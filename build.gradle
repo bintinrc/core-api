@@ -1,0 +1,24 @@
+group 'co.nvqa'
+version '2.0.0'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation project(":commons")
+
+    testImplementation "ch.qos.logback:logback-classic:1.2.3"
+    testImplementation "org.apache.poi:poi-ooxml:3.17"
+}
+
+project.ext {
+    defaultScenarioManager = "co.nvqa.core_api.cucumber.glue.ScenarioManager"
+    cucumberGluePackage = ["co.nvqa.core_api.cucumber.glue", "classpath:co.nvqa.commons.cucumber.glue"]
+}
+
+apply from: "commons/build-commons.gradle"
