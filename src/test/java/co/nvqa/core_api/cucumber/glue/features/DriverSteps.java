@@ -29,6 +29,7 @@ public class DriverSteps  extends BaseSteps {
         driverClient = new DriverClient(TestConstants.API_BASE_URL);
         driverClient.authenticate(new DriverLoginRequest(username, password));
     }
+
     @Given("^Deleted route is not shown on his list routes$")
     public void driverRouteNotShown(){
         List<Long> routes = get(KEY_LIST_OF_CREATED_ROUTE_ID);

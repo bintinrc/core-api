@@ -111,8 +111,7 @@ public class OrderActionSteps extends BaseSteps {
         NvLogger.success(DOMAIN, String.format("waypoint id %d forced %s",waypointId, action));
     }
 
-    private Order searchOrder(String trackingIdOrStampId)
-    {
+    private Order searchOrder(String trackingIdOrStampId) {
         return getOrderSearchClient().searchOrderByTrackingId(trackingIdOrStampId);
     }
 

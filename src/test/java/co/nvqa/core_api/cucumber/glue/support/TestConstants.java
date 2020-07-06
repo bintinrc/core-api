@@ -12,8 +12,8 @@ public class TestConstants extends StandardTestConstants {
     static {
         FAILURE_REASON_ID = getInt("failure-reason-id");
     }
-    public static void init()
-    {
+
+    public static void init(){
         NvLogger.info("CONFIGURATION HELPER INITIATED");
     }
 }
