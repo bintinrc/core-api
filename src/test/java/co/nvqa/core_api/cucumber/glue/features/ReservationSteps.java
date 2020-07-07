@@ -56,6 +56,7 @@ public class ReservationSteps extends BaseSteps {
                 Pickup pickup = pickups.stream().filter(e -> e.getAddress2().toLowerCase().contains(pickupAddress.toLowerCase())).findAny().get();
                 NvLogger.successf("reservation id %d found", pickup.getId());
                 put(KEY_CREATED_RESERVATION, pickup);
+                putInList(KEY_LIST_OF_CREATED_RESERVATIONS, pickup);
                 put(KEY_WAYPOINT_ID, pickup.getWaypointId());
             } catch (RuntimeException ex) {
                 throw new AssertionError(ex);
@@ -69,20 +70,24 @@ public class ReservationSteps extends BaseSteps {
         long reservationId = pickup.getId();
         Route route = get(KEY_CREATED_ROUTE);
         long routeId = route.getId();
-        getReservationV2Client().addReservationToRoute(routeId, reservationId);
-        NvLogger.success(DOMAIN, String.format("reservation id %d added to route id %d", reservationId, routeId));
-        put(KEY_WAYPOINT_ID, pickup.getWaypointId());
+        callWithRetry( () -> {
+            getReservationV2Client().addReservationToRoute(routeId, reservationId);
+            NvLogger.success(DOMAIN, String.format("reservation id %d added to route id %d", reservationId, routeId));
+            put(KEY_WAYPOINT_ID, pickup.getWaypointId());
+        },"operator route the reservation");
     }
 
     @When("^Operator force finish \"([^\"]*)\" reservation$")
     public void operatorForceFinishReservation(String action){
         long waypointId = get(KEY_WAYPOINT_ID);
         long routeId = get(KEY_CREATED_ROUTE_ID);
-        if(action.equalsIgnoreCase(ACTION_FAIL)){
-            getOrderClient().forceFailWaypoint(routeId, waypointId, TestConstants.FAILURE_REASON_ID);
-        } else {
-            getOrderClient().forceSuccessWaypoint(routeId, waypointId);
-        }
-        NvLogger.success(DOMAIN, String.format("waypoint id %d force failed", waypointId));
+        callWithRetry( () -> {
+            if(action.equalsIgnoreCase(ACTION_FAIL)){
+                getOrderClient().forceFailWaypoint(routeId, waypointId, TestConstants.FAILURE_REASON_ID);
+            } else {
+                getOrderClient().forceSuccessWaypoint(routeId, waypointId);
+            }
+            NvLogger.success(DOMAIN, String.format("waypoint id %d force failed", waypointId));
+        }, "admin force finish reservation");
     }
 }

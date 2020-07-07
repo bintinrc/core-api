@@ -94,8 +94,10 @@ public class OrderActionSteps extends BaseSteps {
     @When("^Operator force success order$")
     public void operatorForceSuccessOrder(){
         long orderId = get(KEY_CREATED_ORDER_ID);
-        getOrderClient().forceSuccess(orderId);
-        NvLogger.success(DOMAIN, String.format("order id %d force successed", orderId));
+        callWithRetry( () -> {
+            getOrderClient().forceSuccess(orderId);
+            NvLogger.success(DOMAIN, String.format("order id %d force successed", orderId));
+        },"force success order");
     }
 
     @When("^Operator force \"([^\"]*)\" \"([^\"]*)\" waypoint$")
@@ -103,12 +105,14 @@ public class OrderActionSteps extends BaseSteps {
         operatorSearchTransaction(type, Transaction.STATUS_PENDING);
         long waypointId = get(KEY_WAYPOINT_ID);
         long routeId = get(KEY_CREATED_ROUTE_ID);
-        if(action.equalsIgnoreCase(ACTION_FAIL)){
-            getOrderClient().forceFailWaypoint(routeId, waypointId, TestConstants.FAILURE_REASON_ID);
-        } else {
-            getOrderClient().forceSuccessWaypoint(routeId, waypointId);
-        }
-        NvLogger.success(DOMAIN, String.format("waypoint id %d forced %s",waypointId, action));
+        callWithRetry(() -> {
+            if(action.equalsIgnoreCase(ACTION_FAIL)){
+                getOrderClient().forceFailWaypoint(routeId, waypointId, TestConstants.FAILURE_REASON_ID);
+            } else {
+                getOrderClient().forceSuccessWaypoint(routeId, waypointId);
+            }
+            NvLogger.success(DOMAIN, String.format("waypoint id %d forced %s",waypointId, action));
+        }, String.format("admin force finish %s", action));
     }
 
     private Order searchOrder(String trackingIdOrStampId) {

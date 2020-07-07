@@ -12,6 +12,8 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.junit.Assert;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -35,48 +37,59 @@ public class RoutingSteps extends BaseSteps {
         Route route = fromJsonSnakeCase(json, Route.class);
         route.setComments("Created for Core API testing, created at: " + DateUtil.getTodayDateTime_YYYY_MM_DD_HH_MM_SS());
         route.setTags(Arrays.asList(1,4));
-        route.setDate(DateUtil.getTodayDateTime_YYYY_MM_DD_HH_MM_SS());
-        Route result = getRouteClient().createRoute(route);
-
-        NvLogger.success(DOMAIN, "route created with id: " + result.getId());
-        put(KEY_CREATED_ROUTE, result);
-        putInList(KEY_LIST_OF_CREATED_ROUTE_ID, result.getId());
-        put(KEY_CREATED_ROUTE_ID, result.getId());
+        route.setDate(generateUTCTodayDate());
+        callWithRetry( () -> {
+            Route result = getRouteClient().createRoute(route);
+            NvLogger.success(DOMAIN, "route created with id: " + result.getId());
+            put(KEY_CREATED_ROUTE, result);
+            putInList(KEY_LIST_OF_CREATED_ROUTE_ID, result.getId());
+            putInList(KEY_LIST_OF_HUB_IDS, route.getHubId());
+            putInList(KEY_LIST_OF_ZONE_IDS, route.getZoneId());
+            put(KEY_CREATED_ROUTE_ID, result.getId());
+        }, "create empty route");
     }
 
     @When("^Operator add order to driver \"([^\"]*)\" route$")
     public void operatorCreateEmptyRoute(String type){
-        String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-        long routeId = get(KEY_CREATED_ROUTE_ID);
-        AddParcelToRouteRequest request = new AddParcelToRouteRequest();
-        request.setRouteId(routeId);
-        request.setTrackingId(trackingId);
-        request.setType(type);
-        getRouteClient().addParcelToRoute(routeId, request);
-        NvLogger.success(DOMAIN, String.format("order %s added to %s route id %d", trackingId, type, routeId));
+        callWithRetry(() -> {
+            String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+            long routeId = get(KEY_CREATED_ROUTE_ID);
+            AddParcelToRouteRequest request = new AddParcelToRouteRequest();
+            request.setRouteId(routeId);
+            request.setTrackingId(trackingId);
+            request.setType(type);
+            getRouteClient().addParcelToRoute(routeId, request);
+            NvLogger.success(DOMAIN, String.format("order %s added to %s route id %d", trackingId, type, routeId));
+        }, "add parcel to route");
     }
 
     @When("^Operator delete driver route$")
     public void operatorDeleteRoute(){
-        long routeId = get(KEY_CREATED_ROUTE_ID);
-        getRouteClient().deleteRoute(routeId);
-        NvLogger.success(DOMAIN, String.format("route %d is successfully deleted", routeId));
+        callWithRetry( () -> {
+            long routeId = get(KEY_CREATED_ROUTE_ID);
+            getRouteClient().deleteRoute(routeId);
+            NvLogger.success(DOMAIN, String.format("route %d is successfully deleted", routeId));
+        }, "delete driver route");
     }
 
     @When("^Operator delete multiple driver routes$")
     public void operatorDeleteMultipleRoute(){
-        List<Long> routeIds = get(KEY_LIST_OF_CREATED_ROUTE_ID);
-        getRouteClient().deleteMultipleRoutes(routeIds);
-        NvLogger.success(DOMAIN, String.format("route %s is successfully deleted", Arrays.toString(routeIds.toArray())));
+        callWithRetry( () -> {
+            List<Long> routeIds = get(KEY_LIST_OF_CREATED_ROUTE_ID);
+            getRouteClient().deleteMultipleRoutes(routeIds);
+            NvLogger.success(DOMAIN, String.format("route %s is successfully deleted", Arrays.toString(routeIds.toArray())));
+        }, "delete multiple routes");
     }
 
     @When("^Operator delete driver route with status code \"([^\"]*)\"$")
     public void operatorDeleteRouteUnSuccessFully(int statusCode){
         long routeId = get(KEY_CREATED_ROUTE_ID);
-        Response response = getRouteClient().deleteRouteAndGetRawResponse(routeId);
-        response.then().assertThat().contentType(ContentType.JSON);
-        response.then().assertThat().statusCode(statusCode);
-        NvLogger.success(DOMAIN, String.format("route %d is not allowed to be deleted", routeId));
+        callWithRetry( () -> {
+            Response response = getRouteClient().deleteRouteAndGetRawResponse(routeId);
+            response.then().assertThat().contentType(ContentType.JSON);
+            response.then().assertThat().statusCode(statusCode);
+            NvLogger.success(DOMAIN, String.format("route %d is not allowed to be deleted", routeId));
+        }, "delete driver route unsuccessfully");
     }
 
     @When("^Operator archives driver route$")
@@ -127,5 +140,11 @@ public class RoutingSteps extends BaseSteps {
         callWithRetry(()-> {
             getRouteClient().mergeTransactions(routeId);
         }, "merge transaction waypoints");
+    }
+
+    private String generateUTCTodayDate(){
+        ZonedDateTime startDateTime = DateUtil.getStartOfDay(DateUtil.getDate());
+        return DateUtil
+                .displayDateTime(startDateTime.withZoneSameInstant(ZoneId.of("UTC")));
     }
 }

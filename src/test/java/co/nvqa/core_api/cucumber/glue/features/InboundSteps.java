@@ -17,7 +17,9 @@ public class InboundSteps extends BaseSteps {
 
     @Then("^Operator perform global inbound for created order at hub \"([^\"]*)\"$")
     public void globalInbound(long hubId) {
-        String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-        getInboundClient().globalInbound(new GlobalInboundRequest(trackingId, GlobalInboundRequest.TYPE_SORTING_HUB, hubId));
+        callWithRetry( () -> {
+            String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+            getInboundClient().globalInbound(new GlobalInboundRequest(trackingId, GlobalInboundRequest.TYPE_SORTING_HUB, hubId));
+        },"operator global inbound");
     }
 }
