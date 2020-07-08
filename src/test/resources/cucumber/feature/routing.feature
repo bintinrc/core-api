@@ -7,7 +7,6 @@ Feature: Routing
     When Shipper create order with parameters below
     |service_type                  | <service_type>                  |
     |service_level                 | <service_level>                 |
-    |requested_tracking_number     | <requested_tracking_number>     |
     |parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator create an empty route
       | driver_id  | {routing-driver-id}  |
@@ -27,7 +26,6 @@ Feature: Routing
     When Shipper create order with parameters below
       |service_type                  | <service_type>                  |
       |service_level                 | <service_level>                 |
-      |requested_tracking_number     | <requested_tracking_number>     |
       |parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator search for created order
     And Operator create an empty route
@@ -56,7 +54,6 @@ Feature: Routing
     When Shipper create order with parameters below
       |service_type                  | <service_type>                  |
       |service_level                 | <service_level>                 |
-      |requested_tracking_number     | <requested_tracking_number>     |
       |parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator Search for Created Pickup for Shipper "{routing-shipper-legacy-id}" with status "Pending"
     And Operator create an empty route
@@ -81,7 +78,6 @@ Feature: Routing
     When Shipper create order with parameters below
       |service_type                  | <service_type>                  |
       |service_level                 | <service_level>                 |
-      |requested_tracking_number     | <requested_tracking_number>     |
       |parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator create an empty route
       | driver_id  | {routing-driver-id}  |

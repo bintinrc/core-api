@@ -1,11 +1,9 @@
 package co.nvqa.core_api.cucumber.glue;
 
 import co.nvqa.commons.client.core.*;
-import co.nvqa.commons.client.driver.DriverClient;
 import co.nvqa.commons.client.order_search.OrderSearchClient;
 import co.nvqa.commons.client.reservation.ReservationV2Client;
 import co.nvqa.commons.cucumber.glue.StandardSteps;
-import co.nvqa.commons.model.core.Driver;
 import co.nvqa.commons.util.StandardTestUtils;
 import co.nvqa.core_api.cucumber.glue.support.AuthHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;

@@ -27,27 +27,33 @@ public class OrderCreateSteps extends BaseSteps {
 
     @Given("^Shipper authenticates using client id \"([^\"]*)\" and client secret \"([^\"]*)\"$")
     public void shipperAuthenticate(String clientId, String clientSecret) {
-        orderCreateClientV4 = new OrderCreateClientV4(TestConstants.API_BASE_URL, AuthHelper.getShipperToken(clientId, clientSecret));
+        callWithRetry(() -> {
+            orderCreateClientV4 = new OrderCreateClientV4(TestConstants.API_BASE_URL, AuthHelper.getShipperToken(clientId, clientSecret));
+        }, "shipper API authenticated");
     }
 
     @Given("^Shipper create order with parameters below$")
     public void shipperCreateOrder(Map<String, String> source){
         OrderRequestV4 request = OrderCreateHelper.generateOrderV4(source);
-        OrderRequestV4 result = orderCreateClientV4.createOrder(request, "4.1");
-        NvLogger.success(DOMAIN, "order created tracking id: " + result.getTrackingNumber());
-        put(KEY_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
-        putInList(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
-        put(KEY_ORDER_CREATE_REQUEST, request);
-        put(KEY_PICKUP_ADDRESS_STRING, request.getFrom().getAddress().get("address2"));
+        callWithRetry( () -> {
+            OrderRequestV4 result = orderCreateClientV4.createOrder(request, "4.1");
+            NvLogger.success(DOMAIN, "order created tracking id: " + result.getTrackingNumber());
+            put(KEY_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
+            putInList(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
+            put(KEY_ORDER_CREATE_REQUEST, request);
+            put(KEY_PICKUP_ADDRESS_STRING, request.getFrom().getAddress().get("address2"));
+        }, "shipper create order");
     }
 
     @Given("^Shipper create another order with the same parameters as before$")
     public void shipperCreateAnotherOrderWithSameParams(){
         OrderRequestV4 request = get(KEY_ORDER_CREATE_REQUEST);
         request.setRequestedTrackingNumber("");
-        OrderRequestV4 result = orderCreateClientV4.createOrder(request, "4.1");
-        NvLogger.success(DOMAIN, "order created tracking id: " + result.getTrackingNumber());
-        put(KEY_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
-        putInList(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
+        callWithRetry( () -> {
+            OrderRequestV4 result = orderCreateClientV4.createOrder(request, "4.1");
+            NvLogger.success(DOMAIN, "order created tracking id: " + result.getTrackingNumber());
+            put(KEY_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
+            putInList(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
+        }, "shipper create another order");
     }
 }
