@@ -3,11 +3,9 @@ package co.nvqa.core_api.cucumber.glue.features;
 import co.nvqa.commons.model.core.Pickup;
 import co.nvqa.commons.model.core.route_monitoring.RouteMonitoringResponse;
 import co.nvqa.commons.support.DateUtil;
-import co.nvqa.commons.util.NvLogger;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import cucumber.api.java.en.Given;
 import cucumber.runtime.java.guice.ScenarioScoped;
-import org.junit.Assert;
 
 import java.util.List;
 
@@ -15,7 +13,7 @@ import java.util.List;
  * @author Binti Cahayati on 2020-07-06
  */
 @ScenarioScoped
-public class RouteMonitoring extends BaseSteps {
+public class RouteMonitoringSteps extends BaseSteps {
     private static final String KEY_ROUTE_MONITORING_RESULT = "KEY_ROUTE_MONITORING_RESULT";
 
     @Override
@@ -52,7 +50,6 @@ public class RouteMonitoring extends BaseSteps {
         RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
         int expectedTotalParcels = trackingIds.size() - reservationCounts;
         int actualTotalParcels = result.getTotalParcels();
-        Assert.assertEquals("total parcels count is correct", expectedTotalParcels, actualTotalParcels);
-        NvLogger.successf("total parcels count %d is correct", actualTotalParcels);
+        assertEquals("total parcels count", expectedTotalParcels, actualTotalParcels);
     }
 }

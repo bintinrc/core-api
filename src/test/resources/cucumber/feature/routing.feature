@@ -154,6 +154,8 @@ Feature: Routing
     And Operator Route the Reservation Pickup
     And Operator force finish "<action>" reservation
     Then Operator delete driver route with status code "500"
+    And DB Operator verifies waypoint status is "<action>"
+    And DB Operator verifies route_waypoint record remains exist
     Examples:
       | Note                                   | hiptest-uid                              |action | service_type | service_level |parcel_job_is_pickup_required|
       | Success Waypoint - Reservation         | uid:de50fc99-3509-48f1-8326-15608b145106 |Success| Parcel       | Standard      |true                         |
@@ -178,6 +180,9 @@ Feature: Routing
     And Operator force "<terminal_state>" "DELIVERY" waypoint
     And Operator search for "DELIVERY" transaction with status "<terminal_state>"
     When Operator delete driver route with status code "500"
+    Then DB Operator verifies transaction remains routed to previous route id
+    And DB Operator verifies waypoint status is "<terminal_state>"
+    And DB Operator verifies route_waypoint record remains exist
     Examples:
       | Note                               | hiptest-uid                              |terminal_state  | service_type | service_level |parcel_job_is_pickup_required|
       | Success Transaction - Delivery     | uid:83a33e13-1f1a-468e-823d-a3d9c292fb92 |SUCCESS         | Parcel       | Standard      |false                        |
@@ -201,6 +206,9 @@ Feature: Routing
     And Operator force "<terminal_state>" "PICKUP" waypoint
     And Operator search for "PICKUP" transaction with status "<terminal_state>"
     When Operator delete driver route with status code "500"
+    Then DB Operator verifies transaction remains routed to previous route id
+    And DB Operator verifies waypoint status is "<terminal_state>"
+    And DB Operator verifies route_waypoint record remains exist
     Examples:
       | Note                               | hiptest-uid                              |terminal_state  | service_type | service_level |parcel_job_is_pickup_required|
       | Success Transaction - Pickup       | uid:6310a1f2-1456-4c28-bc46-aae200f25944 |SUCCESS         | Return       | Standard      |true                         |

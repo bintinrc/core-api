@@ -131,7 +131,7 @@ Feature: Route Minitoring
       | Delivery                          | uid:ad5982ad-1289-4255-95e3-707890c0b533 |DD         | Parcel       | Standard      |false                        |
 
 
-  @@total-parcels-count
+  @@total-parcels-count @wip
   Scenario Outline: Operator Filter Route Monitoring Data And Checks Total Parcel for Each Route - Multiple Waypoints - <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper create order with parameters below

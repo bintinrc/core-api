@@ -10,7 +10,6 @@ import cucumber.api.java.en.When;
 import cucumber.runtime.java.guice.ScenarioScoped;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.junit.Assert;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -40,7 +39,7 @@ public class RoutingSteps extends BaseSteps {
         route.setDate(generateUTCTodayDate());
         callWithRetry( () -> {
             Route result = getRouteClient().createRoute(route);
-            NvLogger.success(DOMAIN, "route created with id: " + result.getId());
+            assertNotNull("created route", route);
             put(KEY_CREATED_ROUTE, result);
             putInList(KEY_LIST_OF_CREATED_ROUTE_ID, result.getId());
             putInList(KEY_LIST_OF_HUB_IDS, route.getHubId());
@@ -98,7 +97,7 @@ public class RoutingSteps extends BaseSteps {
         callWithRetry(()-> {
             ArchiveRouteResponse response = getRouteClient().archiveRoute(routeId);
             boolean found = response.getArchivedRouteIds().stream().anyMatch(e -> e.equals(routeId));
-            Assert.assertTrue("archived route found", found);
+            assertTrue("archived route found", found);
         }, "archive driver route");
 
         NvLogger.success(DOMAIN, String.format("route %d is successfully archived", routeId));
@@ -111,7 +110,7 @@ public class RoutingSteps extends BaseSteps {
         callWithRetry(()-> {
             ArchiveRouteResponse response = getRouteClient().archiveRoutes(request);
             boolean found = response.getArchivedRouteIds().containsAll(routes);
-            Assert.assertTrue("archived route found", found);
+            assertTrue("archived route found", found);
         }, "archive driver route");
 
         NvLogger.successf("multiple route ids %s are archived", Arrays.toString(routes.toArray()));
@@ -123,7 +122,7 @@ public class RoutingSteps extends BaseSteps {
         callWithRetry(()-> {
             ArchiveRouteResponse response = getRouteClient().archiveRoute(routeId);
             boolean found = response.getUnarchivedRouteIds().stream().anyMatch(e -> e.equals(routeId));
-            Assert.assertTrue("unarchived route found", found);
+            assertTrue("unarchived route found", found);
         }, "archive driver route");
 
         NvLogger.success(DOMAIN, String.format("route %d is unarchived", routeId));

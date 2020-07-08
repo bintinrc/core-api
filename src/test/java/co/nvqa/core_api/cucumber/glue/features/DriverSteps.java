@@ -8,7 +8,6 @@ import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import cucumber.api.java.en.Given;
 import cucumber.runtime.java.guice.ScenarioScoped;
-import org.junit.Assert;
 
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class DriverSteps  extends BaseSteps {
             List<co.nvqa.commons.model.driver.Route> result = routeResponse.getRoutes();
             routes.stream().forEach(e -> {
                 boolean found = result.stream().anyMatch( o -> o.getId().equals(e));
-                Assert.assertFalse("route found", found);
+                assertFalse("route is shown in driver list routes", found);
             });
         }, "get list driver routes");
     }

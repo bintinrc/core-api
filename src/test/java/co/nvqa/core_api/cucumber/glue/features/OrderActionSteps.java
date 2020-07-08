@@ -9,7 +9,6 @@ import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.guice.ScenarioScoped;
-import org.junit.Assert;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,9 +36,9 @@ public class OrderActionSteps extends BaseSteps {
             NvLogger.infof("retrieve created order details from core orders for tracking id %s", trackingId);
             Order order = getOrderDetails(trackingId);
             put(KEY_CREATED_ORDER, order);
-            Assert.assertNotNull("retrieved order is not null", order);
+            assertNotNull("retrieved order", order);
             put(KEY_CREATED_ORDER_ID, order.getId());
-            Assert.assertNotNull("order id is not null", order.getId());
+            assertNotNull("order id", order.getId());
             NvLogger.successf("order id = %d is successfully retrieved from core", order.getId());
         }, "retrieve order details from core");
     }
@@ -51,7 +50,7 @@ public class OrderActionSteps extends BaseSteps {
         put(KEY_CREATED_ORDER, order);
         callWithRetry(() -> {
             Transaction transaction = getTransaction(order, type, status);
-            Assert.assertNotNull("retrieved transaction is not null", transaction);
+            assertNotNull("retrieved transaction", transaction);
             NvLogger.successf("retrieved transaction for id %d", transaction.getId());
             put(KEY_TRANSACTION_DETAILS, transaction);
             put(KEY_TRANSACTION_ID, transaction.getId());
@@ -75,8 +74,7 @@ public class OrderActionSteps extends BaseSteps {
         long orderId = get(KEY_CREATED_ORDER_ID);
         callWithRetry(() -> {
             Event result = getOrderEvent(event, orderId);
-            Assert.assertEquals("%s event is published", event.toLowerCase(), result.getType().toLowerCase());
-            NvLogger.successf("%s event is published for order id %d",result.getType(), orderId);
+            assertEquals(String.format("%s event is published", event), event.toLowerCase(), result.getType().toLowerCase());
         }, String.format("%s event is published for order id %d",event, orderId));
     }
 
@@ -122,7 +120,7 @@ public class OrderActionSteps extends BaseSteps {
     private Order getOrderDetails(String trackingId){
         long orderId = searchOrder(trackingId).getId();
         Order order = getOrderClient().getOrder(orderId);
-        Assert.assertNotNull("order details is not null",order);
+        assertNotNull("order details",order);
         return order;
     }
 
