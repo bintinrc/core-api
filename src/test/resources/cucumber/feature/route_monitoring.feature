@@ -2,7 +2,7 @@
 Feature: Route Minitoring
 
   @total-parcels-count
-  Scenario Outline: Operator Filter Route Monitoring Data And Checks Total Parcel for Each Route - Single Waypoint - <Note> - <hiptest-uid>
+  Scenario Outline: Operator Filter Route Monitoring Data And Checks Total Parcel for Each Route - Single Waypoint - Transaction - <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper create order with parameters below
       |service_type                  | <service_type>                  |
@@ -17,14 +17,15 @@ Feature: Route Minitoring
     And Operator add order to driver "<route_type>" route
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies Route Monitoring Data has correct total parcels count
+      |total-expected-waypoints     | 1 |
 
     Examples:
-      | Note                           | hiptest-uid                              |route_type | service_type | service_level |parcel_job_is_pickup_required|
-      | Single Transaction - Pickup    | uid:cb335201-b86a-4373-ac57-de37c724c6e1 |PP         | Return       | Standard      |true                         |
-      | Single Transaction - Delivery  | uid:ad5982ad-1289-4255-95e3-707890c0b533 |DD         | Parcel       | Standard      |false                        |
+      | Note      | hiptest-uid                              |route_type | service_type | service_level |parcel_job_is_pickup_required|
+      | Pickup    | uid:cb335201-b86a-4373-ac57-de37c724c6e1 |PP         | Return       | Standard      |true                         |
+      | Delivery  | uid:ad5982ad-1289-4255-95e3-707890c0b533 |DD         | Parcel       | Standard      |false                        |
 
   @total-parcels-count
-  Scenario Outline: Operator Filter Route Monitoring Data And Checks Total Parcel for Each Route - Single Waypoint - <Note> - <hiptest-uid>
+  Scenario Outline: Operator Filter Route Monitoring Data And Checks Total Parcel for Each Route - Single Waypoint - Multiple Merged Transactions - <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper create order with parameters below
       |service_type                  | <service_type>                  |
@@ -44,14 +45,15 @@ Feature: Route Minitoring
     And Operator merge transaction waypoints
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies Route Monitoring Data has correct total parcels count
+      |total-expected-waypoints     | 1 |
 
     Examples:
-      | Note                                     | hiptest-uid                              |route_type | service_type | service_level |parcel_job_is_pickup_required|
-      | Multiple Merged Transactions - Pickup    | uid:cb335201-b86a-4373-ac57-de37c724c6e1 |PP         | Return       | Standard      |true                         |
-      | Multiple Merged Transactions - Delivery  | uid:ad5982ad-1289-4255-95e3-707890c0b533 |DD         | Parcel       | Standard      |false                        |
+      | Note      | hiptest-uid                              |route_type | service_type | service_level |parcel_job_is_pickup_required|
+      | Pickup    | uid:cb335201-b86a-4373-ac57-de37c724c6e1 |PP         | Return       | Standard      |true                         |
+      | Delivery  | uid:ad5982ad-1289-4255-95e3-707890c0b533 |DD         | Parcel       | Standard      |false                        |
 
-  @@total-parcels-count
-  Scenario Outline: Operator Filter Route Monitoring Data And Checks Total Parcel for Each Route - Single Waypoint - <Note> - <hiptest-uid>
+  @total-parcels-count
+  Scenario Outline: Operator Filter Route Monitoring Data And Checks Total Parcel for Each Route - Single Waypoint - Reservation <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper create order with parameters below
       |service_type                  | <service_type>                  |
@@ -67,13 +69,14 @@ Feature: Route Minitoring
     And Operator Route the Reservation Pickup
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies Route Monitoring Data has correct total parcels count
+      |total-expected-waypoints     | 1 |
 
     Examples:
-      | Note                           | hiptest-uid                              |route_type | service_type | service_level |parcel_job_is_pickup_required|
-      | Single Reservation             | uid:cb335201-b86a-4373-ac57-de37c724c6e1 |PP         | Parcel       | Standard      |true                         |
+      | Note  | hiptest-uid                              |route_type | service_type | service_level |parcel_job_is_pickup_required|
+      |       | uid:cb335201-b86a-4373-ac57-de37c724c6e1 |PP         | Parcel       | Standard      |true                         |
 
-  @@total-parcels-count
-  Scenario Outline: Operator Filter Route Monitoring Data And Checks Total Parcel for Each Route - Multiple Waypoints - <Note> - <hiptest-uid>
+  @total-parcels-count
+  Scenario Outline: Operator Filter Route Monitoring Data And Checks Total Parcel for Each Route - Multiple Waypoints - Reservations <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper create order with parameters below
       |service_type                  | <service_type>                  |
@@ -97,13 +100,14 @@ Feature: Route Minitoring
     And Operator Route the Reservation Pickup
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies Route Monitoring Data has correct total parcels count
+      |total-expected-waypoints     | 2 |
 
     Examples:
-      | Note                              | hiptest-uid                              |route_type | service_type | service_level |parcel_job_is_pickup_required|
-      | Reservation                       | uid:cb335201-b86a-4373-ac57-de37c724c6e1 |PP         | Parcel       | Standard      |true                         |
+      | Note           | hiptest-uid                              |route_type | service_type | service_level |parcel_job_is_pickup_required|
+      |                | uid:cb335201-b86a-4373-ac57-de37c724c6e1 |PP         | Parcel       | Standard      |true                         |
 
-  @@total-parcels-count
-  Scenario Outline: Operator Filter Route Monitoring Data And Checks Total Parcel for Each Route - Multiple Waypoints - <Note> - <hiptest-uid>
+  @total-parcels-count
+  Scenario Outline: Operator Filter Route Monitoring Data And Checks Total Parcel for Each Route - Multiple Waypoints - Transactions - <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper create order with parameters below
       |service_type                  | <service_type>                  |
@@ -124,6 +128,7 @@ Feature: Route Minitoring
     And Operator add order to driver "<route_type>" route
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies Route Monitoring Data has correct total parcels count
+      |total-expected-waypoints     | 2 |
 
     Examples:
       | Note                              | hiptest-uid                              |route_type | service_type | service_level |parcel_job_is_pickup_required|
@@ -131,8 +136,8 @@ Feature: Route Minitoring
       | Delivery                          | uid:ad5982ad-1289-4255-95e3-707890c0b533 |DD         | Parcel       | Standard      |false                        |
 
 
-  @@total-parcels-count
-  Scenario Outline: Operator Filter Route Monitoring Data And Checks Total Parcel for Each Route - Multiple Waypoints - <Note> - <hiptest-uid>
+  @total-parcels-count
+  Scenario Outline: Operator Filter Route Monitoring Data And Checks Total Parcel for Each Route - Multiple Waypoints - Mix of PP, DD, & Reservation <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper create order with parameters below
       |service_type                  | Parcel                          |
@@ -173,6 +178,7 @@ Feature: Route Minitoring
     And Operator Route the Reservation Pickup
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies Route Monitoring Data has correct total parcels count
+      |total-expected-waypoints     | 5 |
 
     Examples:
       | Note                                                | hiptest-uid                              |

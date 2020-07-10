@@ -8,6 +8,7 @@ import cucumber.api.java.en.Given;
 import cucumber.runtime.java.guice.ScenarioScoped;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Binti Cahayati on 2020-07-06
@@ -15,6 +16,7 @@ import java.util.List;
 @ScenarioScoped
 public class RouteMonitoringSteps extends BaseSteps {
     private static final String KEY_ROUTE_MONITORING_RESULT = "KEY_ROUTE_MONITORING_RESULT";
+    private static final String KEY_TOTAL_EXPECTED_WAYPOINT = "total-expected-waypoints";
 
     @Override
     public void init(){
@@ -40,16 +42,24 @@ public class RouteMonitoringSteps extends BaseSteps {
     }
 
     @Given("^Operator verifies Route Monitoring Data has correct total parcels count$")
-    public void operatorChecksTotalParcelsCount(){
-        List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-        List<Pickup> pickups = get(KEY_LIST_OF_CREATED_RESERVATIONS);
-        int reservationCounts = 0;
-        if(pickups != null) {
-            reservationCounts = pickups.size();
-        }
-        RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
-        int expectedTotalParcels = trackingIds.size() - reservationCounts;
-        int actualTotalParcels = result.getTotalParcels();
-        assertEquals("total parcels count", expectedTotalParcels, actualTotalParcels);
+    public void operatorChecksTotalParcelsCount(Map<String, Integer> arg1){
+        callWithRetry( () -> {
+            operatorFilterRouteMinitoring();
+            List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+            List<Pickup> pickups = get(KEY_LIST_OF_CREATED_RESERVATIONS);
+            long routeId = get(KEY_CREATED_ROUTE_ID);
+            int reservationCounts = 0;
+            if(pickups != null) {
+                reservationCounts = pickups.size();
+            }
+            RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
+            int expectedTotalParcels = trackingIds.size() - reservationCounts;
+            int actualTotalParcels = result.getTotalParcels();
+            assertEquals(String.format("total parcels count for route id %d",routeId), expectedTotalParcels, actualTotalParcels);
+            int expectedTotalWaypoints = arg1.get(KEY_TOTAL_EXPECTED_WAYPOINT);
+            int actualTotalWaypoints = result.getTotalWaypoints();
+            assertEquals(String.format("total waypoints count for route id %d", routeId), expectedTotalWaypoints,actualTotalWaypoints);
+            assertEquals(String.format("total pending waypoints count for route id %d", routeId), expectedTotalWaypoints,actualTotalWaypoints);
+        }, "check total parcels count");
     }
 }
