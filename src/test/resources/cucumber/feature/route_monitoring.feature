@@ -140,7 +140,7 @@ Feature: Route Minitoring
       | Delivery                          | uid:a0d8285a-b8f9-44c7-8fa5-a8ec42f71e43 |DD         |DELIVERY        | Parcel       | Standard      |false                        |
 
   @total-parcels-count
-  Scenario Outline: Operator Filter Route Monitoring Data And Checks Total Parcel for Each Route - Multiple Waypoints - Mix of PP, DD, & Reservation - (uid:75ac2e9a-7cf0-4704-94a4-eb4257fbbec1)
+  Scenario Outline: Operator Filter Route Monitoring Data And Checks Total Parcel for Each Route - Multiple Waypoints - Mix of PP, DD, & Reservation - <hiptest-uid>
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper create order with parameters below
       |service_type                  | Parcel                          |
@@ -186,3 +186,7 @@ Feature: Route Minitoring
     And Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies Route Monitoring Data has correct total parcels count
       |total-expected-waypoints     | 4 |
+
+    Examples:
+      | Note                         | hiptest-uid                              |
+      |                              | uid:75ac2e9a-7cf0-4704-94a4-eb4257fbbec1 |
