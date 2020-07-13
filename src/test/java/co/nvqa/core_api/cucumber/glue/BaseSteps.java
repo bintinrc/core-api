@@ -4,6 +4,7 @@ import co.nvqa.commons.client.core.*;
 import co.nvqa.commons.client.order_search.OrderSearchClient;
 import co.nvqa.commons.client.reservation.ReservationV2Client;
 import co.nvqa.commons.cucumber.glue.StandardSteps;
+import co.nvqa.commons.util.NvLogger;
 import co.nvqa.commons.util.StandardTestUtils;
 import co.nvqa.core_api.cucumber.glue.support.AuthHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
@@ -14,19 +15,25 @@ import co.nvqa.core_api.cucumber.glue.support.TestConstants;
  */
 public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
     private static final long DEFAULT_FALLBACK_MS = 10_000L;
-    private static final int DEFAULT_RETRY = 2;
+    private static final int DEFAULT_RETRY = 30;
 
+    private static OrderSearchClient orderSearchClient;
+    private static OrderClient orderClient;
     private RouteClient routeClient;
-    private OrderSearchClient orderSearchClient;
-    private OrderClient orderClient;
     private EventClient eventClient;
     private ShipperPickupClient shipperPickupClient;
     private ReservationV2Client reservationV2Client;
     private InboundClient inboundClient;
 
-
+    @SuppressWarnings("unchecked")
     protected void callWithRetry(Runnable runnable, String methodName) {
         retryIfExpectedExceptionOccurred(runnable, methodName, System.out::println, DEFAULT_FALLBACK_MS, DEFAULT_RETRY, AssertionError.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void callWithRetry(Runnable runnable, String methodName, int maxRetry)
+    {
+        retryIfExpectedExceptionOccurred(runnable, methodName, NvLogger::warn, DEFAULT_FALLBACK_MS, maxRetry, AssertionError.class, RuntimeException.class);
     }
 
     protected void doStepPause() {
@@ -42,7 +49,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
         return routeClient;
     }
 
-    protected synchronized OrderSearchClient getOrderSearchClient()
+    protected static synchronized OrderSearchClient getOrderSearchClient()
     {
         if (orderSearchClient == null)
         {
@@ -51,7 +58,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
         return orderSearchClient;
     }
 
-    protected synchronized OrderClient getOrderClient()
+    protected static synchronized OrderClient getOrderClient()
     {
         if (orderClient == null)
         {

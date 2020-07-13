@@ -1,11 +1,13 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
+import co.nvqa.commons.model.core.Order;
 import co.nvqa.commons.model.core.route.AddParcelToRouteRequest;
 import co.nvqa.commons.model.core.route.ArchiveRouteResponse;
 import co.nvqa.commons.model.core.route.Route;
 import co.nvqa.commons.support.DateUtil;
 import co.nvqa.commons.util.NvLogger;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
+import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.guice.ScenarioScoped;
 import io.restassured.http.ContentType;
@@ -24,6 +26,7 @@ import java.util.Map;
 public class RoutingSteps extends BaseSteps {
 
     private static final String DOMAIN = "ROUTING-STEP";
+    public static final String KEY_LIST_OF_PULL_OUT_OF_ROUTE_ORDER_ID = "key-list-pull-out-of-route-order-id";
 
     @Override
     public void init(){
@@ -141,6 +144,15 @@ public class RoutingSteps extends BaseSteps {
         }, "merge transaction waypoints");
     }
 
+    @When("^Operator pull order out of \"([^\"]*)\" route$")
+    public void operatorPullOutOfRoute(String type){
+        callWithRetry(() -> {
+            String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+            Order order = OrderDetailHelper.getOrderDetails(trackingId);
+            getRouteClient().pullOutWaypointFromRoute(order.getId(), type.toUpperCase());
+            putInList(KEY_LIST_OF_PULL_OUT_OF_ROUTE_ORDER_ID, order.getId());
+        }, "pull out of route");
+    }
     private String generateUTCTodayDate(){
         ZonedDateTime startDateTime = DateUtil.getStartOfDay(DateUtil.getDate());
         return DateUtil

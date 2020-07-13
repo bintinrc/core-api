@@ -2,7 +2,7 @@
 Feature: Routing
 
   @add-parcel-to-route
-  Scenario Outline: Operator Add Parcel to Driver Route - <Note> - <hiptest-uid>
+  Scenario Outline: Operator Add Parcel to Driver Route Successfully - <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper create order with parameters below
     |service_type                  | <service_type>                  |
@@ -17,11 +17,11 @@ Feature: Routing
 
     Examples:
       | Note     | hiptest-uid                              |route_type | service_type | service_level |parcel_job_is_pickup_required|
-      | Pickup   | uid:cb335201-b86a-4373-ac57-de37c724c6e1 |PP         | Return       | Standard      |true                         |
-      | Delivery | uid:ad5982ad-1289-4255-95e3-707890c0b533 |DD         | Parcel       | Standard      |false                        |
+      | Pickup   | uid:d9266718-dcf6-4131-8d77-6e3f5d239173 |PP         | Return       | Standard      |true                         |
+      | Delivery | uid:1917f9ef-8275-4dce-8f2d-500b4fa80930 |DD         | Parcel       | Standard      |false                        |
 
   @route-delete
-  Scenario Outline: Operator Delete Driver Route Successfully - Single Pending Waypoint - <Note> - <hiptest-uid>
+  Scenario Outline: Operator Delete Driver Route Successfully - Single Pending Transaction - <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper create order with parameters below
       |service_type                  | <service_type>                  |
@@ -45,11 +45,11 @@ Feature: Routing
     Then Deleted route is not shown on his list routes
     Examples:
       | Note     | hiptest-uid                              |route_type |transaction_type| service_type | service_level |parcel_job_is_pickup_required|
-      | Pickup   | uid:643fba31-d471-44a9-91a4-81a68225b1e5 |PP         |PICKUP          | Return       | Standard      |true                         |
-      | Delivery | uid:fe9f9c79-b9ed-4b86-ac12-c94a035723ad |DD         |DELIVERY        | Parcel       | Standard      |false                        |
+      | Pickup   | uid:a9e166f2-0ca5-4aaf-baae-0593ba83dc00 |PP         |PICKUP          | Return       | Standard      |true                         |
+      | Delivery | uid:c5e68f1d-09f8-4d9e-8632-8b9a5bd9d572 |DD         |DELIVERY        | Parcel       | Standard      |false                        |
 
   @route-delete
-  Scenario Outline: Operator Delete Driver Route Successfully - Single Pending Waypoint - Reservation <Note> - <hiptest-uid>
+  Scenario Outline: Operator Delete Driver Route Successfully - Single Pending Reservation <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper create order with parameters below
       |service_type                  | <service_type>                  |

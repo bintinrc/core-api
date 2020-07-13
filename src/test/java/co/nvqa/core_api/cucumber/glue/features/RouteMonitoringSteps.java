@@ -47,19 +47,24 @@ public class RouteMonitoringSteps extends BaseSteps {
             operatorFilterRouteMinitoring();
             List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
             List<Pickup> pickups = get(KEY_LIST_OF_CREATED_RESERVATIONS);
+            List<Long> pullOutOrderIds = get(RoutingSteps.KEY_LIST_OF_PULL_OUT_OF_ROUTE_ORDER_ID);
             long routeId = get(KEY_CREATED_ROUTE_ID);
             int reservationCounts = 0;
             if(pickups != null) {
                 reservationCounts = pickups.size();
             }
+            int pullOutOfRouteOrderCount = 0;
+            if (pullOutOrderIds != null){
+                pullOutOfRouteOrderCount = pullOutOrderIds.size();
+            }
             RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
-            int expectedTotalParcels = trackingIds.size() - reservationCounts;
+            int expectedTotalParcels = trackingIds.size() - reservationCounts - pullOutOfRouteOrderCount;
             int actualTotalParcels = result.getTotalParcels();
             assertEquals(String.format("total parcels count for route id %d",routeId), expectedTotalParcels, actualTotalParcels);
             int expectedTotalWaypoints = arg1.get(KEY_TOTAL_EXPECTED_WAYPOINT);
             int actualTotalWaypoints = result.getTotalWaypoints();
             assertEquals(String.format("total waypoints count for route id %d", routeId), expectedTotalWaypoints,actualTotalWaypoints);
             assertEquals(String.format("total pending waypoints count for route id %d", routeId), expectedTotalWaypoints,actualTotalWaypoints);
-        }, "check total parcels count");
+        }, "check total parcels count", 70);
     }
 }

@@ -1,9 +1,10 @@
 #! /bin/sh
 
 hiptest-publisher \
-  --token=181005036618164955036858448907656792073644625028690844341 \
+  --token=32566011687122469819438825419833000201479941620470807818 \
   --language=cucumber \
   --framework=java \
-  --test_run_id=430611 \
+  --test-run-id=433046 \
+  --execution-environment=release \
   --push "build/reports/cucumber-junit/*.xml" \
   --push-format junit
