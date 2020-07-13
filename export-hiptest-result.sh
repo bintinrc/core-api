@@ -5,6 +5,6 @@ hiptest-publisher \
   --language=cucumber \
   --framework=java \
   --test-run-id=433046 \
-  --execution-environment=release \
+  --execution-environment=qa \
   --push "build/reports/cucumber-junit/*.xml" \
   --push-format junit
