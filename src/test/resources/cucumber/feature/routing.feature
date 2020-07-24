@@ -1,4 +1,4 @@
-@ForceSuccessOrder @routing
+@ForceSuccessOrder @DeleteReservationAndAddress @ArchiveDriverRoutes @routing
 Feature: Routing
 
   @add-parcel-to-route

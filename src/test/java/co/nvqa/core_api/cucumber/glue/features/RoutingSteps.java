@@ -8,6 +8,7 @@ import co.nvqa.commons.support.DateUtil;
 import co.nvqa.commons.util.NvLogger;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
+import cucumber.api.java.After;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.guice.ScenarioScoped;
 import io.restassured.http.ContentType;
@@ -157,5 +158,20 @@ public class RoutingSteps extends BaseSteps {
         ZonedDateTime startDateTime = DateUtil.getStartOfDay(DateUtil.getDate());
         return DateUtil
                 .displayDateTime(startDateTime.withZoneSameInstant(ZoneId.of("UTC")));
+    }
+
+    @After("@ArchiveDriverRoutes")
+    public void cleanCreatedRoute() {
+        List<Long> routeIds = get(KEY_LIST_OF_CREATED_ROUTE_ID);
+
+        try {
+            if (routeIds != null) {
+                routeIds.forEach( e ->
+                        callWithRetry(() -> getRouteClient().archiveRoute(e)
+                        , "try to archive created routes") );
+            }
+        } catch (Throwable t) {
+            NvLogger.warn("Failed to archive route(s)");
+        }
     }
 }
