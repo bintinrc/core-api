@@ -4,6 +4,7 @@ import co.nvqa.commons.model.core.Pickup;
 import co.nvqa.commons.model.core.route_monitoring.RouteMonitoringResponse;
 import co.nvqa.commons.support.DateUtil;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
+import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import cucumber.api.java.en.Given;
 import cucumber.runtime.java.guice.ScenarioScoped;
 
@@ -41,7 +42,7 @@ public class RouteMonitoringSteps extends BaseSteps {
 
     }
 
-    @Given("^Operator verifies Route Monitoring Data has correct total parcels count$")
+    @Given("^Operator verifies Route Monitoring Data Has Correct Details for Pending Case$")
     public void operatorChecksTotalParcelsCount(Map<String, Integer> arg1){
         callWithRetry( () -> {
             operatorFilterRouteMinitoring();
@@ -58,13 +59,49 @@ public class RouteMonitoringSteps extends BaseSteps {
                 pullOutOfRouteOrderCount = pullOutOrderIds.size();
             }
             RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
+            checkRouteDetails(result);
             int expectedTotalParcels = trackingIds.size() - reservationCounts - pullOutOfRouteOrderCount;
             int actualTotalParcels = result.getTotalParcels();
-            assertEquals(String.format("total parcels count for route id %d",routeId), expectedTotalParcels, actualTotalParcels);
+            //add more assertion for list of pending waypoints
+            assertEquals(String.format("total parcels for route id %d",routeId), expectedTotalParcels, actualTotalParcels);
             int expectedTotalWaypoints = arg1.get(KEY_TOTAL_EXPECTED_WAYPOINT);
             int actualTotalWaypoints = result.getTotalWaypoints();
-            assertEquals(String.format("total waypoints count for route id %d", routeId), expectedTotalWaypoints,actualTotalWaypoints);
-            assertEquals(String.format("total pending waypoints count for route id %d", routeId), expectedTotalWaypoints,actualTotalWaypoints);
-        }, "check total parcels count", 70);
+            assertEquals(String.format("total waypoints for route id %d", routeId), expectedTotalWaypoints,actualTotalWaypoints);
+            assertEquals(String.format("total pending waypoints for route id %d", routeId), expectedTotalWaypoints,actualTotalWaypoints);
+            checkPendingDetails(routeId, result);
+        }, "check pending case", 50);
+    }
+
+    @Given("^Operator verifies Route Monitoring Data for Empty Route has correct details$")
+    public void operatorChecksEmptyRouteData(){
+        callWithRetry( () -> {
+            operatorFilterRouteMinitoring();
+            long routeId = get(KEY_CREATED_ROUTE_ID);
+            RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
+            checkRouteDetails(result);
+            assertTrue("waypoints is empty", result.getWaypoints().isEmpty());
+            assertEquals(String.format("total parcels for route id %d",routeId), 0, result.getTotalParcels());
+            assertEquals(String.format("total waypoints for route id %d", routeId),0, result.getTotalWaypoints());
+            assertEquals(String.format("total pending waypoints for route id %d", routeId), 0, result.getNumPending());
+            checkPendingDetails(routeId, result);
+            assertEquals(String.format("total impending waypoints for route id %d", routeId),0, result.getNumImpending());
+            assertEquals(String.format("total late and pending waypoints for route id %d", routeId),0, result.getNumLateAndPending());
+            assertNull("last seen", result.getLastSeen());
+        }, "check empty route", 50);
+    }
+
+    private void checkRouteDetails(RouteMonitoringResponse result){
+        assertEquals("driver name", TestConstants.ROUTE_MONITORING_DRIVER_NAME.toLowerCase(), result.getDriverName().toLowerCase());
+        assertEquals("hub name", TestConstants.SORTING_HUB_NAME.toLowerCase(), result.getHubName().toLowerCase());
+        assertEquals("zone name", TestConstants.ZONE_NAME.toLowerCase(), result.getZoneName().toLowerCase());
+    }
+
+    private void checkPendingDetails(long routeId, RouteMonitoringResponse result){
+        assertEquals(String.format("total success waypoints for route id %d",routeId), 0, result.getNumSuccess());
+        assertEquals(String.format("total valid failed waypoints for route id %d", routeId),0, result.getNumValidFailed());
+        assertEquals(String.format("total invalid failed waypoints for route id %d", routeId),0, result.getNumInvalidFailed());
+        assertEquals(String.format("total early waypoints for route id %d", routeId), 0, result.getNumEarlyWp());
+        assertEquals(String.format("total late waypoints for route id %d",routeId), 0, result.getNumLateWp());
+        assertEquals(String.format("completion precentage", routeId),0.0, result.getCompletionPercentage());
     }
 }

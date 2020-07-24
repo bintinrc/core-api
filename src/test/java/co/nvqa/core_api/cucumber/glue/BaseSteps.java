@@ -3,6 +3,7 @@ package co.nvqa.core_api.cucumber.glue;
 import co.nvqa.commons.client.core.*;
 import co.nvqa.commons.client.order_search.OrderSearchClient;
 import co.nvqa.commons.client.reservation.ReservationV2Client;
+import co.nvqa.commons.client.shipper.ShipperClient;
 import co.nvqa.commons.cucumber.glue.StandardSteps;
 import co.nvqa.commons.util.NvLogger;
 import co.nvqa.commons.util.StandardTestUtils;
@@ -14,7 +15,7 @@ import co.nvqa.core_api.cucumber.glue.support.TestConstants;
  * all step class should extend this class
  */
 public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
-    private static final long DEFAULT_FALLBACK_MS = 10_000L;
+    private static final long DEFAULT_FALLBACK_MS = 1000L;
     private static final int DEFAULT_RETRY = 30;
 
     private static OrderSearchClient orderSearchClient;
@@ -24,6 +25,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
     private ShipperPickupClient shipperPickupClient;
     private ReservationV2Client reservationV2Client;
     private InboundClient inboundClient;
+    private ShipperClient shipperClient;
 
     @SuppressWarnings("unchecked")
     protected void callWithRetry(Runnable runnable, String methodName) {
@@ -101,5 +103,14 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
             inboundClient = new InboundClient(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());
         }
         return inboundClient;
+    }
+
+    protected synchronized ShipperClient getShipperClient()
+    {
+        if (shipperClient == null)
+        {
+            shipperClient = new ShipperClient(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());
+        }
+        return shipperClient;
     }
 }

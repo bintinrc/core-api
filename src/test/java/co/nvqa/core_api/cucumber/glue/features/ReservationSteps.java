@@ -1,11 +1,13 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
+import co.nvqa.commons.model.core.Address;
 import co.nvqa.commons.model.core.Pickup;
 import co.nvqa.commons.model.core.route.Route;
 import co.nvqa.commons.support.DateUtil;
 import co.nvqa.commons.util.NvLogger;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
+import cucumber.api.java.After;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
@@ -89,5 +91,36 @@ public class ReservationSteps extends BaseSteps {
             }
             NvLogger.success(DOMAIN, String.format("waypoint id %d force failed", waypointId));
         }, "admin force finish reservation");
+    }
+
+    @After("@DeleteReservationAndAddress")
+    public void deleteReservationAndAddressIfAny() {
+        try {
+            List<Pickup> pickups = get(KEY_LIST_OF_CREATED_RESERVATIONS);
+            if (pickups == null) {
+                NvLogger.warn("No Reservations to clear");
+                return;
+            }
+            //clear reservations
+            pickups.forEach( e -> {
+                getReservationV2Client().deleteReservation(e.getId(), e.getShipperId());
+                put(KEY_SHIPPER_OWNER_LEGACY_ID, e.getShipperId());
+            });
+            // clear addresses
+            long shipperLegacyId = get(KEY_SHIPPER_OWNER_LEGACY_ID);
+            long shipperGlobalId = getShipperClient().getNewShipperIdByLegacyId(shipperLegacyId).getId();
+            List<Address> addresses = getShipperClient().readAllAddresses(shipperGlobalId);
+            addresses.forEach(address -> {
+                try {
+                    NvLogger.infof("try to delete address: %d", address.getId());
+                    getShipperClient().deleteAddress(shipperGlobalId, address.getId());
+                    NvLogger.successf("address deleted successfully: %d", address.getId());
+                } catch (Exception | AssertionError e) {
+                    NvLogger.warnf("failed to delete address: %d caused of %s", address.getId(), e.getMessage());
+                }
+            });
+        } catch (Throwable t) {
+            NvLogger.warnf("Failed to clear any reservation and/or address due to: %s", t.getMessage());
+        }
     }
 }
