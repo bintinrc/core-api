@@ -46,9 +46,9 @@ public class OrderActionSteps extends BaseSteps {
     @Then("^Operator search for \"([^\"]*)\" transaction with status \"([^\"]*)\"$")
     public void operatorSearchTransaction(String type, String status){
         String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-        Order order = getOrderDetails(trackingId);
-        put(KEY_CREATED_ORDER, order);
         callWithRetry(() -> {
+            Order order = getOrderDetails(trackingId);
+            put(KEY_CREATED_ORDER, order);
             Transaction transaction = getTransaction(order, type, status);
             assertNotNull("retrieved transaction", transaction);
             NvLogger.successf("retrieved transaction for id %d", transaction.getId());
@@ -111,6 +111,31 @@ public class OrderActionSteps extends BaseSteps {
             }
             NvLogger.success(DOMAIN, String.format("waypoint id %d forced %s",waypointId, action));
         }, String.format("admin force finish %s", action));
+    }
+
+    @When("^Operator tags order with PRIOR tag$")
+    public void tagPriorOrder(){
+        long tagId = TestConstants.ORDER_TAG_PRIOR_ID;
+        operatorTagsOrder(tagId);
+    }
+
+    @When("^Operator tags order with tag id \"([^\"]*)\"$")
+    public void operatorTagsOrder(long tagId){
+        String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+        List<Long> tagIds = Arrays.asList(tagId);
+        callWithRetry( () -> {
+            long orderId = searchOrder(trackingId).getId();
+            getOrderClient().addOrderLevelTags(orderId, tagIds);
+        }, "tag an order");
+    }
+
+    @When("^Operator tags all orders with PRIOR tag$")
+    public void tagMultipleOrders(){
+        List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+        trackingIds.forEach(e -> {
+            put(KEY_CREATED_ORDER_TRACKING_ID, e);
+            tagPriorOrder();
+        });
     }
 
     private Order searchOrder(String trackingIdOrStampId) {

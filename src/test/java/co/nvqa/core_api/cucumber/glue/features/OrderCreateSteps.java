@@ -17,6 +17,9 @@ import java.util.Map;
  */
 @ScenarioScoped
 public class OrderCreateSteps extends BaseSteps {
+
+    public static final String KEY_LIST_OF_ORDER_CREATE_RESPONSE = "key-list-of-order-create-response";
+    public static final String KEY_LIST_OF_ORDER_CREATE_REQUEST = "key-list-of-order-create-request";
     private static final String  DOMAIN = "ORDER-CREATION-STEPS";
     private OrderCreateClientV4 orderCreateClientV4;
 
@@ -41,6 +44,8 @@ public class OrderCreateSteps extends BaseSteps {
             put(KEY_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
             putInList(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
             put(KEY_ORDER_CREATE_REQUEST, request);
+            putInList(KEY_LIST_OF_ORDER_CREATE_RESPONSE, result);
+            putInMap(KEY_LIST_OF_ORDER_CREATE_REQUEST, result.getTrackingNumber(), request);
             put(KEY_PICKUP_ADDRESS_STRING, request.getFrom().getAddress().get("address2"));
         }, "shipper create order");
     }
@@ -54,6 +59,16 @@ public class OrderCreateSteps extends BaseSteps {
             NvLogger.success(DOMAIN, "order created tracking id: " + result.getTrackingNumber());
             put(KEY_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
             putInList(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
+            putInList(KEY_LIST_OF_ORDER_CREATE_RESPONSE, result);
+            putInMap(KEY_LIST_OF_ORDER_CREATE_REQUEST, result.getTrackingNumber(), request);
         }, "shipper create another order");
+    }
+
+    @Given("^Shipper creates multiple orders :\"([^\"]*)\" orders$")
+    public void shipperCreateMultiplesOrders(String numberOfOrders, Map<String, String> source){
+        int n = Integer.parseInt(numberOfOrders);
+        for(int i=0; i< n; i++){
+            shipperCreateOrder(source);
+        }
     }
 }
