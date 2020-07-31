@@ -111,7 +111,7 @@ public class RouteMonitoringSteps extends BaseSteps {
                 assertTrue("tracking id found", found);
             });
             put(KEY_ROUTE_MONITORING_RESULT, waypoints);
-        }, "get pending priority details");
+        }, "get pending priority details", 100);
     }
 
     @When("^Operator verifies pending priority parcel details$")
@@ -156,7 +156,7 @@ public class RouteMonitoringSteps extends BaseSteps {
             } catch (Exception ex){
                 throw new AssertionError("pending priority parcels details not found");
             }
-        }, "get pending priority details");
+        }, "get pending priority details", 100);
     }
 
     @When("^Operator get empty pending priority parcel details for \"([^\"]*)\"$")
@@ -165,7 +165,7 @@ public class RouteMonitoringSteps extends BaseSteps {
         callWithRetry(() -> {
             List<Waypoint> waypoints = getRouteClient().getPendingPriorityParcelDetails(routeId,type);
             assertTrue("pending priority parcel details is empty", waypoints.isEmpty());
-        }, "get empty pending priority details");
+        }, "get empty pending priority details", 100);
     }
 
     @Then("^Operator verifies waypoint details for pending case$")
