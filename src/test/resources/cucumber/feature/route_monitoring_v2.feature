@@ -237,6 +237,8 @@ Feature: Route Monitoring V2
     And Operator verifies total pending priority parcels and other details
       |total-expected-waypoints                 | 3 |
       |total-expected-pending-priority-parcels  | 3 |
+    And Operator get pending priority parcel details for "<transaction_type>"
+    And Operator verifies pending priority parcel details
 
     Examples:
       | Note      | hiptest-uid                              |route_type |transaction_type |service_type | service_level |parcel_job_is_pickup_required|
@@ -266,6 +268,7 @@ Feature: Route Monitoring V2
     When Operator force "<action>" "DELIVERY" waypoint
     And Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies total pending priority parcels is now 0
+    And Operator get empty pending priority parcel details for "delivery"
 
     Examples:
       | Note      | hiptest-uid                              |action    |service_type | service_level |parcel_job_is_pickup_required|
@@ -295,6 +298,7 @@ Feature: Route Monitoring V2
     When Operator force "<action>" "PICKUP" waypoint
     And Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies total pending priority parcels is now 0
+    And Operator get empty pending priority parcel details for "pickup"
 
     Examples:
       | Note      | hiptest-uid                              |action    |service_type | service_level |parcel_job_is_pickup_required|

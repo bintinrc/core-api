@@ -23,6 +23,7 @@ public class OrderActionSteps extends BaseSteps {
     private static final String DOMAIN = "ORDER-ACTION-STEP";
     private static final String ACTION_SUCCESS = "success";
     private static final String ACTION_FAIL = "fail";
+    public static final String KEY_LIST_OF_ORDER_TAG_IDS = "key-order-tag-ids";
 
     @Override
     public void init(){
@@ -126,6 +127,7 @@ public class OrderActionSteps extends BaseSteps {
         callWithRetry( () -> {
             long orderId = searchOrder(trackingId).getId();
             getOrderClient().addOrderLevelTags(orderId, tagIds);
+            put(KEY_LIST_OF_ORDER_TAG_IDS, tagIds);
         }, "tag an order");
     }
 

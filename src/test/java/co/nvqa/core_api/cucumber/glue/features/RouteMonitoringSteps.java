@@ -86,9 +86,9 @@ public class RouteMonitoringSteps extends BaseSteps {
 
     @Given("^Operator verifies Route Monitoring Data for Empty Route has correct details$")
     public void operatorChecksEmptyRouteData(){
+        long routeId = get(KEY_CREATED_ROUTE_ID);
         callWithRetry( () -> {
             operatorFilterRouteMinitoring();
-            long routeId = get(KEY_CREATED_ROUTE_ID);
             RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
             checkRouteDetails(result);
             assertTrue("waypoints is empty", result.getWaypoints().isEmpty());
@@ -97,6 +97,75 @@ public class RouteMonitoringSteps extends BaseSteps {
             assertEquals(String.format("total pending waypoints for route id %d", routeId), 0, result.getNumPending());
             checkPendingDetails(routeId, result);
         }, "check empty route", 100);
+    }
+
+    @When("^Operator get pending priority parcel details for \"([^\"]*)\"$")
+    public void operatorGetPendingPriorityParcelDetails(String type){
+        long routeId = get(KEY_CREATED_ROUTE_ID);
+        List<String> trackingIds =  get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+        put(WAYPOINT_TYPE_TRANSACTION, type);
+        callWithRetry(() -> {
+            List<Waypoint> waypoints = getRouteClient().getPendingPriorityParcelDetails(routeId,type);
+            trackingIds.forEach(e -> {
+                boolean found = waypoints.stream().anyMatch( o -> o.getTrackingId().equalsIgnoreCase(e));
+                assertTrue("tracking id found", found);
+            });
+            put(KEY_ROUTE_MONITORING_RESULT, waypoints);
+        }, "get pending priority details");
+    }
+
+    @When("^Operator verifies pending priority parcel details$")
+    public void operatorVerifiesPendingPriorityParcelDetails(){
+        List<OrderRequestV4> transactionDetails =  get(OrderCreateSteps.KEY_LIST_OF_ORDER_CREATE_RESPONSE);
+        Map<String, OrderRequestV4> requestMap = get(OrderCreateSteps.KEY_LIST_OF_ORDER_CREATE_REQUEST);
+        String type = get(WAYPOINT_TYPE_TRANSACTION);
+        callWithRetry(() -> {
+            operatorGetPendingPriorityParcelDetails(type);
+            List<Waypoint> waypoints = get(KEY_ROUTE_MONITORING_RESULT);
+            assertEquals("pending priority parcel count", transactionDetails.size(), waypoints.size());
+            try{
+                transactionDetails.forEach( e -> {
+                    OrderRequestV4 temp = requestMap.get(e.getTrackingNumber());
+                    Map<String, String> address;
+                    long orderId = getOrderClient().searchOrderByTrackingId(e.getTrackingNumber()).getId();
+                    Waypoint waypoint = waypoints.stream().filter(o -> o.getTrackingId().contains(e.getTrackingNumber())).findAny().get();
+                    assertTrue("tracking id", waypoint.getTrackingId().contains(e.getTrackingNumber()));
+                    assertEquals("order id", orderId, waypoint.getOrderId());
+                    List<Long> tagIds = get(OrderActionSteps.KEY_LIST_OF_ORDER_TAG_IDS);
+                    assertEquals("tags size", tagIds.size(), waypoint.getTags().size());
+                    assertEquals("tags contains PRIOR","PRIOR", waypoint.getTags().get(0));
+                    String startTime;
+                    String endTime ;
+                    if(e.getServiceType().equalsIgnoreCase("RETURN")){
+                        assertEquals("name", e.getFrom().getName().toLowerCase(), waypoint.getName().toLowerCase());
+                        assertEquals("contact", e.getFrom().getPhoneNumber(), waypoint.getContact());
+                        address = temp.getFrom().getAddress();
+                        startTime = e.getParcelJob().getPickupTimeslot().getStartTime();
+                        endTime = e.getParcelJob().getPickupTimeslot().getEndTime();
+                    } else {
+                        assertEquals("name", e.getTo().getName().toLowerCase(), waypoint.getName().toLowerCase());
+                        assertEquals("contact", e.getTo().getPhoneNumber(), waypoint.getContact());
+                        address = temp.getTo().getAddress();
+                        startTime = e.getParcelJob().getDeliveryTimeslot().getStartTime();
+                        endTime = e.getParcelJob().getDeliveryTimeslot().getEndTime();
+                    }
+                    assertEquals("address", createExpectedPendingAddress(address), waypoint.getAddress().toLowerCase());
+                    assertEquals("time window", getFormattedTimeslot(startTime, endTime), waypoint.getTimeWindow().toLowerCase());
+                });
+
+            } catch (Exception ex){
+                throw new AssertionError("pending priority parcels details not found");
+            }
+        }, "get pending priority details");
+    }
+
+    @When("^Operator get empty pending priority parcel details for \"([^\"]*)\"$")
+    public void operatorGetEmptyPendingPriorityParcelDetails(String type){
+        long routeId = get(KEY_CREATED_ROUTE_ID);
+        callWithRetry(() -> {
+            List<Waypoint> waypoints = getRouteClient().getPendingPriorityParcelDetails(routeId,type);
+            assertTrue("pending priority parcel details is empty", waypoints.isEmpty());
+        }, "get empty pending priority details");
     }
 
     @Then("^Operator verifies waypoint details for pending case$")
