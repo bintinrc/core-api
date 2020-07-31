@@ -218,7 +218,7 @@ Feature: Route Monitoring V2
       | Note                         | hiptest-uid                              |
       |                              | uid:75ac2e9a-7cf0-4704-94a4-eb4257fbbec1 |
 
-  @rmv2-pending-priority-parcels @wip
+  @rmv2-pending-priority-parcels
   Scenario Outline: Operator Tag Routed Orders as PRIOR Parcels And Verifies Route Monitoring Data - <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{route-monitoring-shipper-client-id}" and client secret "{route-monitoring-shipper-client-secret}"
     When Shipper creates multiple orders :"3" orders
@@ -245,7 +245,7 @@ Feature: Route Monitoring V2
       | Pickup    | uid:d5aae6ab-c47c-4b31-9809-4516544a6eea |PP         |PICKUP           |Return       | Standard      |true                         |
       | Delivery  | uid:e8e138af-e86e-450c-beaa-b79d83c31d52 |DD         |DELIVERY         |Parcel       | Standard      |false                        |
 
-  @rmv2-pending-priority-parcels @wip2
+  @rmv2-pending-priority-parcels
   Scenario Outline: Exclude Attempted PRIOR Parcel as Pending Priority On Route Monitoring - Delivery - <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{route-monitoring-shipper-client-id}" and client secret "{route-monitoring-shipper-client-secret}"
     When Shipper create order with parameters below
@@ -276,7 +276,7 @@ Feature: Route Monitoring V2
       | Success   | uid:88c82f11-db09-493b-acb5-a93d87dbb23f |SUCCESSS  |Parcel       | Standard      |false                        |
 
 
-  @rmv2-pending-priority-parcels @wip2
+  @rmv2-pending-priority-parcels
   Scenario Outline: Exclude Attempted PRIOR Parcel as Pending Priority On Route Monitoring - Pickup - <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{route-monitoring-shipper-client-id}" and client secret "{route-monitoring-shipper-client-secret}"
     When Shipper create order with parameters below
