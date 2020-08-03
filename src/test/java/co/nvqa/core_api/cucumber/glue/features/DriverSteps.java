@@ -6,6 +6,7 @@ import co.nvqa.commons.model.core.route.Route;
 import co.nvqa.commons.model.driver.*;
 import co.nvqa.commons.model.driver.scan.DeliveryRequestV5;
 import co.nvqa.commons.support.DriverHelper;
+import co.nvqa.commons.util.NvLogger;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
@@ -138,8 +139,10 @@ public class DriverSteps  extends BaseSteps {
         request.setType(job.getType());
         return request;
     }
+
     private void getWaypointId(String transactionType){
         if(transactionType.equalsIgnoreCase(WAYPOINT_TYPE_RESERVATION)){
+            NvLogger.info("reservation waypoint, no need get from order waypoint");
             return;
         }
         String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
