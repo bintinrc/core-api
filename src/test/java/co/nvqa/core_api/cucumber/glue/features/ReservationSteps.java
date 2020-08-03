@@ -22,6 +22,7 @@ import java.util.*;
  */
 @ScenarioScoped
 public class ReservationSteps extends BaseSteps {
+    public static final String KEY_LIST_OF_RESERVATION_TRACKING_IDS = "key-list-of-reservation-tracking-ids";
     private static final String DOMAIN = "RESERVATION-STEPS";
     private static final String ACTION_FAIL = "fail";
 
@@ -58,12 +59,14 @@ public class ReservationSteps extends BaseSteps {
                 Pickup pickup = pickups.stream().filter(e -> e.getAddress2().toLowerCase().contains(pickupAddress.toLowerCase())).findAny().get();
                 NvLogger.successf("reservation id %d found", pickup.getId());
                 put(KEY_CREATED_RESERVATION, pickup);
+                String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
                 putInList(KEY_LIST_OF_CREATED_RESERVATIONS, pickup);
+                putInList(KEY_LIST_OF_RESERVATION_TRACKING_IDS, trackingId);
                 put(KEY_WAYPOINT_ID, pickup.getWaypointId());
             } catch (RuntimeException ex) {
                 throw new AssertionError(ex);
             }
-        },String.format("search reservation with status %s", status));
+        },String.format("search reservation with status %s", status), 70);
     }
 
     @And("Operator Route the Reservation Pickup")
@@ -77,6 +80,17 @@ public class ReservationSteps extends BaseSteps {
             NvLogger.success(DOMAIN, String.format("reservation id %d added to route id %d", reservationId, routeId));
             put(KEY_WAYPOINT_ID, pickup.getWaypointId());
         },"operator route the reservation");
+    }
+
+    @And("^Operator Pull Reservation Out of Route$")
+    public void operatorPullReservationRoute(){
+        Pickup pickup = get(KEY_CREATED_RESERVATION);
+        long reservationId = pickup.getId();
+        Route route = get(KEY_CREATED_ROUTE);
+        long routeId = route.getId();
+        callWithRetry( () -> {
+            getReservationV2Client().pullReservationOutOfRoute(reservationId);
+        },"operator pull out reservation route");
     }
 
     @When("^Operator force finish \"([^\"]*)\" reservation$")

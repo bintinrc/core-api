@@ -27,7 +27,7 @@ import java.util.Map;
 public class RoutingSteps extends BaseSteps {
 
     private static final String DOMAIN = "ROUTING-STEP";
-    public static final String KEY_LIST_OF_PULL_OUT_OF_ROUTE_ORDER_ID = "key-list-pull-out-of-route-order-id";
+    public static final String KEY_LIST_OF_PULL_OUT_OF_ROUTE_TRACKING_ID = "key-list-pull-out-of-route-tracking-id";
 
     @Override
     public void init(){
@@ -53,7 +53,7 @@ public class RoutingSteps extends BaseSteps {
     }
 
     @When("^Operator add order to driver \"([^\"]*)\" route$")
-    public void operatorCreateEmptyRoute(String type){
+    public void operatorAddOrderToRoute(String type){
         callWithRetry(() -> {
             String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
             long routeId = get(KEY_CREATED_ROUTE_ID);
@@ -64,6 +64,15 @@ public class RoutingSteps extends BaseSteps {
             getRouteClient().addParcelToRoute(routeId, request);
             NvLogger.success(DOMAIN, String.format("order %s added to %s route id %d", trackingId, type, routeId));
         }, "add parcel to route");
+    }
+
+    @When("^Operator add all orders to driver \"([^\"]*)\" route$")
+    public void operatorAddMultipleOrdersToRoute(String type){
+        List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+        trackingIds.forEach(e -> {
+            put(KEY_CREATED_ORDER_TRACKING_ID, e);
+            operatorAddOrderToRoute(type);
+        });
     }
 
     @When("^Operator delete driver route$")
@@ -151,7 +160,7 @@ public class RoutingSteps extends BaseSteps {
             String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
             Order order = OrderDetailHelper.getOrderDetails(trackingId);
             getRouteClient().pullOutWaypointFromRoute(order.getId(), type.toUpperCase());
-            putInList(KEY_LIST_OF_PULL_OUT_OF_ROUTE_ORDER_ID, order.getId());
+            putInList(KEY_LIST_OF_PULL_OUT_OF_ROUTE_TRACKING_ID, trackingId);
         }, "pull out of route");
     }
     private String generateUTCTodayDate(){

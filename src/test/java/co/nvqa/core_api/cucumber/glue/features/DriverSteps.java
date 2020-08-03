@@ -1,11 +1,12 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
 import co.nvqa.commons.client.driver.DriverClient;
-import co.nvqa.commons.model.core.Order;
+import co.nvqa.commons.model.core.Transaction;
 import co.nvqa.commons.model.core.route.Route;
-import co.nvqa.commons.model.driver.DriverLoginRequest;
-import co.nvqa.commons.model.driver.RouteResponse;
-import co.nvqa.commons.model.driver.Waypoint;
+import co.nvqa.commons.model.driver.*;
+import co.nvqa.commons.model.driver.scan.DeliveryRequestV5;
+import co.nvqa.commons.support.DriverHelper;
+import co.nvqa.commons.util.NvLogger;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
@@ -22,6 +23,8 @@ public class DriverSteps  extends BaseSteps {
     public static final String KEY_LIST_OF_CREATED_JOB_ORDERS = "key-list-of-created-job-orders";
     private static final String KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS = "key-list-of-driver-waypoint-details";
     private static final String KEY_DRIVER_WAYPOINT_DETAILS = "key-driver-waypoint-details";
+    private static final String KEY_LIST_OF_DRIVER_JOBS = "key-driver-jobs";
+    private static final String WAYPOINT_TYPE_RESERVATION = "RESERVATION";
     private DriverClient driverClient;
 
     @Override
@@ -43,7 +46,7 @@ public class DriverSteps  extends BaseSteps {
         callWithRetry( () -> {
             RouteResponse routeResponse = driverClient.getRoutes();
             List<co.nvqa.commons.model.driver.Route> result = routeResponse.getRoutes();
-            routes.stream().forEach(e -> {
+            routes.forEach(e -> {
                 boolean found = result.stream().anyMatch( o -> o.getId().equals(e));
                 assertFalse("route is shown in driver list routes", found);
             });
@@ -64,16 +67,34 @@ public class DriverSteps  extends BaseSteps {
         }, "driver starts route");
     }
 
+    @Given("^Driver Success Parcel \"([^\"]*)\"$")
+    public void driverDeliverParcelsSuccessfully(String type){
+        getWaypointId(type);
+        driverGetWaypointDetails();
+        createDriverJobs(Job.ACTION_SUCCESS);
+        List<JobV5> jobs = get(KEY_LIST_OF_DRIVER_JOBS);
+        long routeId = get (KEY_CREATED_ROUTE_ID);
+        long waypointId = get(KEY_WAYPOINT_ID);
+        DeliveryRequestV5 request = DriverHelper.createDefaultDeliveryRequestV5(waypointId,jobs);
+        callWithRetry( () -> driverClient.deliverV5(routeId, waypointId, request), "driver success waypoint");
+    }
+
+    @Given("^Driver Success Reservation Pickup$")
+    public void driverSuccessReservationPickup(){
+       driverDeliverParcelsSuccessfully(WAYPOINT_TYPE_RESERVATION);
+    }
+
     private void driverGetWaypointDetails(){
         Route route = get(KEY_CREATED_ROUTE);
         long routeId = route.getId();
         long waypointId = get(KEY_WAYPOINT_ID);
         callWithRetry(() -> {
-            RouteResponse routes = driverClient.getRoutes();
+            List<co.nvqa.commons.model.driver.Route> routes = driverClient.getRoutes().getRoutes();
             try{
-                co.nvqa.commons.model.driver.Route routeDetails = routes.getRoutes().stream().findAny().filter(e-> e.getId() == routeId).get();
+                co.nvqa.commons.model.driver.Route routeDetails = routes.stream().filter( e -> e.getId() == routeId).findAny().get();
                 put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, routeDetails.getWaypoints());
-                Waypoint waypoint = routeDetails.getWaypoints().stream().findAny().filter( e -> e.getId() == waypointId).get();
+                Waypoint waypoint = routeDetails.getWaypoints().stream().filter( e -> e.getId() == waypointId).findAny().get();
+                assertTrue("jobs is not empty", (waypoint.getJobs() !=null && !waypoint.getJobs().isEmpty()));
                 put(KEY_DRIVER_WAYPOINT_DETAILS, waypoint);
             } catch (Exception ex){
                 throw new AssertionError("Waypoint Details are not available in list routes");
@@ -81,13 +102,11 @@ public class DriverSteps  extends BaseSteps {
         }, "driver gets waypoint details");
     }
 
-    private void createPhysicalItems(String trackingId, String action){
-        callWithRetry( () -> {
-            Order order = OrderDetailHelper.getOrderDetails(trackingId);
+    private void createPhysicalItems(co.nvqa.commons.model.driver.Order order, String action){
             co.nvqa.commons.model.driver.Order job = new co.nvqa.commons.model.driver.Order();
             job.setAllowReschedule(false);
             job.setDeliveryType(order.getDeliveryType());
-            job.setTrackingId(trackingId);
+            job.setTrackingId(order.getTrackingId());
             job.setId(order.getId());
             job.setType(order.getType());
             job.setInstruction(order.getInstruction());
@@ -96,6 +115,39 @@ public class DriverSteps  extends BaseSteps {
             job.setAction(action);
             job.setParcelWeight(order.getParcelWeight());
             putInList(KEY_LIST_OF_CREATED_JOB_ORDERS, job);
-        },"create job orders");
+    }
+
+    private void createDriverJobs(String action){
+        Waypoint waypoint = get(KEY_DRIVER_WAYPOINT_DETAILS);
+        List<Job> jobs = waypoint.getJobs();
+        jobs.forEach( e -> {
+            List<co.nvqa.commons.model.driver.Order> parcels = e.getParcels();
+            parcels.forEach(o -> createPhysicalItems(o, action));
+            List<Order> orders = get(KEY_LIST_OF_CREATED_JOB_ORDERS);
+            JobV5 job = createDefaultDriverJobs(e, action);
+            job.setPhysicalItems(orders);
+            putInList(KEY_LIST_OF_DRIVER_JOBS, job);
+        } );
+    }
+
+    private JobV5 createDefaultDriverJobs(Job job, String action){
+        JobV5 request = new JobV5();
+        request.setAction(action);
+        request.setId(job.getId());
+        request.setStatus(job.getStatus());
+        request.setMode(job.getMode());
+        request.setType(job.getType());
+        return request;
+    }
+
+    private void getWaypointId(String transactionType){
+        if(transactionType.equalsIgnoreCase(WAYPOINT_TYPE_RESERVATION)){
+            NvLogger.info("reservation waypoint, no need get from order waypoint");
+            return;
+        }
+        String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+        co.nvqa.commons.model.core.Order order = OrderDetailHelper.getOrderDetails(trackingId);
+        Transaction transaction = OrderDetailHelper.getTransaction(order, transactionType, Transaction.STATUS_PENDING);
+        put(KEY_WAYPOINT_ID, transaction.getWaypointId());
     }
 }
