@@ -62,26 +62,24 @@ public class DriverSteps  extends BaseSteps {
     public void driverStartRoute(){
         Route route = get(KEY_CREATED_ROUTE);
         long routeId = route.getId();
-        callWithRetry(() -> {
-            driverClient.startRoute(routeId);
-        }, "driver starts route");
+        callWithRetry(() -> driverClient.startRoute(routeId), "driver starts route");
     }
 
-    @Given("^Driver Success Parcel \"([^\"]*)\"$")
-    public void driverDeliverParcelsSuccessfully(String type){
+    @Given("^Driver \"([^\"]*)\" Parcel \"([^\"]*)\"$")
+    public void driverDeliverParcels(String action, String type){
         getWaypointId(type);
         driverGetWaypointDetails();
-        createDriverJobs(Job.ACTION_SUCCESS);
+        createDriverJobs(action.toUpperCase());
         List<JobV5> jobs = get(KEY_LIST_OF_DRIVER_JOBS);
         long routeId = get (KEY_CREATED_ROUTE_ID);
         long waypointId = get(KEY_WAYPOINT_ID);
         DeliveryRequestV5 request = DriverHelper.createDefaultDeliveryRequestV5(waypointId,jobs);
-        callWithRetry( () -> driverClient.deliverV5(routeId, waypointId, request), "driver success waypoint");
+        callWithRetry( () -> driverClient.deliverV5(routeId, waypointId, request), "driver attempts waypoint");
     }
 
-    @Given("^Driver Success Reservation Pickup$")
-    public void driverSuccessReservationPickup(){
-       driverDeliverParcelsSuccessfully(WAYPOINT_TYPE_RESERVATION);
+    @Given("^Driver \"([^\"]*)\" Reservation Pickup$")
+    public void driverPickupReservation(String action){
+       driverDeliverParcels(action.toUpperCase(), WAYPOINT_TYPE_RESERVATION);
     }
 
     private void driverGetWaypointDetails(){
@@ -102,7 +100,7 @@ public class DriverSteps  extends BaseSteps {
         }, "driver gets waypoint details");
     }
 
-    private void createPhysicalItems(co.nvqa.commons.model.driver.Order order, String action){
+    private void createPhysicalItems(co.nvqa.commons.model.driver.Order order, String action, String jobType){
             co.nvqa.commons.model.driver.Order job = new co.nvqa.commons.model.driver.Order();
             job.setAllowReschedule(false);
             job.setDeliveryType(order.getDeliveryType());
@@ -114,6 +112,9 @@ public class DriverSteps  extends BaseSteps {
             job.setStatus(order.getStatus());
             job.setAction(action);
             job.setParcelWeight(order.getParcelWeight());
+            if(action.equalsIgnoreCase(Job.ACTION_FAIL)){
+                setOrderFailureReason(jobType, job);
+            }
             putInList(KEY_LIST_OF_CREATED_JOB_ORDERS, job);
     }
 
@@ -122,7 +123,7 @@ public class DriverSteps  extends BaseSteps {
         List<Job> jobs = waypoint.getJobs();
         jobs.forEach( e -> {
             List<co.nvqa.commons.model.driver.Order> parcels = e.getParcels();
-            parcels.forEach(o -> createPhysicalItems(o, action));
+            parcels.forEach(o -> createPhysicalItems(o, action, e.getMode()));
             List<Order> orders = get(KEY_LIST_OF_CREATED_JOB_ORDERS);
             JobV5 job = createDefaultDriverJobs(e, action);
             job.setPhysicalItems(orders);
@@ -149,5 +150,15 @@ public class DriverSteps  extends BaseSteps {
         co.nvqa.commons.model.core.Order order = OrderDetailHelper.getOrderDetails(trackingId);
         Transaction transaction = OrderDetailHelper.getTransaction(order, transactionType, Transaction.STATUS_PENDING);
         put(KEY_WAYPOINT_ID, transaction.getWaypointId());
+    }
+
+    private void setOrderFailureReason(String jobType, Order order){
+        if(jobType.equalsIgnoreCase(Job.TYPE_DELIVERY)){
+            order.setFailureReason(TestConstants.DELIVERY_FAILURE_REASON);
+            order.setFailureReasonId(TestConstants.DELIVERY_FAILURE_REASON_ID);
+        } else {
+            order.setFailureReason(TestConstants.PICKUP_FAILURE_REASON);
+            order.setFailureReasonId(TestConstants.PICKUP_FAILURE_REASON_ID);
+        }
     }
 }
