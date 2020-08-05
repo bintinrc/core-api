@@ -265,15 +265,17 @@ Feature: Route Monitoring V2
     And Operator verifies total pending priority parcels and other details
       |total-expected-waypoints                 | 1 |
       |total-expected-pending-priority-parcels  | 1 |
-    When Operator force "<action>" "DELIVERY" waypoint
-    And Operator Filter Route Monitoring Data for Today's Date
+    When Driver authenticated to login with username "{route-monitoring-driver-username}" and password "{route-monitoring-driver-password}"
+    And Driver Starts the route
+    And Driver "<action>" Parcel "DELIVERY"
+    Then Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies total pending priority parcels is now 0
     And Operator get empty pending priority parcel details for "dd"
 
     Examples:
       | Note      | hiptest-uid                              |action    |service_type | service_level |parcel_job_is_pickup_required|
       | Failed    | uid:fc3071a6-109e-483d-a658-e2d7ea215f80 |FAIL      |Parcel       | Standard      |false                        |
-      | Success   | uid:88c82f11-db09-493b-acb5-a93d87dbb23f |SUCCESSS  |Parcel       | Standard      |false                        |
+      | Success   | uid:88c82f11-db09-493b-acb5-a93d87dbb23f |SUCCESS   |Parcel       | Standard      |false                        |
 
 
   @rmv2-pending-priority-parcels
@@ -295,12 +297,14 @@ Feature: Route Monitoring V2
     And Operator verifies total pending priority parcels and other details
       |total-expected-waypoints                 | 1 |
       |total-expected-pending-priority-parcels  | 1 |
-    When Operator force "<action>" "PICKUP" waypoint
-    And Operator Filter Route Monitoring Data for Today's Date
+    When Driver authenticated to login with username "{route-monitoring-driver-username}" and password "{route-monitoring-driver-password}"
+    And Driver Starts the route
+    And Driver "<action>" Parcel "PICKUP"
+    When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies total pending priority parcels is now 0
     And Operator get empty pending priority parcel details for "pp"
 
     Examples:
       | Note      | hiptest-uid                              |action    |service_type | service_level |parcel_job_is_pickup_required|
       | Failed    | uid:7bb5bc99-d1bd-4385-8ec0-e2d3ca34085a |FAIL      |Return       | Standard      |true                         |
-      | Success   | uid:93ba3047-3e8e-4591-aa63-be7cbdcf5ecc |SUCCESSS  |Return       | Standard      |true                         |
+      | Success   | uid:93ba3047-3e8e-4591-aa63-be7cbdcf5ecc |SUCCESS   |Return       | Standard      |true                         |
