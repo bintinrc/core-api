@@ -276,8 +276,7 @@ Feature: Route Monitoring V2
       | Note      | hiptest-uid                              |action    |service_type | service_level |parcel_job_is_pickup_required|
       | Failed    | uid:fc3071a6-109e-483d-a658-e2d7ea215f80 |FAIL      |Parcel       | Standard      |false                        |
       | Success   | uid:88c82f11-db09-493b-acb5-a93d87dbb23f |SUCCESS   |Parcel       | Standard      |false                        |
-
-
+    
   @rmv2-pending-priority-parcels
   Scenario Outline: Exclude Attempted PRIOR Parcel as Pending Priority On Route Monitoring - Pickup - <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{route-monitoring-shipper-client-id}" and client secret "{route-monitoring-shipper-client-secret}"
@@ -308,3 +307,40 @@ Feature: Route Monitoring V2
       | Note      | hiptest-uid                              |action    |service_type | service_level |parcel_job_is_pickup_required|
       | Failed    | uid:7bb5bc99-d1bd-4385-8ec0-e2d3ca34085a |FAIL      |Return       | Standard      |true                         |
       | Success   | uid:93ba3047-3e8e-4591-aa63-be7cbdcf5ecc |SUCCESS   |Return       | Standard      |true                         |
+
+  @rmv2-pending-priority-parcels
+  Scenario Outline: Operator Get Pending Priority Parcel Details Inside a Route with NON-PRIOR Waypoints (Reservation & Non-PRIOR Delivery) - <Note> - <hiptest-uid>
+    Given Shipper authenticates using client id "{route-monitoring-shipper-client-id}" and client secret "{route-monitoring-shipper-client-secret}"
+    When Shipper create order with parameters below
+      |service_type                  | <service_type>                  |
+      |service_level                 | <service_level>                 |
+      |parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
+    And Operator tags order with PRIOR tag
+    And Operator create an empty route
+      | driver_id  | {route-monitoring-driver-id}  |
+      | hub_id     | {sorting-hub-id}     |
+      | vehicle_id | {vehicle-id}         |
+      | zone_id    | {zone-id}            |
+    And Operator add order to driver "DD" route
+    When Shipper create order with parameters below
+      |service_type                  | <service_type>                  |
+      |service_level                 | <service_level>                 |
+      |parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
+    And Operator add order to driver "DD" route
+    When Shipper create order with parameters below
+      |service_type                  | <service_type>                  |
+      |service_level                 | <service_level>                 |
+      |parcel_job_is_pickup_required | true                            |
+    And Operator Search for Created Pickup for Shipper "{route-monitoring-shipper-legacy-id}" with status "PENDING"
+    And Operator Route the Reservation Pickup
+    When Operator Filter Route Monitoring Data for Today's Date
+    And Operator verifies total pending priority parcels and other details
+      |total-expected-waypoints                 | 3 |
+      |total-expected-pending-priority-parcels  | 1 |
+    And Operator get pending priority parcel details for "DD"
+    And Operator verifies pending priority parcel details
+
+    Examples:
+      | Note      | hiptest-uid                              | service_type | service_level |parcel_job_is_pickup_required|
+      |           | uid:ee4c2d09-e6ed-4ba9-996c-6fa1036e71ce | Parcel       | Standard      |false                        |
+
