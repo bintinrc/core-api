@@ -13,6 +13,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.guice.ScenarioScoped;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -102,7 +103,7 @@ public class RouteMonitoringSteps extends BaseSteps {
     @When("^Operator get pending priority parcel details for \"([^\"]*)\"$")
     public void operatorGetPendingPriorityParcelDetails(String type){
         long routeId = get(KEY_CREATED_ROUTE_ID);
-        List<String> trackingIds =  get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+        List<String> trackingIds =  get(OrderActionSteps.KEY_LIST_OF_PRIOR_TRACKING_IDS);
         put(WAYPOINT_TYPE_TRANSACTION, type);
         callWithRetry(() -> {
             List<Waypoint> waypoints = getRouteClient().getPendingPriorityParcelDetails(routeId,type);
@@ -116,7 +117,7 @@ public class RouteMonitoringSteps extends BaseSteps {
 
     @When("^Operator verifies pending priority parcel details$")
     public void operatorVerifiesPendingPriorityParcelDetails(){
-        List<OrderRequestV4> transactionDetails =  get(OrderCreateSteps.KEY_LIST_OF_ORDER_CREATE_RESPONSE);
+        List<OrderRequestV4> transactionDetails =  getListOfPendingPriorityDetails();
         Map<String, OrderRequestV4> requestMap = get(OrderCreateSteps.KEY_LIST_OF_ORDER_CREATE_REQUEST);
         String type = get(WAYPOINT_TYPE_TRANSACTION);
         callWithRetry(() -> {
@@ -290,6 +291,19 @@ public class RouteMonitoringSteps extends BaseSteps {
             });
         }
         return requestedOrderDetails;
+    }
+
+    private List<OrderRequestV4> getListOfPendingPriorityDetails(){
+        List<OrderRequestV4> requestedOrderDetails = get(OrderCreateSteps.KEY_LIST_OF_ORDER_CREATE_RESPONSE);
+        List<String> priorTrackingIds = get(OrderActionSteps.KEY_LIST_OF_PRIOR_TRACKING_IDS);
+        List<OrderRequestV4> result = new ArrayList<>();
+        if(priorTrackingIds != null) {
+            priorTrackingIds.forEach( e ->  {
+                OrderRequestV4 temp = requestedOrderDetails.stream().filter(o -> o.getTrackingNumber().equalsIgnoreCase(e)).findAny().get();
+                result.add(temp);
+            });
+        }
+        return result;
     }
 
     private void checkRouteDetails(RouteMonitoringResponse result){
