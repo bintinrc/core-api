@@ -32,7 +32,7 @@ Feature: Route Monitoring V2
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies Route Monitoring Data Has Correct Details for Pending Case
       |total-expected-waypoints     | 1 |
-    And Operator verifies waypoint details for pending case
+    And Operator verifies waypoint details for "pending" waypoint
     When Operator pull order out of "<transaction_type>" route
     And Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data for Empty Route has correct details
@@ -64,7 +64,7 @@ Feature: Route Monitoring V2
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Pending Case
       |total-expected-waypoints     | 1 |
-    And Operator verifies waypoint details for pending case
+    And Operator verifies waypoint details for "pending" waypoint
 
     Examples:
       | Note      | hiptest-uid                              |route_type | service_type | service_level |parcel_job_is_pickup_required|
@@ -89,7 +89,7 @@ Feature: Route Monitoring V2
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies Route Monitoring Data Has Correct Details for Pending Case
       |total-expected-waypoints     | 1 |
-    And Operator verifies waypoint details for pending case
+    And Operator verifies waypoint details for "pending" waypoint
     When Operator Pull Reservation Out of Route
     And Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data for Empty Route has correct details
@@ -124,7 +124,7 @@ Feature: Route Monitoring V2
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Pending Case
       |total-expected-waypoints     | 2 |
-    And Operator verifies waypoint details for pending case
+    And Operator verifies waypoint details for "pending" waypoint
 
     Examples:
       | Note           | hiptest-uid                              |route_type | service_type | service_level |parcel_job_is_pickup_required|
@@ -153,12 +153,12 @@ Feature: Route Monitoring V2
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Pending Case
       |total-expected-waypoints     | 2 |
-    And Operator verifies waypoint details for pending case
+    And Operator verifies waypoint details for "pending" waypoint
     When Operator pull order out of "<transaction_type>" route
     And Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Pending Case
       |total-expected-waypoints     | 1 |
-    And Operator verifies waypoint details for pending case
+    And Operator verifies waypoint details for "pending" waypoint
 
     Examples:
       | Note                              | hiptest-uid                              |route_type |transaction_type| service_type | service_level |parcel_job_is_pickup_required|
@@ -208,7 +208,7 @@ Feature: Route Monitoring V2
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Pending Case
       |total-expected-waypoints     | 5 |
-    And Operator verifies waypoint details for pending case
+    And Operator verifies waypoint details for "pending" waypoint
     When Operator pull order out of "PICKUP" route
     And Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Pending Case
@@ -343,4 +343,120 @@ Feature: Route Monitoring V2
     Examples:
       | Note      | hiptest-uid                              | service_type | service_level |parcel_job_is_pickup_required|
       |           | uid:ee4c2d09-e6ed-4ba9-996c-6fa1036e71ce | Parcel       | Standard      |false                        |
+
+  @rmv2-invalid-failed-deliveries
+  Scenario Outline: Operator Get Invalid Failed Deliveries Details After Driver Failed with Invalid Reason - Order with No Tags - <hiptest-uid>
+    Given Shipper authenticates using client id "{route-monitoring-shipper-client-id}" and client secret "{route-monitoring-shipper-client-secret}"
+    When Shipper creates multiple orders :"3" orders
+      |service_type                  | <service_type>                  |
+      |service_level                 | <service_level>                 |
+      |requested_tracking_number     | <requested_tracking_number>     |
+      |parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
+    And Operator inbounds all orders at hub "{sorting-hub-id}"
+    And Operator create an empty route
+      | driver_id  | {route-monitoring-driver-id}  |
+      | hub_id     | {sorting-hub-id}     |
+      | vehicle_id | {vehicle-id}         |
+      | zone_id    | {zone-id}            |
+    And Operator add all orders to driver "DD" route
+    When Driver authenticated to login with username "{route-monitoring-driver-username}" and password "{route-monitoring-driver-password}"
+    And Driver Starts the route
+    And Driver "<action>" "DELIVERY" for All Orders
+    When Operator Filter Route Monitoring Data for Today's Date
+    Then Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints
+      |total-expected-waypoints                 | 3 |
+      |total-expected-invalid-failed            | 3 |
+    When Operator get invalid failed deliveries parcel details
+    Then Operator verifies invalid failed deliveries parcel details
+
+    Examples:
+      | Note      | hiptest-uid                              |action    |service_type | service_level |parcel_job_is_pickup_required|
+      |           | uid:0a866bb1-4faa-4bc7-88ed-0f6e6c167b04 |FAIL      |Parcel       | Standard      |false                        |
+
+  @rmv2-pending-priority-parcels
+  Scenario Outline: Operator Get Invalid Failed Deliveries Details After Driver Failed with Invalid Reason - Order Has PRIOR Tag - <hiptest-uid>
+    Given Shipper authenticates using client id "{route-monitoring-shipper-client-id}" and client secret "{route-monitoring-shipper-client-secret}"
+    When Shipper creates multiple orders :"2" orders
+      |service_type                  | <service_type>                  |
+      |service_level                 | <service_level>                 |
+      |requested_tracking_number     | <requested_tracking_number>     |
+      |parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
+    And Operator inbounds all orders at hub "{sorting-hub-id}"
+    And Operator tags all orders with PRIOR tag
+    And Operator create an empty route
+      | driver_id  | {route-monitoring-driver-id}  |
+      | hub_id     | {sorting-hub-id}     |
+      | vehicle_id | {vehicle-id}         |
+      | zone_id    | {zone-id}            |
+    And Operator add all orders to driver "<route_type>" route
+    When Driver authenticated to login with username "{route-monitoring-driver-username}" and password "{route-monitoring-driver-password}"
+    And Driver Starts the route
+    And Driver "FAIL" "DELIVERY" for All Orders
+    When Operator Filter Route Monitoring Data for Today's Date
+    Then Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints
+      |total-expected-waypoints                 | 2 |
+      |total-expected-invalid-failed            | 2 |
+    When Operator get invalid failed deliveries parcel details
+    Then Operator verifies invalid failed deliveries parcel details
+
+    Examples:
+      | Note      | hiptest-uid                              |route_type |service_type | service_level |parcel_job_is_pickup_required|
+      |           | uid:c48d6ef8-f5e8-49fb-9eef-d92744829d9a |DD         |Parcel       | Standard      |false                        |
+
+
+  @rmv2-invalid-failed-deliveries
+  Scenario Outline: Operator Get Invalid Failed Deliveries Details on Route with NON-Invalid Failed Deliveries (Failed Delivery with Valid Reason) - <hiptest-uid>
+    Given Shipper authenticates using client id "{route-monitoring-shipper-client-id}" and client secret "{route-monitoring-shipper-client-secret}"
+    When Shipper create order with parameters below
+      |service_type                  | <service_type>                  |
+      |service_level                 | <service_level>                 |
+      |requested_tracking_number     | <requested_tracking_number>     |
+      |parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
+    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator create an empty route
+      | driver_id  | {route-monitoring-driver-id}  |
+      | hub_id     | {sorting-hub-id}     |
+      | vehicle_id | {vehicle-id}         |
+      | zone_id    | {zone-id}            |
+    And Operator add order to driver "DD" route
+    When Driver authenticated to login with username "{route-monitoring-driver-username}" and password "{route-monitoring-driver-password}"
+    And Driver Starts the route
+    And Driver Fails Parcel "DELIVERY" with Valid Reason
+    When Operator Filter Route Monitoring Data for Today's Date
+    Then Operator get empty invalid failed deliveries parcel details
+
+    Examples:
+      | Note      | hiptest-uid                              |service_type | service_level |parcel_job_is_pickup_required|
+      |           | uid:ef58d1f6-0fc8-452d-9fb8-4e218322ec77 |Parcel       | Standard      |false                        |
+
+  @rmv2-invalid-failed-deliveries
+  Scenario Outline: Operator Get Invalid Failed Deliveries Details on Route with NON-Invalid Failed Deliveries (Pending Delivery & Reservation) - <hiptest-uid>
+    Given Shipper authenticates using client id "{route-monitoring-shipper-client-id}" and client secret "{route-monitoring-shipper-client-secret}"
+    When Shipper create order with parameters below
+      |service_type                  | <service_type>                  |
+      |service_level                 | <service_level>                 |
+      |requested_tracking_number     | <requested_tracking_number>     |
+      |parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
+    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator create an empty route
+      | driver_id  | {route-monitoring-driver-id}  |
+      | hub_id     | {sorting-hub-id}     |
+      | vehicle_id | {vehicle-id}         |
+      | zone_id    | {zone-id}            |
+    And Operator add order to driver "DD" route
+    When Shipper create order with parameters below
+      |service_type                  | <service_type>                  |
+      |service_level                 | <service_level>                 |
+      |parcel_job_is_pickup_required | true                            |
+    And Operator Search for Created Pickup for Shipper "{route-monitoring-shipper-legacy-id}" with status "PENDING"
+    And Operator Route the Reservation Pickup
+    When Operator Filter Route Monitoring Data for Today's Date
+    Then Operator verifies total invalid failed deliveries is 0 and other details
+    And Operator get empty invalid failed deliveries parcel details
+
+    Examples:
+      | Note      | hiptest-uid                              |service_type | service_level |parcel_job_is_pickup_required|
+      |           | uid:9eb23b81-043d-4581-8e9e-add8d7a7f99d |Parcel       | Standard      |false                        |
+
+
 

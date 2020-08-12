@@ -4,6 +4,7 @@ import co.nvqa.commons.model.core.Order;
 import co.nvqa.commons.model.core.Transaction;
 import co.nvqa.commons.model.core.event.Event;
 import co.nvqa.commons.util.NvLogger;
+import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import cucumber.api.java.en.Then;
@@ -27,12 +28,12 @@ public class OrderActionSteps extends BaseSteps {
     public static final String KEY_LIST_OF_PRIOR_TRACKING_IDS = "key-list-prior-tracking-ids";
 
     @Override
-    public void init(){
+    public void init() {
 
     }
 
     @Then("^Operator search for created order$")
-    public void operatorSearchOrderByTrackingId(){
+    public void operatorSearchOrderByTrackingId() {
         String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
         callWithRetry(() -> {
             NvLogger.infof("retrieve created order details from core orders for tracking id %s", trackingId);
@@ -46,7 +47,7 @@ public class OrderActionSteps extends BaseSteps {
     }
 
     @Then("^Operator search for \"([^\"]*)\" transaction with status \"([^\"]*)\"$")
-    public void operatorSearchTransaction(String type, String status){
+    public void operatorSearchTransaction(String type, String status) {
         String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
         callWithRetry(() -> {
             Order order = getOrderDetails(trackingId);
@@ -56,34 +57,34 @@ public class OrderActionSteps extends BaseSteps {
             NvLogger.successf("retrieved transaction for id %d", transaction.getId());
             put(KEY_TRANSACTION_DETAILS, transaction);
             put(KEY_TRANSACTION_ID, transaction.getId());
-            putInList(KEY_LIST_OF_TRANSACTION_IDS,transaction.getId());
+            putInList(KEY_LIST_OF_TRANSACTION_IDS, transaction.getId());
             putInList(KEY_LIST_OF_WAYPOINT_IDS, transaction.getWaypointId());
             put(KEY_WAYPOINT_ID, transaction.getWaypointId());
         }, "retrieve transaction details from core");
     }
 
     @Then("^Operator search for multiple \"([^\"]*)\" transactions with status \"([^\"]*)\"$")
-    public void operatorSearchMultipleTransaction(String type, String status){
+    public void operatorSearchMultipleTransaction(String type, String status) {
         List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-        trackingIds.forEach( e -> {
+        trackingIds.forEach(e -> {
             put(KEY_CREATED_ORDER_TRACKING_ID, e);
             operatorSearchTransaction(type, status);
         });
     }
 
     @Then("^Operator checks that \"([^\"]*)\" event is published$")
-    public void operatortVerifiesOrderEvent(String event){
+    public void operatortVerifiesOrderEvent(String event) {
         long orderId = get(KEY_CREATED_ORDER_ID);
         callWithRetry(() -> {
             Event result = getOrderEvent(event, orderId);
             assertEquals(String.format("%s event is published", event), event.toLowerCase(), result.getType().toLowerCase());
-        }, String.format("%s event is published for order id %d",event, orderId));
+        }, String.format("%s event is published for order id %d", event, orderId));
     }
 
     @Then("^Operator checks that for all orders, \"([^\"]*)\" event is published$")
-    public void operatortVerifiesOrderEventForEach(String event){
+    public void operatortVerifiesOrderEventForEach(String event) {
         List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-        trackingIds.forEach( e -> {
+        trackingIds.forEach(e -> {
             put(KEY_CREATED_ORDER_TRACKING_ID, e);
             operatorSearchOrderByTrackingId();
             operatortVerifiesOrderEvent(event);
@@ -92,40 +93,40 @@ public class OrderActionSteps extends BaseSteps {
     }
 
     @When("^Operator force success order$")
-    public void operatorForceSuccessOrder(){
+    public void operatorForceSuccessOrder() {
         long orderId = get(KEY_CREATED_ORDER_ID);
-        callWithRetry( () -> {
+        callWithRetry(() -> {
             getOrderClient().forceSuccess(orderId);
             NvLogger.success(DOMAIN, String.format("order id %d force successed", orderId));
-        },"force success order");
+        }, "force success order");
     }
 
     @When("^Operator force \"([^\"]*)\" \"([^\"]*)\" waypoint$")
-    public void operatorForceFailOrder(String action, String type){
+    public void operatorForceFailOrder(String action, String type) {
         operatorSearchTransaction(type, Transaction.STATUS_PENDING);
         long waypointId = get(KEY_WAYPOINT_ID);
         long routeId = get(KEY_CREATED_ROUTE_ID);
         callWithRetry(() -> {
-            if(action.equalsIgnoreCase(ACTION_FAIL)){
+            if (action.equalsIgnoreCase(ACTION_FAIL)) {
                 getOrderClient().forceFailWaypoint(routeId, waypointId, TestConstants.FAILURE_REASON_ID);
             } else {
                 getOrderClient().forceSuccessWaypoint(routeId, waypointId);
             }
-            NvLogger.success(DOMAIN, String.format("waypoint id %d forced %s",waypointId, action));
+            NvLogger.success(DOMAIN, String.format("waypoint id %d forced %s", waypointId, action));
         }, String.format("admin force finish %s", action));
     }
 
     @When("^Operator tags order with PRIOR tag$")
-    public void tagPriorOrder(){
+    public void tagPriorOrder() {
         long tagId = TestConstants.ORDER_TAG_PRIOR_ID;
         operatorTagsOrder(tagId);
     }
 
     @When("^Operator tags order with tag id \"([^\"]*)\"$")
-    public void operatorTagsOrder(long tagId){
+    public void operatorTagsOrder(long tagId) {
         String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
         List<Long> tagIds = Arrays.asList(tagId);
-        callWithRetry( () -> {
+        callWithRetry(() -> {
             long orderId = searchOrder(trackingId).getId();
             getOrderClient().addOrderLevelTags(orderId, tagIds);
             put(KEY_LIST_OF_ORDER_TAG_IDS, tagIds);
@@ -134,7 +135,7 @@ public class OrderActionSteps extends BaseSteps {
     }
 
     @When("^Operator tags all orders with PRIOR tag$")
-    public void tagMultipleOrders(){
+    public void tagMultipleOrders() {
         List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
         trackingIds.forEach(e -> {
             put(KEY_CREATED_ORDER_TRACKING_ID, e);
@@ -146,36 +147,29 @@ public class OrderActionSteps extends BaseSteps {
         return getOrderSearchClient().searchOrderByTrackingId(trackingIdOrStampId);
     }
 
-    private Order getOrderDetails(String trackingId){
+    private Order getOrderDetails(String trackingId) {
         long orderId = searchOrder(trackingId).getId();
         Order order = getOrderClient().getOrder(orderId);
-        assertNotNull("order details",order);
+        assertNotNull("order details", order);
         return order;
     }
 
-    private Transaction getTransaction(Order order, String type, String status){
+    private Transaction getTransaction(Order order, String type, String status) {
         List<Transaction> transactions = order.getTransactions();
         Transaction result;
-        try {
-             result = transactions.stream()
-                    .filter(e-> e.getType().equalsIgnoreCase(type))
-                    .filter(e-> e.getStatus().equalsIgnoreCase(status))
-                    .findAny().get();
-
-        } catch (Exception ex) {
-            throw new AssertionError(ex);
-        }
+        result = transactions.stream()
+                .filter(e -> e.getType().equalsIgnoreCase(type))
+                .filter(e -> e.getStatus().equalsIgnoreCase(status))
+                .findAny().orElseThrow(() -> new NvTestRuntimeException("transaction details not found"));
         return result;
     }
 
-    private Event getOrderEvent(String event, long orderId){
+    private Event getOrderEvent(String event, long orderId) {
         List<Event> events = getEventClient().getOrderEventsByOrderId(orderId).getData();
         Event result;
-        try {
-            result = events.stream().filter(e-> e.getType().equalsIgnoreCase(event)).findAny().get();
-        } catch (Exception ex){
-            throw new AssertionError(ex);
-        }
+        result = events.stream()
+                .filter(e -> e.getType().equalsIgnoreCase(event))
+                .findAny().orElseThrow(() -> new NvTestRuntimeException("order event details not found"));
         return result;
     }
 }

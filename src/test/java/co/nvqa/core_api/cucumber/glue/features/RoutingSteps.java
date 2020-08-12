@@ -30,18 +30,18 @@ public class RoutingSteps extends BaseSteps {
     public static final String KEY_LIST_OF_PULL_OUT_OF_ROUTE_TRACKING_ID = "key-list-pull-out-of-route-tracking-id";
 
     @Override
-    public void init(){
+    public void init() {
 
     }
 
     @When("^Operator create an empty route$")
-    public void operatorCreateEmptyRoute(Map<String, String> arg1){
+    public void operatorCreateEmptyRoute(Map<String, String> arg1) {
         String json = toJsonCamelCase(arg1);
         Route route = fromJsonSnakeCase(json, Route.class);
         route.setComments("Created for Core API testing, created at: " + DateUtil.getTodayDateTime_YYYY_MM_DD_HH_MM_SS());
-        route.setTags(Arrays.asList(1,4));
+        route.setTags(Arrays.asList(1, 4));
         route.setDate(generateUTCTodayDate());
-        callWithRetry( () -> {
+        callWithRetry(() -> {
             Route result = getRouteClient().createRoute(route);
             assertNotNull("created route", route);
             put(KEY_CREATED_ROUTE, result);
@@ -53,7 +53,7 @@ public class RoutingSteps extends BaseSteps {
     }
 
     @When("^Operator add order to driver \"([^\"]*)\" route$")
-    public void operatorAddOrderToRoute(String type){
+    public void operatorAddOrderToRoute(String type) {
         callWithRetry(() -> {
             String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
             long routeId = get(KEY_CREATED_ROUTE_ID);
@@ -67,7 +67,7 @@ public class RoutingSteps extends BaseSteps {
     }
 
     @When("^Operator add all orders to driver \"([^\"]*)\" route$")
-    public void operatorAddMultipleOrdersToRoute(String type){
+    public void operatorAddMultipleOrdersToRoute(String type) {
         List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
         trackingIds.forEach(e -> {
             put(KEY_CREATED_ORDER_TRACKING_ID, e);
@@ -76,8 +76,8 @@ public class RoutingSteps extends BaseSteps {
     }
 
     @When("^Operator delete driver route$")
-    public void operatorDeleteRoute(){
-        callWithRetry( () -> {
+    public void operatorDeleteRoute() {
+        callWithRetry(() -> {
             long routeId = get(KEY_CREATED_ROUTE_ID);
             getRouteClient().deleteRoute(routeId);
             NvLogger.success(DOMAIN, String.format("route %d is successfully deleted", routeId));
@@ -85,8 +85,8 @@ public class RoutingSteps extends BaseSteps {
     }
 
     @When("^Operator delete multiple driver routes$")
-    public void operatorDeleteMultipleRoute(){
-        callWithRetry( () -> {
+    public void operatorDeleteMultipleRoute() {
+        callWithRetry(() -> {
             List<Long> routeIds = get(KEY_LIST_OF_CREATED_ROUTE_ID);
             getRouteClient().deleteMultipleRoutes(routeIds);
             NvLogger.success(DOMAIN, String.format("route %s is successfully deleted", Arrays.toString(routeIds.toArray())));
@@ -94,9 +94,9 @@ public class RoutingSteps extends BaseSteps {
     }
 
     @When("^Operator delete driver route with status code \"([^\"]*)\"$")
-    public void operatorDeleteRouteUnSuccessFully(int statusCode){
+    public void operatorDeleteRouteUnSuccessFully(int statusCode) {
         long routeId = get(KEY_CREATED_ROUTE_ID);
-        callWithRetry( () -> {
+        callWithRetry(() -> {
             Response response = getRouteClient().deleteRouteAndGetRawResponse(routeId);
             response.then().assertThat().contentType(ContentType.JSON);
             response.then().assertThat().statusCode(statusCode);
@@ -105,9 +105,9 @@ public class RoutingSteps extends BaseSteps {
     }
 
     @When("^Operator archives driver route$")
-    public void operatorArchiveRoute(){
+    public void operatorArchiveRoute() {
         long routeId = get(KEY_CREATED_ROUTE_ID);
-        callWithRetry(()-> {
+        callWithRetry(() -> {
             ArchiveRouteResponse response = getRouteClient().archiveRoute(routeId);
             boolean found = response.getArchivedRouteIds().stream().anyMatch(e -> e.equals(routeId));
             assertTrue("archived route found", found);
@@ -117,10 +117,10 @@ public class RoutingSteps extends BaseSteps {
     }
 
     @When("^Operator archives multiple driver routes$")
-    public void operatorArchiveMultipleRoutes(){
+    public void operatorArchiveMultipleRoutes() {
         List<Long> routes = get(KEY_LIST_OF_CREATED_ROUTE_ID);
-        long[] request = routes.stream().mapToLong( e->e).toArray();
-        callWithRetry(()-> {
+        long[] request = routes.stream().mapToLong(e -> e).toArray();
+        callWithRetry(() -> {
             ArchiveRouteResponse response = getRouteClient().archiveRoutes(request);
             boolean found = response.getArchivedRouteIds().containsAll(routes);
             assertTrue("archived route found", found);
@@ -130,9 +130,9 @@ public class RoutingSteps extends BaseSteps {
     }
 
     @When("^Operator archives invalid driver route$")
-    public void operatorArchiveRouteInvalid(){
+    public void operatorArchiveRouteInvalid() {
         long routeId = get(KEY_CREATED_ROUTE_ID, 0L);
-        callWithRetry(()-> {
+        callWithRetry(() -> {
             ArchiveRouteResponse response = getRouteClient().archiveRoute(routeId);
             boolean found = response.getUnarchivedRouteIds().stream().anyMatch(e -> e.equals(routeId));
             assertTrue("unarchived route found", found);
@@ -142,20 +142,20 @@ public class RoutingSteps extends BaseSteps {
     }
 
     @When("^Operator archives driver the same archived route$")
-    public void operatorArchiveSameRoute(){
+    public void operatorArchiveSameRoute() {
         operatorArchiveRoute();
     }
 
     @When("^Operator merge transaction waypoints$")
-    public void operatorMergeRoute(){
+    public void operatorMergeRoute() {
         long routeId = get(KEY_CREATED_ROUTE_ID);
-        callWithRetry(()-> {
+        callWithRetry(() -> {
             getRouteClient().mergeTransactions(routeId);
         }, "merge transaction waypoints");
     }
 
     @When("^Operator pull order out of \"([^\"]*)\" route$")
-    public void operatorPullOutOfRoute(String type){
+    public void operatorPullOutOfRoute(String type) {
         callWithRetry(() -> {
             String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
             Order order = OrderDetailHelper.getOrderDetails(trackingId);
@@ -163,7 +163,8 @@ public class RoutingSteps extends BaseSteps {
             putInList(KEY_LIST_OF_PULL_OUT_OF_ROUTE_TRACKING_ID, trackingId);
         }, "pull out of route");
     }
-    private String generateUTCTodayDate(){
+
+    private String generateUTCTodayDate() {
         ZonedDateTime startDateTime = DateUtil.getStartOfDay(DateUtil.getDate());
         return DateUtil
                 .displayDateTime(startDateTime.withZoneSameInstant(ZoneId.of("UTC")));
@@ -175,9 +176,9 @@ public class RoutingSteps extends BaseSteps {
 
         try {
             if (routeIds != null) {
-                routeIds.forEach( e ->
+                routeIds.forEach(e ->
                         callWithRetry(() -> getRouteClient().archiveRoute(e)
-                        , "try to archive created routes") );
+                                , "try to archive created routes"));
             }
         } catch (Throwable t) {
             NvLogger.warn("Failed to archive route(s)");

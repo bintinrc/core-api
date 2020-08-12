@@ -20,11 +20,11 @@ public class OrderCreateSteps extends BaseSteps {
 
     public static final String KEY_LIST_OF_ORDER_CREATE_RESPONSE = "key-list-of-order-create-response";
     public static final String KEY_LIST_OF_ORDER_CREATE_REQUEST = "key-list-of-order-create-request";
-    private static final String  DOMAIN = "ORDER-CREATION-STEPS";
+    private static final String DOMAIN = "ORDER-CREATION-STEPS";
     private OrderCreateClientV4 orderCreateClientV4;
 
     @Override
-    public void init(){
+    public void init() {
 
     }
 
@@ -36,9 +36,9 @@ public class OrderCreateSteps extends BaseSteps {
     }
 
     @Given("^Shipper create order with parameters below$")
-    public void shipperCreateOrder(Map<String, String> source){
+    public void shipperCreateOrder(Map<String, String> source) {
         OrderRequestV4 request = OrderCreateHelper.generateOrderV4(source);
-        callWithRetry( () -> {
+        callWithRetry(() -> {
             OrderRequestV4 result = orderCreateClientV4.createOrder(request, "4.1");
             NvLogger.success(DOMAIN, "order created tracking id: " + result.getTrackingNumber());
             put(KEY_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
@@ -51,10 +51,10 @@ public class OrderCreateSteps extends BaseSteps {
     }
 
     @Given("^Shipper create another order with the same parameters as before$")
-    public void shipperCreateAnotherOrderWithSameParams(){
+    public void shipperCreateAnotherOrderWithSameParams() {
         OrderRequestV4 request = get(KEY_ORDER_CREATE_REQUEST);
         request.setRequestedTrackingNumber("");
-        callWithRetry( () -> {
+        callWithRetry(() -> {
             OrderRequestV4 result = orderCreateClientV4.createOrder(request, "4.1");
             NvLogger.success(DOMAIN, "order created tracking id: " + result.getTrackingNumber());
             put(KEY_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
@@ -65,9 +65,9 @@ public class OrderCreateSteps extends BaseSteps {
     }
 
     @Given("^Shipper creates multiple orders :\"([^\"]*)\" orders$")
-    public void shipperCreateMultiplesOrders(String numberOfOrders, Map<String, String> source){
+    public void shipperCreateMultiplesOrders(String numberOfOrders, Map<String, String> source) {
         int n = Integer.parseInt(numberOfOrders);
-        for(int i=0; i< n; i++){
+        for (int i = 0; i < n; i++) {
             shipperCreateOrder(source);
         }
     }

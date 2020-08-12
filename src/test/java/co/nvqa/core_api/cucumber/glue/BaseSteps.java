@@ -33,8 +33,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
     }
 
     @SuppressWarnings("unchecked")
-    protected void callWithRetry(Runnable runnable, String methodName, int maxRetry)
-    {
+    protected void callWithRetry(Runnable runnable, String methodName, int maxRetry) {
         retryIfExpectedExceptionOccurred(runnable, methodName, NvLogger::warn, DEFAULT_FALLBACK_MS, maxRetry, AssertionError.class, RuntimeException.class);
     }
 
@@ -42,73 +41,57 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
         StandardTestUtils.pause2s();
     }
 
-    protected synchronized RouteClient getRouteClient()
-    {
-        if (routeClient == null)
-        {
+    protected synchronized RouteClient getRouteClient() {
+        if (routeClient == null) {
             routeClient = new RouteClient(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());
         }
         return routeClient;
     }
 
-    protected static synchronized OrderSearchClient getOrderSearchClient()
-    {
-        if (orderSearchClient == null)
-        {
+    protected static synchronized OrderSearchClient getOrderSearchClient() {
+        if (orderSearchClient == null) {
             orderSearchClient = new OrderSearchClient(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());
         }
         return orderSearchClient;
     }
 
-    protected static synchronized OrderClient getOrderClient()
-    {
-        if (orderClient == null)
-        {
+    protected static synchronized OrderClient getOrderClient() {
+        if (orderClient == null) {
             orderClient = new OrderClient(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());
         }
         return orderClient;
     }
 
-    protected synchronized EventClient getEventClient()
-    {
-        if (eventClient == null)
-        {
+    protected synchronized EventClient getEventClient() {
+        if (eventClient == null) {
             eventClient = new EventClient(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());
         }
         return eventClient;
     }
 
-    protected synchronized ShipperPickupClient getShipperPickupClient()
-    {
-        if (shipperPickupClient == null)
-        {
+    protected synchronized ShipperPickupClient getShipperPickupClient() {
+        if (shipperPickupClient == null) {
             shipperPickupClient = new ShipperPickupClient(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());
         }
         return shipperPickupClient;
     }
 
-    protected synchronized ReservationV2Client getReservationV2Client()
-    {
-        if (reservationV2Client == null)
-        {
+    protected synchronized ReservationV2Client getReservationV2Client() {
+        if (reservationV2Client == null) {
             reservationV2Client = new ReservationV2Client(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());
         }
         return reservationV2Client;
     }
 
-    protected synchronized InboundClient getInboundClient()
-    {
-        if (inboundClient == null)
-        {
+    protected synchronized InboundClient getInboundClient() {
+        if (inboundClient == null) {
             inboundClient = new InboundClient(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());
         }
         return inboundClient;
     }
 
-    protected synchronized ShipperClient getShipperClient()
-    {
-        if (shipperClient == null)
-        {
+    protected synchronized ShipperClient getShipperClient() {
+        if (shipperClient == null) {
             shipperClient = new ShipperClient(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());
         }
         return shipperClient;
