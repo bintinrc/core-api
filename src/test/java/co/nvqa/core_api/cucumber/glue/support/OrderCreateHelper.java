@@ -24,12 +24,12 @@ import java.util.stream.Stream;
  */
 public class OrderCreateHelper {
 
-    private static final String KEY_REQUESTED_TIMESLOT_TYPE="timeslot-type";
+    private static final String KEY_REQUESTED_TIMESLOT_TYPE = "timeslot-type";
     private static final String TYPE_SHIPPER = "shipper";
     private static final String TYPE_CUSTOMER = "customer";
     private static final List<Timeslot> TIMESLOTS;
 
-    static{
+    static {
         TIMESLOTS = new ArrayList<>();
         Stream.of(Timeslot.ValidTimeSlot.values())
                 .filter(e -> !e.equals(Timeslot.ValidTimeSlot.INVALID_TIMESLOT))
@@ -41,7 +41,7 @@ public class OrderCreateHelper {
         final ObjectMapper mapper = JsonUtils.getDefaultSnakeCaseMapper();
         OrderRequestV4 result;
         ParcelJob parcelJob;
-        try{
+        try {
             final String mapAsJson = mapper.writeValueAsString(source);
             result = mapper.readValue(mapAsJson, OrderRequestV4.class);
 
@@ -49,7 +49,7 @@ public class OrderCreateHelper {
 
             Map<String, String> jobMap = source.entrySet().stream()
                     .filter(e -> e.getKey().contains(PREFIX_PARCEL_JOB))
-                    .collect(Collectors.toMap( e -> e.getKey().substring(PREFIX_PARCEL_JOB.length()), Map.Entry::getValue));
+                    .collect(Collectors.toMap(e -> e.getKey().substring(PREFIX_PARCEL_JOB.length()), Map.Entry::getValue));
             String jobJson = mapper.writeValueAsString(jobMap);
             parcelJob = mapper.readValue(jobJson, ParcelJob.class);
 
@@ -62,12 +62,13 @@ public class OrderCreateHelper {
         parcelJob.setPickupDate(DateUtil.displayDate(zdt));
         Timeslot timeslot = generateValidTimeSlot(source, zdt);
         parcelJob.setPickupTimeslot(timeslot);
-        parcelJob.setPickupInstruction("Core API Auto - Pickup instructions-"+uniqueId);
+        parcelJob.setPickupInstruction("Core API Auto - Pickup instructions-" + uniqueId);
         parcelJob.setDeliveryStartDate(DateUtil.displayDate(zdt.plusDays(1L)));
         parcelJob.setDeliveryTimeslot(timeslot);
-        parcelJob.setDeliveryInstruction("Core API Auto - Delivery instructions-"+uniqueId);
+        parcelJob.setDeliveryInstruction("Core API Auto - Delivery instructions-" + uniqueId);
         parcelJob.setDimensions(generateRandomDimensions());
-        ReflectionUtil.nullifyFieldWithNullString(parcelJob);result.setTo(createUserDetail(TYPE_CUSTOMER, uniqueId));
+        ReflectionUtil.nullifyFieldWithNullString(parcelJob);
+        result.setTo(createUserDetail(TYPE_CUSTOMER, uniqueId));
         result.setFrom(createUserDetail(TYPE_SHIPPER, uniqueId));
         result.setParcelJob(parcelJob);
         ReflectionUtil.nullifyFieldWithNullString(result);
@@ -76,18 +77,18 @@ public class OrderCreateHelper {
 
     private static UserDetail createUserDetail(String type, String uniqueId) {
         UserDetail result = new UserDetail();
-        String contact = NvCountry.fromString(TestConstants.COUNTRY_CODE).getCountryCallingCode()+generateRandomNumber(8);
+        String contact = NvCountry.fromString(TestConstants.COUNTRY_CODE).getCountryCallingCode() + generateRandomNumber(8);
         String name;
-        if(type.equalsIgnoreCase(TYPE_SHIPPER)){
+        if (type.equalsIgnoreCase(TYPE_SHIPPER)) {
             name = "CA-Shipper-";
-        } else{
+        } else {
             name = "CA-Customer-";
         }
-        result.setName(name+uniqueId);
-        result.setEmail(name+ RandomUtil.randomString(3)+"@ninjavan.co");
+        result.setName(name + uniqueId);
+        result.setEmail(name + RandomUtil.randomString(3) + "@ninjavan.co");
         result.setPhoneNumber(contact);
         Address address = AddressFactory.getRandomAddress();
-        address.setAddress2(address.getAddress2()+"-"+uniqueId);
+        address.setAddress2(address.getAddress2() + "-" + uniqueId);
         result.setAddress(createMapFromAddress(address));
         return result;
     }
@@ -95,17 +96,17 @@ public class OrderCreateHelper {
     private static String generateRandomNumber(int length) {
         final Random rnd = new Random(Calendar.getInstance().getTimeInMillis());
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < length; i++) {
-            sb.append((char)('0' + rnd.nextInt(10)));
+        for (int i = 0; i < length; i++) {
+            sb.append((char) ('0' + rnd.nextInt(10)));
         }
         return sb.toString();
     }
 
-    private static String generateUniqueId(){
+    private static String generateUniqueId() {
         ZonedDateTime zdt = DateUtil.getDate(ZoneId.of(StandardTestConstants.DEFAULT_TIMEZONE));
         long currentMillis = zdt.toInstant().toEpochMilli();
         String uniqueString = RandomUtil.randomString(256);
-        return uniqueString.substring(0,13) + "-" + String.valueOf(currentMillis).substring(2, 11);
+        return uniqueString.substring(0, 13) + "-" + String.valueOf(currentMillis).substring(2, 11);
     }
 
     private static boolean isAllNull(Map<String, String> map) {
@@ -117,11 +118,11 @@ public class OrderCreateHelper {
         return true;
     }
 
-    private static Map<String, String> createMapFromAddress(Address address){
+    private static Map<String, String> createMapFromAddress(Address address) {
         return JsonUtils.convertValueToMapSnakeCase(address, String.class, String.class);
     }
 
-    private static Dimension generateRandomDimensions(){
+    private static Dimension generateRandomDimensions() {
         Dimension dimension = new Dimension();
         dimension.setWeight((double) StandardTestUtils.randomInt(1, 5));
         dimension.setWidth((double) StandardTestUtils.randomInt(20, 50));
@@ -130,38 +131,38 @@ public class OrderCreateHelper {
         return dimension;
     }
 
-    private static Timeslot generateValidTimeSlot(Map<String, String> source, ZonedDateTime zdt){
+    private static Timeslot generateValidTimeSlot(Map<String, String> source, ZonedDateTime zdt) {
         String timeslotType = RouteMonitoringSteps.TIMESLOT_TYPE_EARLY;
-        if(source.get(KEY_REQUESTED_TIMESLOT_TYPE) != null){
+        if (source.get(KEY_REQUESTED_TIMESLOT_TYPE) != null) {
             timeslotType = source.get(KEY_REQUESTED_TIMESLOT_TYPE);
         }
         Timeslot timeslot;
         switch (timeslotType) {
-            case RouteMonitoringSteps.TIMESLOT_TYPE_IMPENDING :
+            case RouteMonitoringSteps.TIMESLOT_TYPE_IMPENDING:
                 timeslot = generateImpendingTimeSlot(zdt);
                 break;
-            case RouteMonitoringSteps.TIMESLOT_TYPE_LATE :
+            case RouteMonitoringSteps.TIMESLOT_TYPE_LATE:
                 timeslot = generateLateTimeSlot(zdt);
                 break;
             default:
-               timeslot = generateEarlyTimeSlot(zdt);
+                timeslot = generateEarlyTimeSlot(zdt);
         }
         timeslot.setTimezone(TestConstants.DEFAULT_TIMEZONE);
         return timeslot;
     }
 
     //default Pending Waypoint Timeslot && Early Waypoint Timeslot
-    private static Timeslot generateEarlyTimeSlot(ZonedDateTime zdt){
+    private static Timeslot generateEarlyTimeSlot(ZonedDateTime zdt) {
         Timeslot timeslot = null;
         int i = 0;
         boolean found = false;
-        while(!found){
-            if(i==TIMESLOTS.size() || zdt.toLocalTime().isBefore(LocalTime.parse(TIMESLOTS.get(i).getEndTime()).minusHours(3L))){
+        while (!found) {
+            if (i == TIMESLOTS.size() || zdt.toLocalTime().isBefore(LocalTime.parse(TIMESLOTS.get(i).getEndTime()).minusHours(3L))) {
                 found = true;
             }
-            if(i==TIMESLOTS.size()){
+            if (i == TIMESLOTS.size()) {
                 //get latest timeslot if no timeslot meets criteria
-                timeslot = TIMESLOTS.get(TIMESLOTS.size()-1);
+                timeslot = TIMESLOTS.get(TIMESLOTS.size() - 1);
             } else {
                 timeslot = TIMESLOTS.get(i);
             }
@@ -170,15 +171,15 @@ public class OrderCreateHelper {
         return timeslot;
     }
 
-    private static Timeslot generateLateTimeSlot(ZonedDateTime zdt){
+    private static Timeslot generateLateTimeSlot(ZonedDateTime zdt) {
         Timeslot timeslot = null;
         int i = 0;
         boolean found = false;
-        while(!found){
-            if(i==TIMESLOTS.size() || zdt.toLocalTime().isAfter(LocalTime.parse(TIMESLOTS.get(i).getEndTime()).minusHours(3L))){
+        while (!found) {
+            if (i == TIMESLOTS.size() || zdt.toLocalTime().isAfter(LocalTime.parse(TIMESLOTS.get(i).getEndTime()).minusHours(3L))) {
                 found = true;
             }
-            if(i==TIMESLOTS.size()){
+            if (i == TIMESLOTS.size()) {
                 //get earliest timeslot if no timeslot meets criteria
                 timeslot = TIMESLOTS.get(0);
             } else {
@@ -189,13 +190,13 @@ public class OrderCreateHelper {
         return timeslot;
     }
 
-    private static Timeslot generateImpendingTimeSlot(ZonedDateTime zdt){
+    private static Timeslot generateImpendingTimeSlot(ZonedDateTime zdt) {
         Timeslot timeslot = null;
         int i = 0;
         boolean found = false;
-        while(!found){
-            if(zdt.toLocalTime().isAfter(LocalTime.parse(TIMESLOTS.get(i).getStartTime())) &&
-               zdt.toLocalTime().isBefore(LocalTime.parse(TIMESLOTS.get(i).getEndTime()))){
+        while (!found) {
+            if (zdt.toLocalTime().isAfter(LocalTime.parse(TIMESLOTS.get(i).getStartTime())) &&
+                    zdt.toLocalTime().isBefore(LocalTime.parse(TIMESLOTS.get(i).getEndTime()))) {
                 found = true;
                 timeslot = TIMESLOTS.get(i);
             }
@@ -204,7 +205,7 @@ public class OrderCreateHelper {
         return timeslot;
     }
 
-    private static String generateRequestedTrackingId(){
+    private static String generateRequestedTrackingId() {
         ZonedDateTime zdt = DateUtil.getDate(ZoneId.of(StandardTestConstants.DEFAULT_TIMEZONE));
         long currentMillis = zdt.toInstant().toEpochMilli();
         return String.valueOf(currentMillis).substring(2, 11);

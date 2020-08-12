@@ -16,6 +16,10 @@ public class TestConstants extends StandardTestConstants {
     public static final String DELIVERY_FAILURE_REASON;
     public static final int PICKUP_FAILURE_REASON_ID;
     public static final int DELIVERY_FAILURE_REASON_ID;
+    public static final int PICKUP_VALID_FAILURE_REASON_ID;
+    public static final int DELIVERY_VALID_FAILURE_REASON_ID;
+    public static final String PICKUP_VALID_FAILURE_REASON;
+    public static final String DELIVERY_VALID_FAILURE_REASON;
 
 
     static {
@@ -28,9 +32,13 @@ public class TestConstants extends StandardTestConstants {
         DELIVERY_FAILURE_REASON_ID = getInt("delivery-failure-reason-id");
         PICKUP_FAILURE_REASON = getString("pickup-failure-reason");
         DELIVERY_FAILURE_REASON = getString("delivery-failure-reason");
+        PICKUP_VALID_FAILURE_REASON_ID = getInt("pickup-valid-failure-reason-id");
+        DELIVERY_VALID_FAILURE_REASON_ID = getInt("delivery-valid-failure-reason-id");
+        PICKUP_VALID_FAILURE_REASON = getString("pickup-valid-failure-reason");
+        DELIVERY_VALID_FAILURE_REASON = getString("delivery-valid-failure-reason");
     }
 
-    public static void init(){
+    public static void init() {
         NvLogger.info("CONFIGURATION HELPER INITIATED");
     }
 }
