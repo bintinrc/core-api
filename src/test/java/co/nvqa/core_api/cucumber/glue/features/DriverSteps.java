@@ -15,6 +15,8 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.runtime.java.guice.ScenarioScoped;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -115,7 +117,6 @@ public class DriverSteps extends BaseSteps {
             Waypoint waypoint = routeDetails.getWaypoints().stream().filter(e -> e.getId() == waypointId).findAny().get();
             assertTrue("jobs is not empty", (waypoint.getJobs() != null && !waypoint.getJobs().isEmpty()));
             put(KEY_DRIVER_WAYPOINT_DETAILS, waypoint);
-
         }, "driver gets waypoint details");
     }
 
@@ -139,19 +140,24 @@ public class DriverSteps extends BaseSteps {
                 setOrderFailureReason(jobType, job);
             }
         }
-        putInList(KEY_LIST_OF_CREATED_JOB_ORDERS, job);
+        List<Order> orderList = Collections.singletonList(job);
+        put(KEY_LIST_OF_CREATED_JOB_ORDERS, orderList);
     }
 
     private void createDriverJobs(String action) {
         Waypoint waypoint = get(KEY_DRIVER_WAYPOINT_DETAILS);
+        String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
         List<Job> jobs = waypoint.getJobs();
         jobs.forEach(e -> {
             List<co.nvqa.commons.model.driver.Order> parcels = e.getParcels();
-            parcels.forEach(o -> createPhysicalItems(o, action, e.getMode()));
+            Order parcel = parcels.stream().filter( o -> o.getTrackingId().equalsIgnoreCase(trackingId))
+                    .findAny().orElseThrow(() -> new NvTestRuntimeException("Parcel Data not found " +trackingId));
+            createPhysicalItems(parcel, action, e.getMode());
             List<Order> orders = get(KEY_LIST_OF_CREATED_JOB_ORDERS);
             JobV5 job = createDefaultDriverJobs(e, action);
             job.setPhysicalItems(orders);
-            putInList(KEY_LIST_OF_DRIVER_JOBS, job);
+            List<JobV5> jobList = Collections.singletonList(job);
+            put(KEY_LIST_OF_DRIVER_JOBS, jobList);
         });
     }
 
