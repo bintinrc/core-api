@@ -32,7 +32,6 @@ Feature: Route Monitoring V2
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies Route Monitoring Data Has Correct Details for Pending Case
       |total-expected-waypoints     | 1 |
-    And Operator verifies waypoint details for "pending" waypoint
     When Operator pull order out of "<transaction_type>" route
     And Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data for Empty Route has correct details
@@ -64,7 +63,6 @@ Feature: Route Monitoring V2
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Pending Case
       |total-expected-waypoints     | 1 |
-    And Operator verifies waypoint details for "pending" waypoint
 
     Examples:
       | Note      | hiptest-uid                              |route_type | service_type | service_level |parcel_job_is_pickup_required|
@@ -89,7 +87,6 @@ Feature: Route Monitoring V2
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies Route Monitoring Data Has Correct Details for Pending Case
       |total-expected-waypoints     | 1 |
-    And Operator verifies waypoint details for "pending" waypoint
     When Operator Pull Reservation Out of Route
     And Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data for Empty Route has correct details
@@ -124,7 +121,6 @@ Feature: Route Monitoring V2
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Pending Case
       |total-expected-waypoints     | 2 |
-    And Operator verifies waypoint details for "pending" waypoint
 
     Examples:
       | Note           | hiptest-uid                              |route_type | service_type | service_level |parcel_job_is_pickup_required|
@@ -153,12 +149,10 @@ Feature: Route Monitoring V2
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Pending Case
       |total-expected-waypoints     | 2 |
-    And Operator verifies waypoint details for "pending" waypoint
     When Operator pull order out of "<transaction_type>" route
     And Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Pending Case
       |total-expected-waypoints     | 1 |
-    And Operator verifies waypoint details for "pending" waypoint
 
     Examples:
       | Note                              | hiptest-uid                              |route_type |transaction_type| service_type | service_level |parcel_job_is_pickup_required|
@@ -208,7 +202,6 @@ Feature: Route Monitoring V2
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Pending Case
       |total-expected-waypoints     | 5 |
-    And Operator verifies waypoint details for "pending" waypoint
     When Operator pull order out of "PICKUP" route
     And Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Pending Case
@@ -423,7 +416,9 @@ Feature: Route Monitoring V2
     And Driver Starts the route
     And Driver Fails Parcel "DELIVERY" with Valid Reason
     When Operator Filter Route Monitoring Data for Today's Date
-    Then Operator get empty invalid failed deliveries parcel details
+    Then Operator verifies total invalid failed deliveries is 0 and other details
+      |total-expected-waypoints     | 1 |
+    And Operator get empty invalid failed deliveries parcel details
 
     Examples:
       | Note      | hiptest-uid                              |service_type | service_level |parcel_job_is_pickup_required|
@@ -452,6 +447,7 @@ Feature: Route Monitoring V2
     And Operator Route the Reservation Pickup
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies total invalid failed deliveries is 0 and other details
+      |total-expected-waypoints     | 2 |
     And Operator get empty invalid failed deliveries parcel details
 
     Examples:

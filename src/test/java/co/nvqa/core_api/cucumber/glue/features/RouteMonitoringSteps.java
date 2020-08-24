@@ -15,7 +15,6 @@ import cucumber.api.java.en.When;
 import cucumber.runtime.java.guice.ScenarioScoped;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -85,7 +84,7 @@ public class RouteMonitoringSteps extends BaseSteps {
             assertEquals(String.format("total waypoints for route id %d", routeId), expectedTotalWaypoints, actualTotalWaypoints);
             assertEquals(String.format("total pending waypoints for route id %d", routeId), expectedTotalWaypoints, actualTotalWaypoints);
             checkPendingDetails(routeId, result);
-        }, "check pending case", 100);
+        }, "check pending case", 30);
     }
 
     @When("^Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints$")
@@ -120,8 +119,7 @@ public class RouteMonitoringSteps extends BaseSteps {
             assertEquals(String.format("total late and pending waypoints for route id %d", routeId), 0, result.getNumLateAndPending());
             assertEquals("total pending priority parcels", 0, result.getPendingPriorityParcels());
             assertEquals(String.format("completion precentage", routeId), 0.0, result.getCompletionPercentage());
-            checkWaypointDetails(WAYPOINT_TYPE_INVALID_FAILED);
-        }, "check invalid failed case", 100);
+        }, "check invalid failed case", 30);
     }
 
 
@@ -132,12 +130,11 @@ public class RouteMonitoringSteps extends BaseSteps {
             operatorFilterRouteMinitoring();
             RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
             checkRouteDetails(result);
-            assertTrue("waypoints is empty", result.getWaypoints().isEmpty());
             assertEquals(String.format("total parcels for route id %d", routeId), 0, result.getTotalParcels());
             assertEquals(String.format("total waypoints for route id %d", routeId), 0, result.getTotalWaypoints());
             assertEquals(String.format("total pending waypoints for route id %d", routeId), 0, result.getNumPending());
             checkPendingDetails(routeId, result);
-        }, "check empty route", 100);
+        }, "check empty route", 30);
     }
 
     @When("^Operator get pending priority parcel details for \"([^\"]*)\"$")
@@ -152,7 +149,7 @@ public class RouteMonitoringSteps extends BaseSteps {
                 assertTrue("tracking id found", found);
             });
             put(KEY_ROUTE_MONITORING_RESULT, waypoints);
-        }, "get pending priority details", 100);
+        }, "get pending priority details", 30);
     }
 
     @When("^Operator get invalid failed deliveries parcel details$")
@@ -167,7 +164,7 @@ public class RouteMonitoringSteps extends BaseSteps {
                 assertTrue("tracking id found", found);
             });
             put(KEY_ROUTE_MONITORING_RESULT, waypoints);
-        }, "get invalid failed deliveries details", 100);
+        }, "get invalid failed deliveries details", 30);
     }
 
     @When("^Operator verifies invalid failed deliveries parcel details$")
@@ -204,7 +201,7 @@ public class RouteMonitoringSteps extends BaseSteps {
                 assertEquals("address", createExpectedPendingAddress(address), waypoint.getAddress().toLowerCase());
                 assertEquals("time window", getFormattedTimeslot(startTime, endTime), waypoint.getTimeWindow().toLowerCase());
             });
-        }, "get invalid failed deliveries parcel details", 100);
+        }, "get invalid failed deliveries parcel details", 30);
     }
 
     @When("^Operator verifies pending priority parcel details$")
@@ -251,7 +248,7 @@ public class RouteMonitoringSteps extends BaseSteps {
                 assertEquals("time window", getFormattedTimeslot(startTime, endTime), waypoint.getTimeWindow().toLowerCase());
             });
 
-        }, "get pending priority details", 100);
+        }, "get pending priority details", 30);
     }
 
     @When("^Operator get empty pending priority parcel details for \"([^\"]*)\"$")
@@ -260,7 +257,7 @@ public class RouteMonitoringSteps extends BaseSteps {
         callWithRetry(() -> {
             List<Waypoint> waypoints = getRouteClient().getPendingPriorityParcelDetails(routeId, type);
             assertTrue("pending priority parcel details is empty", waypoints.isEmpty());
-        }, "get empty pending priority details", 100);
+        }, "get empty pending priority details", 30);
     }
 
     @When("^Operator get empty invalid failed deliveries parcel details$")
@@ -269,7 +266,7 @@ public class RouteMonitoringSteps extends BaseSteps {
         callWithRetry(() -> {
             List<Waypoint> waypoints = getRouteClient().getInvalidFailedDeliveries(routeId);
             assertTrue("invalid failed deliveries details is empty", waypoints.isEmpty());
-        }, "get invalid failed deliveries details", 100);
+        }, "get invalid failed deliveries details", 30);
     }
 
     @Then("^Operator verifies waypoint details for \"([^\"]*)\" waypoint$")
@@ -363,7 +360,7 @@ public class RouteMonitoringSteps extends BaseSteps {
                     assertNull("driver last seen", waypoint.getDriverLastSeen());
                 });
             }
-        }, "check pending waypoint details", 100);
+        }, "check pending waypoint details", 30);
     }
 
     @When("^Operator verifies total pending priority parcels and other details$")
@@ -374,8 +371,7 @@ public class RouteMonitoringSteps extends BaseSteps {
             RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
             assertEquals("total pending priority parcels", totalExpectedCount, result.getPendingPriorityParcels());
             operatorChecksTotalParcelsCount(source);
-            checkWaypointDetails(WAYPOINT_TYPE_PENDING);
-        }, "check total pending priority parcels", 100);
+        }, "check total pending priority parcels", 30);
     }
 
     @When("^Operator verifies total pending priority parcels is now 0$")
@@ -384,20 +380,17 @@ public class RouteMonitoringSteps extends BaseSteps {
             operatorFilterRouteMinitoring();
             RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
             assertEquals("total pending priority parcels", 0, result.getPendingPriorityParcels());
-        }, "check total pending priority parcels", 100);
+        }, "check total pending priority parcels", 30);
     }
 
     @When("^Operator verifies total invalid failed deliveries is 0 and other details$")
-    public void totalEmptyInvalidFailed() {
+    public void totalEmptyInvalidFailed(Map<String, Integer> waypointCounts) {
         callWithRetry(() -> {
             operatorFilterRouteMinitoring();
             RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
             assertEquals("total invalid failed", 0, result.getNumInvalidFailed());
-            Map<String, Integer> waypointCounts = new HashMap<>();
-            waypointCounts.put(KEY_TOTAL_EXPECTED_WAYPOINT, 2);
             operatorChecksTotalParcelsCount(waypointCounts);
-            checkWaypointDetails(WAYPOINT_TYPE_PENDING);
-        }, "check total invalid failed", 100);
+        }, "check total invalid failed", 30);
     }
 
     private List<OrderRequestV4> getListOfTransactionDetails() {
