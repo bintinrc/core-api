@@ -26,6 +26,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
     private ReservationV2Client reservationV2Client;
     private InboundClient inboundClient;
     private ShipperClient shipperClient;
+    private RouteMonitoringClient routeMonitoringClient;
 
     @SuppressWarnings("unchecked")
     protected void callWithRetry(Runnable runnable, String methodName) {
@@ -46,6 +47,13 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
             routeClient = new RouteClient(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());
         }
         return routeClient;
+    }
+
+    protected synchronized RouteMonitoringClient getRouteMonitoringClient() {
+        if (routeMonitoringClient == null) {
+            routeMonitoringClient = new RouteMonitoringClient(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());
+        }
+        return routeMonitoringClient;
     }
 
     protected static synchronized OrderSearchClient getOrderSearchClient() {
