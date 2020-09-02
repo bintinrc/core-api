@@ -50,6 +50,17 @@ public class OrderCreateSteps extends BaseSteps {
         }, "shipper create order");
     }
 
+    @Given("^Shipper creates a reservation tied to Normal orders$")
+    public void shipperReservationTiedToNormalOrder(Map<String, String> source){
+        shipperCreateOrder(source);
+        shipperCreateAnotherOrderWithSameParams();
+    }
+
+    @Given("^Shipper creates multiple \"([^\"]*)\" orders$")
+    public void shipperCreateMultipleReturnOrders(String type, Map<String, String> source){
+        shipperCreateMultiplesOrders(2, source);
+    }
+
     @Given("^Shipper create another order with the same parameters as before$")
     public void shipperCreateAnotherOrderWithSameParams() {
         OrderRequestV4 request = get(KEY_ORDER_CREATE_REQUEST);
@@ -64,10 +75,9 @@ public class OrderCreateSteps extends BaseSteps {
         }, "shipper create another order");
     }
 
-    @Given("^Shipper creates multiple orders :\"([^\"]*)\" orders$")
-    public void shipperCreateMultiplesOrders(String numberOfOrders, Map<String, String> source) {
-        int n = Integer.parseInt(numberOfOrders);
-        for (int i = 0; i < n; i++) {
+    @Given("^Shipper creates multiple orders : (\\d+) orders$")
+    public void shipperCreateMultiplesOrders(int numberOfOrders, Map<String, String> source) {
+        for (int i = 0; i < numberOfOrders; i++) {
             shipperCreateOrder(source);
         }
     }

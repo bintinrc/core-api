@@ -72,6 +72,17 @@ public class OrderActionSteps extends BaseSteps {
         });
     }
 
+    @Then("^Operator verify all \"([^\"]*)\" transactions status is \"([^\"]*)\"$")
+    public void operatorVerifyAllTransactionStatus(String type, String status) {
+        List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+        trackingIds.forEach(e -> {
+            put(KEY_CREATED_ORDER_TRACKING_ID, e);
+            operatorSearchTransaction(type, status);
+            Transaction transaction = get(KEY_TRANSACTION_DETAILS);
+            assertEquals("transaction status", status.toLowerCase(), transaction.getStatus().toLowerCase());
+        });
+    }
+
     @Then("^Operator checks that \"([^\"]*)\" event is published$")
     public void operatortVerifiesOrderEvent(String event) {
         long orderId = get(KEY_CREATED_ORDER_ID);
@@ -79,6 +90,27 @@ public class OrderActionSteps extends BaseSteps {
             Event result = getOrderEvent(event, orderId);
             assertEquals(String.format("%s event is published", event), event.toLowerCase(), result.getType().toLowerCase());
         }, String.format("%s event is published for order id %d", event, orderId));
+    }
+
+    @Then("^Operator verify that order status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
+    public void operatortVerifiesOrderStatus(String status, String granularStatus) {
+        callWithRetry(() -> {
+            operatorSearchOrderByTrackingId();
+            Order order = get(KEY_CREATED_ORDER);
+            assertEquals(String.format("order %s status = %s", order.getTrackingId(), status), order.getStatus().toLowerCase(), status.toLowerCase());
+            assertEquals(String.format("order %s granular status = %s", order.getTrackingId(), granularStatus), order.getGranularStatus().toLowerCase(), granularStatus.toLowerCase());
+        }, "check order granular status");
+    }
+
+    @Then("^Operator verify that all orders status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
+    public void operatortVerifiesAllOrderStatus(String status, String granularStatus) {
+        callWithRetry(() -> {
+            List<String> trackingIds = get(OrderCreateSteps.KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+            trackingIds.forEach(e -> {
+                put(KEY_CREATED_ORDER_TRACKING_ID, e);
+                operatortVerifiesOrderStatus(status, granularStatus);
+            });
+        }, "check order granular status");
     }
 
     @Then("^Operator checks that for all orders, \"([^\"]*)\" event is published$")

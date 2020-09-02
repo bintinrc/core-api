@@ -15,7 +15,6 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.runtime.java.guice.ScenarioScoped;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

@@ -20,7 +20,8 @@ public class TestConstants extends StandardTestConstants {
     public static final int DELIVERY_VALID_FAILURE_REASON_ID;
     public static final String PICKUP_VALID_FAILURE_REASON;
     public static final String DELIVERY_VALID_FAILURE_REASON;
-
+    public static final long DEFAULT_DP_ADDRESS_ID;
+    public static final long DEFAULT_DP_SHIPPER_ID;
 
     static {
         FAILURE_REASON_ID = getInt("failure-reason-id");
@@ -36,6 +37,8 @@ public class TestConstants extends StandardTestConstants {
         DELIVERY_VALID_FAILURE_REASON_ID = getInt("delivery-valid-failure-reason-id");
         PICKUP_VALID_FAILURE_REASON = getString("pickup-valid-failure-reason");
         DELIVERY_VALID_FAILURE_REASON = getString("delivery-valid-failure-reason");
+        DEFAULT_DP_ADDRESS_ID = getInt("default-dp-address-id");
+        DEFAULT_DP_SHIPPER_ID = getInt("default-dp-shipper-id");
     }
 
     public static void init() {

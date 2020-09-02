@@ -216,7 +216,7 @@ Feature: Route Monitoring V2
   @rmv2-pending-priority-parcels
   Scenario Outline: Operator Tag Routed Orders as PRIOR Parcels And Verifies Route Monitoring Data - <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{route-monitoring-shipper-client-id}" and client secret "{route-monitoring-shipper-client-secret}"
-    When Shipper creates multiple orders :"3" orders
+    When Shipper creates multiple orders : 3 orders
       |service_type                  | <service_type>                  |
       |service_level                 | <service_level>                 |
       |requested_tracking_number     | <requested_tracking_number>     |
@@ -342,7 +342,7 @@ Feature: Route Monitoring V2
   @rmv2-invalid-failed-deliveries
   Scenario Outline: Operator Get Invalid Failed Deliveries Details After Driver Failed with Invalid Reason - Order with No Tags - <hiptest-uid>
     Given Shipper authenticates using client id "{route-monitoring-shipper-client-id}" and client secret "{route-monitoring-shipper-client-secret}"
-    When Shipper creates multiple orders :"3" orders
+    When Shipper creates multiple orders : 3 orders
       |service_type                  | <service_type>                  |
       |service_level                 | <service_level>                 |
       |requested_tracking_number     | <requested_tracking_number>     |
@@ -371,7 +371,7 @@ Feature: Route Monitoring V2
   @rmv2-invalid-failed-deliveries
   Scenario Outline: Operator Get Invalid Failed Deliveries Details After Driver Failed with Invalid Reason - Order Has PRIOR Tag - <hiptest-uid>
     Given Shipper authenticates using client id "{route-monitoring-shipper-client-id}" and client secret "{route-monitoring-shipper-client-secret}"
-    When Shipper creates multiple orders :"2" orders
+    When Shipper creates multiple orders : 2 orders
       |service_type                  | <service_type>                  |
       |service_level                 | <service_level>                 |
       |requested_tracking_number     | <requested_tracking_number>     |
@@ -461,7 +461,7 @@ Feature: Route Monitoring V2
   @rmv2-invalid-failed-pickups
   Scenario Outline: Operator Get Invalid Failed Pickup Details After Driver Failed with Invalid Reason - Order with No Tags - <hiptest-uid>
     Given Shipper authenticates using client id "{route-monitoring-shipper-client-id}" and client secret "{route-monitoring-shipper-client-secret}"
-    When Shipper creates multiple orders :"3" orders
+    When Shipper creates multiple orders : 3 orders
       |service_type                  | <service_type>                  |
       |service_level                 | <service_level>                 |
       |requested_tracking_number     | <requested_tracking_number>     |
@@ -489,7 +489,7 @@ Feature: Route Monitoring V2
   @rmv2-invalid-failed-pickups
   Scenario Outline: Operator Get Invalid Failed Pickup Details After Driver Failed with Invalid Reason - Order Has PRIOR Tag - <hiptest-uid>
     Given Shipper authenticates using client id "{route-monitoring-shipper-client-id}" and client secret "{route-monitoring-shipper-client-secret}"
-    When Shipper creates multiple orders :"2" orders
+    When Shipper creates multiple orders : 2 orders
       |service_type                  | <service_type>                  |
       |service_level                 | <service_level>                 |
       |requested_tracking_number     | <requested_tracking_number>     |

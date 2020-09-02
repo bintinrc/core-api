@@ -69,6 +69,27 @@ public class ReservationSteps extends BaseSteps {
         }, String.format("search reservation with status %s", status), 70);
     }
 
+    @And("^Operator verify that reservation status is \"([^\"]*)\"$")
+    public void operatorRouteReservation(String status) {
+        Pickup pickup = get(KEY_CREATED_RESERVATION);
+        callWithRetry(() -> {
+            searchPickup(pickup.getShipperId(), status);
+            Pickup result = get(KEY_CREATED_RESERVATION);
+            assertEquals("reservation status", status.toLowerCase(), result.getStatus().toLowerCase());
+        }, "operator verify reservation status");
+    }
+
+    @When("^Operator search for created DP reservation with status \"([^\"]*)\"$")
+    public void operatorSearchCreatedDpReservation(String status){
+        long addressId = TestConstants.DEFAULT_DP_ADDRESS_ID;
+        long shipperId = TestConstants.DEFAULT_DP_SHIPPER_ID;
+        long shipperLegacyId = get(DpSteps.KEY_DP_SHIPPER_LEGACY_ID);
+        Address address = getShipperClient().readAddress(shipperId, addressId);
+        String pickupAddress = address.getAddress2();
+        put(KEY_PICKUP_ADDRESS_STRING, pickupAddress);
+        searchPickup(shipperLegacyId, status);
+    }
+
     @And("Operator Route the Reservation Pickup")
     public void operatorRouteReservation() {
         Pickup pickup = get(KEY_CREATED_RESERVATION);
@@ -93,7 +114,7 @@ public class ReservationSteps extends BaseSteps {
         }, "operator pull out reservation route");
     }
 
-    @When("^Operator force finish \"([^\"]*)\" reservation$")
+    @When("^Operator admin manifest force \"([^\"]*)\" reservation$")
     public void operatorForceFinishReservation(String action) {
         long waypointId = get(KEY_WAYPOINT_ID);
         long routeId = get(KEY_CREATED_ROUTE_ID);
@@ -123,15 +144,17 @@ public class ReservationSteps extends BaseSteps {
             // clear addresses
             long shipperLegacyId = get(KEY_SHIPPER_OWNER_LEGACY_ID);
             long shipperGlobalId = getShipperClient().getNewShipperIdByLegacyId(shipperLegacyId).getId();
+            long defaultDpAddressId = TestConstants.DEFAULT_DP_ADDRESS_ID;
             List<Address> addresses = getShipperClient().readAllAddresses(shipperGlobalId);
-            addresses.forEach(address -> {
-                try {
-                    NvLogger.infof("try to delete address: %d", address.getId());
-                    getShipperClient().deleteAddress(shipperGlobalId, address.getId());
-                    NvLogger.successf("address deleted successfully: %d", address.getId());
-                } catch (Exception | AssertionError e) {
-                    NvLogger.warnf("failed to delete address: %d caused of %s", address.getId(), e.getMessage());
-                }
+            addresses.stream().filter( e -> e.getId() != defaultDpAddressId)
+                     .forEach(address -> {
+                         try {
+                             NvLogger.infof("try to delete address: %d", address.getId());
+                             getShipperClient().deleteAddress(shipperGlobalId, address.getId());
+                             NvLogger.successf("address deleted successfully: %d", address.getId());
+                         } catch (Exception | AssertionError e) {
+                             NvLogger.warnf("failed to delete address: %d caused of %s", address.getId(), e.getMessage());
+                         }
             });
         } catch (Throwable t) {
             NvLogger.warnf("Failed to clear any reservation and/or address due to: %s", t.getMessage());
