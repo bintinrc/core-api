@@ -75,7 +75,7 @@ public class ReservationSteps extends BaseSteps {
         callWithRetry(() -> {
             searchPickup(pickup.getShipperId(), status);
             Pickup result = get(KEY_CREATED_RESERVATION);
-            assertEquals("reservation status", status.toLowerCase(), result.getStatus().toLowerCase());
+            assertEquals(String.format("reservation status id %d", result.getId()), status.toLowerCase(), result.getStatus().toLowerCase());
         }, "operator verify reservation status");
     }
 
