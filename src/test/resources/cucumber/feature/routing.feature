@@ -152,7 +152,7 @@ Feature: Routing
       | vehicle_id | {vehicle-id}         |
       | zone_id    | {zone-id}            |
     And Operator Route the Reservation Pickup
-    And Operator force finish "<action>" reservation
+    And Operator admin manifest force "<action>" reservation
     Then Operator delete driver route with status code "500"
     And DB Operator verifies waypoint status is "<action>"
     And DB Operator verifies route_waypoint record remains exist
