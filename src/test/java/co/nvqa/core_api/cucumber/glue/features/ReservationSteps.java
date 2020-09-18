@@ -65,8 +65,17 @@ public class ReservationSteps extends BaseSteps {
             putInList(KEY_LIST_OF_CREATED_RESERVATIONS, pickup);
             putInList(KEY_LIST_OF_RESERVATION_TRACKING_IDS, trackingId);
             put(KEY_WAYPOINT_ID, pickup.getWaypointId());
-
+            putInList(KEY_LIST_OF_WAYPOINT_IDS, pickup.getWaypointId());
         }, String.format("search reservation with status %s", status), 70);
+    }
+
+    @And("^Operator search for all reservations for shipper legacy id \"([^\"]*)\"$")
+    public void operatorSearchAllReservation(long legacyId) {
+        List<String> addresses = get(OrderCreateSteps.KEY_LIST_OF_PICKUP_ADDRESS_STRING);
+        addresses.forEach(e -> {
+            put(KEY_PICKUP_ADDRESS_STRING, e);
+            searchPickup(legacyId, "PENDING");
+        });
     }
 
     @And("^Operator verify that reservation status is \"([^\"]*)\"$")
@@ -103,6 +112,16 @@ public class ReservationSteps extends BaseSteps {
         }, "operator route the reservation");
     }
 
+    @And("Operator Route All Reservation Pickups")
+    public void operatorRouteAllReservations() {
+        List<Pickup> pickups = get(KEY_LIST_OF_CREATED_RESERVATIONS);
+        pickups.forEach( e -> {
+            put(KEY_CREATED_RESERVATION, e);
+            operatorRouteReservation();
+        });
+    }
+
+
     @And("^Operator Pull Reservation Out of Route$")
     public void operatorPullReservationRoute() {
         Pickup pickup = get(KEY_CREATED_RESERVATION);
@@ -126,6 +145,35 @@ public class ReservationSteps extends BaseSteps {
             }
             NvLogger.success(DOMAIN, String.format("waypoint id %d force failed", waypointId));
         }, "admin force finish reservation");
+    }
+
+    @When("^Operator admin manifest force fail reservation with invalid reason$")
+    public void operatorForceFailInvalidReservation() {
+        long waypointId = get(KEY_WAYPOINT_ID);
+        long routeId = get(KEY_CREATED_ROUTE_ID);
+        callWithRetry(() -> {
+            getOrderClient().forceFailWaypoint(routeId, waypointId, TestConstants.RESERVATION_FAILURE_REASON_ID);
+            NvLogger.success(DOMAIN, String.format("waypoint id %d force failed", waypointId));
+        }, "admin force finish reservation");
+    }
+
+    @When("^Operator admin manifest force fail reservation with valid reason$")
+    public void operatorForceFailValidReservation() {
+        long waypointId = get(KEY_WAYPOINT_ID);
+        long routeId = get(KEY_CREATED_ROUTE_ID);
+        callWithRetry(() -> {
+            getOrderClient().forceFailWaypoint(routeId, waypointId, TestConstants.RESERVATION_VALID_FAILURE_REASON_ID);
+            NvLogger.success(DOMAIN, String.format("waypoint id %d force failed", waypointId));
+        }, "admin force finish reservation");
+    }
+
+    @When("^Operator admin manifest force fail all reservations with invalid reason$")
+    public void operatorForceFailInvalidAllReservation() {
+        List<Long> waypointIds = get(KEY_LIST_OF_WAYPOINT_IDS);
+        waypointIds.forEach( e -> {
+            put(KEY_WAYPOINT_ID, e);
+            operatorForceFailInvalidReservation();
+        });
     }
 
     @After("@DeleteReservationAndAddress")

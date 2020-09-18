@@ -15,7 +15,7 @@ import co.nvqa.core_api.cucumber.glue.support.TestConstants;
  * all step class should extend this class
  */
 public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
-    private static final long DEFAULT_FALLBACK_MS = 1000L;
+    private static final long DEFAULT_FALLBACK_MS = 500;
     private static final int DEFAULT_RETRY = 30;
 
     private static OrderSearchClient orderSearchClient;

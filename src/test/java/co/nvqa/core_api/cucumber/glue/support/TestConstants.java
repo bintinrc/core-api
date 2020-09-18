@@ -14,12 +14,16 @@ public class TestConstants extends StandardTestConstants {
     public static final long ORDER_TAG_PRIOR_ID;
     public static final String PICKUP_FAILURE_REASON;
     public static final String DELIVERY_FAILURE_REASON;
+    public static final String RESERVATION_FAILURE_REASON;
     public static final int PICKUP_FAILURE_REASON_ID;
     public static final int DELIVERY_FAILURE_REASON_ID;
+    public static final int RESERVATION_FAILURE_REASON_ID;
     public static final int PICKUP_VALID_FAILURE_REASON_ID;
     public static final int DELIVERY_VALID_FAILURE_REASON_ID;
+    public static final int RESERVATION_VALID_FAILURE_REASON_ID;
     public static final String PICKUP_VALID_FAILURE_REASON;
     public static final String DELIVERY_VALID_FAILURE_REASON;
+    public static final String RESERVATION_VALID_FAILURE_REASON;
     public static final long DEFAULT_DP_ADDRESS_ID;
     public static final long DEFAULT_DP_SHIPPER_ID;
 
@@ -31,12 +35,16 @@ public class TestConstants extends StandardTestConstants {
         ORDER_TAG_PRIOR_ID = getInt("order-tag-prior-id");
         PICKUP_FAILURE_REASON_ID = getInt("pickup-failure-reason-id");
         DELIVERY_FAILURE_REASON_ID = getInt("delivery-failure-reason-id");
+        RESERVATION_FAILURE_REASON_ID = getInt("reservation-failure-reason-id");
         PICKUP_FAILURE_REASON = getString("pickup-failure-reason");
         DELIVERY_FAILURE_REASON = getString("delivery-failure-reason");
+        RESERVATION_FAILURE_REASON = getString("reservation-failure-reason");
         PICKUP_VALID_FAILURE_REASON_ID = getInt("pickup-valid-failure-reason-id");
         DELIVERY_VALID_FAILURE_REASON_ID = getInt("delivery-valid-failure-reason-id");
+        RESERVATION_VALID_FAILURE_REASON_ID = getInt("reservation-valid-failure-reason-id");
         PICKUP_VALID_FAILURE_REASON = getString("pickup-valid-failure-reason");
         DELIVERY_VALID_FAILURE_REASON = getString("delivery-valid-failure-reason");
+        RESERVATION_VALID_FAILURE_REASON = getString("reservation-valid-failure-reason");
         DEFAULT_DP_ADDRESS_ID = getInt("default-dp-address-id");
         DEFAULT_DP_SHIPPER_ID = getInt("default-dp-shipper-id");
     }

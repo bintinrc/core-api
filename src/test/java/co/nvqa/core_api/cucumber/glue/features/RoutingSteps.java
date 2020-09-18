@@ -1,5 +1,6 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
+import co.nvqa.commons.constants.HttpConstants;
 import co.nvqa.commons.model.core.Order;
 import co.nvqa.commons.model.core.route.AddParcelToRouteRequest;
 import co.nvqa.commons.model.core.route.ArchiveRouteResponse;
@@ -28,6 +29,7 @@ public class RoutingSteps extends BaseSteps {
 
     private static final String DOMAIN = "ROUTING-STEP";
     public static final String KEY_LIST_OF_PULL_OUT_OF_ROUTE_TRACKING_ID = "key-list-pull-out-of-route-tracking-id";
+    private static final String KEY_UNARCHIVE_ROUTE_RESPONSE = "key-unarchive-route-response";
 
     @Override
     public void init() {
@@ -114,6 +116,41 @@ public class RoutingSteps extends BaseSteps {
         }, "archive driver route");
 
         NvLogger.success(DOMAIN, String.format("route %d is successfully archived", routeId));
+    }
+
+    @When("^Operator unarchives driver route successfully$")
+    public void operatorUnarchiveRoute() {
+        long routeId = get(KEY_CREATED_ROUTE_ID);
+        callWithRetry(() -> {
+            getRouteClient().unarchiveRouteV2(routeId);
+        }, "unarchive driver route v2");
+    }
+
+    @When("^Operator unarchives driver route with non-archived route id$")
+    public void operatorFailUnarchiveRoute() {
+        long routeId = get(KEY_CREATED_ROUTE_ID);
+        callWithRetry(() -> {
+            Response r = getRouteClient().unarchiveRouteV2AndGetRawResponse(routeId);
+            put(KEY_UNARCHIVE_ROUTE_RESPONSE, r);
+        }, "unarchive driver route v2");
+    }
+
+    @When("^Operator unarchives driver route with invalid route id$")
+    public void unarchiveInvalidRoute(){
+        put(KEY_CREATED_ROUTE_ID, 89L);
+        operatorFailUnarchiveRoute();
+    }
+
+    @When("^Operator verify that response is (\\d+) with proper error message$")
+    public void verifyBadUnarchivedRoute(int statusCode){
+        long routeId = get(KEY_CREATED_ROUTE_ID);
+        Response r = get(KEY_UNARCHIVE_ROUTE_RESPONSE);
+        assertEquals("status code", statusCode, r.getStatusCode());
+        if(statusCode == HttpConstants.RESPONSE_400_BAD_REQUEST) {
+            r.then().body(containsString(String.format("Route with id=%d is not archived!", routeId)));
+        } else {
+            r.then().body(containsString(String.format("Route with id=%d not found!", routeId)));
+        }
     }
 
     @When("^Operator archives multiple driver routes$")
