@@ -361,6 +361,7 @@ Feature: Route Monitoring V2
     Then Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints
       |total-expected-waypoints                 | 3 |
       |total-expected-invalid-failed            | 3 |
+      |total-expected-early                     | 3 |
     When Operator get "invalid failed deliveries" parcel details
     Then Operator verifies "invalid failed deliveries" parcel details
 
@@ -391,6 +392,7 @@ Feature: Route Monitoring V2
     Then Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints
       |total-expected-waypoints                 | 2 |
       |total-expected-invalid-failed            | 2 |
+      |total-expected-early                     | 2 |
     When Operator get "invalid failed deliveries" parcel details
     Then Operator verifies "invalid failed deliveries" parcel details
 
@@ -479,6 +481,7 @@ Feature: Route Monitoring V2
     Then Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints
       |total-expected-waypoints                 | 3 |
       |total-expected-invalid-failed            | 3 |
+      |total-expected-early                     | 3 |
     When Operator get "invalid failed pickups" parcel details
     Then Operator verifies "invalid failed pickups" parcel details
 
@@ -508,6 +511,7 @@ Feature: Route Monitoring V2
     Then Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints
       |total-expected-waypoints                 | 2 |
       |total-expected-invalid-failed            | 2 |
+      |total-expected-early                     | 2 |
     When Operator get "invalid failed pickups" parcel details
     Then Operator verifies "invalid failed pickups" parcel details
 
@@ -572,3 +576,82 @@ Feature: Route Monitoring V2
     Examples:
       | Note      | hiptest-uid                              |service_type | service_level |parcel_job_is_pickup_required|
       |           | uid:ac3dc935-5c7b-43df-b7ca-ee21607e2b7d |Return       | Standard      |true                         |
+
+
+  @rmv2-invalid-failed-reservations
+  Scenario Outline: Operator Get Invalid Failed Reservation Details After Driver Failed with Invalid Reason - <hiptest-uid>
+    Given Shipper authenticates using client id "{route-monitoring-shipper-client-id}" and client secret "{route-monitoring-shipper-client-secret}"
+    When Shipper creates multiple 3 reservations
+      |service_type                  | Parcel                 |
+      |service_level                 | Standard               |
+      |parcel_job_is_pickup_required | true                   |
+    And Operator search for all reservations for shipper legacy id "{route-monitoring-shipper-legacy-id}"
+    And Operator create an empty route
+      | driver_id  | {route-monitoring-driver-id}  |
+      | hub_id     | {sorting-hub-id}     |
+      | vehicle_id | {vehicle-id}         |
+      | zone_id    | {zone-id}            |
+    And Operator Route All Reservation Pickups
+    And Operator admin manifest force fail all reservations with invalid reason
+    When Operator Filter Route Monitoring Data for Today's Date
+    Then Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints
+      |total-expected-waypoints                 | 3 |
+      |total-expected-invalid-failed            | 3 |
+      |total-expected-early                     | 0 |
+    When Operator get invalid failed reservation details
+    Then Operator verifies invalid failed reservations details
+
+    Examples:
+      | Note      | hiptest-uid                              |
+      |           | uid:cc1bca2d-177b-4bc3-ade5-8965a899a706 |
+
+
+  @rmv2-invalid-failed-reservations
+  Scenario Outline: Operator Get Invalid Failed Reservation Details on Route with NON-Invalid Failed Reservation (Failed Reservation with Valid Reason) - <hiptest-uid>
+    Given Shipper authenticates using client id "{route-monitoring-shipper-client-id}" and client secret "{route-monitoring-shipper-client-secret}"
+    When Shipper creates a reservation
+      |service_type                  | Parcel                 |
+      |service_level                 | Standard               |
+      |parcel_job_is_pickup_required | true                   |
+    And Operator search for all reservations for shipper legacy id "{route-monitoring-shipper-legacy-id}"
+    And Operator create an empty route
+      | driver_id  | {route-monitoring-driver-id}  |
+      | hub_id     | {sorting-hub-id}     |
+      | vehicle_id | {vehicle-id}         |
+      | zone_id    | {zone-id}            |
+    And Operator Route All Reservation Pickups
+    And Operator admin manifest force fail reservation with valid reason
+    When Operator Filter Route Monitoring Data for Today's Date
+    Then Operator verifies total invalid failed is 0 and other details
+      |total-expected-waypoints     | 1 |
+      |total-expected-valid-failed  | 1 |
+      |total-expected-early         | 0 |
+    And Operator get empty invalid failed reservation details
+
+    Examples:
+      | Note      | hiptest-uid                              |
+      |           | uid:8e12f8da-bd52-4760-b05c-6d8d610b6a51 |
+
+
+  @rmv2-invalid-failed-reservations
+  Scenario Outline: Operator Get Invalid Failed Reservation Details on Route with NON-Invalid Failed Reservation (Pending Reservation) - <hiptest-uid>
+    Given Shipper authenticates using client id "{route-monitoring-shipper-client-id}" and client secret "{route-monitoring-shipper-client-secret}"
+    When Shipper creates a reservation
+      |service_type                  | Parcel                 |
+      |service_level                 | Standard               |
+      |parcel_job_is_pickup_required | true                   |
+    And Operator search for all reservations for shipper legacy id "{route-monitoring-shipper-legacy-id}"
+    And Operator create an empty route
+      | driver_id  | {route-monitoring-driver-id}  |
+      | hub_id     | {sorting-hub-id}     |
+      | vehicle_id | {vehicle-id}         |
+      | zone_id    | {zone-id}            |
+    And Operator Route All Reservation Pickups
+    When Operator Filter Route Monitoring Data for Today's Date
+    Then Operator verifies total invalid failed is 0 and other details
+      |total-expected-waypoints     | 1 |
+    And Operator get empty invalid failed reservation details
+
+    Examples:
+      | Note      | hiptest-uid                              |
+      |           | uid:1609ead7-b2d6-4475-951f-db6eebcb32e3 |

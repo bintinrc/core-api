@@ -20,6 +20,7 @@ public class OrderCreateSteps extends BaseSteps {
 
     public static final String KEY_LIST_OF_ORDER_CREATE_RESPONSE = "key-list-of-order-create-response";
     public static final String KEY_LIST_OF_ORDER_CREATE_REQUEST = "key-list-of-order-create-request";
+    public static final String KEY_LIST_OF_PICKUP_ADDRESS_STRING = "key-list-of-pickup-address-string";
     private static final String DOMAIN = "ORDER-CREATION-STEPS";
     private OrderCreateClientV4 orderCreateClientV4;
 
@@ -47,6 +48,7 @@ public class OrderCreateSteps extends BaseSteps {
             putInList(KEY_LIST_OF_ORDER_CREATE_RESPONSE, result);
             putInMap(KEY_LIST_OF_ORDER_CREATE_REQUEST, result.getTrackingNumber(), request);
             put(KEY_PICKUP_ADDRESS_STRING, request.getFrom().getAddress().get("address2"));
+            putInList(KEY_LIST_OF_PICKUP_ADDRESS_STRING, request.getFrom().getAddress().get("address2"));
         }, "shipper create order");
     }
 
@@ -55,6 +57,17 @@ public class OrderCreateSteps extends BaseSteps {
         shipperCreateOrder(source);
         shipperCreateAnotherOrderWithSameParams();
     }
+
+    @Given("^Shipper creates a reservation$")
+    public void shipperCreateSingleReservation(Map<String, String> source){
+        shipperCreateOrder(source);
+    }
+
+    @Given("^Shipper creates multiple (\\d+) reservations$")
+    public void shipperCreateMultipleReservation(int numberOfRsvn, Map<String, String> source){
+        shipperCreateMultiplesOrders(numberOfRsvn, source);
+    }
+
 
     @Given("^Shipper creates multiple \"([^\"]*)\" orders$")
     public void shipperCreateMultipleReturnOrders(String type, Map<String, String> source){

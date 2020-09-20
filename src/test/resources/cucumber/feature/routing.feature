@@ -348,3 +348,63 @@ Feature: Routing
     Examples:
       | Note   | hiptest-uid                              |
       |        | uid:547956f4-da74-462e-9a14-ce8ed59a3a67 |
+
+  @route-unarchive
+  Scenario Outline: Operator Unarchive Driver Route Successfully - Empty Route - <hiptest-uid>
+    Given Operator create an empty route
+      | driver_id  | {routing-driver-id}  |
+      | hub_id     | {sorting-hub-id}     |
+      | vehicle_id | {vehicle-id}         |
+      | zone_id    | {zone-id}            |
+    And Operator archives driver route
+    Then DB Operator verifies route status is archived
+    When Operator unarchives driver route successfully
+    Then DB Operator verifies route status = IN_PROGRESS & archived = 0
+    Examples:
+      | Note   | hiptest-uid                              |
+      |        | uid:33e2b7c1-51ef-4021-b71d-122de32e10d1 |
+
+
+  @route-unarchive
+  Scenario Outline: Operator Unarchive Driver Route Successfully - Route has Waypoints - <hiptest-uid>
+    Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
+    When Shipper creates multiple orders : 3 orders
+      |service_type                  | Parcel       |
+      |service_level                 | Standard     |
+      |parcel_job_is_pickup_required | false        |
+    And Operator create an empty route
+      | driver_id  | {routing-driver-id}  |
+      | hub_id     | {sorting-hub-id}     |
+      | vehicle_id | {vehicle-id}         |
+      | zone_id    | {zone-id}            |
+    And Operator add all orders to driver "DD" route
+    And Operator archives driver route
+    Then DB Operator verifies route status is archived
+    When Operator unarchives driver route successfully
+    Then DB Operator verifies route status = IN_PROGRESS & archived = 0
+    Examples:
+      | Note   | hiptest-uid                              |
+      |        | uid:9621bd52-7238-4b37-a542-2e4850a5ed1e |
+
+
+  @route-unarchive
+  Scenario Outline: Operator Unarchive NON-archived Route - <hiptest-uid>
+    Given Operator create an empty route
+      | driver_id  | {routing-driver-id}  |
+      | hub_id     | {sorting-hub-id}     |
+      | vehicle_id | {vehicle-id}         |
+      | zone_id    | {zone-id}            |
+    When Operator unarchives driver route with non-archived route id
+    Then Operator verify that response is 400 with proper error message
+    Examples:
+      | Note   | hiptest-uid                              |
+      |        | uid:d0370a75-e80e-4ba2-a0a9-19007af580e4 |
+
+  @route-unarchive
+  Scenario Outline: Operator Unarchive Invalid Route Id - <hiptest-uid>
+    When Operator unarchives driver route with invalid route id
+    Then Operator verify that response is 404 with proper error message
+    Examples:
+      | Note   | hiptest-uid                              |
+      |        | uid:27d2eaec-d712-46db-b29d-300669495267 |
+
