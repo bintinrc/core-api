@@ -27,6 +27,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
     private InboundClient inboundClient;
     private ShipperClient shipperClient;
     private RouteMonitoringClient routeMonitoringClient;
+    private BatchUpdatePodClient batchUpdatePodClient;
 
     @SuppressWarnings("unchecked")
     protected void callWithRetry(Runnable runnable, String methodName) {
@@ -103,5 +104,12 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
             shipperClient = new ShipperClient(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());
         }
         return shipperClient;
+    }
+
+    protected synchronized BatchUpdatePodClient getBatchUpdatePodClient() {
+        if (batchUpdatePodClient == null) {
+            batchUpdatePodClient = new BatchUpdatePodClient(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());
+        }
+        return batchUpdatePodClient;
     }
 }
