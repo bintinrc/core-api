@@ -94,4 +94,12 @@ public class OrderCreateSteps extends BaseSteps {
             shipperCreateOrder(source);
         }
     }
+
+    @Given("^Shipper creates multiple orders : (\\d+) orders with the same params$")
+    public void shipperCreateMultiplesOrdersWithSameParams(int numberOfOrders, Map<String, String> source) {
+        shipperCreateOrder(source);
+        for (int i = 0; i < numberOfOrders-1; i++) {
+            shipperCreateAnotherOrderWithSameParams();
+        }
+    }
 }
