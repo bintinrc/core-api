@@ -372,7 +372,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
                 assertEquals("url", proofDetails.getSignatureImageUrl(), blobData.getUrl());
                 if(e.getJob().getAction().equalsIgnoreCase(ACTION_MODE_FAIL)) {
                     assertEquals("failure reason id", e.getJob().getFailureReasonId(), blobData.getFailureReasonId());
-//                    assertTrue("failure reason translations", blobData.getFailureReasonTranslations().contains(e.getJob().getFailureReason()));
+                    assertTrue("failure reason translations", blobData.getFailureReasonTranslations().contains(e.getJob().getFailureReason()));
                 }
                 if(e.getJob().getType().equalsIgnoreCase("RESERVATION")){
                     assertNull("status", blobData.getStatus());
