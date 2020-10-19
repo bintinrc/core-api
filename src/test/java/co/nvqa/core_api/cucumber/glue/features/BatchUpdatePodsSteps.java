@@ -362,7 +362,6 @@ public class BatchUpdatePodsSteps extends BaseSteps {
         callWithRetry(() -> {
             proofRequest.forEach( e -> {
                 BlobData blobData = fromJsonSnakeCase(blobDataMap.get(e.getJob().getId()), BlobData.class);
-                System.out.println("blob data ini" + blobDataMap.get(e.getJob().getId()));
                 ProofDetails proofDetails = e.getProofDetails();
                 assertEquals("name", proofDetails.getName().toLowerCase(), blobData.getName().toLowerCase());
                 assertEquals("contact", proofDetails.getContact(), blobData.getContact());
