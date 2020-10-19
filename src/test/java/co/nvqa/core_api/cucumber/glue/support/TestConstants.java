@@ -36,15 +36,15 @@ public class TestConstants extends StandardTestConstants {
         PICKUP_FAILURE_REASON_ID = getInt("pickup-failure-reason-id");
         DELIVERY_FAILURE_REASON_ID = getInt("delivery-failure-reason-id");
         RESERVATION_FAILURE_REASON_ID = getInt("reservation-failure-reason-id");
-        PICKUP_FAILURE_REASON = getString("pickup-failure-reason");
-        DELIVERY_FAILURE_REASON = getString("delivery-failure-reason");
-        RESERVATION_FAILURE_REASON = getString("reservation-failure-reason");
+        PICKUP_FAILURE_REASON = getString("pickup-failure-reason-string");
+        DELIVERY_FAILURE_REASON = getString("delivery-failure-reason-string");
+        RESERVATION_FAILURE_REASON = getString("reservation-failure-reason-string");
         PICKUP_VALID_FAILURE_REASON_ID = getInt("pickup-valid-failure-reason-id");
         DELIVERY_VALID_FAILURE_REASON_ID = getInt("delivery-valid-failure-reason-id");
         RESERVATION_VALID_FAILURE_REASON_ID = getInt("reservation-valid-failure-reason-id");
-        PICKUP_VALID_FAILURE_REASON = getString("pickup-valid-failure-reason");
-        DELIVERY_VALID_FAILURE_REASON = getString("delivery-valid-failure-reason");
-        RESERVATION_VALID_FAILURE_REASON = getString("reservation-valid-failure-reason");
+        PICKUP_VALID_FAILURE_REASON = getString("pickup-valid-failure-reason-string");
+        DELIVERY_VALID_FAILURE_REASON = getString("delivery-valid-failure-reason-string");
+        RESERVATION_VALID_FAILURE_REASON = getString("reservation-valid-failure-reason-string");
         DEFAULT_DP_ADDRESS_ID = getInt("default-dp-address-id");
         DEFAULT_DP_SHIPPER_ID = getInt("default-dp-shipper-id");
     }
