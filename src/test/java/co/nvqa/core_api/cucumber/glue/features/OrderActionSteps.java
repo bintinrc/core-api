@@ -112,9 +112,9 @@ public class OrderActionSteps extends BaseSteps {
         callWithRetry(() -> {
             operatorSearchOrderByTrackingId();
             Order order = get(KEY_CREATED_ORDER);
-            assertEquals(String.format("order %s status = %s", order.getTrackingId(), status), order.getStatus().toLowerCase(), status.toLowerCase());
-            assertEquals(String.format("order %s granular status = %s", order.getTrackingId(), granularStatus), order.getGranularStatus().toLowerCase(), granularStatus.toLowerCase());
-        }, "check order granular status");
+            assertEquals(String.format("order %s status = %s", order.getTrackingId(), status), status.toLowerCase(), order.getStatus().toLowerCase());
+            assertEquals(String.format("order %s granular status = %s", order.getTrackingId(), granularStatus), granularStatus.toLowerCase(), order.getGranularStatus().toLowerCase());
+        }, "check order granular status", 3);
     }
 
     @Then("^Operator verify that all orders status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
