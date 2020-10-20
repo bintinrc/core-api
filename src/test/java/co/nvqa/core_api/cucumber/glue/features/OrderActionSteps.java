@@ -39,6 +39,7 @@ public class OrderActionSteps extends BaseSteps {
             NvLogger.infof("retrieve created order details from core orders for tracking id %s", trackingId);
             Order order = getOrderDetails(trackingId);
             put(KEY_CREATED_ORDER, order);
+            putInList(KEY_LIST_OF_CREATED_ORDER, order);
             assertNotNull("retrieved order", order);
             put(KEY_CREATED_ORDER_ID, order.getId());
             assertNotNull("order id", order.getId());
@@ -111,9 +112,9 @@ public class OrderActionSteps extends BaseSteps {
         callWithRetry(() -> {
             operatorSearchOrderByTrackingId();
             Order order = get(KEY_CREATED_ORDER);
-            assertEquals(String.format("order %s status = %s", order.getTrackingId(), status), order.getStatus().toLowerCase(), status.toLowerCase());
-            assertEquals(String.format("order %s granular status = %s", order.getTrackingId(), granularStatus), order.getGranularStatus().toLowerCase(), granularStatus.toLowerCase());
-        }, "check order granular status");
+            assertEquals(String.format("order %s status = %s", order.getTrackingId(), status), status.toLowerCase(), order.getStatus().toLowerCase());
+            assertEquals(String.format("order %s granular status = %s", order.getTrackingId(), granularStatus), granularStatus.toLowerCase(), order.getGranularStatus().toLowerCase());
+        }, "check order granular status", 3);
     }
 
     @Then("^Operator verify that all orders status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
