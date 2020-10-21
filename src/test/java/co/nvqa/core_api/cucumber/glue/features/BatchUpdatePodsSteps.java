@@ -157,6 +157,18 @@ public class BatchUpdatePodsSteps extends BaseSteps {
         }, "batch update jobs", 30);
     }
 
+    @Given("^API Batch Update Job Request to \"([^\"]*)\" All Return Orders under the reservation$")
+    public void apiBatchJobUpdateReservationAllReturnOrders(String action) {
+        List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+        List<OrderRequestV4> orderRequest = get(OrderCreateSteps.KEY_LIST_OF_ORDER_CREATE_RESPONSE);
+        String normalTid = orderRequest.stream().filter( e -> e.getServiceType().equalsIgnoreCase("Parcel"))
+                .findAny().orElseThrow(() -> new NvTestRuntimeException("cant find order response"))
+                .getTrackingNumber();
+        trackingIds.remove(normalTid);
+        put(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, trackingIds);
+        apiBatchJobUpdateReservationAllOrders(action);
+    }
+
     @Given("^API Batch Update Proof Request to \"([^\"]*)\" All Orders under the reservation$")
     public void apiBatchProofsUpdateReservationAllOrders(String action) {
         long routeId = get(KEY_CREATED_ROUTE_ID);
@@ -169,6 +181,13 @@ public class BatchUpdatePodsSteps extends BaseSteps {
             put(KEY_UPDATE_PROOFS_REQUEST, request);
             getBatchUpdatePodClient().batchUpdatePodProofs(routeId, waypointId, request);
         }, "batch update proofs", 30);
+    }
+
+    @Given("^Operator get proof details for transaction of \"([^\"]*)\" orders$")
+    public void dbOperatorVerifiesTransactionBlobCreatedReturn(String type){
+        List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+        List<JobUpdate> request = createTransactionUpdateProofRequest(trackingIds, ACTION_MODE_SUCCESS, PICKUP_JOB_MODE, false);
+        put(KEY_UPDATE_PROOFS_REQUEST, request);
     }
 
     @Given("^API Batch Update Proof Request to Partial Success & Fail Orders under the reservation$")
@@ -345,7 +364,9 @@ public class BatchUpdatePodsSteps extends BaseSteps {
                     }
                     break;
                 case SUCCESSFUL_PICKUP:
-                    if(pickup != null || proofDetails == null){
+                    OrderRequestV4 order = get(KEY_ORDER_CREATE_REQUEST);
+                    //to exclude POD on Pickup with Normal Order
+                    if((pickup != null && order.getServiceType().equalsIgnoreCase("Parcel")) || proofDetails == null){
                         assertNull("pod is null", request.getPod());
                     } else {
                         checkDeliverySuccesPod(request, trackingId);

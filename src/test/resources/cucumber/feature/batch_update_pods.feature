@@ -33,7 +33,7 @@ Feature: Batch Update PODs
       | SUBSTITUTE   | uid:024b7c50-548c-4429-826a-eb8166effb86 |SUBSTITUTE|
 
   Scenario: Driver picks up X number of return parcels and fails Y number of return parcels in one waypoint (Partial Success) (uid:8e613bce-1d89-4468-ae25-beb96bb24a8d)
-    Given Shipper id "{routing-shipper-id}" subscribes to "Successful Delivery, Completed, Pending Reschedule, First Attempt Delivery Fail" webhook
+    Given Shipper id "{routing-shipper-id}" subscribes to "Successful Pickup, En-route to Sorting Hub, Pickup fail" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 4 orders with the same params
       |service_type                  | Return                  |
@@ -228,9 +228,45 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to "SUCCESS" All Orders under the reservation
     Then DB Operator verifies reservation_blob is created
     And Verify blob data is correct
+    And Operator get proof details for transaction of "Normal" orders
+    And DB Operator verifies transaction_blob is NOT created
+
+  @wip2
+  Scenario: Driver Picks Up All X number of Return Parcels in One Reservation (uid:6408c80d-acce-4956-87d8-76db59d666bd)
+    Given Shipper id "{routing-shipper-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
+    Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
+    When Shipper creates a reservation
+      |service_type                  | Parcel                  |
+      |service_level                 | Standard                |
+      |parcel_job_is_pickup_required | true                    |
+    And Operator create an empty route
+      | driver_id  | {route-monitoring-driver-id}  |
+      | hub_id     | {sorting-hub-id}     |
+      | vehicle_id | {vehicle-id}         |
+      | zone_id    | {zone-id}            |
+    And Operator Search for Created Pickup for Shipper "{routing-shipper-legacy-id}" with status "PENDING"
+    And Operator Route the Reservation Pickup
+    And Shipper creates multiple "Return" orders
+      |service_type                  | Return                  |
+      |service_level                 | Standard                |
+      |parcel_job_is_pickup_required | true                    |
+    When API Batch Update Job Request to "SUCCESS" All Return Orders under the reservation
+    Then Operator verify that reservation status is "SUCCESS"
+    And DB Operator verifies waypoint status is "SUCCESS"
+    And Operator verify that all orders status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
+    And Shipper gets webhook request for event "En-route to Sorting Hub" for all orders
+    And Shipper verifies webhook request payload has correct details for status "En-route to Sorting Hub" for all orders
+    And Shipper gets webhook request for event "Successful Pickup" for all orders
+    And Shipper verifies webhook request payload has correct details for status "Successful Pickup" for all orders
+    When API Batch Update Proof Request to "SUCCESS" All Orders under the reservation
+    Then DB Operator verifies reservation_blob is created
+    And Verify blob data is correct
+    And Operator get proof details for transaction of "Return" orders
+    And DB Operator verifies transaction_blob is created
+    And Verify blob data is correct
 
   Scenario: Driver success reservation without scanning any parcel (uid:e9166198-1c27-447e-bb75-62de915715eb)
-    Given Shipper id "{routing-shipper-id}" subscribes to "Successful Pickup" webhook
+    Given Shipper id "{routing-shipper-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
       |service_type                  | Parcel                  |
@@ -247,6 +283,7 @@ Feature: Batch Update PODs
     Then Operator verify that reservation status is "SUCCESS"
     And DB Operator verifies waypoint status is "SUCCESS"
     And Operator verify that all orders status-granular status is "Pending"-"Pending_Pickup"
+    And Verify NO "En-route to Sorting Hub" event sent for all orders
     And Verify NO "Successful Pickup" event sent for all orders
     When API Batch Update Proof Request to "SUCCESS" Reservation without any Parcel
     Then DB Operator verifies reservation_blob is created
@@ -278,7 +315,7 @@ Feature: Batch Update PODs
     Then DB Operator verifies reservation_blob is created
     And Verify blob data is correct
 
-  Scenario: Driver fails the reservation and fail all X number of parcels (uid:5c2299fa-cd51-4be8-9027-5f2bce2e7621)
+  Scenario: Driver fails the reservation and fail all X number of normal parcels under a reservation (uid:5c2299fa-cd51-4be8-9027-5f2bce2e7621)
     Given Shipper id "{routing-shipper-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
@@ -300,6 +337,39 @@ Feature: Batch Update PODs
     And Shipper verifies webhook request payload has correct details for status "Pickup fail" for all orders
     When API Batch Update Proof Request to "FAIL" All Orders under the reservation
     Then DB Operator verifies reservation_blob is created
+    And Verify blob data is correct
+    And Operator get proof details for transaction of "Normal" orders
+    And DB Operator verifies transaction_blob is NOT created
+
+  Scenario: Driver fails the reservation and fail all X number of return parcels under a reservation (uid:843069d4-281a-427c-9d84-a10e03c2d19a)
+    Given Shipper id "{routing-shipper-id}" subscribes to "Pickup fail" webhook
+    Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
+    When Shipper creates a reservation
+      |service_type                  | Parcel                  |
+      |service_level                 | Standard                |
+      |parcel_job_is_pickup_required | true                    |
+    And Operator create an empty route
+      | driver_id  | {route-monitoring-driver-id}  |
+      | hub_id     | {sorting-hub-id}     |
+      | vehicle_id | {vehicle-id}         |
+      | zone_id    | {zone-id}            |
+    And Operator Search for Created Pickup for Shipper "{routing-shipper-legacy-id}" with status "PENDING"
+    And Operator Route the Reservation Pickup
+    And Shipper creates multiple "Return" orders
+      |service_type                  | Return                  |
+      |service_level                 | Standard                |
+      |parcel_job_is_pickup_required | true                    |
+    When API Batch Update Job Request to "FAIL" All Return Orders under the reservation
+    Then Operator verify that reservation status is "FAIL"
+    And DB Operator verifies waypoint status is "FAIL"
+    And Operator verify that all orders status-granular status is "Pickup_fail"-"Pickup_fail"
+    And Shipper gets webhook request for event "Pickup fail" for all orders
+    And Shipper verifies webhook request payload has correct details for status "Pickup fail" for all orders
+    When API Batch Update Proof Request to "FAIL" All Orders under the reservation
+    Then DB Operator verifies reservation_blob is created
+    And Verify blob data is correct
+    And Operator get proof details for transaction of "Return" orders
+    And DB Operator verifies transaction_blob is created
     And Verify blob data is correct
 
   Scenario: Driver fails the reservation without failing any parcel (uid:82380b11-8ee9-48bd-a47c-9defda349ab8)
