@@ -26,6 +26,7 @@ public class ReservationSteps extends BaseSteps {
     public static final String KEY_LIST_OF_RESERVATION_TRACKING_IDS = "key-list-of-reservation-tracking-ids";
     private static final String DOMAIN = "RESERVATION-STEPS";
     private static final String ACTION_FAIL = "fail";
+    private static final String KEY_INITIAL_RESERVATION_ADDRESS = "key-initial-reservation-address";
 
     @Override
     public void init() {
@@ -35,6 +36,7 @@ public class ReservationSteps extends BaseSteps {
     @Given("Operator Search for Created Pickup for Shipper \"([^\"]*)\" with status \"([^\"]*)\"$")
     public void searchPickup(long legacyId, String status) {
         String pickupAddress = get(KEY_PICKUP_ADDRESS_STRING);
+        put(KEY_INITIAL_RESERVATION_ADDRESS, pickupAddress);
         ZonedDateTime startDateTime = DateUtil.getStartOfDay(DateUtil.getDate());
 
         final ZonedDateTime endDateTime = startDateTime.plusDays(3L)
@@ -81,6 +83,8 @@ public class ReservationSteps extends BaseSteps {
     @And("^Operator verify that reservation status is \"([^\"]*)\"$")
     public void operatorRouteReservation(String status) {
         Pickup pickup = get(KEY_CREATED_RESERVATION);
+        String pickupAddress = get(KEY_INITIAL_RESERVATION_ADDRESS);
+        put(KEY_PICKUP_ADDRESS_STRING, pickupAddress);
         callWithRetry(() -> {
             searchPickup(pickup.getShipperId(), status);
             Pickup result = get(KEY_CREATED_RESERVATION);
