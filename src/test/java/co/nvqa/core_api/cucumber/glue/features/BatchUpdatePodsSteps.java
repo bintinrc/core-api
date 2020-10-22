@@ -183,14 +183,19 @@ public class BatchUpdatePodsSteps extends BaseSteps {
         }, "batch update proofs", 30);
     }
 
-    @Given("^Operator get proof details for transaction of \"([^\"]*)\" orders$")
-    public void dbOperatorVerifiesTransactionBlobCreatedReturn(String type){
+    @Given("^Operator get proof details for \"([^\"]*)\" transaction of \"([^\"]*)\" orders$")
+    public void dbOperatorVerifiesTransactionBlobCreatedReturn(String action, String type){
         List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
         List<JobUpdate> reservationProof = get(KEY_UPDATE_PROOFS_REQUEST);
-        List<JobUpdate> request = createTransactionUpdateProofRequest(trackingIds, ACTION_MODE_SUCCESS, PICKUP_JOB_MODE, false);
+        List<JobUpdate> request = createTransactionUpdateProofRequest(trackingIds, action, PICKUP_JOB_MODE, false);
         request.forEach(e -> {
-            e.getProofDetails().setName(reservationProof.get(0).getProofDetails().getName());
-            e.getProofDetails().setContact(reservationProof.get(0).getProofDetails().getContact());
+            ProofDetails temp = reservationProof.get(0).getProofDetails();
+            e.getProofDetails().setName(temp.getName());
+            e.getProofDetails().setContact(temp.getContact());
+            if(action.equalsIgnoreCase(ACTION_MODE_FAIL)){
+                e.getJob().setFailureReasonId(temp.getFailedParcels().get(0).getFailureReasonId());
+                e.getJob().setFailureReason(temp.getFailedParcels().get(0).getFailureReason());
+            }
         });
         put(KEY_UPDATE_PROOFS_REQUEST, request);
     }
@@ -683,10 +688,12 @@ public class BatchUpdatePodsSteps extends BaseSteps {
             result.setComments("Failed with reason id "+TestConstants.RESERVATION_FAILURE_REASON_ID);
             List<FailedParcels> failedParcels = new ArrayList<>();
             if (!trackingIds.isEmpty()) {
+                result.setPickupQuantity(0);
                 trackingIds.forEach(e -> {
                     long orderId = OrderDetailHelper.searchOrder(e).getId();
                     FailedParcels temp = new FailedParcels();
-                    temp.setFailureReasonId(TestConstants.RESERVATION_VALID_FAILURE_REASON_ID);
+                    temp.setFailureReasonId(TestConstants.PICKUP_FAILURE_REASON_ID);
+                    temp.setFailureReason(TestConstants.PICKUP_FAILURE_REASON);
                     temp.setOrderId(orderId);
                     failedParcels.add(temp);
                 });
@@ -700,9 +707,9 @@ public class BatchUpdatePodsSteps extends BaseSteps {
                 pickupQuantity = 5;
             }
             result.setPickupQuantity(pickupQuantity);
-            result.setTrackingIds(trackingIds);
-        }
 
+        }
+        result.setTrackingIds(trackingIds);
         return result;
     }
 
