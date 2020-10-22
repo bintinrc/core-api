@@ -230,8 +230,7 @@ Feature: Batch Update PODs
     And Verify blob data is correct
     And Operator get proof details for transaction of "Normal" orders
     And DB Operator verifies transaction_blob is NOT created
-
-  @wip2
+    
   Scenario: Driver Picks Up All X number of Return Parcels in One Reservation (uid:6408c80d-acce-4956-87d8-76db59d666bd)
     Given Shipper id "{routing-shipper-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"

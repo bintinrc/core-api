@@ -186,7 +186,12 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     @Given("^Operator get proof details for transaction of \"([^\"]*)\" orders$")
     public void dbOperatorVerifiesTransactionBlobCreatedReturn(String type){
         List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+        List<JobUpdate> reservationProof = get(KEY_UPDATE_PROOFS_REQUEST);
         List<JobUpdate> request = createTransactionUpdateProofRequest(trackingIds, ACTION_MODE_SUCCESS, PICKUP_JOB_MODE, false);
+        request.forEach(e -> {
+            e.getProofDetails().setName(reservationProof.get(0).getProofDetails().getName());
+            e.getProofDetails().setContact(reservationProof.get(0).getProofDetails().getContact());
+        });
         put(KEY_UPDATE_PROOFS_REQUEST, request);
     }
 
@@ -405,7 +410,12 @@ public class BatchUpdatePodsSteps extends BaseSteps {
                     return;
                 }
                 assertEquals("status", e.getJob().getAction(), blobData.getStatus());
-                assertEquals("verification method", "NO_VERIFICATION", blobData.getVerificationMethod());
+                Pickup pickup = get(KEY_CREATED_RESERVATION);
+                if(pickup == null){
+                    assertEquals("verification method", "NO_VERIFICATION", blobData.getVerificationMethod());
+                } else {
+                    assertNull("verification method", blobData.getVerificationMethod());
+                }
             });
         },"check blob data");
     }
