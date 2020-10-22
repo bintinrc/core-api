@@ -228,9 +228,9 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to "SUCCESS" All Orders under the reservation
     Then DB Operator verifies reservation_blob is created
     And Verify blob data is correct
-    And Operator get proof details for transaction of "Normal" orders
+    And Operator get proof details for "SUCCESS" transaction of "Normal" orders
     And DB Operator verifies transaction_blob is NOT created
-    
+
   Scenario: Driver Picks Up All X number of Return Parcels in One Reservation (uid:6408c80d-acce-4956-87d8-76db59d666bd)
     Given Shipper id "{routing-shipper-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
@@ -260,7 +260,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to "SUCCESS" All Orders under the reservation
     Then DB Operator verifies reservation_blob is created
     And Verify blob data is correct
-    And Operator get proof details for transaction of "Return" orders
+    And Operator get proof details for "SUCCESS" transaction of "Return" orders
     And DB Operator verifies transaction_blob is created
     And Verify blob data is correct
 
@@ -337,7 +337,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to "FAIL" All Orders under the reservation
     Then DB Operator verifies reservation_blob is created
     And Verify blob data is correct
-    And Operator get proof details for transaction of "Normal" orders
+    And Operator get proof details for "FAIL" transaction of "Normal" orders
     And DB Operator verifies transaction_blob is NOT created
 
   Scenario: Driver fails the reservation and fail all X number of return parcels under a reservation (uid:843069d4-281a-427c-9d84-a10e03c2d19a)
@@ -367,7 +367,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to "FAIL" All Orders under the reservation
     Then DB Operator verifies reservation_blob is created
     And Verify blob data is correct
-    And Operator get proof details for transaction of "Return" orders
+    And Operator get proof details for "FAIL" transaction of "Return" orders
     And DB Operator verifies transaction_blob is created
     And Verify blob data is correct
 
