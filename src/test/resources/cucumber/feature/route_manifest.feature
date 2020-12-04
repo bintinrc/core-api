@@ -50,4 +50,4 @@ Feature: Route Manifest
     Examples:
       | Note      | hiptest-uid                              | service_level |action  |txn_status|status  |granular_status                              |
       | FAIL      | uid:084c00c4-fc31-4807-9406-564b9112a566 | Standard      |FAIL    |PENDING   |Pending |Pending_Pickup_At_Distribution_Point         |
-      | SUCCESS   | uid:5eb51442-b8d4-4a28-b474-8f49fac986c4 | Standard      |SUCCESS |SUCCESS   |Transit |Enroute_to_Sorting_Hub                       |
+      | SUCCESS   | uid:db316b2b-20c2-4b66-bba3-69f23a1ada7c | Standard      |SUCCESS |SUCCESS   |Transit |Enroute_to_Sorting_Hub                       |

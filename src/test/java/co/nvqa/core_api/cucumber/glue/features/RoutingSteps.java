@@ -30,6 +30,7 @@ public class RoutingSteps extends BaseSteps {
     private static final String DOMAIN = "ROUTING-STEP";
     public static final String KEY_LIST_OF_PULL_OUT_OF_ROUTE_TRACKING_ID = "key-list-pull-out-of-route-tracking-id";
     private static final String KEY_UNARCHIVE_ROUTE_RESPONSE = "key-unarchive-route-response";
+    private static final String KEY_ARCHIVE_ROUTE_RESPONSE = "key-archive-route-response";
 
     @Override
     public void init() {
@@ -110,47 +111,30 @@ public class RoutingSteps extends BaseSteps {
     public void operatorArchiveRoute() {
         long routeId = get(KEY_CREATED_ROUTE_ID);
         callWithRetry(() -> {
-            ArchiveRouteResponse response = getRouteClient().archiveRoute(routeId);
-            boolean found = response.getArchivedRouteIds().stream().anyMatch(e -> e.equals(routeId));
-            assertTrue("archived route found", found);
+            getRouteClient().archiveRouteV2(routeId);
         }, "archive driver route");
 
         NvLogger.success(DOMAIN, String.format("route %d is successfully archived", routeId));
     }
 
-    @When("^Operator unarchives driver route successfully$")
-    public void operatorUnarchiveRoute() {
-        long routeId = get(KEY_CREATED_ROUTE_ID);
-        callWithRetry(() -> {
-            getRouteClient().unarchiveRouteV2(routeId);
-        }, "unarchive driver route v2");
-    }
-
-    @When("^Operator unarchives driver route with non-archived route id$")
-    public void operatorFailUnarchiveRoute() {
-        long routeId = get(KEY_CREATED_ROUTE_ID);
+    @When("^Operator unarchives driver route with status code (\\d+)$")
+    public void operatorUnArchiveRouteV2(int statusCode) {
+        long routeId = get(KEY_CREATED_ROUTE_ID, 89L);
         callWithRetry(() -> {
             Response r = getRouteClient().unarchiveRouteV2AndGetRawResponse(routeId);
+            assertEquals("status code", statusCode, r.getStatusCode());
+            if(statusCode == HttpConstants.RESPONSE_200_SUCCESS){
+                assertTrue("response message", r.getBody().asString().equalsIgnoreCase("{\"new_route_status\":\"IN_PROGRESS\"}"));
+            }
             put(KEY_UNARCHIVE_ROUTE_RESPONSE, r);
         }, "unarchive driver route v2");
     }
 
-    @When("^Operator unarchives driver route with invalid route id$")
-    public void unarchiveInvalidRoute(){
-        put(KEY_CREATED_ROUTE_ID, 89L);
-        operatorFailUnarchiveRoute();
-    }
-
-    @When("^Operator verify that response is (\\d+) with proper error message$")
-    public void verifyBadUnarchivedRoute(int statusCode){
-        long routeId = get(KEY_CREATED_ROUTE_ID);
+    @When("^Operator verify unarchive route response with proper error message : Route \"([^\"]*)\"$")
+    public void verifyBadUnarchivedRoute(String message){
+        long routeId = get(KEY_CREATED_ROUTE_ID, 89L);
         Response r = get(KEY_UNARCHIVE_ROUTE_RESPONSE);
-        assertEquals("status code", statusCode, r.getStatusCode());
-        if(statusCode == HttpConstants.RESPONSE_400_BAD_REQUEST) {
-            r.then().body(containsString(String.format("Route with id=%d is not archived!", routeId)));
-        } else {
-            r.then().body(containsString(String.format("Route with id=%d not found!", routeId)));
-        }
+        assertTrue("response message", r.getBody().asString().contains(String.format("Route with id=%d %s", routeId, message)));
     }
 
     @When("^Operator archives multiple driver routes$")
@@ -201,6 +185,26 @@ public class RoutingSteps extends BaseSteps {
         }, "pull out of route");
     }
 
+    @When("^Operator archives driver route with status code (\\d+)$")
+    public void operatorArchiveRouteV2(int statusCode) {
+        long routeId = get(KEY_CREATED_ROUTE_ID, 1234L);
+        callWithRetry(() -> {
+            Response response = getRouteClient().archiveRouteV2AndGetRawResponse(routeId);
+            assertEquals("archive route response", statusCode, response.getStatusCode());
+            put(KEY_ARCHIVE_ROUTE_RESPONSE, response);
+        }, "archive driver route V2");
+    }
+
+    @When("^Operator verify archive route response with proper error message : Route \"([^\"]*)\"$")
+    public void operatorVerifyArchiveV2Route(String message) {
+        callWithRetry(() -> {
+            long routeId = get(KEY_CREATED_ROUTE_ID, 1234L);
+            Response response = get(KEY_ARCHIVE_ROUTE_RESPONSE);
+            assertTrue("response message", response.getBody().asString().contains(String.format("Route with id=%d %s", routeId, message)));
+
+        }, "verify archive driver route v2");
+    }
+
     private String generateUTCTodayDate() {
         ZonedDateTime startDateTime = DateUtil.getStartOfDay(DateUtil.getDate());
         return DateUtil
@@ -214,7 +218,7 @@ public class RoutingSteps extends BaseSteps {
         try {
             if (routeIds != null) {
                 routeIds.forEach(e ->
-                        callWithRetry(() -> getRouteClient().archiveRoute(e)
+                        callWithRetry(() -> getRouteClient().archiveRouteV2(e)
                                 , "try to archive created routes"));
             }
         } catch (Throwable t) {
