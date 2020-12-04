@@ -214,7 +214,7 @@ Feature: Routing
       | Success       | uid:94d33396-3638-4e91-bb8b-92be0adc9bfc |SUCCESS         | Return       | Standard      |true                         |
       | Failed        | uid:bdd977cd-adec-4e56-9604-7fb178c66e64 |FAIL            | Return       | Standard      |true                         |
 
-  @route-archive
+  @route-archive @debug
   Scenario: Operator Archive Driver Route Successfully - Empty Route (uid:6274cf87-9e6d-4087-912c-937093311538)
     Given Operator create an empty route
       | driver_id  | {routing-driver-id}  |
@@ -226,7 +226,7 @@ Feature: Routing
     When Driver authenticated to login with username "{routing-driver-username}" and password "{routing-driver-password}"
     Then Archived route is not shown on his list routes
 
-  @route-archive
+  @route-archive @debug
   Scenario: Operator Archive Driver Route Successfully - Status = PENDING (uid:8a99328a-9070-4fe4-9a51-a40ff025975c)
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper create order with parameters below
@@ -246,7 +246,7 @@ Feature: Routing
     When Driver authenticated to login with username "{routing-driver-username}" and password "{routing-driver-password}"
     Then Archived route is not shown on his list routes
 
-  @route-archive
+  @route-archive @debug
   Scenario: Operator Archive Driver Route Successfully - Status = IN_PROGRESS (uid:33dfaebd-6ce1-4022-abc3-8c443db4e72e)
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper create order with parameters below
@@ -267,7 +267,7 @@ Feature: Routing
     When Driver authenticated to login with username "{routing-driver-username}" and password "{routing-driver-password}"
     And Archived route is not shown on his list routes
 
-  @route-archive
+  @route-archive @debug
   Scenario: Operator not Allowed to Archive an already Archived Route (uid:0d211076-23da-4e20-ba06-c41fc1b122e3)
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper create order with parameters below
@@ -288,7 +288,7 @@ Feature: Routing
     When Operator archives driver route with status code 400
     Then Operator verify archive route response with proper error message : Route "is already archived!"
 
-  @route-archive
+  @route-archive @debug
   Scenario: Operator not Allowed to Archive Driver Invalid Route Id - Deleted Route  (uid:10fd732f-6326-4e7d-9ad2-6ec0da9ef4e8)
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper create order with parameters below
@@ -306,13 +306,13 @@ Feature: Routing
     And Operator archives driver route with status code 404
     Then Operator verify archive route response with proper error message : Route "not found!"
 
-  @route-archive
+  @route-archive @debug
   Scenario: Operator not Allowed to Archive Driver Invalid Route Id - Route Not Found (uid:547956f4-da74-462e-9a14-ce8ed59a3a67)
     Given Operator archives driver route with status code 404
     Then Operator verify archive route response with proper error message : Route "not found!"
 
 
-  @route-unarchive
+  @route-unarchive @debug
   Scenario: Operator Unarchive Driver Route Successfully - Empty Route (uid:33e2b7c1-51ef-4021-b71d-122de32e10d1)
     Given Operator create an empty route
       | driver_id  | {routing-driver-id}  |
@@ -325,7 +325,7 @@ Feature: Routing
     Then DB Operator verifies route status = IN_PROGRESS & archived = 0
 
 
-  @route-unarchive
+  @route-unarchive @debug
   Scenario: Operator Unarchive Driver Route Successfully - Route has Waypoints (uid:9621bd52-7238-4b37-a542-2e4850a5ed1e)
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 3 orders
@@ -344,7 +344,7 @@ Feature: Routing
     Then DB Operator verifies route status = IN_PROGRESS & archived = 0
 
 
-  @route-unarchive
+  @route-unarchive @debug
   Scenario: Operator Unarchive NON-archived Route (uid:d0370a75-e80e-4ba2-a0a9-19007af580e4)
     Given Operator create an empty route
       | driver_id  | {routing-driver-id}  |
@@ -354,7 +354,7 @@ Feature: Routing
     When Operator unarchives driver route with status code 400
     Then Operator verify unarchive route response with proper error message : Route "is not archived!"
 
-  @route-unarchive
+  @route-unarchive @debug
   Scenario: Operator Unarchive Invalid Route Id (uid:27d2eaec-d712-46db-b29d-300669495267)
     When Operator unarchives driver route with status code 404
     Then Operator verify unarchive route response with proper error message : Route "not found!"
