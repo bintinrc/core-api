@@ -147,6 +147,8 @@ public class ReservationSteps extends BaseSteps {
             } else {
                 getOrderClient().forceSuccessWaypoint(routeId, waypointId);
             }
+            Pickup pickup = get(KEY_CREATED_RESERVATION);
+            searchPickup(pickup.getShipperId(), action);
             NvLogger.success(DOMAIN, String.format("waypoint id %d force failed", waypointId));
         }, "admin force finish reservation");
     }

@@ -34,7 +34,7 @@ Feature: Routing
       | vehicle_id | {vehicle-id}         |
       | zone_id    | {zone-id}            |
     And Operator add order to driver "<route_type>" route
-    When Operator delete driver route
+    When Operator delete driver route with status code "200"
     Then DB Operator verifies soft-deleted route
     And Operator search for "<transaction_type>" transaction with status "PENDING"
     And DB Operator verifies transaction route id is null
@@ -62,7 +62,7 @@ Feature: Routing
       | vehicle_id | {vehicle-id}         |
       | zone_id    | {zone-id}            |
     And Operator Route the Reservation Pickup
-    When Operator delete driver route
+    When Operator delete driver route with status code "200"
     And DB Operator verifies soft-deleted route
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies route_waypoint is hard-deleted
@@ -88,7 +88,7 @@ Feature: Routing
     When Shipper create another order with the same parameters as before
     And Operator add order to driver "<route_type>" route
     And Operator merge transaction waypoints
-    When Operator delete driver route
+    When Operator delete driver route with status code "200"
     Then DB Operator verifies soft-deleted route
     And Operator search for multiple "<transaction_type>" transactions with status "PENDING"
     And DB Operator verifies all transactions route id is null
@@ -109,7 +109,7 @@ Feature: Routing
       | hub_id     | {sorting-hub-id}     |
       | vehicle_id | {vehicle-id}         |
       | zone_id    | {zone-id}            |
-    When Operator delete driver route
+    When Operator delete driver route with status code "200"
     Then DB Operator verifies soft-deleted route
     When Driver authenticated to login with username "{routing-driver-username}" and password "{routing-driver-password}"
     Then Deleted route is not shown on his list routes
@@ -136,7 +136,6 @@ Feature: Routing
     Examples:
       | Note               | hiptest-uid                              |
       |                    | uid:991188e0-9c44-421b-b549-5b37d1f386af |
-
   @route-delete
   Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
@@ -154,6 +153,7 @@ Feature: Routing
     And Operator Route the Reservation Pickup
     And Operator admin manifest force "<action>" reservation
     Then Operator delete driver route with status code "500"
+    And Operator verify delete route response with proper error message : "Reservation $reservation_id for Shipper $shipper_id has status <action>. Cannot delete route."
     And DB Operator verifies waypoint status is "<action>"
     And DB Operator verifies route_waypoint record remains exist
     Examples:
@@ -180,6 +180,7 @@ Feature: Routing
     And Operator force "<terminal_state>" "DELIVERY" waypoint
     And Operator search for "DELIVERY" transaction with status "<terminal_state>"
     When Operator delete driver route with status code "500"
+    And Operator verify delete route response with proper error message : "Delivery for Order $order_id has already been attempted. Cannot delete route."
     Then DB Operator verifies transaction remains routed to previous route id
     And DB Operator verifies waypoint status is "<terminal_state>"
     And DB Operator verifies route_waypoint record remains exist
@@ -206,6 +207,7 @@ Feature: Routing
     And Operator force "<terminal_state>" "PICKUP" waypoint
     And Operator search for "PICKUP" transaction with status "<terminal_state>"
     When Operator delete driver route with status code "500"
+    Then Operator verify delete route response with proper error message : "Pickup for Order $order_id has already been attempted. Cannot delete route."
     Then DB Operator verifies transaction remains routed to previous route id
     And DB Operator verifies waypoint status is "<terminal_state>"
     And DB Operator verifies route_waypoint record remains exist
