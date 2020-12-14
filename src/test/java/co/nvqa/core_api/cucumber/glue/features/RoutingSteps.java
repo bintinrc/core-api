@@ -2,9 +2,11 @@ package co.nvqa.core_api.cucumber.glue.features;
 
 import co.nvqa.commons.constants.HttpConstants;
 import co.nvqa.commons.model.core.Order;
+import co.nvqa.commons.model.core.Pickup;
 import co.nvqa.commons.model.core.route.AddParcelToRouteRequest;
 import co.nvqa.commons.model.core.route.ArchiveRouteResponse;
 import co.nvqa.commons.model.core.route.Route;
+import co.nvqa.commons.model.order_create.v4.OrderRequestV4;
 import co.nvqa.commons.support.DateUtil;
 import co.nvqa.commons.util.NvLogger;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
@@ -31,6 +33,7 @@ public class RoutingSteps extends BaseSteps {
     public static final String KEY_LIST_OF_PULL_OUT_OF_ROUTE_TRACKING_ID = "key-list-pull-out-of-route-tracking-id";
     private static final String KEY_UNARCHIVE_ROUTE_RESPONSE = "key-unarchive-route-response";
     private static final String KEY_ARCHIVE_ROUTE_RESPONSE = "key-archive-route-response";
+    private static final String KEY_DELETE_ROUTE_RESPONSE = "key-delete-route-response";
 
     @Override
     public void init() {
@@ -101,10 +104,31 @@ public class RoutingSteps extends BaseSteps {
         long routeId = get(KEY_CREATED_ROUTE_ID);
         callWithRetry(() -> {
             Response response = getRouteClient().deleteRouteAndGetRawResponse(routeId);
-            response.then().assertThat().contentType(ContentType.JSON);
-            response.then().assertThat().statusCode(statusCode);
-            NvLogger.success(DOMAIN, String.format("route %d is not allowed to be deleted", routeId));
-        }, "delete driver route unsuccessfully");
+            assertEquals("response code", statusCode, response.getStatusCode());
+            if(statusCode == HttpConstants.RESPONSE_200_SUCCESS){
+                assertEquals("response body", f("[%d]", routeId), response.getBody().asString());
+            }
+            put(KEY_DELETE_ROUTE_RESPONSE, response);
+        }, "delete driver route");
+    }
+
+    @When("^Operator verify delete route response with proper error message : \"([^\"]*)\"$")
+    public void verifyBadDeleteRoute(String message){
+        Response r = get(KEY_DELETE_ROUTE_RESPONSE);
+        Pickup pickup = get(KEY_CREATED_RESERVATION);
+        if(pickup != null){
+            System.out.println(String.format("Reservation %d for Shipper %d has status %s. Cannot delete route.", pickup.getId(), pickup.getShipperId(), pickup.getStatus().toUpperCase()));
+            assertTrue("response message", r.getBody().asString().contains(String.format("Reservation %d for Shipper %d has status %s. Cannot delete route.", pickup.getId(), pickup.getShipperId(), pickup.getStatus().toUpperCase())));
+        } else {
+            Order order = get(KEY_CREATED_ORDER);
+            String type;
+            if(order.getType().equalsIgnoreCase("Return")){
+                type = "Pickup";
+            } else {
+                type = "Delivery";
+            }
+            assertTrue("response message", r.getBody().asString().contains(String.format("%s for Order %d has already been attempted. Cannot delete route.", type, order.getId())));
+        }
     }
 
     @When("^Operator archives driver route$")
