@@ -16,38 +16,38 @@ import io.restassured.config.RedirectConfig;
 @Singleton
 public class ScenarioManager extends StandardScenarioManager {
 
-    static {
-        RestAssured.useRelaxedHTTPSValidation();
-        RestAssured.config = RestAssured.config()
-                .objectMapperConfig(new ObjectMapperConfig()
-                        .jackson2ObjectMapperFactory(
-                                (cls, charset) -> {
-                                    ObjectMapper objectMapper = new ObjectMapper();
-                                    objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-                                    objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-                                    return objectMapper;
-                                }
-                        )).redirect(
-                        RedirectConfig.redirectConfig()
-                                .followRedirects(true)
-                                .and()
-                                .maxRedirects(20)
-                );
-    }
+  static {
+    RestAssured.useRelaxedHTTPSValidation();
+    RestAssured.config = RestAssured.config()
+        .objectMapperConfig(new ObjectMapperConfig()
+            .jackson2ObjectMapperFactory(
+                (cls, charset) -> {
+                  ObjectMapper objectMapper = new ObjectMapper();
+                  objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+                  objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                  return objectMapper;
+                }
+            )).redirect(
+            RedirectConfig.redirectConfig()
+                .followRedirects(true)
+                .and()
+                .maxRedirects(20)
+        );
+  }
 
-    @Before
-    public void onCucumberInit(Scenario scenario) {
-        NvLogger.infof("on cucumber init: %s", scenario.getName());
-    }
+  @Before
+  public void onCucumberInit(Scenario scenario) {
+    NvLogger.infof("on cucumber init: %s", scenario.getName());
+  }
 
-    @After
-    public void afterScenario(Scenario scenario) {
-        final String DOMAIN = "SUMMARY";
+  @After
+  public void afterScenario(Scenario scenario) {
+    final String DOMAIN = "SUMMARY";
 
-        if (scenario.isFailed() && NvLogger.isInMemoryEnabled()) {
-            NvLogger.error(DOMAIN, "scenario: " + scenario.getName() + " error");
-            NvLogger.info(NvLogger.getLogStash());
-        }
-        NvLogger.reset();
+    if (scenario.isFailed() && NvLogger.isInMemoryEnabled()) {
+      NvLogger.error(DOMAIN, "scenario: " + scenario.getName() + " error");
+      NvLogger.info(NvLogger.getLogStash());
     }
+    NvLogger.reset();
+  }
 }

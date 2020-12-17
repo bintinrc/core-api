@@ -21,73 +21,73 @@ import java.util.List;
 @ScenarioScoped
 public class DpSteps extends BaseSteps {
 
-    public static String KEY_DP_SHIPPER_LEGACY_ID = "key-dp-shipper-legacy-id";
-    private DpClient dpClient;
+  public static String KEY_DP_SHIPPER_LEGACY_ID = "key-dp-shipper-legacy-id";
+  private DpClient dpClient;
 
-    @Override
-    public void init() {
+  @Override
+  public void init() {
 
-    }
+  }
 
-    @Given("^DP user authenticated to login with username \"([^\"]*)\" and password \"([^\"]*)\"$")
-    public void dpUserLogin(String username, String password){
-        dpClient = new DpClient(TestConstants.API_BASE_URL);
-        callWithRetry( () ->
-                dpClient.authenticate(new PasswordAuth(username, password)), "dp user login");
-    }
+  @Given("^DP user authenticated to login with username \"([^\"]*)\" and password \"([^\"]*)\"$")
+  public void dpUserLogin(String username, String password) {
+    dpClient = new DpClient(TestConstants.API_BASE_URL);
+    callWithRetry(() ->
+        dpClient.authenticate(new PasswordAuth(username, password)), "dp user login");
+  }
 
-    @Given("^DP user lodge in the return dp order to dp id \"([^\"]*)\"$")
-    public void dpUserLodgeInReturnOrder(long dpId){
-        List<String> trackingIds = get(OrderCreateSteps.KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-        callWithRetry( () ->
+  @Given("^DP user lodge in the return dp order to dp id \"([^\"]*)\"$")
+  public void dpUserLodgeInReturnOrder(long dpId) {
+    List<String> trackingIds = get(OrderCreateSteps.KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    callWithRetry(() ->
             trackingIds.forEach(e -> {
-                ReturnRequest request = createDpReturnOrderRequest(e);
-                request.setDpId(dpId);
-                dpClient.createReceiptAndReturnFullyIntegrated(request);
+              ReturnRequest request = createDpReturnOrderRequest(e);
+              request.setDpId(dpId);
+              dpClient.createReceiptAndReturnFullyIntegrated(request);
             })
         , "create dp return order");
-    }
+  }
 
-    @Given("^DP user lodge in as SEND order to dp id \"([^\"]*)\"$")
-    public void dpUserLodgeInSendOrder(long dpId){
-        List<String> trackingIds = get(OrderCreateSteps.KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-        callWithRetry( () ->
-                        trackingIds.forEach(e -> {
-                            LodgeInRequest request = createLodgeInRequest(e);
-                            request.setDpId(dpId);
-                            dpClient.createReceiptAndLodgeIn(request);
-                        })
-                , "create lodge in dp order");
-    }
+  @Given("^DP user lodge in as SEND order to dp id \"([^\"]*)\"$")
+  public void dpUserLodgeInSendOrder(long dpId) {
+    List<String> trackingIds = get(OrderCreateSteps.KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    callWithRetry(() ->
+            trackingIds.forEach(e -> {
+              LodgeInRequest request = createLodgeInRequest(e);
+              request.setDpId(dpId);
+              dpClient.createReceiptAndLodgeIn(request);
+            })
+        , "create lodge in dp order");
+  }
 
-    private ReturnRequest createDpReturnOrderRequest(String trackingId){
-        ReturnRequest result = new ReturnRequest();
-        callWithRetry(() -> {
-            Order order = OrderDetailHelper.getOrderDetails(trackingId);
-            result.setTrackingId(trackingId);
-            result.setStampId(StandardTestUtils.generateStampId());
-            result.setFromName(order.getFromName());
-            result.setFromContact(order.getFromContact());
-            result.setToEmail(order.getToEmail());
-            result.setToName(order.getToName());
-            result.setToContact(order.getToContact());
-            result.setToEmail(order.getToEmail());
-            result.setOrderId(order.getId());
-            result.setShipperId(order.getShipper().getId());
-            result.setToAddress1(order.getToAddress1());
-            result.setToAddress2(order.getToAddress2());
-        }, "create return dp order request");
-        return result;
-    }
+  private ReturnRequest createDpReturnOrderRequest(String trackingId) {
+    ReturnRequest result = new ReturnRequest();
+    callWithRetry(() -> {
+      Order order = OrderDetailHelper.getOrderDetails(trackingId);
+      result.setTrackingId(trackingId);
+      result.setStampId(StandardTestUtils.generateStampId());
+      result.setFromName(order.getFromName());
+      result.setFromContact(order.getFromContact());
+      result.setToEmail(order.getToEmail());
+      result.setToName(order.getToName());
+      result.setToContact(order.getToContact());
+      result.setToEmail(order.getToEmail());
+      result.setOrderId(order.getId());
+      result.setShipperId(order.getShipper().getId());
+      result.setToAddress1(order.getToAddress1());
+      result.setToAddress2(order.getToAddress2());
+    }, "create return dp order request");
+    return result;
+  }
 
-    private LodgeInRequest createLodgeInRequest(String trackingId){
-        LodgeInRequest result = new LodgeInRequest();
-        callWithRetry(() -> {
-            Order order = OrderDetailHelper.getOrderDetails(trackingId);
-            result.setTrackingId(trackingId);
-            result.setShipperId(order.getShipper().getId());
-            put(KEY_DP_SHIPPER_LEGACY_ID, order.getShipper().getId());
-        }, "create lodge in dp order request");
-        return result;
-    }
+  private LodgeInRequest createLodgeInRequest(String trackingId) {
+    LodgeInRequest result = new LodgeInRequest();
+    callWithRetry(() -> {
+      Order order = OrderDetailHelper.getOrderDetails(trackingId);
+      result.setTrackingId(trackingId);
+      result.setShipperId(order.getShipper().getId());
+      put(KEY_DP_SHIPPER_LEGACY_ID, order.getShipper().getId());
+    }, "create lodge in dp order request");
+    return result;
+  }
 }

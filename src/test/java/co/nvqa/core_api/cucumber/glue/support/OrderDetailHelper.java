@@ -14,28 +14,28 @@ import java.util.List;
 @ScenarioScoped
 public class OrderDetailHelper extends BaseSteps {
 
-    @Override
-    public void init() {
+  @Override
+  public void init() {
 
-    }
+  }
 
-    public static Order searchOrder(String trackingIdOrStampId) {
-        return getOrderSearchClient().searchOrderByTrackingId(trackingIdOrStampId);
-    }
+  public static Order searchOrder(String trackingIdOrStampId) {
+    return getOrderSearchClient().searchOrderByTrackingId(trackingIdOrStampId);
+  }
 
-    public static Order getOrderDetails(String trackingId) {
-        long orderId = searchOrder(trackingId).getId();
-        Order order = getOrderClient().getOrder(orderId);
-        return order;
-    }
+  public static Order getOrderDetails(String trackingId) {
+    long orderId = searchOrder(trackingId).getId();
+    Order order = getOrderClient().getOrder(orderId);
+    return order;
+  }
 
-    public static Transaction getTransaction(Order order, String type, String status) {
-        List<Transaction> transactions = order.getTransactions();
-        Transaction result;
-        result = transactions.stream()
-                .filter(e -> e.getType().equalsIgnoreCase(type))
-                .filter(e -> e.getStatus().equalsIgnoreCase(status))
-                .findAny().orElseThrow(() -> new NvTestRuntimeException("transaction details not found"));
-        return result;
-    }
+  public static Transaction getTransaction(Order order, String type, String status) {
+    List<Transaction> transactions = order.getTransactions();
+    Transaction result;
+    result = transactions.stream()
+        .filter(e -> e.getType().equalsIgnoreCase(type))
+        .filter(e -> e.getStatus().equalsIgnoreCase(status))
+        .findAny().orElseThrow(() -> new NvTestRuntimeException("transaction details not found"));
+    return result;
+  }
 }
