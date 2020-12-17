@@ -13,24 +13,25 @@ import java.util.List;
 @ScenarioScoped
 public class InboundSteps extends BaseSteps {
 
-    @Override
-    public void init() {
-    }
+  @Override
+  public void init() {
+  }
 
-    @Then("^Operator perform global inbound for created order at hub \"([^\"]*)\"$")
-    public void globalInbound(long hubId) {
-        callWithRetry(() -> {
-            String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-            getInboundClient().globalInbound(new GlobalInboundRequest(trackingId, GlobalInboundRequest.TYPE_SORTING_HUB, hubId));
-        }, "operator global inbound");
-    }
+  @Then("^Operator perform global inbound for created order at hub \"([^\"]*)\"$")
+  public void globalInbound(long hubId) {
+    callWithRetry(() -> {
+      String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+      getInboundClient().globalInbound(
+          new GlobalInboundRequest(trackingId, GlobalInboundRequest.TYPE_SORTING_HUB, hubId));
+    }, "operator global inbound");
+  }
 
-    @Then("^Operator inbounds all orders at hub \"([^\"]*)\"$")
-    public void globalInboundMultipleOrders(long hubId) {
-        List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-        trackingIds.forEach(e -> {
-            put(KEY_CREATED_ORDER_TRACKING_ID, e);
-            globalInbound(hubId);
-        });
-    }
+  @Then("^Operator inbounds all orders at hub \"([^\"]*)\"$")
+  public void globalInboundMultipleOrders(long hubId) {
+    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    trackingIds.forEach(e -> {
+      put(KEY_CREATED_ORDER_TRACKING_ID, e);
+      globalInbound(hubId);
+    });
+  }
 }

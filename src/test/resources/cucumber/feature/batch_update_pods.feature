@@ -5,14 +5,14 @@ Feature: Batch Update PODs
     Given Shipper id "{routing-shipper-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
-      |service_type                  | Return                  |
-      |service_level                 | Standard                |
-      |parcel_job_is_pickup_required | true                    |
+      | service_type                  | Return   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id}  |
-      | hub_id     | {sorting-hub-id}     |
-      | vehicle_id | {vehicle-id}         |
-      | zone_id    | {zone-id}            |
+      | driver_id  | {route-monitoring-driver-id} |
+      | hub_id     | {sorting-hub-id}             |
+      | vehicle_id | {vehicle-id}                 |
+      | zone_id    | {zone-id}                    |
     And Operator add all orders to driver "PP" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Success All Created Orders "Pickup" with pod type "<type>"
@@ -28,22 +28,22 @@ Feature: Batch Update PODs
     And Verify blob data is correct
 
     Examples:
-      | Note         | hiptest-uid                              |type      |
-      | RECIPIENT    | uid:70cd7f37-bca6-464e-866f-918528b7a14c |RECIPIENT |
-      | SUBSTITUTE   | uid:024b7c50-548c-4429-826a-eb8166effb86 |SUBSTITUTE|
+      | Note       | hiptest-uid                              | type       |
+      | RECIPIENT  | uid:70cd7f37-bca6-464e-866f-918528b7a14c | RECIPIENT  |
+      | SUBSTITUTE | uid:024b7c50-548c-4429-826a-eb8166effb86 | SUBSTITUTE |
 
   Scenario: Driver picks up X number of return parcels and fails Y number of return parcels in one waypoint (Partial Success) (uid:8e613bce-1d89-4468-ae25-beb96bb24a8d)
     Given Shipper id "{routing-shipper-id}" subscribes to "Successful Pickup, En-route to Sorting Hub, Pickup fail" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 4 orders with the same params
-      |service_type                  | Return                  |
-      |service_level                 | Standard                |
-      |parcel_job_is_pickup_required | true                   |
+      | service_type                  | Return   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id}  |
-      | hub_id     | {sorting-hub-id}     |
-      | vehicle_id | {vehicle-id}         |
-      | zone_id    | {zone-id}            |
+      | driver_id  | {route-monitoring-driver-id} |
+      | hub_id     | {sorting-hub-id}             |
+      | vehicle_id | {vehicle-id}                 |
+      | zone_id    | {zone-id}                    |
     And Operator add all orders to driver "PP" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Partial Success Orders "Pickup"
@@ -63,14 +63,14 @@ Feature: Batch Update PODs
     Given Shipper id "{routing-shipper-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
-       |service_type                  | Return                  |
-       |service_level                 | Standard                |
-       |parcel_job_is_pickup_required | true                    |
+      | service_type                  | Return   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id}  |
-      | hub_id     | {sorting-hub-id}     |
-      | vehicle_id | {vehicle-id}         |
-      | zone_id    | {zone-id}            |
+      | driver_id  | {route-monitoring-driver-id} |
+      | hub_id     | {sorting-hub-id}             |
+      | vehicle_id | {vehicle-id}                 |
+      | zone_id    | {zone-id}                    |
     And Operator add all orders to driver "PP" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Fail All Created Orders "Pickup"
@@ -87,15 +87,15 @@ Feature: Batch Update PODs
     Given Shipper id "{routing-shipper-id}" subscribes to "Successful Delivery, Completed" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
-      |service_type                  | Parcel                  |
-      |service_level                 | Standard                |
-      |parcel_job_is_pickup_required | false                   |
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
     When Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id}  |
-      | hub_id     | {sorting-hub-id}     |
-      | vehicle_id | {vehicle-id}         |
-      | zone_id    | {zone-id}            |
+      | driver_id  | {route-monitoring-driver-id} |
+      | hub_id     | {sorting-hub-id}             |
+      | vehicle_id | {vehicle-id}                 |
+      | zone_id    | {zone-id}                    |
     And Operator add all orders to driver "DD" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Success All Created Orders "Delivery" with pod type "<type>"
@@ -111,23 +111,23 @@ Feature: Batch Update PODs
     And Verify blob data is correct
 
     Examples:
-      | Note         | hiptest-uid                              |type      |
-      | RECIPIENT    | uid:bfa103c7-66e1-4d84-add4-8bb43ca9c9fd |RECIPIENT |
-      | SUBSTITUTE   | uid:3e86a2e5-1e5d-4e76-911a-5330f7859161 |SUBSTITUTE|
+      | Note       | hiptest-uid                              | type       |
+      | RECIPIENT  | uid:bfa103c7-66e1-4d84-add4-8bb43ca9c9fd | RECIPIENT  |
+      | SUBSTITUTE | uid:3e86a2e5-1e5d-4e76-911a-5330f7859161 | SUBSTITUTE |
 
   Scenario Outline: Driver delivers all X number of return parcels in one waypoint with POD type - <Note> (<hiptest-uid>)
     Given Shipper id "{routing-shipper-id}" subscribes to "Successful Delivery, Completed" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
-      |service_type                  | Return                  |
-      |service_level                 | Standard                |
-      |parcel_job_is_pickup_required | true                    |
+      | service_type                  | Return   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
     When Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id}  |
-      | hub_id     | {sorting-hub-id}     |
-      | vehicle_id | {vehicle-id}         |
-      | zone_id    | {zone-id}            |
+      | driver_id  | {route-monitoring-driver-id} |
+      | hub_id     | {sorting-hub-id}             |
+      | vehicle_id | {vehicle-id}                 |
+      | zone_id    | {zone-id}                    |
     And Operator add all orders to driver "DD" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Success All Created Orders "Delivery" with pod type "<type>"
@@ -143,23 +143,23 @@ Feature: Batch Update PODs
     And Verify blob data is correct
 
     Examples:
-      | Note         | hiptest-uid                              |type      |
-      | RECIPIENT    | uid:11b78edd-3021-40ab-9e8f-52913dfa1e66 |RECIPIENT |
-      | SUBSTITUTE   | uid:3f5ab4a0-d234-4756-964f-a9eaebffcc99 |SUBSTITUTE|
+      | Note       | hiptest-uid                              | type       |
+      | RECIPIENT  | uid:11b78edd-3021-40ab-9e8f-52913dfa1e66 | RECIPIENT  |
+      | SUBSTITUTE | uid:3f5ab4a0-d234-4756-964f-a9eaebffcc99 | SUBSTITUTE |
 
   Scenario: Driver Delivers X number of Parcels and Fails Y number of Parcels in One Waypoint (Partial Success) (uid:07fe3f7d-ee7a-4937-b7e1-9406fc239ad5)
     Given Shipper id "{routing-shipper-id}" subscribes to "Successful Delivery, Completed, Pending Reschedule, First Attempt Delivery Fail" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 4 orders with the same params
-      |service_type                  | Parcel                  |
-      |service_level                 | Standard                |
-      |parcel_job_is_pickup_required | false                   |
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
     When Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id}  |
-      | hub_id     | {sorting-hub-id}     |
-      | vehicle_id | {vehicle-id}         |
-      | zone_id    | {zone-id}            |
+      | driver_id  | {route-monitoring-driver-id} |
+      | hub_id     | {sorting-hub-id}             |
+      | vehicle_id | {vehicle-id}                 |
+      | zone_id    | {zone-id}                    |
     And Operator add all orders to driver "DD" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Partial Success Orders "Delivery"
@@ -180,15 +180,15 @@ Feature: Batch Update PODs
     Given Shipper id "{routing-shipper-id}" subscribes to "Pending Reschedule, First Attempt Delivery Fail" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
-      |service_type                  | Parcel                  |
-      |service_level                 | Standard                |
-      |parcel_job_is_pickup_required | false                   |
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
     When Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id}  |
-      | hub_id     | {sorting-hub-id}     |
-      | vehicle_id | {vehicle-id}         |
-      | zone_id    | {zone-id}            |
+      | driver_id  | {route-monitoring-driver-id} |
+      | hub_id     | {sorting-hub-id}             |
+      | vehicle_id | {vehicle-id}                 |
+      | zone_id    | {zone-id}                    |
     And Operator add all orders to driver "DD" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Fail All Created Orders "Delivery"
@@ -207,14 +207,14 @@ Feature: Batch Update PODs
     Given Shipper id "{routing-shipper-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
-      |service_type                  | Parcel                  |
-      |service_level                 | Standard                |
-      |parcel_job_is_pickup_required | true                    |
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id}  |
-      | hub_id     | {sorting-hub-id}     |
-      | vehicle_id | {vehicle-id}         |
-      | zone_id    | {zone-id}            |
+      | driver_id  | {route-monitoring-driver-id} |
+      | hub_id     | {sorting-hub-id}             |
+      | vehicle_id | {vehicle-id}                 |
+      | zone_id    | {zone-id}                    |
     And Operator Search for Created Pickup for Shipper "{routing-shipper-legacy-id}" with status "PENDING"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "SUCCESS" All Orders under the reservation
@@ -235,20 +235,20 @@ Feature: Batch Update PODs
     Given Shipper id "{routing-shipper-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates a reservation
-      |service_type                  | Parcel                  |
-      |service_level                 | Standard                |
-      |parcel_job_is_pickup_required | true                    |
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id}  |
-      | hub_id     | {sorting-hub-id}     |
-      | vehicle_id | {vehicle-id}         |
-      | zone_id    | {zone-id}            |
+      | driver_id  | {route-monitoring-driver-id} |
+      | hub_id     | {sorting-hub-id}             |
+      | vehicle_id | {vehicle-id}                 |
+      | zone_id    | {zone-id}                    |
     And Operator Search for Created Pickup for Shipper "{routing-shipper-legacy-id}" with status "PENDING"
     And Operator Route the Reservation Pickup
     And Shipper creates multiple "Return" orders
-      |service_type                  | Return                  |
-      |service_level                 | Standard                |
-      |parcel_job_is_pickup_required | true                    |
+      | service_type                  | Return   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
     When API Batch Update Job Request to "SUCCESS" All Return Orders under the reservation
     Then Operator verify that reservation status is "SUCCESS"
     And DB Operator verifies waypoint status is "SUCCESS"
@@ -268,14 +268,14 @@ Feature: Batch Update PODs
     Given Shipper id "{routing-shipper-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
-      |service_type                  | Parcel                  |
-      |service_level                 | Standard                |
-      |parcel_job_is_pickup_required | true                    |
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id}  |
-      | hub_id     | {sorting-hub-id}     |
-      | vehicle_id | {vehicle-id}         |
-      | zone_id    | {zone-id}            |
+      | driver_id  | {route-monitoring-driver-id} |
+      | hub_id     | {sorting-hub-id}             |
+      | vehicle_id | {vehicle-id}                 |
+      | zone_id    | {zone-id}                    |
     And Operator Search for Created Pickup for Shipper "{routing-shipper-legacy-id}" with status "PENDING"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "SUCCESS" Reservation without any Parcel
@@ -292,14 +292,14 @@ Feature: Batch Update PODs
     Given Shipper id "{routing-shipper-id}" subscribes to "Successful Pickup, En-route to Sorting Hub, Pickup fail" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 4 orders with the same params
-      |service_type                  | Parcel                  |
-      |service_level                 | Standard                |
-      |parcel_job_is_pickup_required | true                    |
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id}  |
-      | hub_id     | {sorting-hub-id}     |
-      | vehicle_id | {vehicle-id}         |
-      | zone_id    | {zone-id}            |
+      | driver_id  | {route-monitoring-driver-id} |
+      | hub_id     | {sorting-hub-id}             |
+      | vehicle_id | {vehicle-id}                 |
+      | zone_id    | {zone-id}                    |
     And Operator Search for Created Pickup for Shipper "{routing-shipper-legacy-id}" with status "PENDING"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to Partial Success Orders under the reservation
@@ -318,14 +318,14 @@ Feature: Batch Update PODs
     Given Shipper id "{routing-shipper-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
-      |service_type                  | Parcel                  |
-      |service_level                 | Standard                |
-      |parcel_job_is_pickup_required | true                    |
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id}  |
-      | hub_id     | {sorting-hub-id}     |
-      | vehicle_id | {vehicle-id}         |
-      | zone_id    | {zone-id}            |
+      | driver_id  | {route-monitoring-driver-id} |
+      | hub_id     | {sorting-hub-id}             |
+      | vehicle_id | {vehicle-id}                 |
+      | zone_id    | {zone-id}                    |
     And Operator Search for Created Pickup for Shipper "{routing-shipper-legacy-id}" with status "PENDING"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "FAIL" All Orders under the reservation
@@ -344,20 +344,20 @@ Feature: Batch Update PODs
     Given Shipper id "{routing-shipper-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates a reservation
-      |service_type                  | Parcel                  |
-      |service_level                 | Standard                |
-      |parcel_job_is_pickup_required | true                    |
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id}  |
-      | hub_id     | {sorting-hub-id}     |
-      | vehicle_id | {vehicle-id}         |
-      | zone_id    | {zone-id}            |
+      | driver_id  | {route-monitoring-driver-id} |
+      | hub_id     | {sorting-hub-id}             |
+      | vehicle_id | {vehicle-id}                 |
+      | zone_id    | {zone-id}                    |
     And Operator Search for Created Pickup for Shipper "{routing-shipper-legacy-id}" with status "PENDING"
     And Operator Route the Reservation Pickup
     And Shipper creates multiple "Return" orders
-      |service_type                  | Return                  |
-      |service_level                 | Standard                |
-      |parcel_job_is_pickup_required | true                    |
+      | service_type                  | Return   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
     When API Batch Update Job Request to "FAIL" All Return Orders under the reservation
     Then Operator verify that reservation status is "FAIL"
     And DB Operator verifies waypoint status is "FAIL"
@@ -375,14 +375,14 @@ Feature: Batch Update PODs
     Given Shipper id "{routing-shipper-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
-      |service_type                  | Parcel                  |
-      |service_level                 | Standard                |
-      |parcel_job_is_pickup_required | true                    |
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id}  |
-      | hub_id     | {sorting-hub-id}     |
-      | vehicle_id | {vehicle-id}         |
-      | zone_id    | {zone-id}            |
+      | driver_id  | {route-monitoring-driver-id} |
+      | hub_id     | {sorting-hub-id}             |
+      | vehicle_id | {vehicle-id}                 |
+      | zone_id    | {zone-id}                    |
     And Operator Search for Created Pickup for Shipper "{routing-shipper-legacy-id}" with status "PENDING"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "FAIL" Reservation without any Parcel
@@ -398,14 +398,14 @@ Feature: Batch Update PODs
     Given Shipper id "{routing-shipper-id}" subscribes to "Successful Pickup" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
-      |service_type                  | Return                  |
-      |service_level                 | Standard                |
-      |parcel_job_is_pickup_required | true                    |
+      | service_type                  | Return   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id}  |
-      | hub_id     | {sorting-hub-id}     |
-      | vehicle_id | {vehicle-id}         |
-      | zone_id    | {zone-id}            |
+      | driver_id  | {route-monitoring-driver-id} |
+      | hub_id     | {sorting-hub-id}             |
+      | vehicle_id | {vehicle-id}                 |
+      | zone_id    | {zone-id}                    |
     And Operator add all orders to driver "PP" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Success All Created Orders "Pickup" with NO Proof Details
@@ -419,15 +419,15 @@ Feature: Batch Update PODs
     Given Shipper id "{routing-shipper-id}" subscribes to "Successful Delivery" webhook
     Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
-      |service_type                  | Return                  |
-      |service_level                 | Standard                |
-      |parcel_job_is_pickup_required | true                    |
+      | service_type                  | Return   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
     And Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id}  |
-      | hub_id     | {sorting-hub-id}     |
-      | vehicle_id | {vehicle-id}         |
-      | zone_id    | {zone-id}            |
+      | driver_id  | {route-monitoring-driver-id} |
+      | hub_id     | {sorting-hub-id}             |
+      | vehicle_id | {vehicle-id}                 |
+      | zone_id    | {zone-id}                    |
     And Operator add all orders to driver "DD" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Success All Created Orders "Delivery" with NO Proof Details
