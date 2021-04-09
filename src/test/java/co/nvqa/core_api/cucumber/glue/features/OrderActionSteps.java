@@ -43,9 +43,19 @@ public class OrderActionSteps extends BaseSteps {
       putInList(KEY_LIST_OF_CREATED_ORDER, order);
       assertNotNull("retrieved order", order);
       put(KEY_CREATED_ORDER_ID, order.getId());
+      putInList(KEY_LIST_OF_CREATED_ORDER_ID, order.getId());
       assertNotNull("order id", order.getId());
       NvLogger.successf("order id = %d is successfully retrieved from core", order.getId());
     }, "retrieve order details from core");
+  }
+
+  @Then("^Operator search for all created orders$")
+  public void operatorSearchAllOrdersByTrackingIds() {
+    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    trackingIds.forEach(e -> {
+      put(KEY_CREATED_ORDER_TRACKING_ID, e);
+      operatorSearchOrderByTrackingId();
+    });
   }
 
   @Then("^Operator search for \"([^\"]*)\" transaction with status \"([^\"]*)\"$")
