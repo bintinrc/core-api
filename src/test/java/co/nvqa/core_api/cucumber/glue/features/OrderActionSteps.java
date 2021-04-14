@@ -3,6 +3,7 @@ package co.nvqa.core_api.cucumber.glue.features;
 import co.nvqa.commons.model.core.Order;
 import co.nvqa.commons.model.core.Transaction;
 import co.nvqa.commons.model.core.event.Event;
+import co.nvqa.commons.model.core.event.EventDetail;
 import co.nvqa.commons.util.NvLogger;
 import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
@@ -13,6 +14,7 @@ import cucumber.runtime.java.guice.ScenarioScoped;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -115,10 +117,73 @@ public class OrderActionSteps extends BaseSteps {
   public void operatortVerifiesOrderEvent(String event) {
     long orderId = get(KEY_CREATED_ORDER_ID);
     callWithRetry(() -> {
-      Event result = getOrderEvent(event, orderId);
+      List<Event> result = getOrderEvent(event, orderId);
       assertEquals(String.format("%s event is published", event), event.toLowerCase(),
-          result.getType().toLowerCase());
+          result.get(0).getType().toLowerCase());
+      put(KEY_ORDER_EVENTS, result);
+      putAllInList(KEY_LIST_OF_ORDER_EVENTS, result);
     }, String.format("%s event is published for order id %d", event, orderId));
+  }
+
+  @Then("^Operator checks that \"([^\"]*)\" event is NOT published$")
+  public void operatortVerifiesOrderEventNotPUblished(String event) {
+    long orderId = get(KEY_CREATED_ORDER_ID);
+    callWithRetry(() -> {
+      List<Event> result = getOrderEvent(event, orderId);
+      assertTrue(String.format("%s event is NOT published", event), result.isEmpty());
+    }, String.format("%s event is NOT published", event));
+  }
+
+  @Then("^Operator verifies that order event \"([^\"]*)\" data has correct details$")
+  public void operatortVerifiesOrderEventData(String eventType) {
+    List<Event> events = get(KEY_LIST_OF_ORDER_EVENTS);
+    List<Long> routeIds = get(KEY_LIST_OF_CREATED_ROUTE_ID);
+    Long routeId = get(KEY_CREATED_ROUTE_ID);
+    Event event;
+    if (eventType.equalsIgnoreCase(Event.ADD_TO_ROUTE_EVENT) || eventType
+        .equalsIgnoreCase(Event.PULL_OUT_OF_ROUTE_EVENT)) {
+      event = events.stream()
+          .filter(e -> e.getType().equalsIgnoreCase(eventType))
+          .filter(e -> e.getData().getSource().equalsIgnoreCase("ROUTE_TRANSFER"))
+          .findAny().orElseThrow(() -> new NvTestRuntimeException(
+              "order event not found"));
+    } else {
+      event = events.stream()
+          .filter(e -> e.getType().equalsIgnoreCase(eventType))
+          .findAny().orElseThrow(() -> new NvTestRuntimeException(
+              "order event not found"));
+    }
+    EventDetail data = event.getData();
+
+    switch (eventType) {
+      case Event.ROUTE_TRANSFER_SCAN_EVENT:
+        if (data.getRouteIdValue().getOldValue() != null) {
+          put(KEY_CREATED_ROUTE_ID, routeIds.get(1));
+          assertEquals("new route_id", routeIds.get(1), data.getRouteIdValue().getNewValue());
+          assertEquals("old route_id", routeIds.get(0), data.getRouteIdValue().getOldValue());
+        } else {
+          put(KEY_CREATED_ROUTE_ID, routeIds.get(0));
+          assertEquals("new route_id", routeIds.get(0), data.getRouteIdValue().getNewValue());
+        }
+        break;
+      case Event.PULL_OUT_OF_ROUTE_EVENT:
+        assertEquals("data.route_id", routeIds.get(0), data.getRouteId());
+        break;
+      default: {
+        //ADD_TO_ROUTE & DRIVER_INBOUND_SCAN
+        assertEquals("data.route_id", routeId, data.getRouteId());
+      }
+    }
+  }
+
+  @Then("^Operator verifies that for all orders, order event \"([^\"]*)\" data has correct details$")
+  public void operatortVerifiesOrderEventDataForAll(String event) {
+    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    trackingIds.forEach(e -> {
+      put(KEY_CREATED_ORDER_TRACKING_ID, e);
+      operatorSearchOrderByTrackingId();
+      operatortVerifiesOrderEventData(event);
+    });
   }
 
   @Then("^Operator verify that order status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
@@ -177,6 +242,15 @@ public class OrderActionSteps extends BaseSteps {
       getOrderClient().forceSuccess(orderId);
       NvLogger.success(DOMAIN, String.format("order id %d force successed", orderId));
     }, "force success order");
+  }
+
+  @When("^Operator force success all orders$")
+  public void operatorForceSuccessAllOrders() {
+    List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
+    orderIds.forEach(e -> {
+      put(KEY_CREATED_ORDER_ID, e);
+      operatorForceSuccessOrder();
+    });
   }
 
   @When("^Operator force \"([^\"]*)\" \"([^\"]*)\" waypoint$")
@@ -242,12 +316,9 @@ public class OrderActionSteps extends BaseSteps {
     return result;
   }
 
-  private Event getOrderEvent(String event, long orderId) {
+  private List<Event> getOrderEvent(String event, long orderId) {
     List<Event> events = getEventClient().getOrderEventsByOrderId(orderId).getData();
-    Event result;
-    result = events.stream()
-        .filter(e -> e.getType().equalsIgnoreCase(event))
-        .findAny().orElseThrow(() -> new NvTestRuntimeException("order event details not found"));
-    return result;
+    return events.stream()
+        .filter(c -> c.getType().equalsIgnoreCase(event)).collect(Collectors.toList());
   }
 }
