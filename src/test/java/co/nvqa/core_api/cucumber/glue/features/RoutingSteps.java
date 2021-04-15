@@ -120,9 +120,6 @@ public class RoutingSteps extends BaseSteps {
     Response r = get(KEY_DELETE_ROUTE_RESPONSE);
     Pickup pickup = get(KEY_CREATED_RESERVATION);
     if (pickup != null) {
-      System.out.println(String
-          .format("Reservation %d for Shipper %d has status %s. Cannot delete route.",
-              pickup.getId(), pickup.getShipperId(), pickup.getStatus().toUpperCase()));
       assertTrue("response message", r.getBody().asString().contains(String
           .format("Reservation %d for Shipper %d has status %s. Cannot delete route.",
               pickup.getId(), pickup.getShipperId(), pickup.getStatus().toUpperCase())));

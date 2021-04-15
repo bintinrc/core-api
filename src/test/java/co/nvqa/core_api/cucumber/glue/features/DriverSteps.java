@@ -2,9 +2,13 @@ package co.nvqa.core_api.cucumber.glue.features;
 
 import co.nvqa.commons.client.driver.DriverClient;
 import co.nvqa.commons.model.core.Transaction;
+import co.nvqa.commons.model.core.route.FailedOrder;
+import co.nvqa.commons.model.core.route.ParcelRouteTransferRequest;
+import co.nvqa.commons.model.core.route.ParcelRouteTransferResponse;
 import co.nvqa.commons.model.core.route.Route;
 import co.nvqa.commons.model.driver.*;
 import co.nvqa.commons.model.driver.scan.DeliveryRequestV5;
+import co.nvqa.commons.support.DateUtil;
 import co.nvqa.commons.support.DriverHelper;
 import co.nvqa.commons.util.NvLogger;
 import co.nvqa.commons.util.NvTestRuntimeException;
@@ -13,10 +17,13 @@ import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import cucumber.runtime.java.guice.ScenarioScoped;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Binti Cahayati on 2020-07-03
@@ -102,6 +109,56 @@ public class DriverSteps extends BaseSteps {
   @Given("^Driver \"([^\"]*)\" Reservation Pickup$")
   public void driverPickupReservation(String action) {
     driverDeliverParcels(action.toUpperCase(), WAYPOINT_TYPE_RESERVATION);
+  }
+
+  @When("^Driver Transfer Parcel to Another Driver$")
+  public void driverTransferRoute(Map<String, String> source) {
+    ParcelRouteTransferRequest request = createParcelRouteTransferRequest(source);
+    callWithRetry(() -> {
+          ParcelRouteTransferResponse response = getRouteClient().parcelRouteTransfer(request);
+          if (request.getRouteId() != null) {
+            long routeId = get(KEY_CREATED_ROUTE_ID);
+            assertEquals("routeId", routeId, response.getRoutes().get(0).getId());
+          }
+          put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, response);
+        },
+        "driver parcel route transfer");
+  }
+
+  @Then("^Verify Parcel Route Transfer Response$")
+  public void verifyRouteTransferReponse() {
+    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    ParcelRouteTransferResponse response = get(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS);
+    co.nvqa.commons.model.driver.Route route = response.getRoutes().get(0);
+    put(KEY_CREATED_ROUTE_ID, route.getId());
+    putInList(KEY_LIST_OF_CREATED_ROUTE_ID, route.getId());
+    List<Waypoint> waypoints = route.getWaypoints();
+    trackingIds.forEach(e -> {
+      Waypoint waypoint = waypoints.stream()
+          .filter(o -> !o.getJobs().isEmpty())
+          .filter(o -> o.getJobs().get(0).getOrders().get(0).getTrackingId().equalsIgnoreCase(e))
+          .findAny().orElseThrow(() -> new NvTestRuntimeException(
+              "Tracking Id is not available in response"));
+      assertTrue(String.format("tracking id %s found", e),
+          waypoint.getJobs().get(0).getOrders().get(0).getTrackingId().equals(e));
+    });
+  }
+
+  @Then("^Verify Parcel Route Transfer Failed Orders with message : \"([^\"]*)\"$")
+  public void verifyRouteTransferReponseFailed(String message) {
+    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    ParcelRouteTransferResponse response = get(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS);
+    List<FailedOrder> failedOrders = response.getFailedOrders();
+    assertTrue("contains all failed orders", failedOrders.size() == trackingIds.size());
+    trackingIds.forEach(e -> {
+      FailedOrder failedOrder = failedOrders.stream()
+          .filter(o -> o.getTrackingIds().get(0).equalsIgnoreCase(e))
+          .findAny().orElseThrow(() -> new NvTestRuntimeException(
+              String.format("tracking id %s not found", e)));
+      assertEquals("tracking id size", 1, failedOrder.getTrackingIds().size());
+      assertEquals("tracking id", e, failedOrder.getTrackingIds().get(0));
+      assertEquals("reason", message, failedOrder.getReason());
+    });
   }
 
   private void driverGetWaypointDetails() {
@@ -198,7 +255,7 @@ public class DriverSteps extends BaseSteps {
     }
   }
 
-  public void setOrderValidFailureReason(String jobType, Order order) {
+  private void setOrderValidFailureReason(String jobType, Order order) {
     if (jobType.equalsIgnoreCase(Job.TYPE_DELIVERY)) {
       order.setFailureReason(TestConstants.DELIVERY_VALID_FAILURE_REASON);
       order.setFailureReasonId(TestConstants.DELIVERY_VALID_FAILURE_REASON_ID);
@@ -206,5 +263,26 @@ public class DriverSteps extends BaseSteps {
       order.setFailureReason(TestConstants.PICKUP_VALID_FAILURE_REASON);
       order.setFailureReasonId(TestConstants.PICKUP_VALID_FAILURE_REASON_ID);
     }
+  }
+
+  private ParcelRouteTransferRequest createParcelRouteTransferRequest(Map<String, String> source) {
+    String json = toJsonCamelCase(source);
+    ParcelRouteTransferRequest request = fromJsonSnakeCase(json, ParcelRouteTransferRequest.class);
+    if (!source.containsKey("to_create_route")) {
+      long routeId = get(KEY_CREATED_ROUTE_ID);
+      request.setRouteId(routeId);
+    }
+    request.setRouteDate(DateUtil.getTodayDateTime_YYYY_MM_DD_HH_MM_SS());
+    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    List<co.nvqa.commons.model.core.route.Parcel> orders = new ArrayList<>();
+    trackingIds.forEach(e -> {
+      co.nvqa.commons.model.core.route.Parcel parcel = new co.nvqa.commons.model.core.route.Parcel();
+      parcel.setTrackingId(e);
+      parcel.setHubId(request.getToDriverHubId());
+      parcel.setInboundType("VAN_FROM_NINJAVAN");
+      orders.add(parcel);
+    });
+    request.setOrders(orders);
+    return request;
   }
 }

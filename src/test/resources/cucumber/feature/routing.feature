@@ -156,7 +156,7 @@ Feature: Routing
     Then Operator delete driver route with status code "500"
     And Operator verify delete route response with proper error message : "Reservation $reservation_id for Shipper $shipper_id has status <action>. Cannot delete route."
     And DB Operator verifies waypoint status is "<action>"
-    And DB Operator verifies route_waypoint record remains exist
+    And DB Operator verifies route_waypoint record exist
     Examples:
       | Note    | hiptest-uid                              | action  | service_type | service_level | parcel_job_is_pickup_required |
       | Success | uid:35a3e49a-435a-47ed-92dd-410ada4fad34 | Success | Parcel       | Standard      | true                          |
@@ -182,9 +182,9 @@ Feature: Routing
     And Operator search for "DELIVERY" transaction with status "<terminal_state>"
     When Operator delete driver route with status code "500"
     And Operator verify delete route response with proper error message : "Delivery for Order $order_id has already been attempted. Cannot delete route."
-    Then DB Operator verifies transaction remains routed to previous route id
+    Then DB Operator verifies transaction routed to new route id
     And DB Operator verifies waypoint status is "<terminal_state>"
-    And DB Operator verifies route_waypoint record remains exist
+    And DB Operator verifies route_waypoint record exists
     Examples:
       | Note    | hiptest-uid                              | terminal_state | service_type | service_level | parcel_job_is_pickup_required |
       | Success | uid:adeef437-d902-453a-8da1-e6962f9454a2 | SUCCESS        | Parcel       | Standard      | false                         |
@@ -209,9 +209,9 @@ Feature: Routing
     And Operator search for "PICKUP" transaction with status "<terminal_state>"
     When Operator delete driver route with status code "500"
     Then Operator verify delete route response with proper error message : "Pickup for Order $order_id has already been attempted. Cannot delete route."
-    Then DB Operator verifies transaction remains routed to previous route id
+    Then DB Operator verifies transaction routed to new route id
     And DB Operator verifies waypoint status is "<terminal_state>"
-    And DB Operator verifies route_waypoint record remains exist
+    And DB Operator verifies route_waypoint record exist
     Examples:
       | Note    | hiptest-uid                              | terminal_state | service_type | service_level | parcel_job_is_pickup_required |
       | Success | uid:94d33396-3638-4e91-bb8b-92be0adc9bfc | SUCCESS        | Return       | Standard      | true                          |
