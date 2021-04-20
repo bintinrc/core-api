@@ -4,6 +4,7 @@ import co.nvqa.commons.model.core.Order;
 import co.nvqa.commons.model.core.Transaction;
 import co.nvqa.commons.model.core.event.Event;
 import co.nvqa.commons.model.core.event.EventDetail;
+import co.nvqa.commons.model.other.ExceptionResponse;
 import co.nvqa.commons.util.NvLogger;
 import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
@@ -11,9 +12,10 @@ import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.guice.ScenarioScoped;
-
+import io.restassured.response.Response;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -28,6 +30,7 @@ public class OrderActionSteps extends BaseSteps {
   private static final String ACTION_FAIL = "fail";
   public static final String KEY_LIST_OF_ORDER_TAG_IDS = "key-order-tag-ids";
   public static final String KEY_LIST_OF_PRIOR_TRACKING_IDS = "key-list-prior-tracking-ids";
+  private static final String KEY_API_RAW_RESPONSE = "key-api-raw-response";
 
   @Override
   public void init() {
@@ -74,6 +77,9 @@ public class OrderActionSteps extends BaseSteps {
       putInList(KEY_LIST_OF_TRANSACTION_IDS, transaction.getId());
       putInList(KEY_LIST_OF_WAYPOINT_IDS, transaction.getWaypointId());
       put(KEY_WAYPOINT_ID, transaction.getWaypointId());
+      if (type.equalsIgnoreCase("DELIVERY")) {
+        put(KEY_DELIVERY_WAYPOINT_ID, transaction.getWaypointId());
+      }
     }, "retrieve transaction details from core");
   }
 
@@ -272,6 +278,54 @@ public class OrderActionSteps extends BaseSteps {
   public void tagPriorOrder() {
     long tagId = TestConstants.ORDER_TAG_PRIOR_ID;
     operatorTagsOrder(tagId);
+  }
+
+  @When("^Operator \"([^\"]*)\" Order COD value with value (\\d+)$")
+  public void operatorModifyCod(String type, long amount) {
+    long orderId = get(KEY_CREATED_ORDER_ID);
+    Response r = getOrderClient().addCodValueAndGetRawResponse(orderId, amount);
+    put(KEY_API_RAW_RESPONSE, r);
+  }
+
+  @When("^Operator deletes Order COD value")
+  public void operatorDeleteCod() {
+    long orderId = get(KEY_CREATED_ORDER_ID);
+    Response r = getOrderClient().deleteCodAndGetRawResponse(orderId);
+    put(KEY_API_RAW_RESPONSE, r);
+  }
+
+  @When("^Operator update delivery verfication with value \"([^\"]*)\"$")
+  public void operatorUpdateDeliveryVerification(String method) {
+    String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+    Response r = getOrderClient()
+        .editDeliveryVerificationRequiredAndGetRawResponse(trackingId, method);
+    put(KEY_API_RAW_RESPONSE, r);
+  }
+
+  @When("^Operator verify response code is (\\d+) with error message details as follow$")
+  public void operatorVerifyResponseWithParams(int expectedHttpStatus, Map<String, String> params) {
+    callWithRetry(() -> {
+      Response response = get(KEY_API_RAW_RESPONSE);
+      assertEquals("Http response code", expectedHttpStatus, response.getStatusCode());
+
+      String json = toJsonSnakeCase(params);
+      ExceptionResponse expectedError = fromJsonSnakeCase(json, ExceptionResponse.class);
+      ExceptionResponse actualError;
+      try {
+        actualError = fromJsonSnakeCase(response.body().asString(),
+            ExceptionResponse.class);
+      } catch (Exception e) {
+        NvLogger.error("JSON error: " + e.getMessage());
+        throw new RuntimeException("response is not valid JSON");
+      }
+      assertEquals("code", expectedError.getCode(), actualError.getCode());
+      assertEquals("messages", params.get("message"),
+          actualError.getMessages().get(0));
+      assertEquals("application", expectedError.getApplication(), actualError.getApplication());
+      assertEquals("description", expectedError.getDescription(), actualError.getDescription());
+      assertEquals("data.message", params.get("message"),
+          actualError.getData().getMessage());
+    }, "verify response");
   }
 
   @When("^Operator tags order with tag id \"([^\"]*)\"$")
