@@ -30,7 +30,7 @@ public class TestConstants extends StandardTestConstants {
 
   static {
     FAILURE_REASON_ID = getInt("failure-reason-id");
-    ROUTE_MONITORING_DRIVER_NAME = getString("route-monitoring-driver-name");
+    ROUTE_MONITORING_DRIVER_NAME = getString("driver-2-name");
     SORTING_HUB_NAME = getString("sorting-hub-name");
     ZONE_NAME = getString("zone-name");
     ORDER_TAG_PRIOR_ID = getInt("order-tag-prior-id");

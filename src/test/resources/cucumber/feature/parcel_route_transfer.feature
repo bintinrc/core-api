@@ -1,8 +1,8 @@
-@DeleteReservationAndAddress @ArchiveDriverRoutes @parcel-route-transfer @wip
+@DeleteReservationAndAddress @ArchiveDriverRoutes @parcel-route-transfer
 Feature: Parcel Route Transfer
 
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Unrouted Delivery (uid:fc7d3611-01fd-442a-bdf0-cde62c2460e1)
-    Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper creates multiple orders : 3 orders
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -11,7 +11,7 @@ Feature: Parcel Route Transfer
     And Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator search for multiple "DELIVERY" transactions with status "PENDING"
     When Driver Transfer Parcel to Another Driver
-      | to_driver_id     | {route-monitoring-driver-id} |
+      | to_driver_id     | {driver-2-id} |
       | to_driver_hub_id | {sorting-hub-id}             |
       | to_create_route  | true                         |
     Then Verify Parcel Route Transfer Response
@@ -28,7 +28,7 @@ Feature: Parcel Route Transfer
     And Operator verifies that for all orders, order event "ADD_TO_ROUTE" data has correct details
 
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Delivery (uid:4f8348c7-6b73-4e1a-9563-c8c4d4534a11)
-    Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -37,13 +37,13 @@ Feature: Parcel Route Transfer
     And Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator search for multiple "DELIVERY" transactions with status "PENDING"
     And Operator create an empty route
-      | driver_id  | {routing-driver-id} |
+      | driver_id  | {driver-id} |
       | hub_id     | {sorting-hub-id}    |
       | vehicle_id | {vehicle-id}        |
       | zone_id    | {zone-id}           |
     And Operator add all orders to driver "DD" route
     When Driver Transfer Parcel to Another Driver
-      | to_driver_id     | {route-monitoring-driver-id} |
+      | to_driver_id     | {driver-2-id} |
       | to_driver_hub_id | {sorting-hub-id}             |
       | to_create_route  | true                         |
     Then Verify Parcel Route Transfer Response
@@ -62,7 +62,7 @@ Feature: Parcel Route Transfer
     And Operator verifies that for all orders, order event "PULL_OUT_OF_ROUTE" data has correct details
 
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Unrouted Delivery (uid:f132d051-4ba0-4042-ae79-e83ea1beead6)
-    Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -71,12 +71,12 @@ Feature: Parcel Route Transfer
     And Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator search for multiple "DELIVERY" transactions with status "PENDING"
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id} |
+      | driver_id  | {driver-2-id} |
       | hub_id     | {sorting-hub-id}             |
       | vehicle_id | {vehicle-id}                 |
       | zone_id    | {zone-id}                    |
     When Driver Transfer Parcel to Another Driver
-      | to_driver_id     | {route-monitoring-driver-id} |
+      | to_driver_id     | {driver-2-id} |
       | to_driver_hub_id | {sorting-hub-id}             |
     Then Verify Parcel Route Transfer Response
     And DB Operator verifies all transactions routed to new route id
@@ -92,7 +92,7 @@ Feature: Parcel Route Transfer
     And Operator verifies that for all orders, order event "ADD_TO_ROUTE" data has correct details
 
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Routed Delivery (uid:1b362123-7a95-45d9-aa63-4037d236a017)
-    Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper creates multiple orders : 3 orders
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -101,18 +101,18 @@ Feature: Parcel Route Transfer
     And Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator search for multiple "DELIVERY" transactions with status "PENDING"
     And Operator create an empty route
-      | driver_id  | {routing-driver-id} |
+      | driver_id  | {driver-id} |
       | hub_id     | {sorting-hub-id}    |
       | vehicle_id | {vehicle-id}        |
       | zone_id    | {zone-id}           |
     And Operator add all orders to driver "DD" route
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id} |
+      | driver_id  | {driver-2-id} |
       | hub_id     | {sorting-hub-id}             |
       | vehicle_id | {vehicle-id}                 |
       | zone_id    | {zone-id}                    |
     When Driver Transfer Parcel to Another Driver
-      | to_driver_id     | {route-monitoring-driver-id} |
+      | to_driver_id     | {driver-2-id} |
       | to_driver_hub_id | {sorting-hub-id}             |
     Then Verify Parcel Route Transfer Response
     And DB Operator verifies all transactions routed to new route id
@@ -130,7 +130,7 @@ Feature: Parcel Route Transfer
     And Operator verifies that for all orders, order event "PULL_OUT_OF_ROUTE" data has correct details
 
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Fail Delivery (uid:48ae2613-9747-4cae-a581-80e9b79d9070)
-    Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -139,14 +139,14 @@ Feature: Parcel Route Transfer
     And Operator perform global inbound for created order at hub "{sorting-hub-id}"
     And Operator search for "DELIVERY" transaction with status "PENDING"
     And Operator create an empty route
-      | driver_id  | {routing-driver-id} |
+      | driver_id  | {driver-id} |
       | hub_id     | {sorting-hub-id}    |
       | vehicle_id | {vehicle-id}        |
       | zone_id    | {zone-id}           |
     And Operator add order to driver "DD" route
     And Operator force "FAIL" "DELIVERY" waypoint
     When Driver Transfer Parcel to Another Driver
-      | to_driver_id     | {route-monitoring-driver-id} |
+      | to_driver_id     | {driver-2-id} |
       | to_driver_hub_id | {sorting-hub-id}             |
       | to_create_route  | true                         |
     Then Verify Parcel Route Transfer Response
@@ -165,7 +165,7 @@ Feature: Parcel Route Transfer
     And Operator verifies that order event "PULL_OUT_OF_ROUTE" data has correct details
 
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Routed Fail Delivery (uid:3a4ad2dd-8073-45d0-a42d-e9b79787aa1f)
-    Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -174,19 +174,19 @@ Feature: Parcel Route Transfer
     And Operator perform global inbound for created order at hub "{sorting-hub-id}"
     And Operator search for "DELIVERY" transaction with status "PENDING"
     And Operator create an empty route
-      | driver_id  | {routing-driver-id} |
+      | driver_id  | {driver-id} |
       | hub_id     | {sorting-hub-id}    |
       | vehicle_id | {vehicle-id}        |
       | zone_id    | {zone-id}           |
     And Operator add order to driver "DD" route
     And Operator force "FAIL" "DELIVERY" waypoint
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id} |
+      | driver_id  | {driver-2-id} |
       | hub_id     | {sorting-hub-id}             |
       | vehicle_id | {vehicle-id}                 |
       | zone_id    | {zone-id}                    |
     When Driver Transfer Parcel to Another Driver
-      | to_driver_id     | {route-monitoring-driver-id} |
+      | to_driver_id     | {driver-2-id} |
       | to_driver_hub_id | {sorting-hub-id}             |
     Then Verify Parcel Route Transfer Response
     And DB Operator verifies transaction routed to new route id
@@ -204,7 +204,7 @@ Feature: Parcel Route Transfer
     And Operator verifies that order event "PULL_OUT_OF_ROUTE" data has correct details
 
   Scenario: Driver Not Allowed to Route Transfer Parcel with Status = Completed (uid:9efcbcf9-5e97-4ec4-90e3-bde7dd41aa79)
-    Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper creates multiple orders : 2 orders
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -213,12 +213,12 @@ Feature: Parcel Route Transfer
     And Operator search for multiple "DELIVERY" transactions with status "PENDING"
     And Operator force success all orders
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id} |
+      | driver_id  | {driver-2-id} |
       | hub_id     | {sorting-hub-id}             |
       | vehicle_id | {vehicle-id}                 |
       | zone_id    | {zone-id}                    |
     When Driver Transfer Parcel to Another Driver
-      | to_driver_id     | {route-monitoring-driver-id} |
+      | to_driver_id     | {driver-2-id} |
       | to_driver_hub_id | {sorting-hub-id}             |
     Then Verify Parcel Route Transfer Failed Orders with message : "Completed"
     And Operator verify that all orders status-granular status is "Completed"-"Completed"
@@ -226,7 +226,7 @@ Feature: Parcel Route Transfer
     And Operator checks that "ROUTE_TRANSFER_SCAN" event is NOT published
 
   Scenario: Driver Not Allowed to Route Transfer Parcel with Status = Cancelled (uid:cac31db7-be90-45e0-8b54-6b0859c25617)
-    Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -235,12 +235,12 @@ Feature: Parcel Route Transfer
     And Operator search for "DELIVERY" transaction with status "PENDING"
     And API Operator cancel created order
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id} |
+      | driver_id  | {driver-2-id} |
       | hub_id     | {sorting-hub-id}             |
       | vehicle_id | {vehicle-id}                 |
       | zone_id    | {zone-id}                    |
     When Driver Transfer Parcel to Another Driver
-      | to_driver_id     | {route-monitoring-driver-id} |
+      | to_driver_id     | {driver-2-id} |
       | to_driver_hub_id | {sorting-hub-id}             |
     Then Verify Parcel Route Transfer Failed Orders with message : "Cancelled"
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
@@ -248,7 +248,7 @@ Feature: Parcel Route Transfer
     And Operator checks that "ROUTE_TRANSFER_SCAN" event is NOT published
 
   Scenario: Driver Not Allowed to Route Transfer Parcel with Status = Returned to Sender (uid:e7c20dcc-dcf6-42fd-8dfd-b1e0011cf490)
-    Given Shipper authenticates using client id "{routing-shipper-client-id}" and client secret "{routing-shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -260,12 +260,12 @@ Feature: Parcel Route Transfer
       | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
     And Operator force success order
     And Operator create an empty route
-      | driver_id  | {route-monitoring-driver-id} |
+      | driver_id  | {driver-2-id} |
       | hub_id     | {sorting-hub-id}             |
       | vehicle_id | {vehicle-id}                 |
       | zone_id    | {zone-id}                    |
     When Driver Transfer Parcel to Another Driver
-      | to_driver_id     | {route-monitoring-driver-id} |
+      | to_driver_id     | {driver-2-id} |
       | to_driver_hub_id | {sorting-hub-id}             |
     Then Verify Parcel Route Transfer Failed Orders with message : "Returned to Sender"
     And Operator verify that order status-granular status is "Completed"-"Returned_to_Sender"
