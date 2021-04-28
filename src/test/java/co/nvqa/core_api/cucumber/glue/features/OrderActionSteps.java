@@ -1,5 +1,6 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
+import co.nvqa.commons.constants.HttpConstants;
 import co.nvqa.commons.model.core.Order;
 import co.nvqa.commons.model.core.Transaction;
 import co.nvqa.commons.model.core.event.Event;
@@ -307,6 +308,7 @@ public class OrderActionSteps extends BaseSteps {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     Response r = getOrderClient()
         .validateDeliveryVerificationAndGetRawResponse(trackingId);
+    assertEquals("response code", HttpConstants.RESPONSE_200_SUCCESS, r.statusCode());
     put(KEY_API_RAW_RESPONSE, r);
   }
 

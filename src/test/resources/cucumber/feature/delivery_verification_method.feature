@@ -273,7 +273,7 @@ Feature: Delivery Verification Method
     When Operator validate order for ATL
     Then Operator verify that response returns "false"
 
-  @validate-verification-method @wip
+  @validate-verification-method
   Scenario Outline: Validate ATL Order with Delivery Verification Method - <Note> (<hiptest-uid>)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
