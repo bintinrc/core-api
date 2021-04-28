@@ -302,6 +302,22 @@ public class OrderActionSteps extends BaseSteps {
     put(KEY_API_RAW_RESPONSE, r);
   }
 
+  @When("^Operator validate order for ATL$")
+  public void operatorValidateDeliveryVerification() {
+    String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+    Response r = getOrderClient()
+        .validateDeliveryVerificationAndGetRawResponse(trackingId);
+    put(KEY_API_RAW_RESPONSE, r);
+  }
+
+  @When("^Operator verify that response returns \"([^\"]*)\"$")
+  public void operatorVerifyResponseValidationDeliveryVerification(String data) {
+    Response r = get(KEY_API_RAW_RESPONSE);
+    String actualData = r.body().asString();
+    String expectedData = "{\"data\":"+data+"}";
+    assertEquals("response data", expectedData, actualData);
+  }
+
   @When("^Operator verify response code is (\\d+) with error message details as follow$")
   public void operatorVerifyResponseWithParams(int expectedHttpStatus, Map<String, String> params) {
     callWithRetry(() -> {
