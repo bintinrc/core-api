@@ -1,4 +1,4 @@
-@ForceSuccessOrder @modify-cod
+@ForceSuccessOrder @order-details @modify-cod
 Feature: Order Details
 
   @modify-cod

@@ -70,6 +70,7 @@ public class OrderActionSteps extends BaseSteps {
     callWithRetry(() -> {
       Order order = getOrderDetails(trackingId);
       put(KEY_CREATED_ORDER, order);
+      put(KEY_CREATED_ORDER_ID, order.getId());
       Transaction transaction = getTransaction(order, type, status);
       assertNotNull("retrieved transaction", transaction);
       NvLogger.successf("retrieved transaction for id %d", transaction.getId());
@@ -129,6 +130,7 @@ public class OrderActionSteps extends BaseSteps {
           result.get(0).getType().toLowerCase());
       put(KEY_ORDER_EVENTS, result);
       putAllInList(KEY_LIST_OF_ORDER_EVENTS, result);
+      operatortVerifiesOrderEventData(event);
     }, String.format("%s event is published for order id %d", event, orderId));
   }
 
@@ -146,22 +148,25 @@ public class OrderActionSteps extends BaseSteps {
     List<Event> events = get(KEY_LIST_OF_ORDER_EVENTS);
     List<Long> routeIds = get(KEY_LIST_OF_CREATED_ROUTE_ID);
     Long routeId = get(KEY_CREATED_ROUTE_ID);
+    long orderId = get(KEY_CREATED_ORDER_ID);
     Event event;
     if (eventType.equalsIgnoreCase(Event.ADD_TO_ROUTE_EVENT) || eventType
         .equalsIgnoreCase(Event.PULL_OUT_OF_ROUTE_EVENT)) {
+      String source = get(RoutingSteps.KEY_ROUTE_EVENT_SOURCE);
       event = events.stream()
+          .filter(e -> e.getOrderId() == orderId)
           .filter(e -> e.getType().equalsIgnoreCase(eventType))
-          .filter(e -> e.getData().getSource().equalsIgnoreCase("ROUTE_TRANSFER"))
+          .filter(e -> e.getData().getSource().equalsIgnoreCase(source))
           .findAny().orElseThrow(() -> new NvTestRuntimeException(
               "order event not found"));
     } else {
       event = events.stream()
+          .filter(e -> e.getOrderId() == orderId)
           .filter(e -> e.getType().equalsIgnoreCase(eventType))
           .findAny().orElseThrow(() -> new NvTestRuntimeException(
               "order event not found"));
     }
     EventDetail data = event.getData();
-
     switch (eventType) {
       case Event.ROUTE_TRANSFER_SCAN_EVENT:
         if (data.getRouteIdValue().getOldValue() != null) {
@@ -177,20 +182,10 @@ public class OrderActionSteps extends BaseSteps {
         assertEquals("data.route_id", routeIds.get(0), data.getRouteId());
         break;
       default: {
-        //ADD_TO_ROUTE & DRIVER_INBOUND_SCAN
+        //ADD_TO_ROUTE, DRIVER_INBOUND_SCAN, DRIVER_PICKUP_SCAN
         assertEquals("data.route_id", routeId, data.getRouteId());
       }
     }
-  }
-
-  @Then("^Operator verifies that for all orders, order event \"([^\"]*)\" data has correct details$")
-  public void operatortVerifiesOrderEventDataForAll(String event) {
-    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-    trackingIds.forEach(e -> {
-      put(KEY_CREATED_ORDER_TRACKING_ID, e);
-      operatorSearchOrderByTrackingId();
-      operatortVerifiesOrderEventData(event);
-    });
   }
 
   @Then("^Operator verify that order status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
@@ -232,14 +227,13 @@ public class OrderActionSteps extends BaseSteps {
 
   @Then("^Operator checks that for all orders, \"([^\"]*)\" event is published$")
   public void operatortVerifiesOrderEventForEach(String event) {
-    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-    trackingIds.forEach(e -> {
-      put(KEY_CREATED_ORDER_TRACKING_ID, e);
-      operatorSearchOrderByTrackingId();
+    List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
+    orderIds.forEach(e -> {
+      put(KEY_CREATED_ORDER_ID, e);
       operatortVerifiesOrderEvent(event);
     });
-    NvLogger.successf("%s event is published for all orders tracking ids %s", event,
-        Arrays.toString(trackingIds.toArray()));
+    NvLogger.successf("%s event is published for all order ids %s", event,
+        Arrays.toString(orderIds.toArray()));
   }
 
   @When("^Operator force success order$")
@@ -316,7 +310,7 @@ public class OrderActionSteps extends BaseSteps {
   public void operatorVerifyResponseValidationDeliveryVerification(String data) {
     Response r = get(KEY_API_RAW_RESPONSE);
     String actualData = r.body().asString();
-    String expectedData = "{\"data\":"+data+"}";
+    String expectedData = "{\"data\":" + data + "}";
     assertEquals("response data", expectedData, actualData);
   }
 

@@ -48,8 +48,11 @@ public class OrderCreateSteps extends BaseSteps {
       put(KEY_ORDER_CREATE_REQUEST, request);
       putInList(KEY_LIST_OF_ORDER_CREATE_RESPONSE, result);
       putInMap(KEY_LIST_OF_ORDER_CREATE_REQUEST, result.getTrackingNumber(), request);
-      put(KEY_PICKUP_ADDRESS_STRING, request.getFrom().getAddress().get("address2"));
-      putInList(KEY_LIST_OF_PICKUP_ADDRESS_STRING, request.getFrom().getAddress().get("address2"));
+      String pickupAddress =
+          request.getFrom().getAddress().get("address1") + " " + request.getFrom().getAddress()
+              .get("address2");
+      put(KEY_PICKUP_ADDRESS_STRING, pickupAddress);
+      putInList(KEY_LIST_OF_PICKUP_ADDRESS_STRING, pickupAddress);
     }, "shipper create order");
   }
 

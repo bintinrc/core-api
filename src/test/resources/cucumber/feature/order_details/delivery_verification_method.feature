@@ -1,4 +1,4 @@
-@ForceSuccessOrder @delivery-verification-method
+@ForceSuccessOrder @order-details @delivery-verification-method
 Feature: Delivery Verification Method
 
   @update-verification-method
