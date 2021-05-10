@@ -6,7 +6,6 @@ import co.nvqa.commons.model.core.Pickup;
 import co.nvqa.commons.model.core.route.AddParcelToRouteRequest;
 import co.nvqa.commons.model.core.route.ArchiveRouteResponse;
 import co.nvqa.commons.model.core.route.Route;
-import co.nvqa.commons.model.order_create.v4.OrderRequestV4;
 import co.nvqa.commons.support.DateUtil;
 import co.nvqa.commons.util.NvLogger;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
@@ -14,7 +13,6 @@ import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import cucumber.api.java.After;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.guice.ScenarioScoped;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
 import java.time.ZoneId;
@@ -34,6 +32,7 @@ public class RoutingSteps extends BaseSteps {
   private static final String KEY_UNARCHIVE_ROUTE_RESPONSE = "key-unarchive-route-response";
   private static final String KEY_ARCHIVE_ROUTE_RESPONSE = "key-archive-route-response";
   private static final String KEY_DELETE_ROUTE_RESPONSE = "key-delete-route-response";
+  public static final String KEY_ROUTE_EVENT_SOURCE = "key-route-event-source";
 
   @Override
   public void init() {
@@ -69,6 +68,7 @@ public class RoutingSteps extends BaseSteps {
       request.setTrackingId(trackingId);
       request.setType(type);
       getRouteClient().addParcelToRoute(routeId, request);
+      put(KEY_ROUTE_EVENT_SOURCE, "ADD_BY_TRACKING_OR_STAMP");
       NvLogger.success(DOMAIN,
           String.format("order %s added to %s route id %d", trackingId, type, routeId));
     }, "add parcel to route");
@@ -112,6 +112,7 @@ public class RoutingSteps extends BaseSteps {
         assertEquals("response body", f("[%d]", routeId), response.getBody().asString());
       }
       put(KEY_DELETE_ROUTE_RESPONSE, response);
+      put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ZONAL_ROUTING_REMOVE");
     }, "delete driver route");
   }
 

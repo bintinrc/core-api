@@ -21,7 +21,7 @@ public class OrderDetailHelper extends BaseSteps {
   }
 
   @Then("^Operator get \"([^\"]*)\" transaction waypoint Ids for all orders$")
-  public void shipperPeekItsWebhookAllOrders(String transactionType) {
+  public void getWaypointIdAllOrders(String transactionType) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     trackingIds.forEach(e -> {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
@@ -56,6 +56,7 @@ public class OrderDetailHelper extends BaseSteps {
     Transaction transaction = OrderDetailHelper
         .getTransaction(order, transactionType, Transaction.STATUS_PENDING);
     put(KEY_WAYPOINT_ID, transaction.getWaypointId());
+    put(KEY_TRANSACTION_ID, transaction.getId());
     putInList(KEY_LIST_OF_WAYPOINT_IDS, transaction.getWaypointId());
   }
 }

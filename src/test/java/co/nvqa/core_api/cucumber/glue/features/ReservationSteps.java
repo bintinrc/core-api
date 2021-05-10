@@ -60,7 +60,8 @@ public class ReservationSteps extends BaseSteps {
       doStepPause();
       List<Pickup> pickups = getShipperPickupClient().search(param);
       Pickup pickup = pickups.stream().
-          filter(e -> e.getAddress2().toLowerCase().contains(pickupAddress.toLowerCase()))
+          filter(e -> (e.getAddress1() + " " + e.getAddress2())
+              .equalsIgnoreCase(pickupAddress))
           .findAny().orElseThrow(() -> new NvTestRuntimeException("reservation details not found"));
       NvLogger.successf("reservation id %d found", pickup.getId());
       put(KEY_CREATED_RESERVATION, pickup);
@@ -100,7 +101,7 @@ public class ReservationSteps extends BaseSteps {
     long shipperId = TestConstants.DEFAULT_DP_SHIPPER_ID;
     long shipperLegacyId = get(DpSteps.KEY_DP_SHIPPER_LEGACY_ID);
     Address address = getShipperClient().readAddress(shipperId, addressId);
-    String pickupAddress = address.getAddress2();
+    String pickupAddress = address.getAddress1() + " " + address.getAddress2();
     put(KEY_PICKUP_ADDRESS_STRING, pickupAddress);
     searchPickup(shipperLegacyId, status);
   }

@@ -1,24 +1,5 @@
-@ForceSuccessOrder @DeleteReservationAndAddress @ArchiveDriverRoutes @routing
-Feature: Routing
-
-  @add-parcel-to-route
-  Scenario Outline: Operator Add Parcel to Driver Route Successfully - <Note> - <hiptest-uid>
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
-    When Shipper create order with parameters below
-      | service_type                  | <service_type>                  |
-      | service_level                 | <service_level>                 |
-      | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
-    And Operator create an empty route
-      | driver_id  | {driver-id} |
-      | hub_id     | {sorting-hub-id}    |
-      | vehicle_id | {vehicle-id}        |
-      | zone_id    | {zone-id}           |
-    And Operator add order to driver "<route_type>" route
-
-    Examples:
-      | Note     | hiptest-uid                              | route_type | service_type | service_level | parcel_job_is_pickup_required |
-      | Pickup   | uid:d9266718-dcf6-4131-8d77-6e3f5d239173 | PP         | Return       | Standard      | true                          |
-      | Delivery | uid:1917f9ef-8275-4dce-8f2d-500b4fa80930 | DD         | Parcel       | Standard      | false                         |
+@ForceSuccessOrder @DeleteReservationAndAddress @routing @route-delete
+Feature: Delete Route
 
   @route-delete
   Scenario Outline: Operator Delete Driver Route Successfully - Single Pending Transaction - <Note> - <hiptest-uid>
@@ -40,6 +21,7 @@ Feature: Routing
     And DB Operator verifies transaction route id is null
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies route_waypoint is hard-deleted
+    And DB Operator verifies route_monitoring_data is hard-deleted
     And Operator checks that "PULL_OUT_OF_ROUTE" event is published
     When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
@@ -66,6 +48,7 @@ Feature: Routing
     And DB Operator verifies soft-deleted route
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies route_waypoint is hard-deleted
+    And DB Operator verifies route_monitoring_data is hard-deleted
     When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
     Examples:
@@ -87,6 +70,7 @@ Feature: Routing
     And Operator add order to driver "<route_type>" route
     When Shipper create another order with the same parameters as before
     And Operator add order to driver "<route_type>" route
+    And Operator search for all created orders
     And Operator merge transaction waypoints
     When Operator delete driver route with status code "200"
     Then DB Operator verifies soft-deleted route
@@ -94,6 +78,7 @@ Feature: Routing
     And DB Operator verifies all transactions route id is null
     And DB Operator verifies all waypoints status is "PENDING"
     And DB Operator verifies all route_waypoint route id is hard-deleted
+    And DB Operator verifies all route_monitoring_data is hard-deleted
     And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
     When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
@@ -216,145 +201,3 @@ Feature: Routing
       | Note    | hiptest-uid                              | terminal_state | service_type | service_level | parcel_job_is_pickup_required |
       | Success | uid:94d33396-3638-4e91-bb8b-92be0adc9bfc | SUCCESS        | Return       | Standard      | true                          |
       | Failed  | uid:bdd977cd-adec-4e56-9604-7fb178c66e64 | FAIL           | Return       | Standard      | true                          |
-
-  @route-archive
-  Scenario: Operator Archive Driver Route Successfully - Empty Route (uid:6274cf87-9e6d-4087-912c-937093311538)
-    Given Operator create an empty route
-      | driver_id  | {driver-id} |
-      | hub_id     | {sorting-hub-id}    |
-      | vehicle_id | {vehicle-id}        |
-      | zone_id    | {zone-id}           |
-    And Operator archives driver route with status code 204
-    Then DB Operator verifies route status is archived
-    When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
-    Then Archived route is not shown on his list routes
-
-  @route-archive
-  Scenario: Operator Archive Driver Route Successfully - Status = PENDING (uid:8a99328a-9070-4fe4-9a51-a40ff025975c)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
-    When Shipper create order with parameters below
-      | service_type                  | Parcel                      |
-      | service_level                 | Standard                    |
-      | requested_tracking_number     | <requested_tracking_number> |
-      | parcel_job_is_pickup_required | false                       |
-    And Operator search for created order
-    And Operator create an empty route
-      | driver_id  | {driver-id} |
-      | hub_id     | {sorting-hub-id}    |
-      | vehicle_id | {vehicle-id}        |
-      | zone_id    | {zone-id}           |
-    And Operator add order to driver "DD" route
-    And Operator archives driver route with status code 204
-    Then DB Operator verifies route status is archived
-    When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
-    Then Archived route is not shown on his list routes
-
-  @route-archive
-  Scenario: Operator Archive Driver Route Successfully - Status = IN_PROGRESS (uid:33dfaebd-6ce1-4022-abc3-8c443db4e72e)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
-    When Shipper create order with parameters below
-      | service_type                  | Parcel   |
-      | service_level                 | Standard |
-      | parcel_job_is_pickup_required | false    |
-    And Operator search for created order
-    And Operator create an empty route
-      | driver_id  | {driver-id} |
-      | hub_id     | {sorting-hub-id}    |
-      | vehicle_id | {vehicle-id}        |
-      | zone_id    | {zone-id}           |
-    And Operator add order to driver "DD" route
-    When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
-    And Driver Starts the route
-    When Operator archives driver route with status code 204
-    Then DB Operator verifies route status is archived
-    When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
-    And Archived route is not shown on his list routes
-
-  @route-archive
-  Scenario: Operator not Allowed to Archive an already Archived Route (uid:0d211076-23da-4e20-ba06-c41fc1b122e3)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
-    When Shipper create order with parameters below
-      | service_type                  | Parcel   |
-      | service_level                 | Standard |
-      | parcel_job_is_pickup_required | false    |
-    And Operator search for created order
-    And Operator create an empty route
-      | driver_id  | {driver-id} |
-      | hub_id     | {sorting-hub-id}    |
-      | vehicle_id | {vehicle-id}        |
-      | zone_id    | {zone-id}           |
-    And Operator add order to driver "DD" route
-    And Operator archives driver route
-    Then DB Operator verifies route status is archived
-    When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
-    Then Archived route is not shown on his list routes
-    When Operator archives driver route with status code 400
-    Then Operator verify archive route response with proper error message : Route "is already archived!"
-
-  @route-archive
-  Scenario: Operator not Allowed to Archive Driver Invalid Route Id - Deleted Route  (uid:10fd732f-6326-4e7d-9ad2-6ec0da9ef4e8)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
-    When Shipper create order with parameters below
-      | service_type                  | Parcel   |
-      | service_level                 | Standard |
-      | parcel_job_is_pickup_required | false    |
-    And Operator search for created order
-    And Operator create an empty route
-      | driver_id  | {driver-id} |
-      | hub_id     | {sorting-hub-id}    |
-      | vehicle_id | {vehicle-id}        |
-      | zone_id    | {zone-id}           |
-    And Operator add order to driver "DD" route
-    When Operator delete driver route
-    And Operator archives driver route with status code 404
-    Then Operator verify archive route response with proper error message : Route "not found!"
-
-  @route-archive
-  Scenario: Operator not Allowed to Archive Driver Invalid Route Id - Route Not Found (uid:547956f4-da74-462e-9a14-ce8ed59a3a67)
-    Given Operator archives driver route with status code 404
-    Then Operator verify archive route response with proper error message : Route "not found!"
-
-  @route-unarchive
-  Scenario: Operator Unarchive Driver Route Successfully - Empty Route (uid:33e2b7c1-51ef-4021-b71d-122de32e10d1)
-    Given Operator create an empty route
-      | driver_id  | {driver-id} |
-      | hub_id     | {sorting-hub-id}    |
-      | vehicle_id | {vehicle-id}        |
-      | zone_id    | {zone-id}           |
-    And Operator archives driver route
-    Then DB Operator verifies route status is archived
-    When Operator unarchives driver route with status code 200
-    Then DB Operator verifies route status = IN_PROGRESS & archived = 0
-
-  @route-unarchive
-  Scenario: Operator Unarchive Driver Route Successfully - Route has Waypoints (uid:9621bd52-7238-4b37-a542-2e4850a5ed1e)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
-    When Shipper creates multiple orders : 3 orders
-      | service_type                  | Parcel   |
-      | service_level                 | Standard |
-      | parcel_job_is_pickup_required | false    |
-    And Operator create an empty route
-      | driver_id  | {driver-id} |
-      | hub_id     | {sorting-hub-id}    |
-      | vehicle_id | {vehicle-id}        |
-      | zone_id    | {zone-id}           |
-    And Operator add all orders to driver "DD" route
-    And Operator archives driver route
-    Then DB Operator verifies route status is archived
-    When Operator unarchives driver route with status code 200
-    Then DB Operator verifies route status = IN_PROGRESS & archived = 0
-
-  @route-unarchive
-  Scenario: Operator Unarchive NON-archived Route (uid:d0370a75-e80e-4ba2-a0a9-19007af580e4)
-    Given Operator create an empty route
-      | driver_id  | {driver-id} |
-      | hub_id     | {sorting-hub-id}    |
-      | vehicle_id | {vehicle-id}        |
-      | zone_id    | {zone-id}           |
-    When Operator unarchives driver route with status code 400
-    Then Operator verify unarchive route response with proper error message : Route "is not archived!"
-
-  @route-unarchive
-  Scenario: Operator Unarchive Invalid Route Id (uid:27d2eaec-d712-46db-b29d-300669495267)
-    When Operator unarchives driver route with status code 404
-    Then Operator verify unarchive route response with proper error message : Route "not found!"

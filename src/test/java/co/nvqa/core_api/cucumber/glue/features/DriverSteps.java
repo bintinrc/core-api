@@ -8,6 +8,7 @@ import co.nvqa.commons.model.core.route.ParcelRouteTransferResponse;
 import co.nvqa.commons.model.core.route.Route;
 import co.nvqa.commons.model.driver.*;
 import co.nvqa.commons.model.driver.scan.DeliveryRequestV5;
+import co.nvqa.commons.model.driver.scan.VanInboundScanRequest;
 import co.nvqa.commons.support.DateUtil;
 import co.nvqa.commons.support.DriverHelper;
 import co.nvqa.commons.util.NvLogger;
@@ -77,6 +78,16 @@ public class DriverSteps extends BaseSteps {
     callWithRetry(() -> driverClient.startRoute(routeId), "driver starts route");
   }
 
+  @Given("^Driver Van Inbound Parcel at hub id \"([^\"]*)\"$")
+  public void driverVanInboundParcel(long hubId) {
+    long routeId = get(KEY_CREATED_ROUTE_ID);
+    String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+    long waypointId = get(KEY_WAYPOINT_ID);
+    callWithRetry(() -> driverClient.scan(String.valueOf(routeId),
+        VanInboundScanRequest.createSimpleRequest(hubId, trackingId, waypointId)),
+        "driver van inbound parcel");
+  }
+
   @Given("^Driver \"([^\"]*)\" Parcel \"([^\"]*)\"$")
   public void driverDeliverParcels(String action, String type) {
     callWithRetry(() -> {
@@ -87,6 +98,20 @@ public class DriverSteps extends BaseSteps {
       long routeId = get(KEY_CREATED_ROUTE_ID);
       long waypointId = get(KEY_WAYPOINT_ID);
       DeliveryRequestV5 request = DriverHelper.createDefaultDeliveryRequestV5(waypointId, jobs);
+      driverClient.deliverV5(routeId, waypointId, request);
+    }, "driver attempts waypoint");
+  }
+
+  //to success/fail previously rescheduled failed delivery/pickup
+  @Given("^Driver \"([^\"]*)\" Parcel previous \"([^\"]*)\"$")
+  public void driverDeliverPreviousFailedParcels(String action, String type) {
+    callWithRetry(() -> {
+      createDriverJobs(action.toUpperCase());
+      List<JobV5> jobs = get(KEY_LIST_OF_DRIVER_JOBS);
+      long routeId = get(KEY_CREATED_ROUTE_ID);
+      long waypointId = get(KEY_WAYPOINT_ID);
+      DeliveryRequestV5 request = DriverHelper.createDefaultDeliveryRequestV5(waypointId, jobs);
+      put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "TRANSACTION_UNROUTE");
       driverClient.deliverV5(routeId, waypointId, request);
     }, "driver attempts waypoint");
   }
@@ -121,6 +146,7 @@ public class DriverSteps extends BaseSteps {
             assertEquals("routeId", routeId, response.getRoutes().get(0).getId());
           }
           put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, response);
+          put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ROUTE_TRANSFER");
         },
         "driver parcel route transfer");
   }

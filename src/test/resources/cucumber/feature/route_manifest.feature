@@ -9,10 +9,10 @@ Feature: Route Manifest
       | parcel_job_is_pickup_required | true            |
     And Operator Search for Created Pickup for Shipper "{shipper-2-legacy-id}" with status "PENDING"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator Route the Reservation Pickup
     When Operator admin manifest force "<action>" reservation
     Then Operator verify that reservation status is "<action>"
@@ -35,10 +35,10 @@ Feature: Route Manifest
     And DP user lodge in as SEND order to dp id "{dp-id}"
     And Operator search for created DP reservation with status "PENDING"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator Route the Reservation Pickup
     When Operator admin manifest force "<action>" reservation
     Then Operator verify that reservation status is "<action>"
@@ -61,10 +61,10 @@ Feature: Route Manifest
     When Operator inbounds all orders at hub "{sorting-hub-id}"
     And API Operator assign delivery multiple waypoint of an order to DP Include Today with ID = "{dpms-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add all orders to driver "DD" route
     And Operator merge transaction waypoints
     And Operator get "DELIVERY" transaction waypoint Ids for all orders
