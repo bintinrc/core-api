@@ -1,6 +1,7 @@
 @DeleteReservationAndAddress @ArchiveDriverRoutes @parcel-route-transfer
 Feature: Parcel Route Transfer
 
+  @routing-refactor
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Unrouted Delivery (uid:fc7d3611-01fd-442a-bdf0-cde62c2460e1)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper creates multiple orders : 3 orders
@@ -24,6 +25,7 @@ Feature: Parcel Route Transfer
     And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
     And DB Operator verifies inbound_scans record for all orders with type "4" and correct route_id
 
+  @routing-refactor
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Delivery (uid:4f8348c7-6b73-4e1a-9563-c8c4d4534a11)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -54,6 +56,7 @@ Feature: Parcel Route Transfer
     And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
 
+  @routing-refactor
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Unrouted Delivery (uid:f132d051-4ba0-4042-ae79-e83ea1beead6)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -81,6 +84,7 @@ Feature: Parcel Route Transfer
     And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
 
+  @routing-refactor
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Routed Delivery (uid:1b362123-7a95-45d9-aa63-4037d236a017)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper creates multiple orders : 3 orders
@@ -115,6 +119,7 @@ Feature: Parcel Route Transfer
     And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
     And DB Operator verifies inbound_scans record for all orders with type "4" and correct route_id
 
+  @routing-refactor
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Fail Delivery (uid:48ae2613-9747-4cae-a581-80e9b79d9070)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -146,6 +151,7 @@ Feature: Parcel Route Transfer
     And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
 
+  @routing-refactor
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Routed Fail Delivery (uid:3a4ad2dd-8073-45d0-a42d-e9b79787aa1f)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below

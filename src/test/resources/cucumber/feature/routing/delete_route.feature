@@ -1,7 +1,7 @@
 @ForceSuccessOrder @DeleteReservationAndAddress @routing @route-delete
 Feature: Delete Route
 
-  @route-delete
+  @route-delete @routing-refactor
   Scenario Outline: Operator Delete Driver Route Successfully - Single Pending Transaction - <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -20,6 +20,7 @@ Feature: Delete Route
     And Operator search for "<transaction_type>" transaction with status "PENDING"
     And DB Operator verifies transaction route id is null
     And DB Operator verifies waypoint status is "PENDING"
+    And DB Operator verifies waypoints.route_id & seq_no is NULL
     And DB Operator verifies route_waypoint is hard-deleted
     And DB Operator verifies route_monitoring_data is hard-deleted
     And Operator checks that "PULL_OUT_OF_ROUTE" event is published
@@ -30,7 +31,7 @@ Feature: Delete Route
       | Pickup   | uid:a9e166f2-0ca5-4aaf-baae-0593ba83dc00 | PP         | PICKUP           | Return       | Standard      | true                          |
       | Delivery | uid:c5e68f1d-09f8-4d9e-8632-8b9a5bd9d572 | DD         | DELIVERY         | Parcel       | Standard      | false                         |
 
-  @route-delete
+  @route-delete @routing-refactor
   Scenario Outline: Operator Delete Driver Route Successfully - Single Pending Reservation <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -47,6 +48,7 @@ Feature: Delete Route
     When Operator delete driver route with status code "200"
     And DB Operator verifies soft-deleted route
     And DB Operator verifies waypoint status is "PENDING"
+    And DB Operator verifies waypoints.route_id & seq_no is NULL
     And DB Operator verifies route_waypoint is hard-deleted
     And DB Operator verifies route_monitoring_data is hard-deleted
     When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
@@ -55,7 +57,7 @@ Feature: Delete Route
       | Note | hiptest-uid                              | service_type | service_level | parcel_job_is_pickup_required |
       |      | uid:5cf6b734-73e3-4689-b052-b04dc3fd467c | Parcel       | Standard      | true                          |
 
-  @route-delete
+  @route-delete @routing-refactor
   Scenario Outline: Operator Delete Driver Route Successfully - Merged Pending Waypoint - <Note> - <hiptest-uid>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -77,6 +79,7 @@ Feature: Delete Route
     And Operator search for multiple "<transaction_type>" transactions with status "PENDING"
     And DB Operator verifies all transactions route id is null
     And DB Operator verifies all waypoints status is "PENDING"
+    And DB Operator verifies waypoints.route_id & seq_no is NULL
     And DB Operator verifies all route_waypoint route id is hard-deleted
     And DB Operator verifies all route_monitoring_data is hard-deleted
     And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
