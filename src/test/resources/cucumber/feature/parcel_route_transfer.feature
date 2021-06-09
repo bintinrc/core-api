@@ -131,6 +131,7 @@ Feature: Parcel Route Transfer
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     And Operator force "FAIL" "DELIVERY" waypoint
+    Then Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
     When Driver Transfer Parcel to Another Driver
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
@@ -164,6 +165,7 @@ Feature: Parcel Route Transfer
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     And Operator force "FAIL" "DELIVERY" waypoint
+    Then Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
     And API Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
     When Driver Transfer Parcel to Another Driver
