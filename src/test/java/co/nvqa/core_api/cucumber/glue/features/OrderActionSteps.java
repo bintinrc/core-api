@@ -198,7 +198,7 @@ public class OrderActionSteps extends BaseSteps {
       assertEquals(
           String.format("order %s granular status = %s", order.getTrackingId(), granularStatus),
           granularStatus.toLowerCase(), order.getGranularStatus().toLowerCase());
-    }, "check order granular status", 3);
+    }, "check order granular status");
   }
 
   @Then("^Operator verify that all orders status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
