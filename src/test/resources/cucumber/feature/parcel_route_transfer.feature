@@ -15,6 +15,7 @@ Feature: Parcel Route Transfer
       | to_driver_hub_id | {sorting-hub-id} |
       | to_create_route  | true             |
     Then Verify Parcel Route Transfer Response
+    And DB Operator get routes dummy waypoints
     And DB Operator verifies all transactions routed to new route id
     And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints status is "ROUTED"
@@ -45,6 +46,7 @@ Feature: Parcel Route Transfer
       | to_driver_hub_id | {sorting-hub-id} |
       | to_create_route  | true             |
     Then Verify Parcel Route Transfer Response
+    And DB Operator get routes dummy waypoints
     And DB Operator verifies all transactions routed to new route id
     And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints status is "ROUTED"
@@ -65,11 +67,8 @@ Feature: Parcel Route Transfer
       | parcel_job_is_pickup_required | false    |
     And Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator search for multiple "DELIVERY" transactions with status "PENDING"
-    And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+    And API Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
     When Driver Transfer Parcel to Another Driver
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
@@ -99,11 +98,8 @@ Feature: Parcel Route Transfer
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator add all orders to driver "DD" route
-    And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+    And API Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
     When Driver Transfer Parcel to Another Driver
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
@@ -140,6 +136,7 @@ Feature: Parcel Route Transfer
       | to_driver_hub_id | {sorting-hub-id} |
       | to_create_route  | true             |
     Then Verify Parcel Route Transfer Response
+    And DB Operator get routes dummy waypoints
     And DB Operator verifies transaction routed to new route id
     And DB Operator verifies route_waypoint record exist
     And DB Operator verifies waypoint status is "ROUTED"
@@ -167,11 +164,8 @@ Feature: Parcel Route Transfer
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     And Operator force "FAIL" "DELIVERY" waypoint
-    And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+    And API Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
     When Driver Transfer Parcel to Another Driver
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
