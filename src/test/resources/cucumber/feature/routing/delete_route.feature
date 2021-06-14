@@ -20,6 +20,7 @@ Feature: Delete Route
     And DB Operator verifies waypoints.route_id & seq_no is NULL
     And DB Operator verifies dummy waypoints.route_id & seq_no is NULL
     And DB Operator verifies route_waypoint is hard-deleted
+    And DB Operator verifies dummy route_waypoint is hard-deleted
     And DB Operator verifies route_monitoring_data is hard-deleted
     And Operator checks that "PULL_OUT_OF_ROUTE" event is published
     When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
@@ -46,6 +47,7 @@ Feature: Delete Route
     And DB Operator verifies waypoints.route_id & seq_no is NULL
     And DB Operator verifies dummy waypoints.route_id & seq_no is NULL
     And DB Operator verifies route_waypoint is hard-deleted
+    And DB Operator verifies dummy route_waypoint is hard-deleted
     And DB Operator verifies route_monitoring_data is hard-deleted
     When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
@@ -75,6 +77,7 @@ Feature: Delete Route
     And DB Operator verifies waypoints.route_id & seq_no is NULL
     And DB Operator verifies dummy waypoints.route_id & seq_no is NULL
     And DB Operator verifies all route_waypoint route id is hard-deleted
+    And DB Operator verifies dummy route_waypoint is hard-deleted
     And DB Operator verifies all route_monitoring_data is hard-deleted
     And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
     When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
@@ -91,6 +94,7 @@ Feature: Delete Route
     When Operator delete driver route with status code "200"
     Then DB Operator verifies soft-deleted route
     And DB Operator verifies dummy waypoints.route_id & seq_no is NULL
+    And DB Operator verifies dummy route_waypoint is hard-deleted
     When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
     Examples:
