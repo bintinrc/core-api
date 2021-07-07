@@ -218,6 +218,16 @@ public class RoutingSteps extends BaseSteps {
     }, "pull out of route");
   }
 
+  @When("^Operator pull DP order out of route$")
+  public void operatorPullOutDpOrderOfRoute() {
+    callWithRetry(() -> {
+      String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+      Order order = OrderDetailHelper.getOrderDetails(trackingId);
+      getRouteClient().pullOutDpOrderFromRoute(order.getId());
+      put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_DP");
+    }, "pull out of route");
+  }
+
   @When("^Operator archives driver route with status code (\\d+)$")
   public void operatorArchiveRouteV2(int statusCode) {
     long routeId = get(KEY_CREATED_ROUTE_ID, 1234L);

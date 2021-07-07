@@ -52,6 +52,13 @@ public class OrderCreateSteps extends BaseSteps {
           request.getFrom().getAddress().get("address1") + " " + request.getFrom().getAddress()
               .get("address2");
       put(KEY_PICKUP_ADDRESS_STRING, pickupAddress);
+      //custom dp order add to holding route
+      if (source.get("dp-holding-route-id") != null) {
+        long routeId = Long.valueOf(source.get("dp-holding-route-id"));
+        put(KEY_CREATED_ROUTE_ID, routeId);
+        putInList(KEY_LIST_OF_CREATED_ROUTE_ID, routeId);
+        put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ADD_BY_ORDER_DP");
+      }
       putInList(KEY_LIST_OF_PICKUP_ADDRESS_STRING, pickupAddress);
     }, "shipper create order");
   }
