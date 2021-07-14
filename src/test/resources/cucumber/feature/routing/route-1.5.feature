@@ -49,6 +49,10 @@ Feature: Route 1.5
       | parcel_job_is_pickup_required | false    |
     And Operator search for multiple "DELIVERY" transactions with status "PENDING"
     And Operator merge transactions on Zonal Routing
+    And API Operator verifies Delivery transactions of following orders have same waypoint id:
+      | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
     When Operator unmerge transactions
     And Operator get "DELIVERY" transaction waypoint Ids for all orders
     Then DB Operator verifies all waypoints status is "PENDING"
