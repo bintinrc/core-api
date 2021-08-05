@@ -21,6 +21,29 @@ Feature: Route 1.5
     And DB Operator verifies route_monitoring_data record
     And Operator checks that "ADD_TO_ROUTE" event is published
 
+  Scenario: Add Order to DP Holding Route (uid:5cbbfa8e-f896-42b4-b4b0-217d79475e4c)
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    When Shipper create order with parameters below
+      | service_type                  | Parcel                   |
+      | service_level                 | Standard                 |
+      | parcel_job_is_pickup_required | false                    |
+    And Operator search for created order
+    And Operator create an empty route
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    When Operator new add parcel to DP holding route
+    And Operator search for "DELIVERY" transaction with status "PENDING"
+    And DB Operator get routes dummy waypoints
+    Then DB Operator verifies transaction routed to new route id
+    And DB Operator verifies route_waypoint record exist
+    And DB Operator verifies waypoint status is "ROUTED"
+    And DB Operator verifies waypoints.route_id & seq_no is populated correctly
+    And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
+    And DB Operator verifies route_monitoring_data record
+    And Operator checks that "ADD_TO_ROUTE" event is published
+
   Scenario: Remove DP Order From Holding Route (uid:7c6abd1e-6591-4027-9217-8e6e69c07232)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below

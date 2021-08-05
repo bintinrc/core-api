@@ -11,6 +11,7 @@ import co.nvqa.commons.util.NvLogger;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import cucumber.api.java.After;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.guice.ScenarioScoped;
 import io.restassured.response.Response;
@@ -72,6 +73,14 @@ public class RoutingSteps extends BaseSteps {
       NvLogger.success(DOMAIN,
           String.format("order %s added to %s route id %d", trackingId, type, routeId));
     }, "add parcel to route");
+  }
+
+  @Given("^Operator new add parcel to DP holding route$")
+  public void operatorAddToDpHoldingRoute() {
+    Long orderId = get(KEY_CREATED_ORDER_ID);
+    Long routeId = get(KEY_CREATED_ROUTE_ID);
+    getRouteClient().addToRouteDp(orderId, routeId);
+    put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ADD_BY_ORDER_DP");
   }
 
   @When("^Operator add all orders to driver \"([^\"]*)\" route$")
