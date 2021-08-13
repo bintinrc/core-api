@@ -16,7 +16,7 @@ Feature: Route Monitoring V2
       |      | uid:c7b7310d-2693-48ef-8245-789af66b802d |
 
   @rmv2-add-to-route @rmv2-pull-out-of-route
-  Scenario Outline: Operator Add to Route & Pull Out Of Route And Verifies Route Monitoring Data - Single Waypoint - Transaction - <Note> - <hiptest-uid>
+  Scenario Outline: Operator Add to Route & Pull Out Of Route And Verifies Route Monitoring Data - Single Waypoint - Transaction - <Note> (<hiptest-uid>)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -43,7 +43,7 @@ Feature: Route Monitoring V2
       | Delivery | uid:15d6dd67-f31c-4cf1-b192-b2759c0089a3 | DD         | DELIVERY         | Parcel       | Standard      | false                         |
 
   @rmv2-add-to-route
-  Scenario Outline: Operator Add to Route And Verifies Route Monitoring Data - Single Waypoint - Multiple Merged Transactions - <Note> - <hiptest-uid>
+  Scenario Outline: Operator Add to Route And Verifies Route Monitoring Data - Single Waypoint - Multiple Merged Transactions - <Note> (<hiptest-uid>)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -214,7 +214,7 @@ Feature: Route Monitoring V2
       |      | uid:75ac2e9a-7cf0-4704-94a4-eb4257fbbec1 |
 
   @rmv2-pending-priority-parcels
-  Scenario Outline: Operator Tag Routed Orders as PRIOR Parcels And Verifies Route Monitoring Data - <Note> - <hiptest-uid>
+  Scenario Outline: Operator Tag Routed Orders as PRIOR Parcels And Verifies Route Monitoring Data - <Note> (<hiptest-uid>)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates multiple orders : 3 orders
       | service_type                  | <service_type>                  |
@@ -241,7 +241,7 @@ Feature: Route Monitoring V2
       | Delivery | uid:e8e138af-e86e-450c-beaa-b79d83c31d52 | DD         | Parcel       | Standard      | false                         |
 
   @rmv2-pending-priority-parcels
-  Scenario Outline: Exclude Attempted PRIOR Parcel as Pending Priority On Route Monitoring - Delivery - <Note> - <hiptest-uid>
+  Scenario Outline: Exclude Attempted PRIOR Parcel as Pending Priority On Route Monitoring - Delivery - <Note> (<hiptest-uid>)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -273,7 +273,7 @@ Feature: Route Monitoring V2
       | Success | uid:88c82f11-db09-493b-acb5-a93d87dbb23f | SUCCESS | Parcel       | Standard      | false                         |
 
   @rmv2-pending-priority-parcels
-  Scenario Outline: Exclude Attempted PRIOR Parcel as Pending Priority On Route Monitoring - Pickup - <Note> - <hiptest-uid>
+  Scenario Outline: Exclude Attempted PRIOR Parcel as Pending Priority On Route Monitoring - Pickup - <Note> (<hiptest-uid>)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |

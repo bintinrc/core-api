@@ -22,10 +22,10 @@ Feature: Route Manifest
 
     Examples:
       | Note    | hiptest-uid                              | service_level | action  | txn_status |
-      | FAIL    | uid:ec3d61a9-eb96-4f30-b027-7549f94a6c5d | Standard      | FAIL    | PENDING    |
-      | SUCCESS | uid:0b39277e-63a2-48fd-bee3-b57ab71780d6 | Standard      | SUCCESS | PENDING    |
+      | Fail    | uid:ec3d61a9-eb96-4f30-b027-7549f94a6c5d | Standard      | FAIL    | PENDING    |
+      | Success | uid:0b39277e-63a2-48fd-bee3-b57ab71780d6 | Standard      | SUCCESS | PENDING    |
 
-  Scenario Outline: Admin Manifest Force Finish a DP Reservation - <Note> - <hiptest-uid>
+  Scenario Outline: Admin Manifest Force Finish a DP Reservation - <Note> (<hiptest-uid>)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates multiple "Parcel" orders
       | service_type                  | Parcel          |
@@ -48,8 +48,8 @@ Feature: Route Manifest
 
     Examples:
       | Note    | hiptest-uid                              | service_level | action  | txn_status | status  | granular_status                      |
-      | FAIL    | uid:084c00c4-fc31-4807-9406-564b9112a566 | Standard      | FAIL    | PENDING    | Pending | Pending_Pickup_At_Distribution_Point |
-      | SUCCESS | uid:db316b2b-20c2-4b66-bba3-69f23a1ada7c | Standard      | SUCCESS | SUCCESS    | Transit | Enroute_to_Sorting_Hub               |
+      | Fail    | uid:084c00c4-fc31-4807-9406-564b9112a566 | Standard      | FAIL    | PENDING    | Pending | Pending_Pickup_At_Distribution_Point |
+      | Success | uid:db316b2b-20c2-4b66-bba3-69f23a1ada7c | Standard      | SUCCESS | SUCCESS    | Transit | Enroute_to_Sorting_Hub               |
 
   Scenario: Admin Manifest Force Success Merged Waypoint of DP Orders on Route Manifest (uid:90638cd2-87ea-4c39-926c-b0da87c0ab8b)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"

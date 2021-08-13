@@ -21,7 +21,7 @@ Feature: Route 1.5
     And DB Operator verifies route_monitoring_data record
     And Operator checks that "ADD_TO_ROUTE" event is published
 
-  Scenario: Add Order to DP Holding Route (uid:5cbbfa8e-f896-42b4-b4b0-217d79475e4c)
+  Scenario: Add Order to DP Holding Route (uid:eddb26ba-5d01-4256-9916-3c4f9216a7e4)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Parcel                   |
