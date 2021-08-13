@@ -71,6 +71,7 @@ public class OrderActionSteps extends BaseSteps {
       Order order = getOrderDetails(trackingId);
       put(KEY_CREATED_ORDER, order);
       put(KEY_CREATED_ORDER_ID, order.getId());
+      putInList(KEY_LIST_OF_CREATED_ORDER_ID, order.getId());
       Transaction transaction = getTransaction(order, type, status);
       assertNotNull("retrieved transaction", transaction);
       NvLogger.successf("retrieved transaction for id %d", transaction.getId());

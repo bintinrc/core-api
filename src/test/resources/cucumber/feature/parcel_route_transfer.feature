@@ -1,4 +1,4 @@
-@DeleteReservationAndAddress @ArchiveDriverRoutes @parcel-route-transfer
+#@DeleteReservationAndAddress @ArchiveDriverRoutes @parcel-route-transfer
 Feature: Parcel Route Transfer
 
   @routing-refactor

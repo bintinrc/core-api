@@ -69,14 +69,15 @@ public class OrderCreateHelper {
     parcelJob.setDeliveryInstruction("Core API Auto - Delivery instructions-" + uniqueId);
     parcelJob.setDimensions(generateRandomDimensions());
     ReflectionUtil.nullifyFieldWithNullString(parcelJob);
-    result.setTo(createUserDetail(TYPE_CUSTOMER, uniqueId));
-    result.setFrom(createUserDetail(TYPE_SHIPPER, uniqueId));
+    result.setTo(createUserDetail(TYPE_CUSTOMER, uniqueId, source));
+    result.setFrom(createUserDetail(TYPE_SHIPPER, uniqueId, source));
     result.setParcelJob(parcelJob);
     ReflectionUtil.nullifyFieldWithNullString(result);
     return result;
   }
 
-  private static UserDetail createUserDetail(String type, String uniqueId) {
+  private static UserDetail createUserDetail(String type, String uniqueId,
+      Map<String, String> source) {
     UserDetail result = new UserDetail();
     String contact = NvCountry.fromString(TestConstants.COUNTRY_CODE).getCountryCallingCode()
         + generateRandomNumber(8);
@@ -90,6 +91,10 @@ public class OrderCreateHelper {
     result.setEmail(name + RandomUtil.randomString(3) + "@ninjavan.co");
     result.setPhoneNumber(contact);
     Address address = AddressFactory.getRandomAddress();
+    if (source.get("dp-address-unit-number") != null) {
+      address.setAddress1(address.getAddress1() + " " + source.get("dp-address-unit-number"));
+      address.setPostcode(source.get("dp-address-postcode"));
+    }
     address.setAddress2(address.getAddress2() + "-" + uniqueId);
     result.setAddress(createMapFromAddress(address));
     return result;
@@ -126,10 +131,10 @@ public class OrderCreateHelper {
 
   private static Dimension generateRandomDimensions() {
     Dimension dimension = new Dimension();
-    dimension.setWeight((double) StandardTestUtils.randomInt(1, 5));
-    dimension.setWidth((double) StandardTestUtils.randomInt(20, 50));
-    dimension.setHeight((double) StandardTestUtils.randomInt(30, 60));
-    dimension.setLength((double) StandardTestUtils.randomInt(40, 70));
+    dimension.setWeight((double) StandardTestUtils.randomInt(1, 3));
+    dimension.setWidth((double) StandardTestUtils.randomInt(10, 20));
+    dimension.setHeight((double) StandardTestUtils.randomInt(15, 25));
+    dimension.setLength((double) StandardTestUtils.randomInt(20, 30));
     return dimension;
   }
 

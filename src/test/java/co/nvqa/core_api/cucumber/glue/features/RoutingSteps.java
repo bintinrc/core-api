@@ -11,6 +11,7 @@ import co.nvqa.commons.util.NvLogger;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import cucumber.api.java.After;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.guice.ScenarioScoped;
 import io.restassured.response.Response;
@@ -72,6 +73,14 @@ public class RoutingSteps extends BaseSteps {
       NvLogger.success(DOMAIN,
           String.format("order %s added to %s route id %d", trackingId, type, routeId));
     }, "add parcel to route");
+  }
+
+  @Given("^Operator new add parcel to DP holding route$")
+  public void operatorAddToDpHoldingRoute() {
+    Long orderId = get(KEY_CREATED_ORDER_ID);
+    Long routeId = get(KEY_CREATED_ROUTE_ID);
+    getRouteClient().addToRouteDp(orderId, routeId);
+    put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ADD_BY_ORDER_DP");
   }
 
   @When("^Operator add all orders to driver \"([^\"]*)\" route$")
@@ -215,6 +224,16 @@ public class RoutingSteps extends BaseSteps {
       Order order = OrderDetailHelper.getOrderDetails(trackingId);
       getRouteClient().pullOutWaypointFromRoute(order.getId(), type.toUpperCase());
       putInList(KEY_LIST_OF_PULL_OUT_OF_ROUTE_TRACKING_ID, trackingId);
+    }, "pull out of route");
+  }
+
+  @When("^Operator pull DP order out of route$")
+  public void operatorPullOutDpOrderOfRoute() {
+    callWithRetry(() -> {
+      String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+      Order order = OrderDetailHelper.getOrderDetails(trackingId);
+      getRouteClient().pullOutDpOrderFromRoute(order.getId());
+      put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_DP");
     }, "pull out of route");
   }
 
