@@ -135,6 +135,7 @@ Feature: Delete Route
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
+    And DB Operator get routes dummy waypoints
     And Operator Route the Reservation Pickup
     And Operator admin manifest force "<action>" reservation
     Then Operator delete driver route with status code "500"
@@ -161,6 +162,7 @@ Feature: Delete Route
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
+    And DB Operator get routes dummy waypoints
     And Operator add order to driver "DD" route
     And Operator force "<terminal_state>" "DELIVERY" waypoint
     And Operator search for "DELIVERY" transaction with status "<terminal_state>"
@@ -188,6 +190,7 @@ Feature: Delete Route
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
+    And DB Operator get routes dummy waypoints
     And Operator add order to driver "PP" route
     And Operator force "<terminal_state>" "PICKUP" waypoint
     And Operator search for "PICKUP" transaction with status "<terminal_state>"
