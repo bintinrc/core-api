@@ -1,4 +1,4 @@
-#@DeleteReservationAndAddress @ArchiveDriverRoutes @parcel-route-transfer
+@DeleteReservationAndAddress @ArchiveDriverRoutes @parcel-route-transfer
 Feature: Parcel Route Transfer
 
   @routing-refactor
@@ -14,8 +14,8 @@ Feature: Parcel Route Transfer
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
       | to_create_route  | true             |
-    Then Verify Parcel Route Transfer Response
-    And DB Operator verifies created dummy waypoints
+    And Operator search for multiple "DELIVERY" transactions with status "PENDING"
+    Then DB Operator verifies created dummy waypoints
     And DB Operator verifies all transactions routed to new route id
     And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints.route_id & seq_no is populated correctly
@@ -36,7 +36,6 @@ Feature: Parcel Route Transfer
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator inbounds all orders at hub "{sorting-hub-id}"
-    And Operator search for multiple "DELIVERY" transactions with status "PENDING"
     And Operator create an empty route
       | driver_id  | {driver-id}      |
       | hub_id     | {sorting-hub-id} |
@@ -47,8 +46,8 @@ Feature: Parcel Route Transfer
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
       | to_create_route  | true             |
-    Then Verify Parcel Route Transfer Response
-    And DB Operator verifies created dummy waypoints
+    And Operator search for multiple "DELIVERY" transactions with status "PENDING"
+    Then DB Operator verifies created dummy waypoints
     And DB Operator verifies all transactions routed to new route id
     And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints status is "ROUTED"
@@ -76,8 +75,7 @@ Feature: Parcel Route Transfer
     When Driver Transfer Parcel to Another Driver
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
-    Then Verify Parcel Route Transfer Response
-    And DB Operator verifies all transactions routed to new route id
+    Then DB Operator verifies all transactions routed to new route id
     And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
@@ -109,8 +107,7 @@ Feature: Parcel Route Transfer
     When Driver Transfer Parcel to Another Driver
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
-    Then Verify Parcel Route Transfer Response
-    And DB Operator verifies all transactions routed to new route id
+    Then DB Operator verifies all transactions routed to new route id
     And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies all waypoints.route_id & seq_no is populated correctly
@@ -131,7 +128,6 @@ Feature: Parcel Route Transfer
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator perform global inbound for created order at hub "{sorting-hub-id}"
-    And Operator search for "DELIVERY" transaction with status "PENDING"
     And Operator create an empty route
       | driver_id  | {driver-id}      |
       | hub_id     | {sorting-hub-id} |
@@ -144,8 +140,8 @@ Feature: Parcel Route Transfer
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
       | to_create_route  | true             |
-    Then Verify Parcel Route Transfer Response
-    And DB Operator verifies created dummy waypoints
+    And Operator search for "DELIVERY" transaction with status "FAIL"
+    Then DB Operator verifies created dummy waypoints
     And DB Operator verifies transaction routed to new route id
     And DB Operator verifies route_waypoint record exist
     And DB Operator verifies waypoint status is "ROUTED"
@@ -181,8 +177,7 @@ Feature: Parcel Route Transfer
     When Driver Transfer Parcel to Another Driver
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
-    Then Verify Parcel Route Transfer Response
-    And DB Operator verifies transaction routed to new route id
+    Then DB Operator verifies transaction routed to new route id
     And DB Operator verifies route_waypoint record exist
     And DB Operator verifies waypoint status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly

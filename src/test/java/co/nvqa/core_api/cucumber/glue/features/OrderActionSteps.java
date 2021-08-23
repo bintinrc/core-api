@@ -5,6 +5,7 @@ import co.nvqa.commons.model.core.Order;
 import co.nvqa.commons.model.core.Transaction;
 import co.nvqa.commons.model.core.event.Event;
 import co.nvqa.commons.model.core.event.EventDetail;
+import co.nvqa.commons.model.core.route.ParcelRouteTransferResponse;
 import co.nvqa.commons.model.other.ExceptionResponse;
 import co.nvqa.commons.util.NvLogger;
 import co.nvqa.commons.util.NvTestRuntimeException;
@@ -80,6 +81,11 @@ public class OrderActionSteps extends BaseSteps {
       putInList(KEY_LIST_OF_TRANSACTION_IDS, transaction.getId());
       putInList(KEY_LIST_OF_WAYPOINT_IDS, transaction.getWaypointId());
       put(KEY_WAYPOINT_ID, transaction.getWaypointId());
+      //to get newly create route id from parcel route transfer
+      if (get(DriverSteps.KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS) != null) {
+        put(KEY_CREATED_ROUTE_ID, transaction.getRouteId());
+        putInList(KEY_LIST_OF_CREATED_ROUTE_ID, transaction.getRouteId());
+      }
       if (type.equalsIgnoreCase("DELIVERY")) {
         put(KEY_DELIVERY_WAYPOINT_ID, transaction.getWaypointId());
       }

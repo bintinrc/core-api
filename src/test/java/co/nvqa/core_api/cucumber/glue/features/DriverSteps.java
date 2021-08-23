@@ -33,7 +33,7 @@ import java.util.Map;
 public class DriverSteps extends BaseSteps {
 
   public static final String KEY_LIST_OF_CREATED_JOB_ORDERS = "key-list-of-created-job-orders";
-  private static final String KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS = "key-list-of-driver-waypoint-details";
+  public static final String KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS = "key-list-of-driver-waypoint-details";
   private static final String KEY_DRIVER_WAYPOINT_DETAILS = "key-driver-waypoint-details";
   private static final String KEY_LIST_OF_DRIVER_JOBS = "key-driver-jobs";
   private static final String WAYPOINT_TYPE_RESERVATION = "RESERVATION";
@@ -141,10 +141,6 @@ public class DriverSteps extends BaseSteps {
     ParcelRouteTransferRequest request = createParcelRouteTransferRequest(source);
     callWithRetry(() -> {
           ParcelRouteTransferResponse response = getRouteClient().parcelRouteTransfer(request);
-          if (request.getRouteId() != null) {
-            long routeId = get(KEY_CREATED_ROUTE_ID);
-            assertEquals("routeId", routeId, response.getRoutes().get(0).getId());
-          }
           put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, response);
           put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ROUTE_TRANSFER");
         },
