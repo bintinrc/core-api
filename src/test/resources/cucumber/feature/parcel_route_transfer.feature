@@ -9,7 +9,6 @@ Feature: Parcel Route Transfer
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator inbounds all orders at hub "{sorting-hub-id}"
-    And Operator search for multiple "DELIVERY" transactions with status "PENDING"
     When Driver Transfer Parcel to Another Driver
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
@@ -27,6 +26,7 @@ Feature: Parcel Route Transfer
     And Operator checks that for all orders, "DRIVER_INBOUND_SCAN" event is published
     And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
     And DB Operator verifies inbound_scans record for all orders with type "4" and correct route_id
+    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
 
   @routing-refactor
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Delivery (uid:4f8348c7-6b73-4e1a-9563-c8c4d4534a11)
@@ -60,6 +60,7 @@ Feature: Parcel Route Transfer
     And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
     And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
+    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
 
   @routing-refactor
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Unrouted Delivery (uid:f132d051-4ba0-4042-ae79-e83ea1beead6)
@@ -86,6 +87,7 @@ Feature: Parcel Route Transfer
     And Operator checks that for all orders, "DRIVER_INBOUND_SCAN" event is published
     And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
+    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
 
   @routing-refactor
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Routed Delivery (uid:1b362123-7a95-45d9-aa63-4037d236a017)
@@ -119,6 +121,7 @@ Feature: Parcel Route Transfer
     And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
     And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
     And DB Operator verifies inbound_scans record for all orders with type "4" and correct route_id
+    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
 
   @routing-refactor
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Fail Delivery (uid:48ae2613-9747-4cae-a581-80e9b79d9070)
@@ -154,6 +157,7 @@ Feature: Parcel Route Transfer
     And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
     And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
+    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
 
   @routing-refactor
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Routed Fail Delivery (uid:3a4ad2dd-8073-45d0-a42d-e9b79787aa1f)
@@ -189,6 +193,7 @@ Feature: Parcel Route Transfer
     And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
     And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
+    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
 
   Scenario: Driver Not Allowed to Route Transfer Parcel with Status = Completed (uid:9efcbcf9-5e97-4ec4-90e3-bde7dd41aa79)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
