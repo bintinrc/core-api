@@ -270,9 +270,7 @@ public class RoutingSteps extends BaseSteps {
 
     try {
       if (routeIds != null) {
-        routeIds.forEach(e ->
-            callWithRetry(() -> getRouteClient().archiveRouteV2(e)
-                , "try to archive created routes"));
+        routeIds.forEach(e -> getRouteClient().archiveRouteV2(e));
       }
     } catch (Throwable t) {
       NvLogger.warn("Failed to archive route(s)");
