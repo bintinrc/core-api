@@ -21,6 +21,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import cucumber.runtime.java.guice.ScenarioScoped;
 
+import io.restassured.response.Response;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -141,6 +142,18 @@ public class DriverSteps extends BaseSteps {
     ParcelRouteTransferRequest request = createParcelRouteTransferRequest(source);
     callWithRetry(() -> {
           ParcelRouteTransferResponse response = getRouteClient().parcelRouteTransfer(request);
+          put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, response);
+          put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ROUTE_TRANSFER");
+        },
+        "driver parcel route transfer");
+  }
+
+  @When("^Driver Transfer Parcel to Route with past date$")
+  public void driverTransferRoutePastDate(Map<String, String> source) {
+    ParcelRouteTransferRequest request = createParcelRouteTransferRequest(source);
+    callWithRetry(() -> {
+          Response response = getRouteClient().parcelRouteTransferAndGetRawResponse(request);
+          put(OrderActionSteps.KEY_API_RAW_RESPONSE, response);
           put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, response);
           put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ROUTE_TRANSFER");
         },

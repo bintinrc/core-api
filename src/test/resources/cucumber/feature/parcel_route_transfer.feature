@@ -262,3 +262,51 @@ Feature: Parcel Route Transfer
     And Operator verify that order status-granular status is "Completed"-"Returned_to_Sender"
     And DB Operator verifies transaction route id is null
     And Operator checks that "ROUTE_TRANSFER_SCAN" event is NOT published
+
+  Scenario: Driver Not Allowed to Route Transfer Marketplace Sort Order - RTS = 0 (uid:af38bd8c-0656-4a7a-81b5-cfa7844002f3)
+    Given API Shipper set Shipper V4 using data below:
+      | legacyId | {shipper-v4-marketplace-sort-legacy-id} |
+    When API Shipper create V4 order using data below:
+      | generateFromAndTo | RANDOM                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+      | v4OrderRequest    | { "service_type":"Marketplace Sort","requested_tracking_number":"{shipper-v4-marketplace-sort-prefix}{{6-random-digits}}","sort":{"to_3pl":"{3pl-sort}"},"marketplace":{"seller_id": "seller-ABC01","seller_company_name":"ABC Shop"},"service_level":"Standard", "parcel_job":{ "is_pickup_required":false, "pickup_date":"{{next-1-day-yyyy-MM-dd}}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
+    And API Operator Global Inbound parcel using data below:
+      | globalInboundRequest | { "hubId":{sorting-hub-id} } |
+    And Operator search for multiple "DELIVERY" transactions with status "PENDING"
+    And API Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    When Driver Transfer Parcel to Another Driver
+      | to_driver_id     | {driver-2-id}    |
+      | to_driver_hub_id | {sorting-hub-id} |
+    Then Verify Parcel Route Transfer Failed Orders with message : "Marketplace Sort Order"
+    And Operator verify that order status-granular status is "Transit"-"Arrived_at_Sorting_Hub"
+    And DB Operator verifies transaction route id is null
+    And Operator checks that "ROUTE_TRANSFER_SCAN" event is NOT published
+
+  Scenario: Driver Route Transfer Marketplace Sort Order - RTS = 1 (uid:21425816-4891-4f21-b416-a83e9e25566b)
+    Given API Shipper set Shipper V4 using data below:
+      | legacyId | {shipper-v4-marketplace-sort-legacy-id} |
+    When API Shipper create V4 order using data below:
+      | generateFromAndTo | RANDOM                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+      | v4OrderRequest    | { "service_type":"Marketplace Sort","requested_tracking_number":"{shipper-v4-marketplace-sort-prefix}{{6-random-digits}}","sort":{"to_3pl":"{3pl-sort}"},"marketplace":{"seller_id": "seller-ABC01","seller_company_name":"ABC Shop"},"service_level":"Standard", "parcel_job":{ "is_pickup_required":false, "pickup_date":"{{next-1-day-yyyy-MM-dd}}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
+    And API Operator Global Inbound parcel using data below:
+      | globalInboundRequest | { "hubId":{sorting-hub-id} } |
+    And API Operator RTS created order:
+      | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
+    And API Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    When Driver Transfer Parcel to Another Driver
+      | to_driver_id     | {driver-2-id}    |
+      | to_driver_hub_id | {sorting-hub-id} |
+    And Operator search for multiple "DELIVERY" transactions with status "PENDING"
+    Then DB Operator verifies all transactions routed to new route id
+    And DB Operator verifies all route_waypoint records
+    And DB Operator verifies all waypoints status is "ROUTED"
+    And DB Operator verifies waypoints.route_id & seq_no is populated correctly
+    And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
+    And DB Operator verifies all route_monitoring_data records
+    And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
+    And Operator checks that for all orders, "ROUTE_TRANSFER_SCAN" event is published
+    And Operator checks that for all orders, "DRIVER_INBOUND_SCAN" event is published
+    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
+    And DB Operator verifies inbound_scans record with type "4" and correct route_id
+    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
