@@ -59,6 +59,24 @@ public class RoutingSteps extends BaseSteps {
     }, "create empty route");
   }
 
+  @When("^Operator create an empty route with past date$")
+  public void operatorCreateEmptyRoutePastDate(Map<String, String> arg1) {
+    String json = toJsonCamelCase(arg1);
+    Route route = fromJsonSnakeCase(json, Route.class);
+    route.setComments("Created for Core API testing");
+    route.setTags(Arrays.asList(1, 4));
+    route.setDate(generateUTCYesterdayDate());
+    callWithRetry(() -> {
+      Route result = getRouteClient().createRoute(route);
+      assertNotNull("created route", route);
+      put(KEY_CREATED_ROUTE, result);
+      putInList(KEY_LIST_OF_CREATED_ROUTE_ID, result.getId());
+      putInList(KEY_LIST_OF_HUB_IDS, route.getHubId());
+      putInList(KEY_LIST_OF_ZONE_IDS, route.getZoneId());
+      put(KEY_CREATED_ROUTE_ID, result.getId());
+    }, "create empty route");
+  }
+
   @When("^Operator add order to driver \"([^\"]*)\" route$")
   public void operatorAddOrderToRoute(String type) {
     callWithRetry(() -> {
@@ -260,6 +278,12 @@ public class RoutingSteps extends BaseSteps {
 
   private String generateUTCTodayDate() {
     ZonedDateTime startDateTime = DateUtil.getStartOfDay(DateUtil.getDate());
+    return DateUtil
+        .displayDateTime(startDateTime.withZoneSameInstant(ZoneId.of("UTC")));
+  }
+
+  private String generateUTCYesterdayDate() {
+    ZonedDateTime startDateTime = DateUtil.getStartOfDay(DateUtil.getDate()).minusDays(1);
     return DateUtil
         .displayDateTime(startDateTime.withZoneSameInstant(ZoneId.of("UTC")));
   }

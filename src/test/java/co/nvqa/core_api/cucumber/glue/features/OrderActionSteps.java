@@ -32,7 +32,7 @@ public class OrderActionSteps extends BaseSteps {
   private static final String ACTION_FAIL = "fail";
   public static final String KEY_LIST_OF_ORDER_TAG_IDS = "key-order-tag-ids";
   public static final String KEY_LIST_OF_PRIOR_TRACKING_IDS = "key-list-prior-tracking-ids";
-  private static final String KEY_API_RAW_RESPONSE = "key-api-raw-response";
+  public static final String KEY_API_RAW_RESPONSE = "key-api-raw-response";
 
   @Override
   public void init() {
