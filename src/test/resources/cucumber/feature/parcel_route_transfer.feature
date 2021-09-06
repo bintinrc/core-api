@@ -310,3 +310,24 @@ Feature: Parcel Route Transfer
     And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+
+  Scenario: Driver Not Allowed to Route Transfer Parcel to Past Date Route (uid:22437d8b-1443-4e99-9367-777dfadc4043)
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    And Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator create an empty route with past date
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    When Driver Transfer Parcel to Route with past date
+      | to_driver_id     | {driver-2-id}    |
+      | to_driver_hub_id | {sorting-hub-id} |
+    Then Operator verify response code is 500 with error message details as follow
+      | code        | 103100                                          |
+      | message     | Not allowed to transfer to routes before today! |
+      | application | core                                            |
+      | description | INVALID_ROUTE_DATE                              |
