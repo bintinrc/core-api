@@ -5,15 +5,14 @@ import co.nvqa.commons.model.core.Order;
 import co.nvqa.commons.model.core.Transaction;
 import co.nvqa.commons.model.core.event.Event;
 import co.nvqa.commons.model.core.event.EventDetail;
-import co.nvqa.commons.model.core.route.ParcelRouteTransferResponse;
 import co.nvqa.commons.model.other.ExceptionResponse;
 import co.nvqa.commons.util.NvLogger;
 import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
-import cucumber.runtime.java.guice.ScenarioScoped;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import io.cucumber.guice.ScenarioScoped;
 import io.restassured.response.Response;
 import java.util.Arrays;
 import java.util.List;
@@ -291,7 +290,7 @@ public class OrderActionSteps extends BaseSteps {
     put(KEY_API_RAW_RESPONSE, r);
   }
 
-  @When("^Operator deletes Order COD value")
+  @When("^Operator deletes Order COD value$")
   public void operatorDeleteCod() {
     long orderId = get(KEY_CREATED_ORDER_ID);
     Response r = getOrderClient().deleteCodAndGetRawResponse(orderId);
