@@ -8,11 +8,11 @@ import co.nvqa.commons.util.NvLogger;
 import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
-import cucumber.api.java.After;
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.When;
-import cucumber.runtime.java.guice.ScenarioScoped;
+import io.cucumber.java.After;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
+import io.cucumber.guice.ScenarioScoped;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -34,7 +34,7 @@ public class ReservationSteps extends BaseSteps {
 
   }
 
-  @Given("Operator Search for Created Pickup for Shipper \"([^\"]*)\" with status \"([^\"]*)\"$")
+  @Given("^Operator Search for Created Pickup for Shipper \"([^\"]*)\" with status \"([^\"]*)\"$")
   public void searchPickup(long legacyId, String status) {
     String pickupAddress = get(KEY_PICKUP_ADDRESS_STRING);
     put(KEY_INITIAL_RESERVATION_ADDRESS, pickupAddress);

@@ -3,8 +3,8 @@ package co.nvqa.core_api.cucumber.glue.features;
 import co.nvqa.commons.model.core.GlobalInboundRequest;
 import co.nvqa.commons.model.core.GlobalInboundResponse;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
-import cucumber.api.java.en.Then;
-import cucumber.runtime.java.guice.ScenarioScoped;
+import io.cucumber.java.en.Then;
+import io.cucumber.guice.ScenarioScoped;
 
 import java.util.List;
 
