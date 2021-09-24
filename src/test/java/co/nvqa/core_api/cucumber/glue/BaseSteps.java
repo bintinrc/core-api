@@ -31,8 +31,8 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
 
   @SuppressWarnings("unchecked")
   protected void callWithRetry(Runnable runnable, String methodName) {
-    retryIfExpectedExceptionOccurred(runnable, methodName, System.out::println, DEFAULT_FALLBACK_MS,
-        DEFAULT_RETRY, AssertionError.class);
+    retryIfExpectedExceptionOccurred(runnable, methodName, NvLogger::warn, DEFAULT_FALLBACK_MS,
+        DEFAULT_RETRY, AssertionError.class, RuntimeException.class);
   }
 
   @SuppressWarnings("unchecked")

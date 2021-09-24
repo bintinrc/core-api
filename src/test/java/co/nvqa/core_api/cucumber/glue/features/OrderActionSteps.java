@@ -134,6 +134,11 @@ public class OrderActionSteps extends BaseSteps {
     long orderId = get(KEY_CREATED_ORDER_ID);
     callWithRetry(() -> {
       List<Event> result = getOrderEvent(event, orderId);
+
+      if (result.isEmpty()) {
+        throw new NvTestRuntimeException(
+            f("events should not empty, order id: %d, event: %s", orderId, event));
+      }
       assertEquals(String.format("%s event is published", event), event.toLowerCase(),
           result.get(0).getType().toLowerCase());
       put(KEY_ORDER_EVENTS, result);
