@@ -10,14 +10,15 @@ import co.nvqa.commons.util.NvLogger;
 import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
+import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.guice.ScenarioScoped;
 import io.restassured.response.Response;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -134,6 +135,11 @@ public class OrderActionSteps extends BaseSteps {
     long orderId = get(KEY_CREATED_ORDER_ID);
     callWithRetry(() -> {
       List<Event> result = getOrderEvent(event, orderId);
+
+      if (result.isEmpty()) {
+        throw new NvTestRuntimeException(
+            f("events should not empty, order id: %d, event: %s", orderId, event));
+      }
       assertEquals(String.format("%s event is published", event), event.toLowerCase(),
           result.get(0).getType().toLowerCase());
       put(KEY_ORDER_EVENTS, result);
@@ -198,15 +204,17 @@ public class OrderActionSteps extends BaseSteps {
 
   @Then("^Operator verify that order status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
   public void operatortVerifiesOrderStatus(String status, String granularStatus) {
+    operatorSearchOrderByTrackingId();
+    final Order o = get(KEY_CREATED_ORDER);
     callWithRetry(() -> {
       operatorSearchOrderByTrackingId();
       Order order = get(KEY_CREATED_ORDER);
       assertEquals(String.format("order %s status = %s", order.getTrackingId(), status),
-          status.toLowerCase(), order.getStatus().toLowerCase());
+          StringUtils.lowerCase(status), StringUtils.lowerCase(order.getStatus()));
       assertEquals(
           String.format("order %s granular status = %s", order.getTrackingId(), granularStatus),
-          granularStatus.toLowerCase(), order.getGranularStatus().toLowerCase());
-    }, "check order granular status");
+          StringUtils.lowerCase(granularStatus), StringUtils.lowerCase(order.getGranularStatus()));
+    }, f("check order granular status of %s", o.getTrackingId()));
   }
 
   @Then("^Operator verify that all orders status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
@@ -357,7 +365,7 @@ public class OrderActionSteps extends BaseSteps {
       getOrderClient().addOrderLevelTags(orderId, tagIds);
       put(KEY_LIST_OF_ORDER_TAG_IDS, tagIds);
       putInList(KEY_LIST_OF_PRIOR_TRACKING_IDS, trackingId);
-    }, "tag an order");
+    }, f("tag an order: %s", trackingId));
   }
 
   @When("^Operator tags all orders with PRIOR tag$")
@@ -386,7 +394,8 @@ public class OrderActionSteps extends BaseSteps {
     result = transactions.stream()
         .filter(e -> e.getType().equalsIgnoreCase(type))
         .filter(e -> e.getStatus().equalsIgnoreCase(status))
-        .findAny().orElseThrow(() -> new NvTestRuntimeException("transaction details not found"));
+        .findAny().orElseThrow(() -> new NvTestRuntimeException(
+            f("transaction details not found: %s", order.getTrackingId())));
     return result;
   }
 
