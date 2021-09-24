@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -203,15 +204,16 @@ public class OrderActionSteps extends BaseSteps {
 
   @Then("^Operator verify that order status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
   public void operatortVerifiesOrderStatus(String status, String granularStatus) {
+    operatorSearchOrderByTrackingId();
     final Order o = get(KEY_CREATED_ORDER);
     callWithRetry(() -> {
       operatorSearchOrderByTrackingId();
       Order order = get(KEY_CREATED_ORDER);
       assertEquals(String.format("order %s status = %s", order.getTrackingId(), status),
-          status.toLowerCase(), order.getStatus().toLowerCase());
+          StringUtils.lowerCase(status), StringUtils.lowerCase(order.getStatus()));
       assertEquals(
           String.format("order %s granular status = %s", order.getTrackingId(), granularStatus),
-          granularStatus.toLowerCase(), order.getGranularStatus().toLowerCase());
+          StringUtils.lowerCase(granularStatus), StringUtils.lowerCase(order.getGranularStatus()));
     }, f("check order granular status of %s", o.getTrackingId()));
   }
 
