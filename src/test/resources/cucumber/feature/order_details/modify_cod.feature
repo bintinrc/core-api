@@ -20,7 +20,7 @@ Feature: Order Details
 
     Examples:
       | Note       | action | cod | hiptest-uid                              |
-      | Add COD    | Add    |     | uid:746af929-4ea9-43c6-b8b0-96f016cf1f90 |
+      | Add COD    | Add    | 0   | uid:746af929-4ea9-43c6-b8b0-96f016cf1f90 |
       | Update COD | Update | 30  | uid:3c77e509-5b9d-46d9-a6ab-593a939b2101 |
 
   @modify-cod
@@ -45,7 +45,7 @@ Feature: Order Details
 
     Examples:
       | Note       | action | cod | hiptest-uid                              |
-      | Add COD    | Add    |     | uid:26a72716-a98f-41b4-94f2-fc5b7920c48a |
+      | Add COD    | Add    | 0   | uid:26a72716-a98f-41b4-94f2-fc5b7920c48a |
       | Update COD | Update | 50  | uid:ca54ac49-1b0b-4753-bca3-42059040b975 |
 
   @modify-cod @ArchiveDriverRoutes
@@ -77,7 +77,7 @@ Feature: Order Details
 
     Examples:
       | Note       | action | cod | hiptest-uid                              |
-      | Add COD    | Add    |     | uid:fc92e5f7-ffc3-4503-8e66-2994360251a7 |
+      | Add COD    | Add    | 0   | uid:fc92e5f7-ffc3-4503-8e66-2994360251a7 |
       | Update COD | Update | 50  | uid:469e522e-7d0a-4010-bfae-529daea0b8e0 |
 
   @modify-cod
