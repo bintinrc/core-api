@@ -1,4 +1,4 @@
-@ForceSuccessOrder @order-details @Populate-Pricing-Zone-L1-L3
+@ForceSuccessOrder @order-details @Populate-Pricing-Zone-L1-L3 @ID
 Feature: Populate Pricing Zone L1-L3
 
   Scenario Outline: ID - Populate Pricing Info with Address Billing Zone L1-L3 upon Global Inbound (uid:2275c571-7692-470e-82d7-aa188eea0863)
