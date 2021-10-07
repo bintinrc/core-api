@@ -1,4 +1,4 @@
-@ForceSuccessOrder @DeleteReservationAndAddress @route-1.5-refactor @routing-refactor
+@ForceSuccessOrder @DeleteReservationAndAddress @routing @route-1.5-refactor @routing-refactor
 Feature: Route 1.5
 
   Scenario: Add to DP Holding Route upon Hub Inbound (uid:5cbbfa8e-f896-42b4-b4b0-217d79475e4c)
