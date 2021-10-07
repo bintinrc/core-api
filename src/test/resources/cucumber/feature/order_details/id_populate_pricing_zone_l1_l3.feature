@@ -3,7 +3,8 @@ Feature: Populate Pricing Zone L1-L3
 
   Scenario Outline: ID - Populate Pricing Info with Address Billing Zone L1-L3 upon Global Inbound (uid:2275c571-7692-470e-82d7-aa188eea0863)
     Given API Shipper set Shipper V4 using data below:
-      | legacyId | {shipper-legacy-id} |
+      | shipperV4ClientId     | {shipper-client-id}     |
+      | shipperV4ClientSecret | {shipper-client-secret} |
     Given API Operator get Billing Zone info:
       | latitude       | longitude       |
       | <fromLatitude> | <fromLongitude> |
@@ -37,7 +38,8 @@ Feature: Populate Pricing Zone L1-L3
 
   Scenario Outline: ID - Populate Pricing Info with Address Billing Zone L1-L3 upon Edit Delivery Address (uid:f5c023d9-43d0-404c-a789-b8d3a827b1f6)
     Given API Shipper set Shipper V4 using data below:
-      | legacyId | {shipper-legacy-id} |
+      | shipperV4ClientId     | {shipper-client-id}     |
+      | shipperV4ClientSecret | {shipper-client-secret} |
     Given API Operator get Billing Zone info:
       | latitude       | longitude       |
       | <fromLatitude> | <fromLongitude> |
@@ -72,7 +74,8 @@ Feature: Populate Pricing Zone L1-L3
 
   Scenario Outline: ID - Populate Pricing Info with Address Billing Zone L1-L3 upon Single OJS Address Verification (uid:56d0f163-a28c-416a-b3bb-7090c7b7e23d)
     Given API Shipper set Shipper V4 using data below:
-      | legacyId | {shipper-legacy-id} |
+      | shipperV4ClientId     | {shipper-client-id}     |
+      | shipperV4ClientSecret | {shipper-client-secret} |
     Given API Operator get Billing Zone info:
       | latitude       | longitude       |
       | <fromLatitude> | <fromLongitude> |
