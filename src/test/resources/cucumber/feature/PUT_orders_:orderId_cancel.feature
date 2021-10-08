@@ -26,6 +26,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | status   | CANCELLED                                                                          |
       | comments | Cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd} |
     And DB Operator verifies waypoint status is "PENDING"
+    And DB Operator verify Jaro Scores of the created order after cancel
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
@@ -52,6 +53,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | status   | CANCELLED                                                                          |
       | comments | Cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd} |
     And DB Operator verifies waypoint status is "PENDING"
+    And DB Operator verify Jaro Scores of the created order after cancel
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
