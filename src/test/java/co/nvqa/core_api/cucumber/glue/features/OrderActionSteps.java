@@ -195,6 +195,8 @@ public class OrderActionSteps extends BaseSteps {
       case Event.PULL_OUT_OF_ROUTE_EVENT:
         assertEquals("data.route_id", routeIds.get(0), data.getRouteId());
         break;
+      case Event.CANCEL:
+        break;
       default: {
         //ADD_TO_ROUTE, DRIVER_INBOUND_SCAN, DRIVER_PICKUP_SCAN
         assertEquals("data.route_id", routeId, data.getRouteId());
@@ -215,6 +217,18 @@ public class OrderActionSteps extends BaseSteps {
           String.format("order %s granular status = %s", order.getTrackingId(), granularStatus),
           StringUtils.lowerCase(granularStatus), StringUtils.lowerCase(order.getGranularStatus()));
     }, f("check order granular status of %s", o.getTrackingId()));
+  }
+
+  @Then("^Operator verify that order comment is appended with cancel reason = \"([^\"]*)\"$")
+  public void operatortVerifiesOrderComment(String comment) {
+    operatorSearchOrderByTrackingId();
+    final Order o = get(KEY_CREATED_ORDER);
+    callWithRetry(() -> {
+      operatorSearchOrderByTrackingId();
+      Order order = get(KEY_CREATED_ORDER);
+      assertEquals("order comment", StringUtils.lowerCase(comment),
+          StringUtils.lowerCase(order.getComments()));
+    }, f("check order comment", o.getTrackingId()));
   }
 
   @Then("^Operator verify that all orders status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
