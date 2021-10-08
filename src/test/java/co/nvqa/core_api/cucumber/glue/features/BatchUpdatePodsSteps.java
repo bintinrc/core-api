@@ -398,6 +398,10 @@ public class BatchUpdatePodsSteps extends BaseSteps {
           } else {
             checkDeliverySuccesPod(request, trackingId);
           }
+        case CANCELLED:
+          String comment = get(KEY_CANCELLATION_REASON);
+          assertEquals("cancel comment", comment,
+              request.getComments());
           break;
       }
     }, String.format("verify webhook payload %s", trackingId), 30);
