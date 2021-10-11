@@ -37,10 +37,10 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | service_type                  | Return   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
+    And Operator verify that order status-granular status is "Pending"-"Pending_Pickup"
     And Operator search for created order
     When API Operator cancel order with PUT /orders/:orderId/cancel
       | reason | Cancelled by automated test {gradle-current-date-yyyy-MM-dd} |
-    And API Operator get order details
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And Operator checks that "CANCEL" event is published
     And Operator verify that order comment is appended with cancel reason = "cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd}"

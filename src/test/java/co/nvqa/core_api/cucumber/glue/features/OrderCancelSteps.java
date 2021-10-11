@@ -27,10 +27,26 @@ public class OrderCancelSteps extends BaseSteps {
     put(KEY_CANCELLATION_REASON, f("Cancellation reason : %s", reason));
   }
 
+  @Given("^API Operator cancel order with DELETE /2.0/orders/:uuid$")
+  public void apiOperatorCancelOrderV2() {
+    String asyncHandle = get(KEY_CREATED_ORDER_ASYNC_ID);
+    getOrderClient().cancelOrderV2(asyncHandle);
+    put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_CANCEL");
+    put(KEY_CANCELLATION_REASON, "Cancellation reason : API CANCELLATION REQUEST");
+  }
+
   @When("^Operator failed to cancel invalid status with PUT /orders/:orderId/cancel$")
   public void operatorCancelV1() {
     long orderId = get(KEY_CREATED_ORDER_ID);
     Response r = getOrderClient().cancelOrderV1AndGetRawResponse(orderId, "invalid cancel");
+    put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_CANCEL");
+    put(OrderActionSteps.KEY_API_RAW_RESPONSE, r);
+  }
+
+  @When("^Operator failed to cancel invalid status with DELETE /2.0/orders/:uuid$")
+  public void operatorCancelInvalidV2() {
+    String asyncHandle = get(KEY_CREATED_ORDER_ASYNC_ID);
+    Response r = getOrderClient().cancelOrderV2AndGetRawResponse(asyncHandle);
     put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_CANCEL");
     put(OrderActionSteps.KEY_API_RAW_RESPONSE, r);
   }
