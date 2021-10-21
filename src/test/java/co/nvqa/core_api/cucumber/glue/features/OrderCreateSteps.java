@@ -32,8 +32,10 @@ public class OrderCreateSteps extends BaseSteps {
   @Given("^Shipper authenticates using client id \"([^\"]*)\" and client secret \"([^\"]*)\"$")
   public void shipperAuthenticate(String clientId, String clientSecret) {
     callWithRetry(() -> {
+      String token = AuthHelper.getShipperToken(clientId, clientSecret);
       orderCreateClientV4 = new OrderCreateClientV4(TestConstants.API_BASE_URL,
-          AuthHelper.getShipperToken(clientId, clientSecret));
+          token);
+      put(KEY_SHIPPER_V4_ACCESS_TOKEN, token);
     }, "shipper API authenticated");
   }
 

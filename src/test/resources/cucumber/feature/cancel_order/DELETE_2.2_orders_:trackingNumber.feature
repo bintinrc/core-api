@@ -1,7 +1,7 @@
-@ForceSuccessOrder @DeleteReservationAndAddress @cancel-order @/2.0/orders/:uuid
-Feature: Cancel DELETE /2.0/orders/:uuid
+@ForceSuccessOrder @DeleteReservationAndAddress @cancel-order @/2.2/orders/:trackingNumber
+Feature: Cancel DELETE /2.2/orders/:trackingNumber
 
-  Scenario: DELETE 2.0/orders/:uuidId - Cancel Order - Staging (uid:f375785d-1963-4329-8087-b5c9192557a2)
+  Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Staging (uid:b80be344-3ec8-493f-bd21-64a1b29f2dfc)
     Given Shipper id "{shipper-id}" subscribes to "Cancelled" webhook
     And Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -12,7 +12,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And Operator verify that order status-granular status is "Staging"-"Staging"
     And Operator search for created order
     And DB Operator gets async handle of an order from its Tracking ID
-    When API Operator cancel order with DELETE /2.0/orders/:uuid
+    When API Operator cancel order with DELETE /2.2/orders/:trackingNumber
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And Operator checks that "CANCEL" event is published
     And Operator verify that order comment is appended with cancel reason = "cancellation reason : api cancellation request"
@@ -29,7 +29,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
-  Scenario: DELETE 2.0/orders/:uuidId - Cancel Order - Pending Pickup (uid:f00ad4fa-36c8-47ba-ae37-7ac548f4c26d)
+  Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Pending Pickup (uid:7cbab742-2853-42ac-bb36-38fc1f370f7e)
     Given Shipper id "{shipper-id}" subscribes to "Cancelled" webhook
     And Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -38,7 +38,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
       | parcel_job_is_pickup_required | true     |
     And Operator search for created order
     And DB Operator gets async handle of an order from its Tracking ID
-    When API Operator cancel order with DELETE /2.0/orders/:uuid
+    When API Operator cancel order with DELETE /2.2/orders/:trackingNumber
     And API Operator get order details
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And Operator checks that "CANCEL" event is published
@@ -56,7 +56,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
-  Scenario: DELETE 2.0/orders/:uuidId - Cancel Order - Van En-route to Pickup (uid:6ca033a5-449c-4c9d-b4ff-2f3f1acf379d)
+  Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Van En-route to Pickup (uid:b1acc37c-40e7-48ce-a161-f4c329bc6f20)
     Given Shipper id "{shipper-id}" subscribes to "Cancelled" webhook
     And Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -73,7 +73,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And API Operator start the route
     Then Operator verify that order status-granular status is "Transit"-"Van_Enroute_To_Pickup"
     And DB Operator gets async handle of an order from its Tracking ID
-    When API Operator cancel order with DELETE /2.0/orders/:uuid
+    When API Operator cancel order with DELETE /2.2/orders/:trackingNumber
     And API Operator get order details
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And Operator checks that "CANCEL" event is published
@@ -100,7 +100,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
-  Scenario: DELETE 2.0/orders/:uuidId - Cancel Order - Pickup Fail (uid:955b4cb8-f4de-4ef7-af0a-7fc18f929ba8)
+  Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Pickup Fail (uid:3e840d42-8e45-4650-adff-9873cd914202)
     Given Shipper id "{shipper-id}" subscribes to "Cancelled" webhook
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -120,7 +120,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
       | addParcelToRouteRequest | { "type":"DD" } |
     Then Operator verify that order status-granular status is "Pickup_Fail"-"Pickup_Fail"
     And DB Operator gets async handle of an order from its Tracking ID
-    When API Operator cancel order with DELETE /2.0/orders/:uuid
+    When API Operator cancel order with DELETE /2.2/orders/:trackingNumber
     And API Operator get order details
     Then Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And Operator checks that "CANCEL" event is published
@@ -145,7 +145,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
-  Scenario: DELETE 2.0/orders/:uuidId - Cancel Order - Returned to Sender (uid:ed7a57f2-6fe2-4f85-9281-14310b21ca52)
+  Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Returned to Sender (uid:a4f65af2-e265-4aa6-abf0-56d6e85fded9)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -158,7 +158,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And Operator force success order
     Then Operator verify that order status-granular status is "Completed"-"Returned_to_Sender"
     And DB Operator gets async handle of an order from its Tracking ID
-    When Operator failed to cancel invalid status with DELETE /2.0/orders/:uuid
+    When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103093                       |
       | message     | Order is Returned to Sender! |
@@ -167,7 +167,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And Operator verify that order status-granular status is "Completed"-"Returned_to_Sender"
     And Operator checks that "CANCEL" event is NOT published
 
-  Scenario: DELETE 2.0/orders/:uuidId - Cancel Order - Completed (uid:0c82aa2a-c946-47e0-adcd-b053290fe55d)
+  Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Completed (uid:eda4dd11-ef04-40ac-9cd5-d3154f9cc424)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -177,7 +177,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And Operator force success order
     Then Operator verify that order status-granular status is "Completed"-"Completed"
     And DB Operator gets async handle of an order from its Tracking ID
-    When Operator failed to cancel invalid status with DELETE /2.0/orders/:uuid
+    When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103093                |
       | message     | Order is Completed!   |
@@ -186,7 +186,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And Operator verify that order status-granular status is "Completed"-"Completed"
     And Operator checks that "CANCEL" event is NOT published
 
-  Scenario: DELETE 2.0/orders/:uuidId - Cancel Order - Cancelled (uid:c235975e-9524-4c3c-ac8f-f1e63d27628a)
+  Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Cancelled (uid:dae34644-0089-480a-abf2-afdb64ac6d15)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -196,10 +196,10 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And API Operator cancel created order
     Then Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And DB Operator gets async handle of an order from its Tracking ID
-    When API Operator cancel order with DELETE /2.0/orders/:uuid
+    When API Operator cancel order with DELETE /2.2/orders/:trackingNumber
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
 
-  Scenario: DELETE 2.0/orders/:uuidId - Cancel Order - Arrived at Distribution Point (uid:dedbbf05-aaaa-407b-9d37-df9f010b965f)
+  Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Arrived at Distribution Point (uid:3477397f-01ca-4a83-93b1-3f4121609d1d)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -217,7 +217,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And Operator force "SUCCESS" "DELIVERY" waypoint
     Then Operator verify that order status-granular status is "Transit"-"Arrived_at_Distribution_Point"
     And DB Operator gets async handle of an order from its Tracking ID
-    When Operator failed to cancel invalid status with DELETE /2.0/orders/:uuid
+    When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103093                                  |
       | message     | Order is Arrived at Distribution Point! |
@@ -226,7 +226,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And Operator verify that order status-granular status is "Transit"-"Arrived_at_Distribution_Point"
     And Operator checks that "CANCEL" event is NOT published
 
-  Scenario: DELETE 2.0/orders/:uuidId - Cancel Order - Arrived at Sorting Hub (uid:9cf17e5d-0767-49c9-a9b7-ccee32f44b0e)
+  Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Arrived at Sorting Hub (uid:54452d45-8c0d-4da3-b4f9-261ca95496cc)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -236,7 +236,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And Operator perform global inbound for created order at hub "{sorting-hub-id}"
     And Operator verify that order status-granular status is "Transit"-"Arrived_at_Sorting_Hub"
     And DB Operator gets async handle of an order from its Tracking ID
-    When Operator failed to cancel invalid status with DELETE /2.0/orders/:uuid
+    When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103093                           |
       | message     | Order is Arrived at Sorting Hub! |
@@ -245,7 +245,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And Operator verify that order status-granular status is "Transit"-"Arrived_at_Sorting_Hub"
     And Operator checks that "CANCEL" event is NOT published
 
-  Scenario: DELETE 2.0/orders/:uuidId - Cancel Order - En-route to Sorting Hub (uid:7cbeb99f-68d6-4e92-a6b8-2abf0b2c8bed)
+  Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - En-route to Sorting Hub (uid:b18462c8-25e9-4415-ba8c-76509b2879ea)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
@@ -255,7 +255,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And API Operator update order granular status to = "En-route to Sorting Hub"
     And Operator verify that order status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
     And DB Operator gets async handle of an order from its Tracking ID
-    When Operator failed to cancel invalid status with DELETE /2.0/orders/:uuid
+    When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103093                            |
       | message     | Order is En-route to Sorting Hub! |
@@ -264,7 +264,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And Operator verify that order status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
     And Operator checks that "CANCEL" event is NOT published
 
-  Scenario: DELETE 2.0/orders/:uuidId - Cancel Order - On Vehicle for Delivery (uid:5f66e727-8af3-4546-bbd1-54f941ff493c)
+  Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - On Vehicle for Delivery (uid:dc14f525-cff7-4161-9ca1-1dffc4047a9e)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
@@ -274,7 +274,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And API Operator update order granular status to = "On Vehicle for Delivery"
     And Operator verify that order status-granular status is "Transit"-"On_Vehicle_for_Delivery"
     And DB Operator gets async handle of an order from its Tracking ID
-    When Operator failed to cancel invalid status with DELETE /2.0/orders/:uuid
+    When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103093                            |
       | message     | Order is On Vehicle for Delivery! |
@@ -283,7 +283,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And Operator verify that order status-granular status is "Transit"-"On_Vehicle_for_Delivery"
     And Operator checks that "CANCEL" event is NOT published
 
-  Scenario: DELETE /2.0/orders/:uuidId - Cancel Order - On Hold (uid:b0dd1641-7df7-43d1-8192-904cab22fefb)
+  Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - On Hold (uid:088e2953-1442-437f-b9d8-60f8d6be37bb)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
@@ -293,7 +293,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And API Operator update order granular status to = "On Hold"
     And Operator verify that order status-granular status is "On_Hold"-"On_Hold"
     And DB Operator gets async handle of an order from its Tracking ID
-    When Operator failed to cancel invalid status with DELETE /2.0/orders/:uuid
+    When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103093                |
       | message     | Order is On Hold!     |
@@ -302,7 +302,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And Operator verify that order status-granular status is "On_Hold"-"On_Hold"
     And Operator checks that "CANCEL" event is NOT published
 
-  Scenario: DELETE 2.0/orders/:uuidId - Cancel Order - Transferred to 3PL (uid:160ef468-1709-4fbb-b22d-4d0ae4e8334a)
+  Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Transferred to 3PL (uid:3c302884-8b26-49d1-a0db-78004e2ae42d)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
@@ -312,7 +312,7 @@ Feature: Cancel DELETE /2.0/orders/:uuid
     And API Operator update order granular status to = "Transferred to 3PL"
     And Operator verify that order status-granular status is "Transit"-"Transferred_to_3PL"
     And DB Operator gets async handle of an order from its Tracking ID
-    When Operator failed to cancel invalid status with DELETE /2.0/orders/:uuid
+    When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103093                       |
       | message     | Order is Transferred to 3PL! |

@@ -35,6 +35,15 @@ public class OrderCancelSteps extends BaseSteps {
     put(KEY_CANCELLATION_REASON, "Cancellation reason : API CANCELLATION REQUEST");
   }
 
+  @Given("^API Operator cancel order with DELETE /2.2/orders/:trackingNumber$")
+  public void apiOperatorCancelOrderV3() {
+    String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+    String shipperToken = get(KEY_SHIPPER_V4_ACCESS_TOKEN);
+    getShipperOrderClient(shipperToken).cancelOrderV3(trackingId);
+    put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_CANCEL");
+    put(KEY_CANCELLATION_REASON, "Cancellation reason : API CANCELLATION REQUEST");
+  }
+
   @When("^Operator failed to cancel invalid status with PUT /orders/:orderId/cancel$")
   public void operatorCancelV1() {
     long orderId = get(KEY_CREATED_ORDER_ID);
@@ -47,6 +56,15 @@ public class OrderCancelSteps extends BaseSteps {
   public void operatorCancelInvalidV2() {
     String asyncHandle = get(KEY_CREATED_ORDER_ASYNC_ID);
     Response r = getOrderClient().cancelOrderV2AndGetRawResponse(asyncHandle);
+    put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_CANCEL");
+    put(OrderActionSteps.KEY_API_RAW_RESPONSE, r);
+  }
+
+  @When("^Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber$")
+  public void operatorCancelInvalidV3() {
+    String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+    String shipperToken = get(KEY_SHIPPER_V4_ACCESS_TOKEN);
+    Response r = getShipperOrderClient(shipperToken).cancelOrderV3AndGetRawResponse(trackingId);
     put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_CANCEL");
     put(OrderActionSteps.KEY_API_RAW_RESPONSE, r);
   }
