@@ -75,6 +75,10 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
     return orderClient;
   }
 
+  protected static synchronized OrderClient getShipperOrderClient(String shipperToken) {
+    return new OrderClient(TestConstants.API_BASE_URL, shipperToken);
+  }
+
   protected synchronized EventClient getEventClient() {
     if (eventClient == null) {
       eventClient = new EventClient(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());

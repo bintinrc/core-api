@@ -194,12 +194,8 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator search for created order
     And API Operator cancel created order
     Then Operator verify that order status-granular status is "Cancelled"-"Cancelled"
-    When Operator failed to cancel invalid status with PUT /orders/:orderId/cancel
-    Then Operator verify response code is 400 with error message details as follow
-      | code        | 103098                     |
-      | message     | Order is already cancelled |
-      | application | core                       |
-      | description | ORDER_ALREADY_CANCELLED    |
+    When API Operator cancel order with PUT /orders/:orderId/cancel
+      | reason | Cancelled by automated test {gradle-current-date-yyyy-MM-dd} |
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
 
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Arrived at Distribution Point (uid:fd902296-466d-40d9-b7cd-76c7ecee4f7e)
