@@ -289,6 +289,5 @@ Feature: Delivery Verification Method
 
     Examples:
       | Note | hiptest-uid                              |
-      | OTP  | uid:8e7283b1-f62a-499d-99a5-5cb41a076641 |
-      | NONE | uid:6a19e1f0-ff2a-4f08-95dc-3c39e0c68b12 |
-
+      | OTP  | uid:d3d0226f-d4f5-4483-a7bd-49e4c3d0f08e |
+      | NONE | uid:c521fe2f-34c1-45b7-8f30-1ff056f93bdb |
