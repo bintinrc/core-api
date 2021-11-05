@@ -1,7 +1,7 @@
 @ForceSuccessOrder @DeleteReservationAndAddress @ArchiveDriverRoutes @route-manifest
 Feature: Route Manifest
 
-  Scenario Outline: Admin Manifest Force Finish a Reservation Tied to Normal Orders - <Note> - <hiptest-uid>
+  Scenario Outline: Admin Manifest Force Finish a Reservation Tied to Normal Orders - <Note> (<hiptest-uid>)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates a reservation tied to Normal orders
       | service_type                  | Parcel          |
