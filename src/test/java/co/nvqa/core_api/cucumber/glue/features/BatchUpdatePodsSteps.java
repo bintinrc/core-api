@@ -28,6 +28,7 @@ import io.cucumber.guice.ScenarioScoped;
 
 import java.time.Instant;
 import java.util.*;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author Binti Cahayati on 2020-10-08
@@ -296,23 +297,27 @@ public class BatchUpdatePodsSteps extends BaseSteps {
 
   @Given("^Shipper id \"([^\"]*)\" subscribes to \"([^\"]*)\" webhook$")
   public void shipperSubscribeWebhook(long shipperGlobalId, String eventName) {
-    cleanWebhookSubs(shipperGlobalId);
     callWithRetry(() -> {
-      Bin bin = binClient.requestNewBin();
-      put(Bin.KEY_CREATED_BIN, bin);
+      List<Webhook> webhooks = Arrays
+          .asList(getShipperClient().getWebhookSubscription(shipperGlobalId));
       List<String> events = Arrays.asList(eventName.split(", "));
       events.forEach(e -> {
-        Webhook webhook = new Webhook(e, Webhook.WEBHOOK_METHOD, bin.getEndpoint(),
-            Webhook.VERSION_1_1);
-        getShipperClient().createWebhookSubscription(shipperGlobalId, webhook);
-        NvLogger.successf("webhook event %s subscribed to %s", e, bin.getEndpoint());
+        String eventTemp = StringUtils.join(e.split(" "), "-").trim();
+        Bin bin = binClient.requestNewBin(shipperGlobalId + "-" + eventTemp);
+        put(Bin.KEY_CREATED_BIN + e, bin);
+        if (webhooks.stream().noneMatch(o -> o.getEvent().equalsIgnoreCase(e))) {
+          Webhook webhook = new Webhook(e, Webhook.WEBHOOK_METHOD, bin.getEndpoint(),
+              Webhook.VERSION_1_1);
+          getShipperClient().createWebhookSubscription(shipperGlobalId, webhook);
+          NvLogger.successf("webhook event %s subscribed to %s", e, bin.getEndpoint());
+        }
       });
     }, "subscribe webhook event: " + eventName, 30);
   }
 
   @Then("^Shipper gets webhook request for event \"([^\"]*)\"$")
   public void shipperPeekItsWebhook(String event) {
-    Bin bin = get(Bin.KEY_CREATED_BIN);
+    Bin bin = get(Bin.KEY_CREATED_BIN + event);
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     callWithRetry(() -> {
       List<BinRequest> requests = Arrays.asList(binClient.retrieveBinContent(bin.getMessage()));
@@ -357,7 +362,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   public void verifyNoWebhookSent(String event) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     trackingIds.forEach(o -> {
-      Bin bin = get(Bin.KEY_CREATED_BIN);
+      Bin bin = get(Bin.KEY_CREATED_BIN + event);
       callWithRetry(() -> {
         List<BinRequest> requests = Arrays.asList(binClient.retrieveBinContent(bin.getMessage()));
         boolean found = requests.stream().anyMatch(e ->
