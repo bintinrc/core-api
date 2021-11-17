@@ -2,7 +2,7 @@
 Feature: Route Monitoring V2
 
   @rmv2-empty-route
-  Scenario Outline: Operator Create Empty Route And Verifies Route Monitoring Data - <Note> (<hiptest-uid>)
+  Scenario Outline: Operator Create Empty Route And Verifies Route Monitoring Data (<hiptest-uid>)
     Given Operator create an empty route
       | driver_id  | {driver-2-id} |
       | hub_id     | {sorting-hub-id}             |
@@ -304,7 +304,7 @@ Feature: Route Monitoring V2
       | Success | uid:93ba3047-3e8e-4591-aa63-be7cbdcf5ecc | SUCCESS | Return       | Standard      | true                          |
 
   @rmv2-pending-priority-parcels
-  Scenario Outline: Operator Get Pending Priority Parcel Details Inside a Route with NON-PRIOR Waypoints (Reservation & Non-PRIOR Delivery) - <Note> (<hiptest-uid>)
+  Scenario Outline: Operator Get Pending Priority Parcel Details Inside a Route with NON-PRIOR Waypoints (Reservation & Non-PRIOR Delivery) (<hiptest-uid>)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
