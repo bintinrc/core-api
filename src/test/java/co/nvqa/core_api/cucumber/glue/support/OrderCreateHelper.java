@@ -33,7 +33,7 @@ public class OrderCreateHelper {
     TIMESLOTS = new ArrayList<>();
     Stream.of(Timeslot.ValidTimeSlot.values())
         .filter(e -> !e.equals(Timeslot.ValidTimeSlot.INVALID_TIMESLOT))
-        .forEach(e -> TIMESLOTS.add(new Timeslot(e.getStartTime(), e.getEndTime())));
+        .forEach(e -> TIMESLOTS.add(new Timeslot(e.getTimeslot().get(0), e.getTimeslot().get(1))));
   }
 
   public static OrderRequestV4 generateOrderV4(Map<String, String> source) {
