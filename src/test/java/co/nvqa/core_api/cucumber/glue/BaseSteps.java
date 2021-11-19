@@ -1,11 +1,16 @@
 package co.nvqa.core_api.cucumber.glue;
 
-import co.nvqa.commons.client.core.*;
+import co.nvqa.commons.client.core.BatchUpdatePodClient;
+import co.nvqa.commons.client.core.EventClient;
+import co.nvqa.commons.client.core.InboundClient;
+import co.nvqa.commons.client.core.OrderClient;
+import co.nvqa.commons.client.core.RouteClient;
+import co.nvqa.commons.client.core.RouteMonitoringClient;
+import co.nvqa.commons.client.core.ShipperPickupClient;
 import co.nvqa.commons.client.order_search.OrderSearchClient;
 import co.nvqa.commons.client.reservation.ReservationV2Client;
 import co.nvqa.commons.client.shipper.ShipperClient;
 import co.nvqa.commons.cucumber.glue.StandardSteps;
-import co.nvqa.commons.util.NvLogger;
 import co.nvqa.commons.util.StandardTestUtils;
 import co.nvqa.core_api.cucumber.glue.support.AuthHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
@@ -31,14 +36,14 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
 
   @SuppressWarnings("unchecked")
   protected void callWithRetry(Runnable runnable, String methodName) {
-    retryIfExpectedExceptionOccurred(runnable, methodName, NvLogger::warn, DEFAULT_FALLBACK_MS,
-        DEFAULT_RETRY, AssertionError.class, RuntimeException.class);
+    retryIfAssertionErrorOrRuntimeExceptionOccurred(runnable, methodName, DEFAULT_FALLBACK_MS,
+        DEFAULT_RETRY);
   }
 
   @SuppressWarnings("unchecked")
   protected void callWithRetry(Runnable runnable, String methodName, int maxRetry) {
-    retryIfExpectedExceptionOccurred(runnable, methodName, NvLogger::warn, DEFAULT_FALLBACK_MS,
-        maxRetry, AssertionError.class, RuntimeException.class);
+    retryIfAssertionErrorOrRuntimeExceptionOccurred(runnable, methodName, DEFAULT_FALLBACK_MS,
+        maxRetry);
   }
 
   protected void doStepPause() {
