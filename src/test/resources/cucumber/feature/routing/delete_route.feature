@@ -64,6 +64,7 @@ Feature: Delete Route
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And API Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+    And Operator search for all created orders
     And Operator add order to driver "<route_type>" route
     When Shipper create another order with the same parameters as before
     And Operator add order to driver "<route_type>" route
