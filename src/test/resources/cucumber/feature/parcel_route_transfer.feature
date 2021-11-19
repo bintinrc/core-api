@@ -138,6 +138,7 @@ Feature: Parcel Route Transfer
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
+    And Operator search for created order
     And Operator add order to driver "DD" route
     And Operator force "FAIL" "DELIVERY" waypoint
     Then Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"

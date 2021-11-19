@@ -86,7 +86,7 @@ public class RoutingSteps extends BaseSteps {
       request.setRouteId(routeId);
       request.setType(type);
       getRouteClient().addParcelToRoute(orderId, request);
-      put(KEY_ROUTE_EVENT_SOURCE, "ADD_BY_TRACKING_OR_STAMP");
+      put(KEY_ROUTE_EVENT_SOURCE, "ADD_BY_ORDER");
       NvLogger.success(DOMAIN,
           String.format("order id %s added to %s route id %d", orderId, type, routeId));
     }, "add parcel to route");
@@ -103,7 +103,7 @@ public class RoutingSteps extends BaseSteps {
   @When("^Operator add all orders to driver \"([^\"]*)\" route$")
   public void operatorAddMultipleOrdersToRoute(String type) {
     List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
-    orderIds.forEach(e -> {
+    orderIds.stream().distinct().forEach(e -> {
       put(KEY_CREATED_ORDER_ID,e );
       operatorAddOrderToRoute(type);
     });

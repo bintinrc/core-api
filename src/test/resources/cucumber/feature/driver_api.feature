@@ -1,6 +1,6 @@
 @ForceSuccessOrder @ArchiveDriverRoutes @driver-api
 Feature: Driver API
-  
+
   Scenario: Driver Van Inbound an Order Delivery (uid:1d621734-5703-41e5-9c91-5aac51abf358)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -34,6 +34,7 @@ Feature: Driver API
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
+    And Operator search for created order
     And Operator add order to driver "PP" route
     When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
