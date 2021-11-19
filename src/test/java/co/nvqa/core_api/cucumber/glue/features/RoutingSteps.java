@@ -80,16 +80,15 @@ public class RoutingSteps extends BaseSteps {
   @When("^Operator add order to driver \"([^\"]*)\" route$")
   public void operatorAddOrderToRoute(String type) {
     callWithRetry(() -> {
-      String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-      long routeId = get(KEY_CREATED_ROUTE_ID);
+      Long routeId = get(KEY_CREATED_ROUTE_ID);
+      Long orderId = get(KEY_CREATED_ORDER_ID);
       AddParcelToRouteRequest request = new AddParcelToRouteRequest();
       request.setRouteId(routeId);
-      request.setTrackingId(trackingId);
       request.setType(type);
-      getRouteClient().addParcelToRoute(routeId, request);
+      getRouteClient().addParcelToRoute(orderId, request);
       put(KEY_ROUTE_EVENT_SOURCE, "ADD_BY_TRACKING_OR_STAMP");
       NvLogger.success(DOMAIN,
-          String.format("order %s added to %s route id %d", trackingId, type, routeId));
+          String.format("order id %s added to %s route id %d", orderId, type, routeId));
     }, "add parcel to route");
   }
 
@@ -103,9 +102,9 @@ public class RoutingSteps extends BaseSteps {
 
   @When("^Operator add all orders to driver \"([^\"]*)\" route$")
   public void operatorAddMultipleOrdersToRoute(String type) {
-    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-    trackingIds.forEach(e -> {
-      put(KEY_CREATED_ORDER_TRACKING_ID, e);
+    List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
+    orderIds.forEach(e -> {
+      put(KEY_CREATED_ORDER_ID,e );
       operatorAddOrderToRoute(type);
     });
   }

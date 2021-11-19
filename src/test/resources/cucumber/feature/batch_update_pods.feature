@@ -9,10 +9,11 @@ Feature: Batch Update PODs
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator search for all created orders
     And Operator add all orders to driver "PP" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Success All Created Orders "Pickup" with pod type "<type>"
@@ -40,10 +41,11 @@ Feature: Batch Update PODs
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator search for all created orders
     And Operator add all orders to driver "PP" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Partial Success Orders "Pickup"
@@ -67,10 +69,11 @@ Feature: Batch Update PODs
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator search for all created orders
     And Operator add all orders to driver "PP" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Fail All Created Orders "Pickup"
@@ -92,10 +95,11 @@ Feature: Batch Update PODs
       | parcel_job_is_pickup_required | false    |
     When Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator search for all created orders
     And Operator add all orders to driver "DD" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Success All Created Orders "Delivery" with pod type "<type>"
@@ -124,10 +128,11 @@ Feature: Batch Update PODs
       | parcel_job_is_pickup_required | true     |
     When Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator search for all created orders
     And Operator add all orders to driver "DD" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Success All Created Orders "Delivery" with pod type "<type>"
@@ -156,10 +161,11 @@ Feature: Batch Update PODs
       | parcel_job_is_pickup_required | false    |
     When Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator search for all created orders
     And Operator add all orders to driver "DD" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Partial Success Orders "Delivery"
@@ -185,10 +191,11 @@ Feature: Batch Update PODs
       | parcel_job_is_pickup_required | false    |
     When Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator search for all created orders
     And Operator add all orders to driver "DD" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Fail All Created Orders "Delivery"
@@ -211,10 +218,10 @@ Feature: Batch Update PODs
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "PENDING"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "SUCCESS" All Orders under the reservation
@@ -239,10 +246,10 @@ Feature: Batch Update PODs
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "PENDING"
     And Operator Route the Reservation Pickup
     And Shipper creates multiple "Return" orders
@@ -272,10 +279,10 @@ Feature: Batch Update PODs
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "PENDING"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "SUCCESS" Reservation without any Parcel
@@ -296,10 +303,10 @@ Feature: Batch Update PODs
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "PENDING"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to Partial Success Orders under the reservation
@@ -322,10 +329,10 @@ Feature: Batch Update PODs
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "PENDING"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "FAIL" All Orders under the reservation
@@ -348,10 +355,10 @@ Feature: Batch Update PODs
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "PENDING"
     And Operator Route the Reservation Pickup
     And Shipper creates multiple "Return" orders
@@ -379,10 +386,10 @@ Feature: Batch Update PODs
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "PENDING"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "FAIL" Reservation without any Parcel
@@ -402,10 +409,11 @@ Feature: Batch Update PODs
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator search for all created orders
     And Operator add all orders to driver "PP" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Success All Created Orders "Pickup" with NO Proof Details
@@ -424,10 +432,11 @@ Feature: Batch Update PODs
       | parcel_job_is_pickup_required | true     |
     And Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator search for all created orders
     And Operator add all orders to driver "DD" route
     And Operator merge transaction waypoints
     When API Batch Update Job Request to Success All Created Orders "Delivery" with NO Proof Details

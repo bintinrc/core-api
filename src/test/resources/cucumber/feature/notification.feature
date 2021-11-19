@@ -23,10 +23,10 @@ Feature: Notification
     And Operator search for created order
     And Operator perform global inbound for created order at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     And Operator force "SUCCESS" "DELIVERY" waypoint
     Then Shipper gets webhook request for event "Successful Delivery" for all orders
@@ -43,10 +43,10 @@ Feature: Notification
     And Operator perform global inbound for created order at hub "{sorting-hub-id}"
     And API Operator assign delivery waypoint of an order to DP Include Today with ID = "{dpms-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route

@@ -24,9 +24,9 @@ Feature: Route 1.5
   Scenario: Add Order to DP Holding Route (uid:eddb26ba-5d01-4256-9916-3c4f9216a7e4)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
-      | service_type                  | Parcel                   |
-      | service_level                 | Standard                 |
-      | parcel_job_is_pickup_required | false                    |
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
     And Operator search for created order
     And Operator create an empty route
       | driver_id  | {driver-id}      |

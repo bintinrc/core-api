@@ -4,10 +4,10 @@ Feature: Route Monitoring V2
   @rmv2-empty-route
   Scenario Outline: Operator Create Empty Route And Verifies Route Monitoring Data (<hiptest-uid>)
     Given Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data for Empty Route has correct details
       | total-expected-valid-failed | 0 |
@@ -24,10 +24,10 @@ Feature: Route Monitoring V2
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add order to driver "<route_type>" route
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies Route Monitoring Data Has Correct Details for "Pending" Case
@@ -51,10 +51,10 @@ Feature: Route Monitoring V2
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add order to driver "<route_type>" route
     When Shipper create another order with the same parameters as before
     And Operator add order to driver "<route_type>" route
@@ -80,10 +80,10 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator Search for Created Pickup for Shipper "{shipper-2-legacy-id}" with status "PENDING"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator Route the Reservation Pickup
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies Route Monitoring Data Has Correct Details for "Pending" Case
@@ -107,10 +107,10 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator Search for Created Pickup for Shipper "{shipper-2-legacy-id}" with status "PENDING"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator Route the Reservation Pickup
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -137,10 +137,10 @@ Feature: Route Monitoring V2
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add order to driver "<route_type>" route
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -170,10 +170,10 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | true     |
     And Operator Search for Created Pickup for Shipper "{shipper-2-legacy-id}" with status "Pending"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator Route the Reservation Pickup
     When Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -223,10 +223,11 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator tags all orders with PRIOR tag
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator search for all created orders
     And Operator add all orders to driver "<route_type>" route
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies total pending priority parcels and other details
@@ -251,10 +252,10 @@ Feature: Route Monitoring V2
     And Operator tags order with PRIOR tag
     And Operator perform global inbound for created order at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies total pending priority parcels and other details
@@ -282,10 +283,10 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator tags order with PRIOR tag
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add order to driver "PP" route
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies total pending priority parcels and other details
@@ -312,10 +313,10 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator tags order with PRIOR tag
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -349,10 +350,11 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator search for all created orders
     And Operator add all orders to driver "DD" route
     When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
@@ -380,10 +382,11 @@ Feature: Route Monitoring V2
     And Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator tags all orders with PRIOR tag
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator search for all created orders
     And Operator add all orders to driver "<route_type>" route
     When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
@@ -411,10 +414,10 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator perform global inbound for created order at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
@@ -440,10 +443,10 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator perform global inbound for created order at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     When Shipper create order with parameters below
       | service_type                  | <service_type>  |
@@ -469,10 +472,11 @@ Feature: Route Monitoring V2
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator search for all created orders
     And Operator add all orders to driver "PP" route
     When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
@@ -499,10 +503,12 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator tags all orders with PRIOR tag
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator search for all created ordersAnd Operator search for all created orders
+    And Operator search for all created orders
     And Operator add all orders to driver "<route_type>" route
     When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
@@ -529,10 +535,10 @@ Feature: Route Monitoring V2
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add order to driver "PP" route
     When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
@@ -557,10 +563,10 @@ Feature: Route Monitoring V2
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add order to driver "PP" route
     When Shipper create order with parameters below
       | service_type                  | Parcel          |
@@ -587,10 +593,10 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | true     |
     And Operator search for all reservations for shipper legacy id "{shipper-2-legacy-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator Route All Reservation Pickups
     And Operator admin manifest force fail all reservations with invalid reason
     When Operator Filter Route Monitoring Data for Today's Date
@@ -615,10 +621,10 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | true     |
     And Operator search for all reservations for shipper legacy id "{shipper-2-legacy-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator Route All Reservation Pickups
     And Operator admin manifest force fail reservation with valid reason
     When Operator Filter Route Monitoring Data for Today's Date
@@ -642,10 +648,10 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | true     |
     And Operator search for all reservations for shipper legacy id "{shipper-2-legacy-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id} |
-      | hub_id     | {sorting-hub-id}             |
-      | vehicle_id | {vehicle-id}                 |
-      | zone_id    | {zone-id}                    |
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator Route All Reservation Pickups
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies total invalid failed is 0 and other details

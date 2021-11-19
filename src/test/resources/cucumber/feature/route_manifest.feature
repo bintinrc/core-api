@@ -65,6 +65,7 @@ Feature: Route Manifest
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
+    And Operator search for all created orders
     And Operator add all orders to driver "DD" route
     And Operator merge transaction waypoints
     And Operator get "DELIVERY" transaction waypoint Ids for all orders
