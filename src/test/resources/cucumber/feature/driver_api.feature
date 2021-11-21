@@ -34,6 +34,7 @@ Feature: Driver API
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
+    And Operator search for created order
     And Operator add order to driver "PP" route
     When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route

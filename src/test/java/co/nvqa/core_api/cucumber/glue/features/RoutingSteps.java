@@ -7,7 +7,6 @@ import co.nvqa.commons.model.core.route.AddParcelToRouteRequest;
 import co.nvqa.commons.model.core.route.ArchiveRouteResponse;
 import co.nvqa.commons.model.core.route.Route;
 import co.nvqa.commons.support.DateUtil;
-import co.nvqa.commons.util.NvLogger;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import io.cucumber.java.After;
@@ -84,15 +83,14 @@ public class RoutingSteps extends BaseSteps {
   @When("Operator add order to driver {string} route")
   public void operatorAddOrderToRoute(String type) {
     callWithRetry(() -> {
-      final String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
       final long routeId = get(KEY_CREATED_ROUTE_ID);
+      final long orderId = get(KEY_CREATED_ORDER_ID);
       final AddParcelToRouteRequest request = new AddParcelToRouteRequest();
       request.setRouteId(routeId);
-      request.setTrackingId(trackingId);
       request.setType(type);
-      getRouteClient().addParcelToRoute(routeId, request);
-      put(KEY_ROUTE_EVENT_SOURCE, "ADD_BY_TRACKING_OR_STAMP");
-      LOGGER.info("order {} added to {} route id {}", trackingId, type, routeId);
+      getRouteClient().addParcelToRoute(orderId, request);
+      put(KEY_ROUTE_EVENT_SOURCE, "ADD_BY_ORDER");
+      LOGGER.info("order id {} added to {} route id {}", orderId, type, routeId);
     }, "add parcel to route");
   }
 
@@ -105,10 +103,11 @@ public class RoutingSteps extends BaseSteps {
   }
 
   @When("Operator add all orders to driver {string} route")
-  public void operatorAddMultipleOrdersToRoute(String type) {
-    final List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-    trackingIds.forEach(e -> {
-      put(KEY_CREATED_ORDER_TRACKING_ID, e);
+  public void
+  operatorAddMultipleOrdersToRoute(String type) {
+    final List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
+    orderIds.stream().distinct().forEach(e -> {
+      put(KEY_CREATED_ORDER_ID,e );
       operatorAddOrderToRoute(type);
     });
   }

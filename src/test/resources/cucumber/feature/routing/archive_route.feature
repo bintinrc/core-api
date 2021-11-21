@@ -4,10 +4,10 @@ Feature: Archive Route
   @route-archive
   Scenario: Operator Archive Driver Route Successfully - Empty Route (uid:6274cf87-9e6d-4087-912c-937093311538)
     Given Operator create an empty route
-      | driver_id  | {driver-id} |
-      | hub_id     | {sorting-hub-id}    |
-      | vehicle_id | {vehicle-id}        |
-      | zone_id    | {zone-id}           |
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator archives driver route with status code 204
     Then DB Operator verifies route status is archived
     When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
@@ -23,10 +23,10 @@ Feature: Archive Route
       | parcel_job_is_pickup_required | false                       |
     And Operator search for created order
     And Operator create an empty route
-      | driver_id  | {driver-id} |
-      | hub_id     | {sorting-hub-id}    |
-      | vehicle_id | {vehicle-id}        |
-      | zone_id    | {zone-id}           |
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     And Operator archives driver route with status code 204
     Then DB Operator verifies route status is archived
@@ -42,10 +42,10 @@ Feature: Archive Route
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
     And Operator create an empty route
-      | driver_id  | {driver-id} |
-      | hub_id     | {sorting-hub-id}    |
-      | vehicle_id | {vehicle-id}        |
-      | zone_id    | {zone-id}           |
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
     And Driver Starts the route
@@ -63,10 +63,10 @@ Feature: Archive Route
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
     And Operator create an empty route
-      | driver_id  | {driver-id} |
-      | hub_id     | {sorting-hub-id}    |
-      | vehicle_id | {vehicle-id}        |
-      | zone_id    | {zone-id}           |
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     And Operator archives driver route
     Then DB Operator verifies route status is archived
@@ -84,10 +84,10 @@ Feature: Archive Route
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
     And Operator create an empty route
-      | driver_id  | {driver-id} |
-      | hub_id     | {sorting-hub-id}    |
-      | vehicle_id | {vehicle-id}        |
-      | zone_id    | {zone-id}           |
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     When Operator delete driver route
     And Operator archives driver route with status code 404

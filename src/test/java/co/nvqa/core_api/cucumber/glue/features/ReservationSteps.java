@@ -70,7 +70,7 @@ public class ReservationSteps extends BaseSteps {
       putInList(KEY_LIST_OF_RESERVATION_TRACKING_IDS, trackingId);
       put(KEY_WAYPOINT_ID, pickup.getWaypointId());
       putInList(KEY_LIST_OF_WAYPOINT_IDS, pickup.getWaypointId());
-    }, String.format("search reservation with status %s", status), 70);
+    }, String.format("search reservation with status %s", status), 30);
   }
 
   @And("^Operator search for all reservations for shipper legacy id \"([^\"]*)\"$")
