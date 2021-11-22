@@ -28,6 +28,7 @@ Feature: Route Monitoring V2
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
+    And Operator search for created order
     And Operator add order to driver "<route_type>" route
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies Route Monitoring Data Has Correct Details for "Pending" Case
@@ -55,11 +56,10 @@ Feature: Route Monitoring V2
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And Operator add order to driver "<route_type>" route
     When Shipper create another order with the same parameters as before
-    And Operator add order to driver "<route_type>" route
     When Shipper create another order with the same parameters as before
-    And Operator add order to driver "<route_type>" route
+    And Operator search for all created orders
+    And Operator add all orders to driver "<route_type>" route
     And Operator merge transaction waypoints
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for "Pending" Case
@@ -136,18 +136,18 @@ Feature: Route Monitoring V2
       | service_level                 | <service_level>                 |
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
-    And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    And Operator add order to driver "<route_type>" route
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
       | service_level                 | <service_level>                 |
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
-    And Operator add order to driver "<route_type>" route
+    And Operator search for all created orders
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator add all orders to driver "<route_type>" route
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for "Pending" Case
       | total-expected-waypoints | 2 |
@@ -249,6 +249,7 @@ Feature: Route Monitoring V2
       | service_level                 | <service_level>                 |
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
+    And Operator search for created order
     And Operator tags order with PRIOR tag
     And Operator perform global inbound for created order at hub "{sorting-hub-id}"
     And Operator create an empty route
@@ -281,6 +282,7 @@ Feature: Route Monitoring V2
       | service_level                 | <service_level>                 |
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
+    And Operator search for created order
     And Operator tags order with PRIOR tag
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
@@ -507,7 +509,6 @@ Feature: Route Monitoring V2
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And Operator search for all created ordersAnd Operator search for all created orders
     And Operator search for all created orders
     And Operator add all orders to driver "<route_type>" route
     When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
@@ -539,6 +540,7 @@ Feature: Route Monitoring V2
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
+    And Operator search for created order
     And Operator add order to driver "PP" route
     When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
@@ -567,6 +569,7 @@ Feature: Route Monitoring V2
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
+    And Operator search for created order
     And Operator add order to driver "PP" route
     When Shipper create order with parameters below
       | service_type                  | Parcel          |
