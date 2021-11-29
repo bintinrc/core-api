@@ -94,6 +94,21 @@ public class RoutingSteps extends BaseSteps {
     }, "add parcel to route");
   }
 
+  @When("Operator add order by tracking id to driver {string} route")
+  public void operatorAddOrderByTrackingIdToRoute(String type) {
+    callWithRetry(() -> {
+      final long routeId = get(KEY_CREATED_ROUTE_ID);
+      final String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+      final AddParcelToRouteRequest request = new AddParcelToRouteRequest();
+      request.setRouteId(routeId);
+      request.setType(type);
+      request.setTrackingId(trackingId);
+      getRouteClient().addParcelToRouteByTrackingId(request);
+      put(KEY_ROUTE_EVENT_SOURCE, "ADD_BY_TRACKING_OR_STAMP");
+      LOGGER.info("order {} added to {} route id {}", trackingId, type, routeId);
+    }, "add parcel to route");
+  }
+
   @Given("^Operator new add parcel to DP holding route$")
   public void operatorAddToDpHoldingRoute() {
     Long orderId = get(KEY_CREATED_ORDER_ID);
@@ -107,7 +122,7 @@ public class RoutingSteps extends BaseSteps {
   operatorAddMultipleOrdersToRoute(String type) {
     final List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
     orderIds.stream().distinct().forEach(e -> {
-      put(KEY_CREATED_ORDER_ID,e );
+      put(KEY_CREATED_ORDER_ID, e);
       operatorAddOrderToRoute(type);
     });
   }
@@ -149,9 +164,10 @@ public class RoutingSteps extends BaseSteps {
     Response r = get(KEY_DELETE_ROUTE_RESPONSE);
     Pickup pickup = get(KEY_CREATED_RESERVATION);
     if (pickup != null) {
-      Assertions.assertThat(r.getBody().asString()).as("response message is correct").containsIgnoringCase(String
-          .format("Reservation %d for Shipper %d has status %s. Cannot delete route.",
-              pickup.getId(), pickup.getShipperId(), pickup.getStatus().toUpperCase()));
+      Assertions.assertThat(r.getBody().asString()).as("response message is correct")
+          .containsIgnoringCase(String
+              .format("Reservation %d for Shipper %d has status %s. Cannot delete route.",
+                  pickup.getId(), pickup.getShipperId(), pickup.getStatus().toUpperCase()));
     } else {
       final Order order = get(KEY_CREATED_ORDER);
       String type;

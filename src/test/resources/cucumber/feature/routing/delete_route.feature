@@ -65,9 +65,9 @@ Feature: Delete Route
     And API Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     And Operator search for all created orders
-    And Operator add order to driver "<route_type>" route
+    And Operator add order by tracking id to driver "<route_type>" route
     When Shipper create another order with the same parameters as before
-    And Operator add order to driver "<route_type>" route
+    And Operator add order by tracking id to driver "<route_type>" route
     And Operator search for all created orders
     And Operator merge transaction waypoints
     When Operator delete driver route with status code "200"
