@@ -179,28 +179,28 @@ Feature: Route Monitoring V2
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
-    And Operator add order to driver "DD" route
+    And Operator add order by tracking id to driver "DD" route
     When Shipper create another order with the same parameters as before
-    And Operator add order to driver "DD" route
+    And Operator add order by tracking id to driver "DD" route
     And Operator merge transaction waypoints
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
-    And Operator add order to driver "PP" route
+    And Operator add order by tracking id to driver "PP" route
     When Shipper create another order with the same parameters as before
-    And Operator add order to driver "PP" route
+    And Operator add order by tracking id to driver "PP" route
     And Operator merge transaction waypoints
     When Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
-    And Operator add order to driver "DD" route
+    And Operator add order by tracking id to driver "DD" route
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
-    And Operator add order to driver "PP" route
+    And Operator add order by tracking id to driver "PP" route
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for "Pending" Case
       | total-expected-waypoints | 5 |
@@ -319,12 +319,12 @@ Feature: Route Monitoring V2
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And Operator add order to driver "DD" route
+    And Operator add order by tracking id to driver "DD" route
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
       | service_level                 | <service_level>                 |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
-    And Operator add order to driver "DD" route
+    And Operator add order by tracking id to driver "DD" route
     When Shipper create order with parameters below
       | service_type                  | <service_type>  |
       | service_level                 | <service_level> |
@@ -420,7 +420,7 @@ Feature: Route Monitoring V2
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And Operator add order to driver "DD" route
+    And Operator add order by tracking id to driver "DD" route
     When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
     And Driver Fails Parcel "DELIVERY" with Valid Reason
@@ -449,7 +449,7 @@ Feature: Route Monitoring V2
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And Operator add order to driver "DD" route
+    And Operator add order by tracking id to driver "DD" route
     When Shipper create order with parameters below
       | service_type                  | <service_type>  |
       | service_level                 | <service_level> |
