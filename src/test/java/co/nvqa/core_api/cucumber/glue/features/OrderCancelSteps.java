@@ -80,6 +80,43 @@ public class OrderCancelSteps extends BaseSteps {
     put(KEY_CANCELLATION_REASON, f("Cancellation reason : %s", reason));
   }
 
+  @Given("^API Operator cancel order with DELETE /dashboard/shippers/:shipperId/orders/cancel by TID$")
+  public void apiOperatorCancelOrderV5byTid(Map<String, String> source) {
+    String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+    String shipperToken = get(KEY_SHIPPER_V4_ACCESS_TOKEN);
+    String reason = source.get("reason");
+    CancelOrder request = new CancelOrder();
+    request.setComments(reason);
+    request.setTrackingId(trackingId);
+    CancelOrder response = getShipperOrderClient(shipperToken)
+        .cancelOrderV5(Long.valueOf(source.get("shipper_legacy_id")), request);
+    assertEquals("cancelled orders size", 1, response.getCancelledOrders().size());
+    assertEquals("cancelled Orders tracking id equals", trackingId,
+        response.getCancelledOrders().get(0).getTrackingId());
+    assertEquals("un-cancelled orders size", 0, response.getUnCancelledOrders().size());
+    put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_CANCEL");
+    put(KEY_CANCELLATION_REASON, f("Cancellation reason : %s", reason));
+  }
+
+  @Given("^API Operator cancel order with DELETE /dashboard/shippers/:shipperId/orders/cancel by UUID$")
+  public void apiOperatorCancelOrderV5byUuid(Map<String, String> source) {
+    String asyncHandle = get(KEY_CREATED_ORDER_ASYNC_ID);
+    String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+    String shipperToken = get(KEY_SHIPPER_V4_ACCESS_TOKEN);
+    String reason = source.get("reason");
+    CancelOrder request = new CancelOrder();
+    request.setComments(reason);
+    request.setUuid(asyncHandle);
+    CancelOrder response = getShipperOrderClient(shipperToken)
+        .cancelOrderV5(Long.valueOf(source.get("shipper_legacy_id")), request);
+    assertEquals("cancelled orders size", 1, response.getCancelledOrders().size());
+    assertEquals("cancelled Orders tracking id equals", trackingId,
+        response.getCancelledOrders().get(0).getTrackingId());
+    assertEquals("un-cancelled orders size", 0, response.getUnCancelledOrders().size());
+    put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_CANCEL");
+    put(KEY_CANCELLATION_REASON, f("Cancellation reason : %s", reason));
+  }
+
   @When("^Operator failed to cancel invalid status with PUT /orders/:orderId/cancel$")
   public void operatorCancelV1() {
     long orderId = get(KEY_CREATED_ORDER_ID);
@@ -130,6 +167,41 @@ public class OrderCancelSteps extends BaseSteps {
     request.setComments("invalid cancel order status");
     request.setUuid(asyncHandle);
     CancelOrder response = getShipperOrderClient(shipperToken).cancelOrderV4(request);
+    assertEquals("cancelled orders size", 0, response.getCancelledOrders().size());
+    assertEquals("un-cancelled orders size", 1, response.getUnCancelledOrders().size());
+    assertEquals("un-cancelled Orders tracking id equals", trackingId,
+        response.getUnCancelledOrders().get(0).getTrackingId());
+    put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_CANCEL");
+    put(KEY_CANCELLATION_REASON, f("Cancellation reason : %s", "invalid cancel order status"));
+  }
+
+  @Given("^Operator failed to cancel order with DELETE /dashboard/shippers/:shipperId/orders/cancel by TID$")
+  public void invalidCancelOrderV5byTid(Map<String, Long> source) {
+    String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+    String shipperToken = get(KEY_SHIPPER_V4_ACCESS_TOKEN);
+    CancelOrder request = new CancelOrder();
+    request.setComments("invalid cancel order status");
+    request.setTrackingId(trackingId);
+    CancelOrder response = getShipperOrderClient(shipperToken)
+        .cancelOrderV5(source.get("shipper_legacy_id"), request);
+    assertEquals("cancelled orders size", 0, response.getCancelledOrders().size());
+    assertEquals("un-cancelled orders size", 1, response.getUnCancelledOrders().size());
+    assertEquals("un-cancelled Orders tracking id equals", trackingId,
+        response.getUnCancelledOrders().get(0).getTrackingId());
+    put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_CANCEL");
+    put(KEY_CANCELLATION_REASON, f("Cancellation reason : %s", "invalid cancel order status"));
+  }
+
+  @Given("^Operator failed to cancel order with DELETE /dashboard/shippers/:shipperId/orders/cancel by UUID$")
+  public void invalidCancelOrderV5byUuid(Map<String, Long> source) {
+    String asyncHandle = get(KEY_CREATED_ORDER_ASYNC_ID);
+    String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+    String shipperToken = get(KEY_SHIPPER_V4_ACCESS_TOKEN);
+    CancelOrder request = new CancelOrder();
+    request.setComments("invalid cancel order status");
+    request.setUuid(asyncHandle);
+    CancelOrder response = getShipperOrderClient(shipperToken)
+        .cancelOrderV5(source.get("shipper_legacy_id"), request);
     assertEquals("cancelled orders size", 0, response.getCancelledOrders().size());
     assertEquals("un-cancelled orders size", 1, response.getUnCancelledOrders().size());
     assertEquals("un-cancelled Orders tracking id equals", trackingId,
