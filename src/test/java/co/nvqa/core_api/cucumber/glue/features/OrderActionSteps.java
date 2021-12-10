@@ -278,7 +278,7 @@ public class OrderActionSteps extends BaseSteps {
   @When("^Operator force success all orders$")
   public void operatorForceSuccessAllOrders() {
     List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
-    orderIds.forEach(e -> {
+    orderIds.stream().distinct().forEach(e -> {
       put(KEY_CREATED_ORDER_ID, e);
       operatorForceSuccessOrder();
     });
