@@ -13,10 +13,10 @@ Feature: Order Details
     And Operator force success order
     When Operator "<action>" Order COD value with value 50
     Then Operator verify response code is 500 with error message details as follow
-      | code        | 103042                                 |
-      | message     | Not allowed to update Completed order. |
-      | application | core                                   |
-      | description | INVALID_ORDER_EXCEPTION                |
+      | code        | 103042                                  |
+      | message     | Not allowed to update 'Completed' order |
+      | application | core                                    |
+      | description | INVALID_ORDER_EXCEPTION                 |
 
     Examples:
       | Note       | action | cod | hiptest-uid                              |
@@ -39,7 +39,7 @@ Feature: Order Details
     When Operator "<action>" Order COD value with value 50
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103042                                          |
-      | message     | Not allowed to update Returned to Sender order. |
+      | message     | Not allowed to update 'Returned to Sender' order |
       | application | core                                            |
       | description | INVALID_ORDER_EXCEPTION                         |
 
@@ -71,7 +71,7 @@ Feature: Order Details
     When Operator "<action>" Order COD value with value 50
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103042                                               |
-      | message     | Not allowed to update On Vehicle for Delivery order. |
+      | message     | Not allowed to update 'On Vehicle for Delivery' order |
       | application | core                                                 |
       | description | INVALID_ORDER_EXCEPTION                              |
 
@@ -92,10 +92,10 @@ Feature: Order Details
     And Operator force success order
     When Operator deletes Order COD value
     Then Operator verify response code is 500 with error message details as follow
-      | code        | 103042                                 |
-      | message     | Not allowed to update Completed order. |
-      | application | core                                   |
-      | description | INVALID_ORDER_EXCEPTION                |
+      | code        | 103042                                  |
+      | message     | Not allowed to update 'Completed' order |
+      | application | core                                    |
+      | description | INVALID_ORDER_EXCEPTION                 |
 
   @modify-cod
   Scenario: Do not allow to Modify COD if Order State is Returned to Sender - Delete COD (uid:4477d811-4166-4655-9186-5b7fa60e52c4)
@@ -113,7 +113,7 @@ Feature: Order Details
     When Operator deletes Order COD value
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103042                                          |
-      | message     | Not allowed to update Returned to Sender order. |
+      | message     | Not allowed to update 'Returned to Sender' order |
       | application | core                                            |
       | description | INVALID_ORDER_EXCEPTION                         |
 
@@ -140,6 +140,6 @@ Feature: Order Details
     When Operator deletes Order COD value
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103042                                               |
-      | message     | Not allowed to update On Vehicle for Delivery order. |
+      | message     | Not allowed to update 'On Vehicle for Delivery' order |
       | application | core                                                 |
       | description | INVALID_ORDER_EXCEPTION                              |
