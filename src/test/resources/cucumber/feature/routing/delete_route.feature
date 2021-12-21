@@ -49,6 +49,11 @@ Feature: Delete Route
     And DB Operator verifies route_waypoint is hard-deleted
     And DB Operator verifies dummy route_waypoint is hard-deleted
     And DB Operator verifies route_monitoring_data is hard-deleted
+    And DB Operator verifies shipper_pickups_search data updated correctly
+      | status          | PENDING |
+      | waypoint_status | Pending |
+      | route_id        | 0       |
+      | driver_id       | 0       |
     When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
     Examples:
