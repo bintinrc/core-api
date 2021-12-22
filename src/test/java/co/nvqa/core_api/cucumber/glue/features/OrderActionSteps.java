@@ -259,6 +259,11 @@ public class OrderActionSteps extends BaseSteps {
   @Then("^Operator checks that for all orders, \"([^\"]*)\" event is published$")
   public void operatortVerifiesOrderEventForEach(String event) {
     List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
+    //to exclude checking on initial order when ZR edit route and add unrouted waypoints
+    String eventSource = get(RoutingSteps.KEY_ROUTE_EVENT_SOURCE);
+    if (eventSource.equalsIgnoreCase("ZONAL_ROUTING_UPDATE")) {
+      orderIds.remove(0);
+    }
     orderIds.forEach(e -> {
       put(KEY_CREATED_ORDER_ID, e);
       operatortVerifiesOrderEvent(event);

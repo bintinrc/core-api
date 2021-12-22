@@ -1,0 +1,117 @@
+@ForceSuccessOrder @DeleteReservationAndAddress @routing @zonal-routing-api @routing-refactor
+Feature: Zonal Routing API
+
+  Scenario: Zonal Routing API - Create Driver Route & Assign Waypoints (uid:a7196db7-0635-45a8-a9d5-e201740e95b8)
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    When API Operator create new shipper address V2 using data below:
+      | shipperId       | {shipper-2-id} |
+      | generateAddress | RANDOM         |
+    And API Operator create V2 reservation using data below:
+      | reservationRequest | { "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for "DELIVERY" transaction with status "PENDING"
+    When Shipper create order with parameters below
+      | service_type                  | Return   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
+    And Operator search for "PICKUP" transaction with status "PENDING"
+    And Operator create a route and assign waypoint from Zonal Routing API
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    Then DB Operator verifies created dummy waypoints
+    And DB Operator verifies all transactions routed to new route id
+    And DB Operator verifies all route_waypoint records
+    And DB Operator verifies all waypoints status is "ROUTED"
+    And DB Operator verifies waypoints.route_id & seq_no is populated correctly
+    And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
+    And DB Operator verifies all route_monitoring_data records
+    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
+    When API Driver set credentials "{driver-username}" and "{driver-password}"
+    And Verify that waypoints are shown on driver list route correctly
+
+  Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Add Unrouted Waypoints to Route (uid:a7196db7-0635-45a8-a9d5-e201740e95b8)
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for "DELIVERY" transaction with status "PENDING"
+    And Operator create a route and assign waypoint from Zonal Routing API
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    When API Operator create new shipper address V2 using data below:
+      | shipperId       | {shipper-2-id} |
+      | generateAddress | RANDOM         |
+    And API Operator create V2 reservation using data below:
+      | reservationRequest | { "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for "DELIVERY" transaction with status "PENDING"
+    When Shipper create order with parameters below
+      | service_type                  | Return   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
+    And Operator search for "PICKUP" transaction with status "PENDING"
+    And Operator edit route from Zonal Routing API
+      | driver_id  | {driver-id}  |
+      | vehicle_id | {vehicle-id} |
+    Then DB Operator verifies created dummy waypoints
+    And DB Operator verifies all transactions routed to new route id
+    And DB Operator verifies all route_waypoint records
+    And DB Operator verifies all waypoints status is "ROUTED"
+    And DB Operator verifies waypoints.route_id & seq_no is populated correctly
+    And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
+    And DB Operator verifies all route_monitoring_data records
+    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
+    When API Driver set credentials "{driver-username}" and "{driver-password}"
+    And Verify that waypoints are shown on driver list route correctly
+
+  Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Edit Waypoint Sequence (uid:a7196db7-0635-45a8-a9d5-e201740e95b8)
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    When API Operator create new shipper address V2 using data below:
+      | shipperId       | {shipper-2-id} |
+      | generateAddress | RANDOM         |
+    And API Operator create V2 reservation using data below:
+      | reservationRequest | { "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for "DELIVERY" transaction with status "PENDING"
+    When Shipper create order with parameters below
+      | service_type                  | Return   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
+    And Operator search for "PICKUP" transaction with status "PENDING"
+    And Operator create a route and assign waypoint from Zonal Routing API
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    When Operator edit route from Zonal Routing API
+      | driver_id        | {driver-id}  |
+      | vehicle_id       | {vehicle-id} |
+      | to_edit_sequence | true         |
+    Then DB Operator verifies created dummy waypoints
+    And DB Operator verifies all transactions routed to new route id
+    And DB Operator verifies all route_waypoint records
+    And DB Operator verifies all waypoints status is "ROUTED"
+    And DB Operator verifies waypoints.route_id & seq_no is populated correctly
+    And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
+    And DB Operator verifies all route_monitoring_data records
+    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+    When API Driver set credentials "{driver-username}" and "{driver-password}"
+    And Verify that waypoints are shown on driver list route correctly
+    And DB Operator verifies seq_no ordering is correct
+
