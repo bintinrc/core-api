@@ -113,5 +113,5 @@ Feature: Zonal Routing API
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that waypoints are shown on driver list route correctly
-    And DB Operator verifies seq_no ordering is correct
+    And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
