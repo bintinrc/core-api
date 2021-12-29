@@ -6,6 +6,7 @@ import co.nvqa.commons.model.core.Pickup;
 import co.nvqa.commons.model.core.route.AddParcelToRouteRequest;
 import co.nvqa.commons.model.core.route.ArchiveRouteResponse;
 import co.nvqa.commons.model.core.route.Route;
+import co.nvqa.commons.model.core.route.ZonalRoutingRouteRequest;
 import co.nvqa.commons.support.DateUtil;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
@@ -18,6 +19,7 @@ import io.restassured.response.Response;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.assertj.core.api.Assertions;
@@ -60,6 +62,46 @@ public class RoutingSteps extends BaseSteps {
       putInList(KEY_LIST_OF_ZONE_IDS, route.getZoneId());
       put(KEY_CREATED_ROUTE_ID, result.getId());
     }, "create empty route");
+  }
+
+  @When("Operator create a route and assign waypoint from Zonal Routing API")
+  public void operatorCreateRouteZr(Map<String, String> arg1) {
+    final String json = toJsonCamelCase(arg1);
+    final ZonalRoutingRouteRequest route = fromJsonSnakeCase(json, ZonalRoutingRouteRequest.class);
+    final List<Long> waypointIds = get(KEY_LIST_OF_WAYPOINT_IDS);
+    route.setTags(Arrays.asList(1, 4));
+    route.setDate(generateUTCTodayDate());
+    route.setWaypoints(waypointIds);
+    callWithRetry(() -> {
+      List<Route> result = getRouteClient()
+          .zonalRoutingCreateRoute(Collections.singletonList(route));
+      Assertions.assertThat(result.get(0)).as("created route is not null").isNotNull();
+      put(KEY_CREATED_ROUTE, result);
+      putInList(KEY_LIST_OF_CREATED_ROUTE_ID, result.get(0).getId());
+      put(KEY_CREATED_ROUTE_ID, result.get(0).getId());
+      put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ZONAL_ROUTING_CREATE");
+    }, "zonal routing create route");
+  }
+
+  @When("Operator edit route from Zonal Routing API")
+  public void operatorEditRouteZr(Map<String, String> arg1) {
+    final long routeId = get(KEY_CREATED_ROUTE_ID);
+    final String json = toJsonCamelCase(arg1);
+    final ZonalRoutingRouteRequest route = fromJsonSnakeCase(json, ZonalRoutingRouteRequest.class);
+    final List<Long> waypointIds = get(KEY_LIST_OF_WAYPOINT_IDS);
+    if (arg1.containsKey("to_edit_sequence")) {
+      Collections.shuffle(waypointIds);
+    }
+    route.setTags(Arrays.asList(1, 4));
+    route.setWaypoints(waypointIds);
+    route.setId(routeId);
+    put(KEY_LIST_OF_WAYPOINTS_SEQUENCE, waypointIds);
+    callWithRetry(() -> {
+      List<Route> result = getRouteClient()
+          .zonalRoutingEditRoute(Collections.singletonList(route));
+      Assertions.assertThat(result.get(0)).as("updated route is not null").isNotNull();
+      put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ZONAL_ROUTING_UPDATE");
+    }, "zonal routing edit route");
   }
 
   @When("Operator create an empty route with past date")
