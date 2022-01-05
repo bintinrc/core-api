@@ -1,4 +1,4 @@
-@ForceSuccessOrder @DeleteReservationAndAddress @routing @order-tag-to-dp @routing-refactor
+@ForceSuccessOrder @ArchiveDriverRoutes @DeleteReservationAndAddress @routing @order-tag-to-dp @routing-refactor
 Feature: Order Tag to DP
 
   Scenario: Add to DP Holding Route upon Hub Inbound (uid:5cbbfa8e-f896-42b4-b4b0-217d79475e4c)

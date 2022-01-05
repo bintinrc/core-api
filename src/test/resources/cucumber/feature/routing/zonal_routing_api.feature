@@ -1,4 +1,4 @@
-@ForceSuccessOrder @DeleteReservationAndAddress @routing @zonal-routing-api @routing-refactor
+@ForceSuccessOrder @ArchiveDriverRoutes @DeleteReservationAndAddress @routing @zonal-routing-api @routing-refactor
 Feature: Zonal Routing API
 
   Scenario: Zonal Routing API - Create Driver Route & Assign Waypoints (uid:a7196db7-0635-45a8-a9d5-e201740e95b8)
