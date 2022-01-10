@@ -115,3 +115,51 @@ Feature: Zonal Routing API
     And Verify that waypoints are shown on driver list route correctly
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
+  Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Remove Waypoints From Route (uid:a7196db7-0635-45a8-a9d5-e201740e95b8)
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    When API Operator create new shipper address V2 using data below:
+      | shipperId       | {shipper-2-id} |
+      | generateAddress | RANDOM         |
+    And API Operator create V2 reservation using data below:
+      | reservationRequest | { "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for "DELIVERY" transaction with status "PENDING"
+    When Shipper create order with parameters below
+      | service_type                  | Return   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
+    And Operator search for "PICKUP" transaction with status "PENDING"
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for "DELIVERY" transaction with status "PENDING"
+    And Operator create a route and assign waypoint from Zonal Routing API
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    Then DB Operator verifies all transactions routed to new route id
+    And DB Operator verifies created dummy waypoints
+    When Operator edit route by removing waypoints from Zonal Routing API
+      | driver_id  | {driver-id}  |
+      | vehicle_id | {vehicle-id} |
+  # check for still routed waypoint
+    Then DB Operator verifies transaction routed to new route id
+    And DB Operator verifies route_waypoint record exist
+    And DB Operator verifies waypoint status is "ROUTED"
+    And DB Operator verifies waypoints.route_id & seq_no is populated correctly
+    And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
+    And DB Operator verifies route_monitoring_data record
+  # check for removed waypoints
+    Then DB Operator verifies all transactions route id is null
+    And DB Operator verifies all waypoints status is "PENDING"
+    And DB Operator verifies all waypoints.route_id & seq_no is NULL
+    And DB Operator verifies all route_waypoint route id is hard-deleted
+    And DB Operator verifies all route_monitoring_data is hard-deleted
+    And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
+    When API Driver set credentials "{driver-username}" and "{driver-password}"
+    And Verify that driver list route showing only routed waypoints

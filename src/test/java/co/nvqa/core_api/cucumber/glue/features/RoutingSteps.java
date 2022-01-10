@@ -83,6 +83,7 @@ public class RoutingSteps extends BaseSteps {
     }, "zonal routing create route");
   }
 
+  //add unrouted waypoints & edit waypoint sequence
   @When("Operator edit route from Zonal Routing API")
   public void operatorEditRouteZr(Map<String, String> arg1) {
     final long routeId = get(KEY_CREATED_ROUTE_ID);
@@ -101,6 +102,43 @@ public class RoutingSteps extends BaseSteps {
           .zonalRoutingEditRoute(Collections.singletonList(route));
       Assertions.assertThat(result.get(0)).as("updated route is not null").isNotNull();
       put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ZONAL_ROUTING_UPDATE");
+    }, "zonal routing edit route");
+  }
+
+  //remove waypoints
+  @When("Operator edit route by removing waypoints from Zonal Routing API")
+  public void operatorEditRouteRemoveZr(Map<String, String> arg1) {
+    final long routeId = get(KEY_CREATED_ROUTE_ID);
+    final String json = toJsonCamelCase(arg1);
+    final ZonalRoutingRouteRequest route = fromJsonSnakeCase(json, ZonalRoutingRouteRequest.class);
+    final Long waypointId = get(KEY_WAYPOINT_ID);
+    final Long transactionId = get(KEY_TRANSACTION_ID);
+    final Long orderId = get(KEY_CREATED_ORDER_ID);
+    final List<Long> waypointIds = get(KEY_LIST_OF_WAYPOINT_IDS);
+    final List<Long> transactionIds = get(KEY_LIST_OF_TRANSACTION_IDS);
+    final List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
+    route.setTags(Arrays.asList(1, 4));
+    route.setWaypoints(Collections.singletonList(waypointId));
+    route.setId(routeId);
+    callWithRetry(() -> {
+      List<Route> result = getRouteClient()
+          .zonalRoutingEditRoute(Collections.singletonList(route));
+      Assertions.assertThat(result.get(0)).as("updated route is not null").isNotNull();
+      put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ZONAL_ROUTING_UPDATE");
+      //remove all waypoints, transactions, orders from map
+      remove(KEY_LIST_OF_WAYPOINT_IDS);
+      remove(KEY_LIST_OF_TRANSACTION_IDS);
+      remove(KEY_LIST_OF_CREATED_ORDER_ID);
+      //include only removed waypoints, transactions, orders
+      waypointIds.remove(waypointId);
+      transactionIds.remove(transactionId);
+      orderIds.remove(orderId);
+      //add only removed waypoints, transactions, orders
+      putAllInList(KEY_LIST_OF_WAYPOINT_IDS, waypointIds);
+      putAllInList(KEY_LIST_OF_TRANSACTION_IDS, transactionIds);
+      putAllInList(KEY_LIST_OF_CREATED_ORDER_ID, orderIds);
+      putAllInList(KEY_LIST_OF_REMAINING_WAYPOINT_IDS, route.getWaypoints());
+      putAllInList(KEY_LIST_OF_REMOVED_WAYPOINT_IDS, waypointIds);
     }, "zonal routing edit route");
   }
 
