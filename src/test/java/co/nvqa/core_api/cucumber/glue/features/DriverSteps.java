@@ -231,7 +231,7 @@ public class DriverSteps extends BaseSteps {
     if (action.equalsIgnoreCase(Job.ACTION_FAIL)) {
       boolean idValidFailed = get(KEY_BOOLEAN_DRIVER_FAILED_VALID, false);
       if (idValidFailed) {
-        setOrderValidFailureReason(jobType, order);
+        setOrderValidFailureReason(jobType, job);
       } else {
         setOrderFailureReason(jobType, job);
       }
