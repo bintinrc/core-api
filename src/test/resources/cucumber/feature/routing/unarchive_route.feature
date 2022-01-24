@@ -1,4 +1,4 @@
-@ForceSuccessOrder @DeleteReservationAndAddress @ArchiveDriverRoutes @routing @route-unarchive
+@ForceSuccessOrder @ArchiveDriverRoutes @DeleteReservationAndAddress @ArchiveDriverRoutes @routing @route-unarchive
 Feature: Unarchive Route
 
   @route-unarchive

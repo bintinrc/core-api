@@ -60,6 +60,7 @@ public class OrderCreateSteps extends BaseSteps {
         put(KEY_CREATED_ROUTE_ID, routeId);
         putInList(KEY_LIST_OF_CREATED_ROUTE_ID, routeId);
         put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ADD_BY_ORDER_DP");
+        put(KEY_ROUTE_SOURCE_BY_INBOUND, "ADD_BY_ORDER_DP");
       }
       putInList(KEY_LIST_OF_PICKUP_ADDRESS_STRING, pickupAddress);
     }, "shipper create order");

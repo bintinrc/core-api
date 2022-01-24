@@ -1,4 +1,4 @@
-@ForceSuccessOrder @DeleteReservationAndAddress @cancel-order @/dashboard/shippers/:shipperId/orders/cancel
+@ForceSuccessOrder @ArchiveDriverRoutes @DeleteReservationAndAddress @cancel-order @/dashboard/shippers/:shipperId/orders/cancel
 Feature: DELETE /dashboard/shippers/:shipperId/orders/cancel
 
   Scenario: DELETE /dashboard/shippers/:shipperId/orders/cancel - Cancel Order by TID - Staging (uid:b80be344-3ec8-493f-bd21-64a1b29f2dfc)
