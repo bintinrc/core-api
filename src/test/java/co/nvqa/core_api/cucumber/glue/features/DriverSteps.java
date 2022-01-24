@@ -229,6 +229,7 @@ public class DriverSteps extends BaseSteps {
     job.setAction(action);
     job.setParcelWeight(order.getParcelWeight());
     job.setShipperId(order.getShipperId());
+    job.setRts(order.getRts());
     if (action.equalsIgnoreCase(Job.ACTION_FAIL)) {
       boolean idValidFailed = get(KEY_BOOLEAN_DRIVER_FAILED_VALID, false);
       if (idValidFailed) {
