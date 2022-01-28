@@ -331,7 +331,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       requests.forEach(e -> jsonLists.add(e.getBody()));
       String json = jsonLists.stream().filter(e -> e.contains(event) && e.contains(trackingId))
           .findAny().orElseThrow(() -> new NvTestRuntimeException(
-              String.format("cant find webhook %s for %s", event, trackingId)));
+              f("cant find webhook %s for %s", event, trackingId)));
       WebhookRequest webhookRequest = JsonUtils
           .fromJsonSnakeCase(json, WebhookRequest.class);
       LOGGER.info(f("webhook event = %s found for %s", event, webhookRequest.getTrackingId()));
@@ -374,7 +374,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
                 .equalsIgnoreCase(event)
                 && JsonUtils.fromJsonSnakeCase(e.getBody(), WebhookRequest.class).getTrackingId()
                 .equalsIgnoreCase(o));
-        assertTrue(String.format("no %s webhook sent for %s", event, o), !found);
+        assertTrue(f("no %s webhook sent for %s", event, o), !found);
       }, "get webhooks requests", 30);
     });
   }
@@ -850,7 +850,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
           Boolean.parseBoolean(webhookRequest.getPod().getLeftInSafePlace()));
       assertEquals("url", podDetails.getSignatureImageUrl().toLowerCase(),
           webhookRequest.getPod().getUri().toLowerCase());
-      assertEquals(String.format("type is %s", podType), podType.toUpperCase(),
+      assertEquals(f("type is %s", podType), podType.toUpperCase(),
           webhookRequest.getPod().getType().toUpperCase());
     }
   }
