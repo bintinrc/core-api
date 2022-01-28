@@ -374,7 +374,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
                 .equalsIgnoreCase(event)
                 && JsonUtils.fromJsonSnakeCase(e.getBody(), WebhookRequest.class).getTrackingId()
                 .equalsIgnoreCase(o));
-        assertTrue(f("no %s webhook sent for %s", event, o), !found);
+        assertTrue(String.format("no %s webhook sent for %s", event, o), !found);
       }, "get webhooks requests", 30);
     });
   }
@@ -850,7 +850,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
           Boolean.parseBoolean(webhookRequest.getPod().getLeftInSafePlace()));
       assertEquals("url", podDetails.getSignatureImageUrl().toLowerCase(),
           webhookRequest.getPod().getUri().toLowerCase());
-      assertEquals(f("type is %s", podType), podType.toUpperCase(),
+      assertEquals(String.format("type is %s", podType), podType.toUpperCase(),
           webhookRequest.getPod().getType().toUpperCase());
     }
   }
