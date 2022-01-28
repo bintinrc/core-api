@@ -31,12 +31,16 @@ import java.time.Instant;
 import java.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Binti Cahayati on 2020-10-08
  */
 @ScenarioScoped
 public class BatchUpdatePodsSteps extends BaseSteps {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(BatchUpdatePodsSteps.class);
 
   private static String PICKUP_JOB_MODE = "PICK_UP";
   private static String DELIVERY_JOB_MODE = "DELIVERY";
@@ -322,18 +326,16 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     Bin bin = get(Bin.KEY_CREATED_BIN + event);
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     callWithRetry(() -> {
-    List<BinRequest> requests = Arrays.asList(binClient.retrieveBinContent(bin.getMessage()));
-    BinRequest binRequest = requests.stream().filter(e ->
-        JsonUtils.fromJsonSnakeCase(e.getBody(), WebhookRequest.class).getStatus()
-            .equalsIgnoreCase(event)
-            && JsonUtils.fromJsonSnakeCase(e.getBody(), WebhookRequest.class).getTrackingId()
-            .equalsIgnoreCase(trackingId))
-        .findAny().orElseThrow(() -> new NvTestRuntimeException(
-            String.format("cant find webhook %s for %s", event, trackingId)));
-    WebhookRequest webhookRequest = JsonUtils
-        .fromJsonSnakeCase(binRequest.getBody(), WebhookRequest.class);
-    NvLogger.successf("webhook event = %s found for %s", event, webhookRequest.getTrackingId());
-    putInMap(KEY_LIST_OF_WEBHOOK_REQUEST + event, webhookRequest.getTrackingId(), webhookRequest);
+      List<BinRequest> requests = Arrays.asList(binClient.retrieveBinContent(bin.getMessage()));
+      List<String> jsonLists = new ArrayList<>();
+      requests.forEach(e -> jsonLists.add(e.getBody()));
+      String json = jsonLists.stream().filter(e -> e.contains(event) && e.contains(trackingId))
+          .findAny().orElseThrow(() -> new NvTestRuntimeException(
+              String.format("cant find webhook %s for %s", event, trackingId)));
+      WebhookRequest webhookRequest = JsonUtils
+          .fromJsonSnakeCase(json, WebhookRequest.class);
+      LOGGER.info(f("webhook event = %s found for %s", event, webhookRequest.getTrackingId()));
+      putInMap(KEY_LIST_OF_WEBHOOK_REQUEST + event, webhookRequest.getTrackingId(), webhookRequest);
     }, "get webhooks requests", 30);
   }
 
@@ -416,13 +418,15 @@ public class BatchUpdatePodsSteps extends BaseSteps {
               .isEqualTo(comment);
         case ON_VEHICLE_DELIVERY:
           Hub hubInfo = get(KEY_HUB_INFO);
-          String hubName = StringUtils.lowerCase(
-              f("%s-%s-%s", hubInfo.getCountry(), hubInfo.getCity(), hubInfo.getShortName()));
-          Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
-              .isEqualTo(hubName);
+          if (hubInfo != null) {
+            String hubName = StringUtils.lowerCase(
+                f("%s-%s-%s", hubInfo.getCountry(), hubInfo.getCity(), hubInfo.getShortName()));
+            Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
+                .isEqualTo(hubName);
+          }
           break;
       }
-    }, String.format("verify webhook payload %s", trackingId), 30);
+    }, f("verify webhook payload %s", trackingId), 30);
   }
 
   @Given("^Verify blob data is correct$")

@@ -7,7 +7,6 @@ import co.nvqa.commons.model.core.Transaction;
 import co.nvqa.commons.model.core.event.Event;
 import co.nvqa.commons.model.core.event.EventDetail;
 import co.nvqa.commons.model.other.ExceptionResponse;
-import co.nvqa.commons.util.NvLogger;
 import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
@@ -21,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -28,6 +29,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 @ScenarioScoped
 public class OrderActionSteps extends BaseSteps {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(OrderActionSteps.class);
 
   private static final String DOMAIN = "ORDER-ACTION-STEP";
   private static final String ACTION_SUCCESS = "success";
@@ -45,8 +48,7 @@ public class OrderActionSteps extends BaseSteps {
   public void operatorSearchOrderByTrackingId() {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     callWithRetry(() -> {
-      NvLogger
-          .infof("retrieve created order details from core orders for tracking id %s", trackingId);
+      LOGGER.info(f("retrieve created order details from core orders for tracking id %s", trackingId));
       Order order = getOrderDetails(trackingId);
       put(KEY_CREATED_ORDER, order);
       putInList(KEY_LIST_OF_CREATED_ORDER, order);
@@ -54,7 +56,7 @@ public class OrderActionSteps extends BaseSteps {
       put(KEY_CREATED_ORDER_ID, order.getId());
       putInList(KEY_LIST_OF_CREATED_ORDER_ID, order.getId());
       assertNotNull("order id", order.getId());
-      NvLogger.successf("order id = %d is successfully retrieved from core", order.getId());
+      LOGGER.info(f("order id = %d is successfully retrieved from core", order.getId()));
     }, "retrieve order details from core");
   }
 
@@ -77,7 +79,7 @@ public class OrderActionSteps extends BaseSteps {
       putInList(KEY_LIST_OF_CREATED_ORDER_ID, order.getId());
       Transaction transaction = getTransaction(order, type, status);
       assertNotNull("retrieved transaction", transaction);
-      NvLogger.successf("retrieved transaction for id %d", transaction.getId());
+      LOGGER.info(f("retrieved transaction for id %d", transaction.getId()));
       put(KEY_TRANSACTION_DETAILS, transaction);
       put(KEY_TRANSACTION_ID, transaction.getId());
       putInList(KEY_LIST_OF_TRANSACTION_IDS, transaction.getId());
@@ -270,8 +272,7 @@ public class OrderActionSteps extends BaseSteps {
       put(KEY_CREATED_ORDER_ID, e);
       operatortVerifiesOrderEvent(event);
     });
-    NvLogger.successf("%s event is published for all order ids %s", event,
-        Arrays.toString(orderIds.toArray()));
+    LOGGER.info(f("%s event is published for all order ids %s", event, Arrays.toString(orderIds.toArray())));
   }
 
   @When("^Operator force success order$")
@@ -279,7 +280,7 @@ public class OrderActionSteps extends BaseSteps {
     long orderId = get(KEY_CREATED_ORDER_ID);
     callWithRetry(() -> {
       getOrderClient().forceSuccess(orderId);
-      NvLogger.success(DOMAIN, String.format("order id %d force successed", orderId));
+      LOGGER.info(f("order id %d force successed", orderId));
     }, "force success order");
   }
 
@@ -317,7 +318,7 @@ public class OrderActionSteps extends BaseSteps {
       } else {
         getOrderClient().forceSuccessWaypoint(routeId, waypointId);
       }
-      NvLogger.success(DOMAIN, String.format("waypoint id %d forced %s", waypointId, action));
+      LOGGER.info(f("waypoint id %d forced %s", waypointId, action));
     }, String.format("admin force finish %s", action));
   }
 
@@ -334,7 +335,7 @@ public class OrderActionSteps extends BaseSteps {
         List<Long> emptyOrderId = new ArrayList<>();
         getOrderClient().forceSuccessWaypointWithCodCollected(routeId, waypointId, emptyOrderId);
       }
-      NvLogger.success(DOMAIN, String.format("waypoint id %d forced success with cod", waypointId));
+      LOGGER.info(f("waypoint id %d forced success with cod", waypointId));
     }, "admin force finish success with cod");
   }
 
@@ -396,7 +397,7 @@ public class OrderActionSteps extends BaseSteps {
         actualError = fromJsonSnakeCase(response.body().asString(),
             ExceptionResponse.class);
       } catch (Exception e) {
-        NvLogger.error("JSON error: " + e.getMessage());
+        LOGGER.error("JSON error: " + e.getMessage());
         throw new RuntimeException("response is not valid JSON");
       }
       assertEquals("code", expectedError.getCode(), actualError.getCode());
