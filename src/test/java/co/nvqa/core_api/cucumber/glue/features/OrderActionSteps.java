@@ -1,6 +1,7 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
 import co.nvqa.commons.constants.HttpConstants;
+import co.nvqa.commons.model.core.BulkForceSuccessRequest;
 import co.nvqa.commons.model.core.Order;
 import co.nvqa.commons.model.core.Transaction;
 import co.nvqa.commons.model.core.event.Event;
@@ -14,6 +15,7 @@ import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -290,6 +292,20 @@ public class OrderActionSteps extends BaseSteps {
     });
   }
 
+  @When("Operator bulk force success all orders with cod collected : {string}")
+  public void operatorBulkForceSuccessAllOrders(String codCollected) {
+    List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
+    List<BulkForceSuccessRequest> request = new ArrayList<>();
+    orderIds.stream().distinct().forEach(e -> {
+      BulkForceSuccessRequest forceSuccessRequest = new BulkForceSuccessRequest();
+      forceSuccessRequest.setOrderId(e);
+      forceSuccessRequest.setIsCodCollected(Boolean.valueOf(codCollected));
+      forceSuccessRequest.setReason("QA AUTO TEST BULK FORCE SUCCESS");
+      request.add(forceSuccessRequest);
+    });
+    getOrderClient().bulkForceSuccess(request);
+  }
+
   @When("^Operator force \"([^\"]*)\" \"([^\"]*)\" waypoint$")
   public void operatorForceFailOrder(String action, String type) {
     operatorSearchTransaction(type, Transaction.STATUS_PENDING);
@@ -303,6 +319,23 @@ public class OrderActionSteps extends BaseSteps {
       }
       NvLogger.success(DOMAIN, String.format("waypoint id %d forced %s", waypointId, action));
     }, String.format("admin force finish %s", action));
+  }
+
+  @When("Operator admin manifest force success waypoint with cod collected : {string}")
+  public void operatorAdminManifestForceSuccessCod(String codCollected) {
+    operatorSearchTransaction(Transaction.TYPE_DELIVERY, Transaction.STATUS_PENDING);
+    long waypointId = get(KEY_WAYPOINT_ID);
+    long routeId = get(KEY_CREATED_ROUTE_ID);
+    List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
+    callWithRetry(() -> {
+      if (Boolean.valueOf(codCollected)) {
+        getOrderClient().forceSuccessWaypointWithCodCollected(routeId, waypointId, orderIds);
+      } else {
+        List<Long> emptyOrderId = new ArrayList<>();
+        getOrderClient().forceSuccessWaypointWithCodCollected(routeId, waypointId, emptyOrderId);
+      }
+      NvLogger.success(DOMAIN, String.format("waypoint id %d forced success with cod", waypointId));
+    }, "admin force finish success with cod");
   }
 
   @When("^Operator tags order with PRIOR tag$")
