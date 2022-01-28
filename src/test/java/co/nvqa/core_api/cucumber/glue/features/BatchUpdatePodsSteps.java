@@ -842,16 +842,17 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     String podType = get(KEY_WEBHOOK_POD_TYPE);
     ProofDetails podDetails = proofDetails.get(trackingId);
     if (podDetails != null) {
-      assertEquals("name", podDetails.getName().toLowerCase(),
-          webhookRequest.getPod().getName().toLowerCase());
-      assertEquals("contact", podDetails.getContact(),
-          webhookRequest.getPod().getContact().toLowerCase());
-      assertFalse("left_in_safe_place",
-          Boolean.parseBoolean(webhookRequest.getPod().getLeftInSafePlace()));
-      assertEquals("url", podDetails.getSignatureImageUrl().toLowerCase(),
-          webhookRequest.getPod().getUri().toLowerCase());
-      assertEquals(String.format("type is %s", podType), podType.toUpperCase(),
-          webhookRequest.getPod().getType().toUpperCase());
+      Assertions.assertThat(webhookRequest.getPod().getName().toLowerCase()).as("name equal")
+          .isEqualTo(podDetails.getName().toLowerCase());
+      Assertions.assertThat(webhookRequest.getPod().getContact().toLowerCase()).as("contact equal")
+          .isEqualTo(podDetails.getContact().toLowerCase());
+      Assertions.assertThat(Boolean.parseBoolean(webhookRequest.getPod().getLeftInSafePlace()))
+          .as("left_in_safe_place = false").isFalse();
+      Assertions.assertThat(webhookRequest.getPod().getUri().toLowerCase()).as("url equal")
+          .isEqualTo(podDetails.getSignatureImageUrl().toLowerCase());
+      Assertions.assertThat(webhookRequest.getPod().getType().toLowerCase())
+          .as(f("type is %s", podType))
+          .isEqualTo(podType.toLowerCase());
     }
   }
 
