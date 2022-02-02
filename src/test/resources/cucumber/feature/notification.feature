@@ -57,3 +57,97 @@ Feature: Notification
     And API DP do the Customer Collection from dp with ID = "{dp-id}"
     Then Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
+
+  Scenario Outline: Send Successful Delivery Webhook with COD - Single Force Success - <Note> (uid:ed820a8f-35e0-4cd4-b775-0891905e25df)
+    Given Shipper id "{shipper-id}" subscribes to "Successful Delivery" webhook
+    And Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    And Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+      | parcel_job_cash_on_delivery   | 500.20   |
+    And Operator search for created order
+    When API Operator force succeed created order with cod collected = "<codCollected>"
+    Then Shipper gets webhook request for event "Successful Delivery" for all orders
+    And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
+    Examples:
+      | Note              | codCollected |
+      | COD Collected     | true         |
+      | COD not Collected | false        |
+
+  Scenario Outline: Send Successful Delivery Webhook with COD - Admin Force Success Route Manifest - <Note> (uid:ed820a8f-35e0-4cd4-b775-0891905e25df)
+    Given Shipper id "{shipper-id}" subscribes to "Successful Delivery" webhook
+    And Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+      | parcel_job_cash_on_delivery   | 45.0     |
+    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator add order by tracking id to driver "DD" route
+    When Operator admin manifest force success waypoint with cod collected : "<codCollected>"
+    Then Shipper gets webhook request for event "Successful Delivery" for all orders
+    And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
+    Examples:
+      | Note              | codCollected |
+      | COD Collected     | true         |
+      | COD not Collected | false        |
+
+  Scenario Outline: Send Successful Delivery Webhook with COD - Bulk Force Success - <Note> (uid:ed820a8f-35e0-4cd4-b775-0891905e25df)
+    Given Shipper id "{shipper-id}" subscribes to "Successful Delivery" webhook
+    And Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    And Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+      | parcel_job_cash_on_delivery   | 150      |
+    And Operator search for created order
+    When Operator bulk force success all orders with cod collected : "<codCollected>"
+    Then Shipper gets webhook request for event "Successful Delivery" for all orders
+    And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
+    Examples:
+      | Note              | codCollected |
+      | COD Collected     | true         |
+      | COD not Collected | false        |
+
+  Scenario: Send Successful Delivery Webhook with COD - Bulk Force Success (uid:ed820a8f-35e0-4cd4-b775-0891905e25df)
+    Given Shipper id "{shipper-id}" subscribes to "Successful Delivery" webhook
+    And Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    And Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for created order
+    When Operator bulk force success all orders with cod collected : "false"
+    Then Shipper gets webhook request for event "Successful Delivery" for all orders
+    And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
+
+  Scenario: Send Route Start Webhook Notification (uid:1d621734-5703-41e5-9c91-5aac51abf358)
+    Given Shipper id "{shipper-id}" subscribes to "On Vehicle for Delivery" webhook
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for created order
+    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator add order to driver "DD" route
+    And Operator get "DELIVERY" transaction waypoint Ids for all orders
+    When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
+    And Operator get info of hub details string id "{sorting-hub-id}"
+    And Driver Starts the route
+    Then Operator verify that order status-granular status is "Transit"-"On_Vehicle_for_Delivery"
+    And Shipper gets webhook request for event "On Vehicle for Delivery" for all orders
+    And Shipper verifies webhook request payload has correct details for status "On Vehicle for Delivery"
+

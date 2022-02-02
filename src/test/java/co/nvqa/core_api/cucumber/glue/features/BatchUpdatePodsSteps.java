@@ -8,6 +8,7 @@ import co.nvqa.commons.model.core.batch_update_pod.BlobData;
 import co.nvqa.commons.model.core.batch_update_pod.FailedParcels;
 import co.nvqa.commons.model.core.batch_update_pod.JobUpdate;
 import co.nvqa.commons.model.core.batch_update_pod.ProofDetails;
+import co.nvqa.commons.model.core.hub.Hub;
 import co.nvqa.commons.model.driver.Job;
 import co.nvqa.commons.model.driver.JobV5;
 import co.nvqa.commons.model.driver.builder.JobBuilder;
@@ -29,12 +30,17 @@ import io.cucumber.guice.ScenarioScoped;
 import java.time.Instant;
 import java.util.*;
 import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.api.Assertions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Binti Cahayati on 2020-10-08
  */
 @ScenarioScoped
 public class BatchUpdatePodsSteps extends BaseSteps {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(BatchUpdatePodsSteps.class);
 
   private static String PICKUP_JOB_MODE = "PICK_UP";
   private static String DELIVERY_JOB_MODE = "DELIVERY";
@@ -45,7 +51,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   private static String KEY_LIST_OF_WEBHOOK_REQUEST = "key-list-of-webhook-request";
   public static String KEY_LIST_OF_PARTIAL_SUCCESS_TID = "key-list-partial-success-tid";
   public static String KEY_LIST_OF_PARTIAL_FAIL_TID = "key-list-partial-fail-tid";
-  private static String KEY_LIST_PROOF_WEBHOOK_DETAILS = "key-proof-webhook-details";
+  private static String KEY_MAP_PROOF_WEBHOOK_DETAILS = "key-proof-webhook-details";
   private static String KEY_PROOF_RESERVATION_REQUEST = "key-proof-reservation-request";
   private static String KEY_WEBHOOK_POD_TYPE = "key-webhook-pod-type";
   private RequestBinClient binClient;
@@ -321,16 +327,14 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     callWithRetry(() -> {
       List<BinRequest> requests = Arrays.asList(binClient.retrieveBinContent(bin.getMessage()));
-      BinRequest binRequest = requests.stream().filter(e ->
-          JsonUtils.fromJsonSnakeCase(e.getBody(), WebhookRequest.class).getStatus()
-              .equalsIgnoreCase(event)
-              && JsonUtils.fromJsonSnakeCase(e.getBody(), WebhookRequest.class).getTrackingId()
-              .equalsIgnoreCase(trackingId))
+      List<String> jsonLists = new ArrayList<>();
+      requests.forEach(e -> jsonLists.add(e.getBody()));
+      String json = jsonLists.stream().filter(e -> e.contains(event) && e.contains(trackingId))
           .findAny().orElseThrow(() -> new NvTestRuntimeException(
-              String.format("cant find webhook %s for %s", event, trackingId)));
+              f("cant find webhook %s for %s", event, trackingId)));
       WebhookRequest webhookRequest = JsonUtils
-          .fromJsonSnakeCase(binRequest.getBody(), WebhookRequest.class);
-      NvLogger.successf("webhook event = %s found for %s", event, webhookRequest.getTrackingId());
+          .fromJsonSnakeCase(json, WebhookRequest.class);
+      LOGGER.info(f("webhook event = %s found for %s", event, webhookRequest.getTrackingId()));
       putInMap(KEY_LIST_OF_WEBHOOK_REQUEST + event, webhookRequest.getTrackingId(), webhookRequest);
     }, "get webhooks requests", 30);
   }
@@ -380,36 +384,49 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     Map<String, WebhookRequest> webhookRequest = get(KEY_LIST_OF_WEBHOOK_REQUEST + status);
     WebhookRequest request = webhookRequest.get(trackingId);
+    OrderRequestV4 order = get(KEY_ORDER_CREATE_REQUEST);
     callWithRetry(() -> {
       assertEquals("status", status.toLowerCase(), request.getStatus().toLowerCase());
       assertEquals("tracking id", trackingId.toLowerCase(), request.getTrackingId().toLowerCase());
       Webhook.WebhookStatus webhookStatus = Webhook.WebhookStatus.fromString(status);
       Pickup pickup = get(KEY_CREATED_RESERVATION);
-      Map<String, ProofDetails> proofDetails = get(KEY_LIST_PROOF_WEBHOOK_DETAILS);
+      Map<String, ProofDetails> proofDetails = get(KEY_MAP_PROOF_WEBHOOK_DETAILS);
       switch (webhookStatus) {
         case SUCCESSFUL_DELIVERY:
           if (proofDetails == null) {
-            assertNull("pod is null", request.getPod());
+            Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
           } else {
             checkDeliverySuccesPod(request, trackingId);
           }
+          if (order.getParcelJob().getCashOnDelivery() != null) {
+            Double cod = order.getParcelJob().getCashOnDelivery();
+            Assertions.assertThat(request.getCodCollected()).as("cod_collected field equal")
+                .isEqualTo(cod);
+          }
           break;
         case SUCCESSFUL_PICKUP:
-          OrderRequestV4 order = get(KEY_ORDER_CREATE_REQUEST);
           //to exclude POD on Pickup with Normal Order
           if ((pickup != null && order.getServiceType().equalsIgnoreCase("Parcel"))
               || proofDetails == null) {
-            assertNull("pod is null", request.getPod());
+            Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
           } else {
             checkDeliverySuccesPod(request, trackingId);
           }
         case CANCELLED:
           String comment = get(KEY_CANCELLATION_REASON);
-          assertEquals("cancel comment", comment,
-              request.getComments());
+          Assertions.assertThat(request.getComments()).as("cancel comment equal")
+              .isEqualTo(comment);
+        case ON_VEHICLE_DELIVERY:
+          Hub hubInfo = get(KEY_HUB_INFO);
+          if (hubInfo != null) {
+            String hubName = StringUtils.lowerCase(
+                f("%s-%s-%s", hubInfo.getCountry(), hubInfo.getCity(), hubInfo.getShortName()));
+            Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
+                .isEqualTo(hubName);
+          }
           break;
       }
-    }, String.format("verify webhook payload %s", trackingId), 30);
+    }, f("verify webhook payload %s", trackingId), 30);
   }
 
   @Given("^Verify blob data is correct$")
@@ -703,13 +720,13 @@ public class BatchUpdatePodsSteps extends BaseSteps {
 
     result.setName(name);
     result.setContact(contact);
-    putInMap(KEY_LIST_PROOF_WEBHOOK_DETAILS, order.getTrackingId(), result);
+    putInMap(KEY_MAP_PROOF_WEBHOOK_DETAILS, order.getTrackingId(), result);
     put(KEY_PROOF_RESERVATION_REQUEST, result);
     return result;
   }
 
   private ProofDetails createProofDetails(String trackingId) {
-    Map<String, ProofDetails> proofDetailsMap = get(KEY_LIST_PROOF_WEBHOOK_DETAILS);
+    Map<String, ProofDetails> proofDetailsMap = get(KEY_MAP_PROOF_WEBHOOK_DETAILS);
     ProofDetails result = proofDetailsMap.get(trackingId);
     result.setLatitude(1.3856817);
     result.setLongitude(103.8450433);
@@ -821,20 +838,21 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   }
 
   private void checkDeliverySuccesPod(WebhookRequest webhookRequest, String trackingId) {
-    Map<String, ProofDetails> proofDetails = get(KEY_LIST_PROOF_WEBHOOK_DETAILS);
+    Map<String, ProofDetails> proofDetails = get(KEY_MAP_PROOF_WEBHOOK_DETAILS);
     String podType = get(KEY_WEBHOOK_POD_TYPE);
     ProofDetails podDetails = proofDetails.get(trackingId);
     if (podDetails != null) {
-      assertEquals("name", podDetails.getName().toLowerCase(),
-          webhookRequest.getPod().getName().toLowerCase());
-      assertEquals("contact", podDetails.getContact(),
-          webhookRequest.getPod().getContact().toLowerCase());
-      assertFalse("left_in_safe_place",
-          Boolean.parseBoolean(webhookRequest.getPod().getLeftInSafePlace()));
-      assertEquals("url", podDetails.getSignatureImageUrl().toLowerCase(),
-          webhookRequest.getPod().getUri().toLowerCase());
-      assertEquals(String.format("type is %s", podType), podType.toUpperCase(),
-          webhookRequest.getPod().getType().toUpperCase());
+      Assertions.assertThat(webhookRequest.getPod().getName().toLowerCase()).as("name equal")
+          .isEqualTo(podDetails.getName().toLowerCase());
+      Assertions.assertThat(webhookRequest.getPod().getContact().toLowerCase()).as("contact equal")
+          .isEqualTo(podDetails.getContact().toLowerCase());
+      Assertions.assertThat(Boolean.parseBoolean(webhookRequest.getPod().getLeftInSafePlace()))
+          .as("left_in_safe_place = false").isFalse();
+      Assertions.assertThat(webhookRequest.getPod().getUri().toLowerCase()).as("url equal")
+          .isEqualTo(podDetails.getSignatureImageUrl().toLowerCase());
+      Assertions.assertThat(webhookRequest.getPod().getType().toLowerCase())
+          .as(f("type is %s", podType))
+          .isEqualTo(podType.toLowerCase());
     }
   }
 
