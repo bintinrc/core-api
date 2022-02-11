@@ -28,7 +28,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies inbound_scans record for all orders with type "4" and correct route_id
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
-    And Verify that waypoints are shown on driver list route correctly
+    And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
   @routing-refactor
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Delivery (uid:4f8348c7-6b73-4e1a-9563-c8c4d4534a11)
@@ -65,7 +65,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
-    And Verify that waypoints are shown on driver list route correctly
+    And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
   @routing-refactor
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Unrouted Delivery (uid:f132d051-4ba0-4042-ae79-e83ea1beead6)
@@ -94,7 +94,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
-    And Verify that waypoints are shown on driver list route correctly
+    And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
   @routing-refactor
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Routed Delivery (uid:1b362123-7a95-45d9-aa63-4037d236a017)
@@ -131,7 +131,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies inbound_scans record for all orders with type "4" and correct route_id
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
-    And Verify that waypoints are shown on driver list route correctly
+    And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
   @routing-refactor
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Fail Delivery (uid:48ae2613-9747-4cae-a581-80e9b79d9070)
@@ -170,7 +170,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
-    And Verify that waypoints are shown on driver list route correctly
+    And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
   @routing-refactor
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Routed Fail Delivery (uid:3a4ad2dd-8073-45d0-a42d-e9b79787aa1f)
@@ -208,7 +208,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
-    And Verify that waypoints are shown on driver list route correctly
+    And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
   Scenario: Driver Not Allowed to Route Transfer Parcel with Status = Completed (uid:9efcbcf9-5e97-4ec4-90e3-bde7dd41aa79)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
@@ -328,7 +328,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
-    And Verify that waypoints are shown on driver list route correctly
+    And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
   Scenario: Driver Not Allowed to Route Transfer Parcel to Past Date Route (uid:22437d8b-1443-4e99-9367-777dfadc4043)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
