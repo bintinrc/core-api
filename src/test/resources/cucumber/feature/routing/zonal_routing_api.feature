@@ -163,3 +163,47 @@ Feature: Zonal Routing API
     And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that driver "{driver-id}" list route showing only routed waypoints
+
+  Scenario: Zonal Routing Edit Route API - Bulk Edit Waypoints Inside Multiple Routes - Move Routed Waypoints to Another Route (uid:a7196db7-0635-45a8-a9d5-e201740e95b8)
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    When API Operator create new shipper address V2 using data below:
+      | shipperId       | {shipper-2-id} |
+      | generateAddress | RANDOM         |
+    And API Operator create V2 reservation using data below:
+      | reservationRequest | { "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for "DELIVERY" transaction with status "PENDING"
+    When Shipper create order with parameters below
+      | service_type                  | Return   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
+    And Operator search for "PICKUP" transaction with status "PENDING"
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for "DELIVERY" transaction with status "PENDING"
+    And Operator create a route and assign waypoint from Zonal Routing API
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    Then DB Operator verifies all transactions routed to new route id
+    And DB Operator verifies created dummy waypoints
+    When API Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+    And Operator edit route by moving to another route from Zonal Routing API
+      | driver_id  | {driver-id}  |
+      | vehicle_id | {vehicle-id} |
+  # check for still routed waypoint
+    And DB Operator verifies routed waypoint remains in old route
+  # check for moved waypoints to another route
+    And DB Operator verifies waypoint moved to another route
+    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
+    And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
+    When API Driver set credentials "{driver-username}" and "{driver-password}"
+    And Verify that waypoints are shown on driver "{driver-id}" list route correctly
+    And Verify that waypoints are not shown on previous driver list route

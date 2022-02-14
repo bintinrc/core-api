@@ -18,6 +18,7 @@ import io.restassured.response.Response;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -86,10 +87,11 @@ public class RoutingSteps extends BaseSteps {
   //add unrouted waypoints & edit waypoint sequence
   @When("Operator edit route from Zonal Routing API")
   public void operatorEditRouteZr(Map<String, String> arg1) {
-    final long routeId = get(KEY_CREATED_ROUTE_ID);
+    final Long routeId = get(KEY_CREATED_ROUTE_ID);
     final String json = toJsonCamelCase(arg1);
     final ZonalRoutingRouteRequest route = fromJsonSnakeCase(json, ZonalRoutingRouteRequest.class);
     final List<Long> waypointIds = get(KEY_LIST_OF_WAYPOINT_IDS);
+    final List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
     if (arg1.containsKey("to_edit_sequence")) {
       Collections.shuffle(waypointIds);
     }
@@ -101,6 +103,9 @@ public class RoutingSteps extends BaseSteps {
       List<Route> result = getRouteClient()
           .zonalRoutingEditRoute(Collections.singletonList(route));
       Assertions.assertThat(result.get(0)).as("updated route is not null").isNotNull();
+      remove(KEY_LIST_OF_CREATED_ORDER_ID);
+      orderIds.remove(0);
+      putAllInList(KEY_LIST_OF_CREATED_ORDER_ID, orderIds);
       put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ZONAL_ROUTING_UPDATE");
     }, "zonal routing edit route");
   }
@@ -140,6 +145,53 @@ public class RoutingSteps extends BaseSteps {
       putAllInList(KEY_LIST_OF_REMAINING_WAYPOINT_IDS, route.getWaypoints());
       putAllInList(KEY_LIST_OF_REMOVED_WAYPOINT_IDS, waypointIds);
     }, "zonal routing edit route");
+  }
+
+  //move routed waypoints to another route
+  @When("Operator edit route by moving to another route from Zonal Routing API")
+  public void operatorEditRouteMoveToAnotherRouteZr(Map<String, String> arg1) {
+    final List<Long> routeIds = get(KEY_LIST_OF_CREATED_ROUTE_ID);
+    final String json = toJsonCamelCase(arg1);
+    final Long waypointId = get(KEY_WAYPOINT_ID);
+    final Long transactionId = get(KEY_TRANSACTION_ID);
+    final Long orderId = get(KEY_CREATED_ORDER_ID);
+    final List<Long> waypointIds = get(KEY_LIST_OF_WAYPOINT_IDS);
+    final List<Long> transactionIds = get(KEY_LIST_OF_TRANSACTION_IDS);
+    final List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
+
+    List<ZonalRoutingRouteRequest> request = new ArrayList<>();
+    //removed from route
+    ZonalRoutingRouteRequest removedRoute = fromJson(json, ZonalRoutingRouteRequest.class);
+    removedRoute.setTags(Arrays.asList(1, 4));
+    removedRoute.setWaypoints(Collections.singletonList(waypointId));
+    removedRoute.setId(routeIds.get(0));
+    request.add(removedRoute);
+
+    //moved to new route
+    ZonalRoutingRouteRequest movedToRoute = fromJson(json, ZonalRoutingRouteRequest.class);
+    movedToRoute.setTags(Arrays.asList(1, 4));
+    waypointIds.remove(waypointId);
+    movedToRoute.setWaypoints(waypointIds);
+    movedToRoute.setId(routeIds.get(1));
+    request.add(movedToRoute);
+
+    callWithRetry(() -> {
+      List<Route> result = getRouteClient()
+          .zonalRoutingEditRoute(request);
+      Assertions.assertThat(result.get(0)).as("removed route is not null").isNotNull();
+      Assertions.assertThat(result.get(1)).as("moved to route is not null").isNotNull();
+      put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ZONAL_ROUTING_UPDATE");
+      remove(KEY_LIST_OF_WAYPOINT_IDS);
+      remove(KEY_LIST_OF_TRANSACTION_IDS);
+      remove(KEY_LIST_OF_CREATED_ORDER_ID);
+      orderIds.remove(orderId);
+      waypointIds.remove(waypointId);
+      transactionIds.remove(transactionId);
+      putAllInList(KEY_LIST_OF_WAYPOINT_IDS, waypointIds);
+      putAllInList(KEY_LIST_OF_TRANSACTION_IDS, transactionIds);
+      putAllInList(KEY_LIST_OF_CREATED_ORDER_ID, orderIds);
+      put(KEY_LIST_ZONAL_ROUTING_EDIT_ROUTE, request);
+    }, "zonal routing edit route move to another route");
   }
 
   @When("Operator create an empty route with past date")

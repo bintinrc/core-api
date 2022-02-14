@@ -48,7 +48,8 @@ public class OrderActionSteps extends BaseSteps {
   public void operatorSearchOrderByTrackingId() {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     callWithRetry(() -> {
-      LOGGER.info(f("retrieve created order details from core orders for tracking id %s", trackingId));
+      LOGGER.info(
+          f("retrieve created order details from core orders for tracking id %s", trackingId));
       Order order = getOrderDetails(trackingId);
       put(KEY_CREATED_ORDER, order);
       putInList(KEY_LIST_OF_CREATED_ORDER, order);
@@ -263,16 +264,12 @@ public class OrderActionSteps extends BaseSteps {
   @Then("^Operator checks that for all orders, \"([^\"]*)\" event is published$")
   public void operatortVerifiesOrderEventForEach(String event) {
     List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
-    //to exclude checking on initial order when ZR edit route and add unrouted waypoints
-    String eventSource = get(RoutingSteps.KEY_ROUTE_EVENT_SOURCE);
-    if (eventSource.equalsIgnoreCase("ZONAL_ROUTING_UPDATE")) {
-      orderIds.remove(0);
-    }
     orderIds.forEach(e -> {
       put(KEY_CREATED_ORDER_ID, e);
       operatortVerifiesOrderEvent(event);
     });
-    LOGGER.info(f("%s event is published for all order ids %s", event, Arrays.toString(orderIds.toArray())));
+    LOGGER.info(f("%s event is published for all order ids %s", event,
+        Arrays.toString(orderIds.toArray())));
   }
 
   @When("^Operator force success order$")
