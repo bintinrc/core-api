@@ -33,7 +33,7 @@ Feature: Zonal Routing API
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
     When API Driver set credentials "{driver-username}" and "{driver-password}"
-    And Verify that waypoints are shown on driver list route correctly
+    And Verify that waypoints are shown on driver "{driver-id}" list route correctly
 
   Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Add Unrouted Waypoints to Route (uid:a7196db7-0635-45a8-a9d5-e201740e95b8)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
@@ -75,7 +75,7 @@ Feature: Zonal Routing API
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
     When API Driver set credentials "{driver-username}" and "{driver-password}"
-    And Verify that waypoints are shown on driver list route correctly
+    And Verify that waypoints are shown on driver "{driver-id}" list route correctly
 
   Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Edit Waypoint Sequence (uid:a7196db7-0635-45a8-a9d5-e201740e95b8)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
@@ -112,7 +112,7 @@ Feature: Zonal Routing API
     And DB Operator verifies all route_monitoring_data records
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-username}" and "{driver-password}"
-    And Verify that waypoints are shown on driver list route correctly
+    And Verify that waypoints are shown on driver "{driver-id}" list route correctly
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
   Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Remove Waypoints From Route (uid:a7196db7-0635-45a8-a9d5-e201740e95b8)
@@ -162,4 +162,4 @@ Feature: Zonal Routing API
     And DB Operator verifies all route_monitoring_data is hard-deleted
     And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
     When API Driver set credentials "{driver-username}" and "{driver-password}"
-    And Verify that driver list route showing only routed waypoints
+    And Verify that driver "{driver-id}" list route showing only routed waypoints
