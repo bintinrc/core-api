@@ -262,7 +262,7 @@ Feature: Route Monitoring V2
     And Operator verifies total pending priority parcels and other details
       | total-expected-waypoints                | 1 |
       | total-expected-pending-priority-parcels | 1 |
-    When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
     And Driver "<action>" Parcel "DELIVERY"
     Then Operator Filter Route Monitoring Data for Today's Date
@@ -294,7 +294,7 @@ Feature: Route Monitoring V2
     And Operator verifies total pending priority parcels and other details
       | total-expected-waypoints                | 1 |
       | total-expected-pending-priority-parcels | 1 |
-    When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
     And Driver "<action>" Parcel "PICKUP"
     When Operator Filter Route Monitoring Data for Today's Date
@@ -358,7 +358,7 @@ Feature: Route Monitoring V2
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "DD" route
-    When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
     And Driver "<action>" "DELIVERY" for All Orders
     When Operator Filter Route Monitoring Data for Today's Date
@@ -390,7 +390,7 @@ Feature: Route Monitoring V2
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "<route_type>" route
-    When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
     And Driver "FAIL" "DELIVERY" for All Orders
     When Operator Filter Route Monitoring Data for Today's Date
@@ -421,7 +421,7 @@ Feature: Route Monitoring V2
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator add order by tracking id to driver "DD" route
-    When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
     And Driver Fails Parcel "DELIVERY" with Valid Reason
     When Operator Filter Route Monitoring Data for Today's Date
@@ -480,7 +480,7 @@ Feature: Route Monitoring V2
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "PP" route
-    When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
     And Driver "<action>" "PICKUP" for All Orders
     When Operator Filter Route Monitoring Data for Today's Date
@@ -511,7 +511,7 @@ Feature: Route Monitoring V2
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "<route_type>" route
-    When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
     And Driver "FAIL" "PICKUP" for All Orders
     When Operator Filter Route Monitoring Data for Today's Date
@@ -542,7 +542,7 @@ Feature: Route Monitoring V2
       | zone_id    | {zone-id}        |
     And Operator search for created order
     And Operator add order to driver "PP" route
-    When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
     And Driver Fails Parcel "PICKUP" with Valid Reason
     When Operator Filter Route Monitoring Data for Today's Date

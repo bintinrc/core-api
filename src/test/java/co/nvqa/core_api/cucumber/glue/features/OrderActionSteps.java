@@ -290,20 +290,6 @@ public class OrderActionSteps extends BaseSteps {
     });
   }
 
-  @When("Operator bulk force success all orders with cod collected : {string}")
-  public void operatorBulkForceSuccessAllOrders(String codCollected) {
-    List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
-    List<BulkForceSuccessRequest> request = new ArrayList<>();
-    orderIds.stream().distinct().forEach(e -> {
-      BulkForceSuccessRequest forceSuccessRequest = new BulkForceSuccessRequest();
-      forceSuccessRequest.setOrderId(e);
-      forceSuccessRequest.setIsCodCollected(Boolean.valueOf(codCollected));
-      forceSuccessRequest.setReason("QA AUTO TEST BULK FORCE SUCCESS");
-      request.add(forceSuccessRequest);
-    });
-    getOrderClient().bulkForceSuccess(request);
-  }
-
   @When("^Operator force \"([^\"]*)\" \"([^\"]*)\" waypoint$")
   public void operatorForceFailOrder(String action, String type) {
     operatorSearchTransaction(type, Transaction.STATUS_PENDING);
