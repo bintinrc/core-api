@@ -10,7 +10,7 @@ Feature: Archive Route
       | zone_id    | {zone-id}        |
     And Operator archives driver route with status code 204
     Then DB Operator verifies route status is archived
-    When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
+    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Archived route is not shown on his list routes
 
   @route-archive
@@ -30,7 +30,7 @@ Feature: Archive Route
     And Operator add order to driver "DD" route
     And Operator archives driver route with status code 204
     Then DB Operator verifies route status is archived
-    When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
+    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Archived route is not shown on his list routes
 
   @route-archive
@@ -47,11 +47,11 @@ Feature: Archive Route
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
-    When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
+    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     And Driver Starts the route
     When Operator archives driver route with status code 204
     Then DB Operator verifies route status is archived
-    When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
+    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     And Archived route is not shown on his list routes
 
   @route-archive
@@ -70,7 +70,7 @@ Feature: Archive Route
     And Operator add order to driver "DD" route
     And Operator archives driver route
     Then DB Operator verifies route status is archived
-    When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
+    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Archived route is not shown on his list routes
     When Operator archives driver route with status code 400
     Then Operator verify archive route response with proper error message : Route "is already archived!"

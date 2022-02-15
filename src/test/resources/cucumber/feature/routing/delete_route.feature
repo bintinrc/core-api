@@ -23,7 +23,7 @@ Feature: Delete Route
     And DB Operator verifies dummy route_waypoint is hard-deleted
     And DB Operator verifies route_monitoring_data is hard-deleted
     And Operator checks that "PULL_OUT_OF_ROUTE" event is published
-    When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
+    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
     Examples:
       | Note     | hiptest-uid                              | route_type | transaction_type | service_type | service_level | parcel_job_is_pickup_required |
@@ -54,7 +54,7 @@ Feature: Delete Route
       | waypoint_status | Pending |
       | route_id        | 0       |
       | driver_id       | 0       |
-    When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
+    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
     Examples:
       | Note | hiptest-uid                              | service_type | service_level | parcel_job_is_pickup_required |
@@ -86,7 +86,7 @@ Feature: Delete Route
     And DB Operator verifies dummy route_waypoint is hard-deleted
     And DB Operator verifies all route_monitoring_data is hard-deleted
     And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
-    When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
+    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
     Examples:
       | Note     | hiptest-uid                              | route_type | transaction_type | service_type | service_level | parcel_job_is_pickup_required |
@@ -101,7 +101,7 @@ Feature: Delete Route
     Then DB Operator verifies soft-deleted route
     And DB Operator verifies dummy waypoints.route_id & seq_no is NULL
     And DB Operator verifies dummy route_waypoint is hard-deleted
-    When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
+    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
     Examples:
       | Note | hiptest-uid                              |
@@ -121,7 +121,7 @@ Feature: Delete Route
       | zone_id    | {zone-id}        |
     When Operator delete multiple driver routes
     Then DB Operator verifies multiple routes are soft-deleted
-    When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
+    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
     Examples:
       | Note | hiptest-uid                              |

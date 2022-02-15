@@ -16,7 +16,7 @@ Feature: Driver API
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     And Operator get "DELIVERY" transaction waypoint Ids for all orders
-    When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
     And Driver Starts the route
     Then Operator verify that order status-granular status is "Transit"-"On_Vehicle_for_Delivery"
@@ -36,7 +36,7 @@ Feature: Driver API
       | zone_id    | {zone-id}        |
     And Operator search for created order
     And Operator add order to driver "PP" route
-    When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
     And Driver "SUCCESS" Parcel "PICKUP"
     Then Operator verify that order status-granular status is "Transit"-"Enroute_to_sorting_hub"
@@ -56,7 +56,7 @@ Feature: Driver API
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator Route the Reservation Pickup
-    When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver "Success" Reservation Pickup
     Then Operator verify that order status-granular status is "Transit"-"Enroute_to_sorting_hub"
     And Operator checks that "DRIVER_PICKUP_SCAN" event is published
@@ -77,7 +77,7 @@ Feature: Driver API
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     And Operator get "DELIVERY" transaction waypoint Ids for all orders
-    When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
     And Driver Starts the route
     And Driver "FAIL" Parcel "DELIVERY"

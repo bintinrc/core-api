@@ -20,7 +20,7 @@ public class OrderDetailHelper extends BaseSteps {
 
   }
 
-  @Then("^Operator get \"([^\"]*)\" transaction waypoint Ids for all orders$")
+  @Then("Operator get {string} transaction waypoint Ids for all orders")
   public void getWaypointIdAllOrders(String transactionType) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     trackingIds.forEach(e -> {

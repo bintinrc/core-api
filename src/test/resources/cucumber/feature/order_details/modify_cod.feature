@@ -65,7 +65,7 @@ Feature: Order Details
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     And Operator search for "DELIVERY" transaction with status "PENDING"
-    When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
+    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     And API Operator Van Inbound parcel
     And Driver Starts the route
     When Operator "<action>" Order COD value with value 50
@@ -134,7 +134,7 @@ Feature: Order Details
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     And Operator search for "DELIVERY" transaction with status "PENDING"
-    When Driver authenticated to login with username "{driver-username}" and password "{driver-password}"
+    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     And API Operator Van Inbound parcel
     And Driver Starts the route
     When Operator deletes Order COD value

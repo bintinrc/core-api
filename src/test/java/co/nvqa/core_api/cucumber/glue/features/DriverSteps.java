@@ -46,19 +46,21 @@ public class DriverSteps extends BaseSteps {
 
   }
 
-  @Given("^Driver authenticated to login with username \"([^\"]*)\" and password \"([^\"]*)\"$")
-  public void driverLogin(String username, String password) {
+  @Given("Driver id {string} authenticated to login with username {string} and password {string}")
+  public void driverLogin(String driverId, String username, String password) {
     callWithRetry(() -> {
       driverClient = new DriverClient(TestConstants.API_BASE_URL);
       driverClient.authenticate(new DriverLoginRequest(username, password));
+      put(KEY_NINJA_DRIVER_ID, Long.valueOf(driverId));
     }, "driver login");
   }
 
-  @Given("^Deleted route is not shown on his list routes$")
+  @Given("Deleted route is not shown on driver list routes")
   public void driverRouteNotShown() {
-    List<Long> routes = get(KEY_LIST_OF_CREATED_ROUTE_ID);
+    final List<Long> routes = get(KEY_LIST_OF_CREATED_ROUTE_ID);
+    final Long driverId = get(KEY_NINJA_DRIVER_ID);
     callWithRetry(() -> {
-      RouteResponse routeResponse = driverClient.getRoutes();
+      RouteResponse routeResponse = driverClient.getRoutes(driverId);
       List<co.nvqa.commons.model.driver.Route> result = routeResponse.getRoutes();
       routes.forEach(e -> {
         boolean found = result.stream().anyMatch(o -> o.getId().equals(e));
@@ -198,10 +200,13 @@ public class DriverSteps extends BaseSteps {
 
   private void driverGetWaypointDetails() {
     Route route = get(KEY_CREATED_ROUTE);
-    long routeId = route.getId();
-    long waypointId = get(KEY_WAYPOINT_ID);
+    final Long routeId = route.getId();
+    final Long waypointId = get(KEY_WAYPOINT_ID);
+    final Long driverId = get(KEY_NINJA_DRIVER_ID);
+
     callWithRetry(() -> {
-      List<co.nvqa.commons.model.driver.Route> routes = driverClient.getRoutes().getRoutes();
+      List<co.nvqa.commons.model.driver.Route> routes = driverClient.getRoutes(driverId)
+          .getRoutes();
       co.nvqa.commons.model.driver.Route routeDetails = routes.stream()
           .filter(e -> e.getId() == routeId)
           .findAny().orElseThrow(() -> new NvTestRuntimeException(

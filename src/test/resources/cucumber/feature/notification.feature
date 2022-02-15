@@ -48,7 +48,7 @@ Feature: Notification
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
-    When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
     And Driver "SUCCESS" Parcel "DELIVERY"
     And DB Operator gets DP Job ID by Barcode
@@ -143,7 +143,7 @@ Feature: Notification
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     And Operator get "DELIVERY" transaction waypoint Ids for all orders
-    When Driver authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
     And Operator get info of hub details string id "{sorting-hub-id}"
     And Driver Starts the route
