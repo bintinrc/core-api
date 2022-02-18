@@ -55,7 +55,7 @@ public class DriverSteps extends BaseSteps {
     }, "driver login");
   }
 
-  @Given("Deleted route is not shown on driver list routes")
+  @Given("Deleted route is not shown on his list routes")
   public void driverRouteNotShown() {
     final List<Long> routes = get(KEY_LIST_OF_CREATED_ROUTE_ID);
     final Long driverId = get(KEY_NINJA_DRIVER_ID);
