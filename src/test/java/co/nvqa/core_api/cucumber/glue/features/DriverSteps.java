@@ -94,14 +94,14 @@ public class DriverSteps extends BaseSteps {
   @Given("^Driver \"([^\"]*)\" Parcel \"([^\"]*)\"$")
   public void driverDeliverParcels(String action, String type) {
     callWithRetry(() -> {
-      getWaypointId(type);
-      driverGetWaypointDetails();
-      createDriverJobs(action.toUpperCase());
-      List<JobV5> jobs = get(KEY_LIST_OF_DRIVER_JOBS);
-      long routeId = get(KEY_CREATED_ROUTE_ID);
-      long waypointId = get(KEY_WAYPOINT_ID);
-      DeliveryRequestV5 request = DriverHelper.createDefaultDeliveryRequestV5(waypointId, jobs);
-      driverClient.deliverV5(routeId, waypointId, request);
+    getWaypointId(type);
+    driverGetWaypointDetails();
+    createDriverJobs(action.toUpperCase());
+    List<JobV5> jobs = get(KEY_LIST_OF_DRIVER_JOBS);
+    long routeId = get(KEY_CREATED_ROUTE_ID);
+    long waypointId = get(KEY_WAYPOINT_ID);
+    DeliveryRequestV5 request = DriverHelper.createDefaultDeliveryRequestV5(waypointId, jobs);
+    driverClient.deliverV5(routeId, waypointId, request);
     }, "driver attempts waypoint");
   }
 
@@ -205,18 +205,16 @@ public class DriverSteps extends BaseSteps {
     final Long driverId = get(KEY_NINJA_DRIVER_ID);
 
     callWithRetry(() -> {
-      List<co.nvqa.commons.model.driver.Route> routes = driverClient.getRoutes(driverId)
-          .getRoutes();
-      co.nvqa.commons.model.driver.Route routeDetails = routes.stream()
-          .filter(e -> e.getId() == routeId)
-          .findAny().orElseThrow(() -> new NvTestRuntimeException(
-              "Waypoint Details are not available in list routes"));
-      put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, routeDetails.getWaypoints());
-      Waypoint waypoint = routeDetails.getWaypoints().stream().filter(e -> e.getId() == waypointId)
-          .findAny().get();
-      assertTrue("jobs is not empty",
-          (waypoint.getJobs() != null && !waypoint.getJobs().isEmpty()));
-      put(KEY_DRIVER_WAYPOINT_DETAILS, waypoint);
+    List<co.nvqa.commons.model.driver.Route> routes = driverClient.getRoutes(driverId)
+        .getRoutes();
+    routes.stream().filter(e -> e.getId().equals(routeId))
+        .forEach(e -> put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, e));
+    co.nvqa.commons.model.driver.Route routeDetails = get(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS);
+    routeDetails.getWaypoints().stream().filter(e -> e.getId().equals(waypointId))
+        .forEach(e -> put(KEY_DRIVER_WAYPOINT_DETAILS, e));
+    Waypoint waypoint = get(KEY_DRIVER_WAYPOINT_DETAILS);
+    assertTrue("jobs is not empty",
+        (waypoint.getJobs() != null && !waypoint.getJobs().isEmpty()));
     }, "driver gets waypoint details");
   }
 
