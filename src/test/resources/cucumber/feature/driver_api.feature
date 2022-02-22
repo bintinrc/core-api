@@ -44,12 +44,12 @@ Feature: Driver API
     And DB Operator verifies inbound_scans record with type "1" and correct route_id
 
   Scenario: Driver Success a Reservation Pickup by Scanning Normal Order (uid:53cfcc56-2c2f-40f3-a06c-ced1a86b1bc2)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-3-client-id}" and client secret "{shipper-3-client-secret}"
     When Shipper creates a reservation
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
-    And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "PENDING"
+    And Operator Search for Created Pickup for Shipper "{shipper-3-legacy-id}" with status "PENDING"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |

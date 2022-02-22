@@ -50,6 +50,7 @@ public class RoutingSteps extends BaseSteps {
   public void operatorCreateEmptyRoute(Map<String, String> arg1) {
     final String json = toJsonCamelCase(arg1);
     final Route route = fromJsonSnakeCase(json, Route.class);
+    put(KEY_NINJA_DRIVER_ID, route.getDriverId());
     route.setComments("Created for Core API testing, created at: " + DateUtil
         .getTodayDateTime_YYYY_MM_DD_HH_MM_SS());
     route.setTags(Arrays.asList(1, 4));

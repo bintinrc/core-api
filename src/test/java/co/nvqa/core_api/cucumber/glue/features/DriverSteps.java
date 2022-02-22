@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import org.assertj.core.api.Assertions;
 
 /**
  * @author Binti Cahayati on 2020-07-03
@@ -207,16 +208,14 @@ public class DriverSteps extends BaseSteps {
     callWithRetry(() -> {
       List<co.nvqa.commons.model.driver.Route> routes = driverClient.getRoutes(driverId)
           .getRoutes();
-      co.nvqa.commons.model.driver.Route routeDetails = routes.stream()
-          .filter(e -> e.getId() == routeId)
-          .findAny().orElseThrow(() -> new NvTestRuntimeException(
-              "Waypoint Details are not available in list routes"));
-      put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, routeDetails.getWaypoints());
-      Waypoint waypoint = routeDetails.getWaypoints().stream().filter(e -> e.getId() == waypointId)
-          .findAny().get();
-      assertTrue("jobs is not empty",
-          (waypoint.getJobs() != null && !waypoint.getJobs().isEmpty()));
-      put(KEY_DRIVER_WAYPOINT_DETAILS, waypoint);
+      routes.stream().filter(e -> e.getId().equals(routeId))
+          .forEach(e -> put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, e));
+      co.nvqa.commons.model.driver.Route routeDetails = get(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS);
+      routeDetails.getWaypoints().stream().filter(e -> e.getId().equals(waypointId))
+          .forEach(e -> put(KEY_DRIVER_WAYPOINT_DETAILS, e));
+      Waypoint waypoint = get(KEY_DRIVER_WAYPOINT_DETAILS);
+      Assertions.assertThat(waypoint.getJobs() != null && !waypoint.getJobs().isEmpty())
+          .as("jobs is not empty").isTrue();
     }, "driver gets waypoint details");
   }
 
