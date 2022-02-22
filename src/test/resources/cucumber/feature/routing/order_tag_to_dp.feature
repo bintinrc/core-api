@@ -1,4 +1,4 @@
-@ForceSuccessOrder @ArchiveDriverRoutes @DeleteReservationAndAddress @routing @order-tag-to-dp @routing-refactor
+@ForceSuccessOrder @DeleteReservationAndAddress @routing @order-tag-to-dp @routing-refactor
 Feature: Order Tag to DP
 
   Scenario: Add to DP Holding Route upon Hub Inbound (uid:5cbbfa8e-f896-42b4-b4b0-217d79475e4c)
@@ -25,6 +25,7 @@ Feature: Order Tag to DP
     And Operator checks that "CUSTOMER_NOTIFICATION" event is published
     And Operator checks that "UPDATE_AV" event is published
 
+  @ArchiveDriverRoutes
   Scenario: Add Order to DP Holding Route -  PUT /2.0/orders/:orderId/routes-dp (uid:eddb26ba-5d01-4256-9916-3c4f9216a7e4)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
