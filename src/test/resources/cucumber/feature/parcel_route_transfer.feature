@@ -14,11 +14,11 @@ Feature: Parcel Route Transfer
       | to_driver_hub_id | {sorting-hub-id} |
       | to_create_route  | true             |
     And Operator search for multiple "DELIVERY" transactions with status "PENDING"
-    Then DB Operator verifies created dummy waypoints
+
     And DB Operator verifies all transactions routed to new route id
     And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints.route_id & seq_no is populated correctly
-    And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
+
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies all route_monitoring_data records
     And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
@@ -50,12 +50,12 @@ Feature: Parcel Route Transfer
       | to_driver_hub_id | {sorting-hub-id} |
       | to_create_route  | true             |
     And Operator search for multiple "DELIVERY" transactions with status "PENDING"
-    Then DB Operator verifies created dummy waypoints
+
     And DB Operator verifies all transactions routed to new route id
     And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
-    And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
+
     And DB Operator verifies all route_monitoring_data records
     And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
     And Operator checks that for all orders, "ROUTE_TRANSFER_SCAN" event is published
@@ -85,7 +85,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
-    And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
+
     And DB Operator verifies all route_monitoring_data records
     And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
     And Operator checks that for all orders, "ROUTE_TRANSFER_SCAN" event is published
@@ -121,7 +121,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies all waypoints.route_id & seq_no is populated correctly
-    And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
+
     And DB Operator verifies all route_monitoring_data records
     And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
     And Operator checks that for all orders, "ROUTE_TRANSFER_SCAN" event is published
@@ -155,12 +155,12 @@ Feature: Parcel Route Transfer
       | to_driver_hub_id | {sorting-hub-id} |
       | to_create_route  | true             |
     And Operator search for "DELIVERY" transaction with status "FAIL"
-    Then DB Operator verifies created dummy waypoints
+
     And DB Operator verifies transaction routed to new route id
     And DB Operator verifies route_waypoint record exist
     And DB Operator verifies waypoint status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
-    And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
+
     And DB Operator verifies route_monitoring_data record
     And Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
     And Operator checks that for all orders, "ROUTE_TRANSFER_SCAN" event is published
@@ -198,7 +198,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies route_waypoint record exist
     And DB Operator verifies waypoint status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
-    And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
+
     And DB Operator verifies route_monitoring_data record
     And Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
     And Operator checks that for all orders, "ROUTE_TRANSFER_SCAN" event is published
@@ -319,7 +319,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
-    And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
+
     And DB Operator verifies all route_monitoring_data records
     And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
     And Operator checks that for all orders, "ROUTE_TRANSFER_SCAN" event is published
