@@ -3,7 +3,6 @@ package co.nvqa.core_api.cucumber.glue.features;
 import co.nvqa.commons.model.core.Dimension;
 import co.nvqa.commons.model.core.GlobalInboundRequest;
 import co.nvqa.commons.model.core.GlobalInboundResponse;
-import co.nvqa.commons.model.order_create.v4.OrderRequestV4;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -11,8 +10,6 @@ import io.cucumber.guice.ScenarioScoped;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.DoubleStream;
-import org.assertj.core.api.Assertions;
 
 /**
  * @author Binti Cahayati on 2020-07-04
@@ -58,23 +55,5 @@ public class InboundSteps extends BaseSteps {
       GlobalInboundResponse response = getInboundClient().globalInbound(request);
       assertEquals("status", "SUCCESSFUL_INBOUND", response.getStatus());
     }, "operator global inbound with changes in dimensions");
-  }
-
-  @Given("Operator verifies orders.weight is updated to highest weight correctly")
-  public void operatorVerifiesUpdatedWeight() {
-    final Dimension dimension = get(KEY_INBOUND_DIMENSION_REQUEST);
-    final OrderRequestV4 order = get(KEY_ORDER_CREATE_REQUEST);
-    final Double actualWeight = get(KEY_UPDATED_ORDER_WEIGHT);
-    double volumetricWeight =
-        (dimension.getLength() * dimension.getWidth() * dimension.getHeight()) / 6000;
-    double shipperAdjustedWeight =
-        (Math.floor(order.getParcelJob().getDimensions().getWeight() / 100)) / 10;
-    double measuredWeight = dimension.getWeight();
-    double expectedWeight = DoubleStream.of(shipperAdjustedWeight, measuredWeight, volumetricWeight)
-        .max()
-        .getAsDouble();
-
-    Assertions.assertThat(actualWeight).as("orders.weight equal highest weight")
-        .isEqualTo(expectedWeight);
   }
 }

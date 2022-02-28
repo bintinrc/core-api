@@ -14,7 +14,6 @@ Feature: ID - Order Dimensions Update Calculation
       | length | <length>          |
       | width  | <width>           |
       | height | <height>          |
-    And DB Operator gets orders.weight
     Then Operator verifies orders.weight is updated to highest weight correctly
     Examples:
       | Note                                     | shipper_weight_case | shipper_submitted_weight | measured_weight | length | width | height |
@@ -35,7 +34,7 @@ Feature: ID - Order Dimensions Update Calculation
       | length | <length>          |
       | width  | <width>           |
       | height | <height>          |
-    Then DB Operator verifies order weight updated to highest weight
+    Then DB Operator verifies order weight updated to highest weight within range
       | weight           | <expected_weight>  |
       | use_weight_range | <use_weight_range> |
     Examples:
@@ -57,7 +56,6 @@ Feature: ID - Order Dimensions Update Calculation
       | length | <length>          |
       | width  | <width>           |
       | height | <height>          |
-    And DB Operator gets orders.weight
     Then Operator verifies orders.weight is updated to highest weight correctly
     Examples:
       | Note                                     | shipper_weight_case | shipper_submitted_weight | measured_weight | length | width | height |
@@ -78,7 +76,7 @@ Feature: ID - Order Dimensions Update Calculation
       | length | <length>          |
       | width  | <width>           |
       | height | <height>          |
-    Then DB Operator verifies order weight updated to highest weight
+    Then DB Operator verifies order weight updated to highest weight within range
       | weight           | <expected_weight>  |
       | use_weight_range | <use_weight_range> |
     Examples:
@@ -100,7 +98,7 @@ Feature: ID - Order Dimensions Update Calculation
       | length | <length>          |
       | width  | <width>           |
       | height | <height>          |
-    Then DB Operator verifies order weight updated to highest weight
+    Then DB Operator verifies order weight updated to highest weight within range
       | weight           | <expected_weight> |
       | use_weight_range | false             |
     Examples:
@@ -122,7 +120,7 @@ Feature: ID - Order Dimensions Update Calculation
       | length | <length>          |
       | width  | <width>           |
       | height | <height>          |
-    Then DB Operator verifies order weight updated to highest weight
+    Then DB Operator verifies order weight updated to highest weight within range
       | weight           | <expected_weight> |
       | use_weight_range | false             |
     Examples:
@@ -144,7 +142,7 @@ Feature: ID - Order Dimensions Update Calculation
       | length | <length>          |
       | width  | <width>           |
       | height | <height>          |
-    Then DB Operator verifies order weight updated to highest weight
+    Then DB Operator verifies order weight updated to highest weight within range
       | weight           | <expected_weight> |
       | use_weight_range | false             |
     Examples:
