@@ -67,7 +67,11 @@ public class OrderCreateHelper {
     parcelJob.setDeliveryStartDate(DateUtil.displayDate(zdt.plusDays(1L)));
     parcelJob.setDeliveryTimeslot(timeslot);
     parcelJob.setDeliveryInstruction("Core API Auto - Delivery instructions-" + uniqueId);
-    parcelJob.setDimensions(generateRandomDimensions());
+    Dimension dimension = generateRandomDimensions();
+    if (source.containsKey("weight")) {
+      dimension.setWeight(Double.valueOf(source.get("weight")));
+    }
+    parcelJob.setDimensions(dimension);
     ReflectionUtil.nullifyFieldWithNullString(parcelJob);
     result.setTo(createUserDetail(TYPE_CUSTOMER, uniqueId, source));
     result.setFrom(createUserDetail(TYPE_SHIPPER, uniqueId, source));

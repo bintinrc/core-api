@@ -2,6 +2,7 @@ package co.nvqa.core_api.cucumber.glue.features;
 
 import co.nvqa.commons.constants.HttpConstants;
 import co.nvqa.commons.model.core.BulkForceSuccessRequest;
+import co.nvqa.commons.model.core.Dimension;
 import co.nvqa.commons.model.core.Order;
 import co.nvqa.commons.model.core.Transaction;
 import co.nvqa.commons.model.core.event.Event;
@@ -412,6 +413,18 @@ public class OrderActionSteps extends BaseSteps {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
       tagPriorOrder();
     });
+  }
+
+  @When("Operator updates order dimensions with following details")
+  public void updateOrderDimensions(Map<String, Double> source) {
+    final Long orderId = get(KEY_CREATED_ORDER_ID);
+    final String json = toJsonSnakeCase(source);
+    final Dimension dimension = fromJsonSnakeCase(json, Dimension.class);
+    if (dimension.getWeight() == 0) {
+      dimension.setWeight(null);
+    }
+    callWithRetry(() -> getOrderClient().updateParcelDimensions(orderId, dimension),
+        "update order dimension");
   }
 
   private Order searchOrder(String trackingIdOrStampId) {
