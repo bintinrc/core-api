@@ -1,4 +1,4 @@
-#@ForceSuccessOrder @ArchiveDriverRoutes @DeleteReservationAndAddress @routing @zonal-routing-api @routing-refactor
+@ForceSuccessOrder @ArchiveDriverRoutes @DeleteReservationAndAddress @routing @zonal-routing-api @routing-refactor
 Feature: Zonal Routing API
 
   Scenario: Zonal Routing API - Create Driver Route & Assign Waypoints (uid:a7196db7-0635-45a8-a9d5-e201740e95b8)
@@ -72,7 +72,7 @@ Feature: Zonal Routing API
     And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that waypoints are shown on driver "{driver-id}" list route correctly
-@wip
+
   Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Edit Waypoint Sequence (uid:a7196db7-0635-45a8-a9d5-e201740e95b8)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When API Operator create new shipper address V2 using data below:
