@@ -103,6 +103,10 @@ public class DriverSteps extends BaseSteps {
       long waypointId = get(KEY_WAYPOINT_ID);
       DeliveryRequestV5 request = DriverHelper.createDefaultDeliveryRequestV5(waypointId, jobs);
       driverClient.deliverV5(routeId, waypointId, request);
+      if (action.equalsIgnoreCase(Job.ACTION_FAIL)) {
+        int attempCount = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT, 0);
+        put(KEY_DRIVER_FAIL_ATTEMPT_COUNT, ++attempCount);
+      }
     }, "driver attempts waypoint");
   }
 
