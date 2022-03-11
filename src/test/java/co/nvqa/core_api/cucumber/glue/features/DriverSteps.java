@@ -2,6 +2,7 @@ package co.nvqa.core_api.cucumber.glue.features;
 
 import co.nvqa.commons.client.driver.DriverClient;
 import co.nvqa.commons.model.core.Transaction;
+import co.nvqa.commons.model.core.batch_update_pod.ProofDetails;
 import co.nvqa.commons.model.core.route.FailedOrder;
 import co.nvqa.commons.model.core.route.ParcelRouteTransferRequest;
 import co.nvqa.commons.model.core.route.ParcelRouteTransferResponse;
@@ -101,8 +102,17 @@ public class DriverSteps extends BaseSteps {
       List<JobV5> jobs = get(KEY_LIST_OF_DRIVER_JOBS);
       long routeId = get(KEY_CREATED_ROUTE_ID);
       long waypointId = get(KEY_WAYPOINT_ID);
+      co.nvqa.commons.model.core.Order order = get(KEY_CREATED_ORDER);
+
       DeliveryRequestV5 request = DriverHelper.createDefaultDeliveryRequestV5(waypointId, jobs);
+      request.setContact(order.getToContact());
+      request.setName(order.getToName());
       driverClient.deliverV5(routeId, waypointId, request);
+
+      ProofDetails proofDetails = new ProofDetails();
+      proofDetails.setContact(request.getContact());
+      proofDetails.setName(request.getName());
+      putInMap(BatchUpdatePodsSteps.KEY_MAP_PROOF_WEBHOOK_DETAILS, order.getTrackingId(), proofDetails);
       if (action.equalsIgnoreCase(Job.ACTION_FAIL)) {
         int attempCount = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT, 0);
         put(KEY_DRIVER_FAIL_ATTEMPT_COUNT, ++attempCount);

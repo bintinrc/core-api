@@ -51,7 +51,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   private static String KEY_LIST_OF_WEBHOOK_REQUEST = "key-list-of-webhook-request";
   public static String KEY_LIST_OF_PARTIAL_SUCCESS_TID = "key-list-partial-success-tid";
   public static String KEY_LIST_OF_PARTIAL_FAIL_TID = "key-list-partial-fail-tid";
-  private static String KEY_MAP_PROOF_WEBHOOK_DETAILS = "key-proof-webhook-details";
+  public static String KEY_MAP_PROOF_WEBHOOK_DETAILS = "key-proof-webhook-details";
   private static String KEY_PROOF_RESERVATION_REQUEST = "key-proof-reservation-request";
   private static String KEY_WEBHOOK_POD_TYPE = "key-webhook-pod-type";
   private RequestBinClient binClient;
@@ -878,7 +878,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
 
   private void checkDeliverySuccesPod(WebhookRequest webhookRequest, String trackingId) {
     Map<String, ProofDetails> proofDetails = get(KEY_MAP_PROOF_WEBHOOK_DETAILS);
-    String podType = get(KEY_WEBHOOK_POD_TYPE);
+    String podType = get(KEY_WEBHOOK_POD_TYPE, "RECIPIENT");
     ProofDetails podDetails = proofDetails.get(trackingId);
     if (podDetails != null) {
       Assertions.assertThat(webhookRequest.getPod().getName().toLowerCase()).as("name equal")
@@ -887,8 +887,13 @@ public class BatchUpdatePodsSteps extends BaseSteps {
           .isEqualTo(podDetails.getContact().toLowerCase());
       Assertions.assertThat(Boolean.parseBoolean(webhookRequest.getPod().getLeftInSafePlace()))
           .as("left_in_safe_place = false").isFalse();
-      Assertions.assertThat(webhookRequest.getPod().getUri().toLowerCase()).as("url equal")
-          .isEqualTo(podDetails.getSignatureImageUrl().toLowerCase());
+      if (podDetails.getSignatureImageUrl() != null) {
+        Assertions.assertThat(webhookRequest.getPod().getUri().toLowerCase()).as("url equal")
+            .isEqualTo(podDetails.getSignatureImageUrl().toLowerCase());
+      } else {
+        Assertions.assertThat(webhookRequest.getPod().getUri()).as("url not null")
+            .isNotNull();
+      }
       Assertions.assertThat(webhookRequest.getPod().getType().toLowerCase())
           .as(f("type is %s", podType))
           .isEqualTo(podType.toLowerCase());
