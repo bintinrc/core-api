@@ -401,7 +401,8 @@ public class BatchUpdatePodsSteps extends BaseSteps {
           Map<String, ProofDetails> proofDetails = get(KEY_MAP_PROOF_WEBHOOK_DETAILS);
           switch (webhookStatus) {
             case SUCCESSFUL_DELIVERY:
-              if (proofDetails == null) {
+              final Long dpJobId = get(KEY_DP_JOB_ID);
+              if (proofDetails == null || dpJobId != null) {
                 Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
               } else {
                 checkDeliverySuccesPod(request, trackingId);

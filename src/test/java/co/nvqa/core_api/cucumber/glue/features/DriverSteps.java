@@ -76,7 +76,7 @@ public class DriverSteps extends BaseSteps {
     driverRouteNotShown();
   }
 
-  @Given("^Driver Starts the route$")
+  @Given("Driver Starts the route")
   public void driverStartRoute() {
     Route route = get(KEY_CREATED_ROUTE);
     long routeId = route.getId();
@@ -105,14 +105,17 @@ public class DriverSteps extends BaseSteps {
       co.nvqa.commons.model.core.Order order = get(KEY_CREATED_ORDER);
 
       DeliveryRequestV5 request = DriverHelper.createDefaultDeliveryRequestV5(waypointId, jobs);
-      request.setContact(order.getToContact());
-      request.setName(order.getToName());
+      if (order != null) {
+        request.setContact(order.getToContact());
+        request.setName(order.getToName());
+      }
       driverClient.deliverV5(routeId, waypointId, request);
 
       ProofDetails proofDetails = new ProofDetails();
       proofDetails.setContact(request.getContact());
       proofDetails.setName(request.getName());
-      putInMap(BatchUpdatePodsSteps.KEY_MAP_PROOF_WEBHOOK_DETAILS, order.getTrackingId(), proofDetails);
+      putInMap(BatchUpdatePodsSteps.KEY_MAP_PROOF_WEBHOOK_DETAILS, order.getTrackingId(),
+          proofDetails);
       if (action.equalsIgnoreCase(Job.ACTION_FAIL)) {
         int attempCount = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT, 0);
         put(KEY_DRIVER_FAIL_ATTEMPT_COUNT, ++attempCount);
