@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
+import org.assertj.core.api.Assertions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -192,21 +193,28 @@ public class OrderActionSteps extends BaseSteps {
       case Event.ROUTE_TRANSFER_SCAN_EVENT:
         if (data.getRouteIdValue().getOldValue() != null) {
           put(KEY_CREATED_ROUTE_ID, routeIds.get(1));
-          assertEquals("new route_id", routeIds.get(1), data.getRouteIdValue().getNewValue());
-          assertEquals("old route_id", routeIds.get(0), data.getRouteIdValue().getOldValue());
+          Assertions.assertThat(data.getRouteIdValue().getNewValue()).as("old route_id")
+              .isEqualTo(routeIds.get(1));
+          Assertions.assertThat(data.getRouteIdValue().getOldValue()).as("old route_id")
+              .isEqualTo(routeIds.get(0));
         } else {
           put(KEY_CREATED_ROUTE_ID, routeIds.get(0));
-          assertEquals("new route_id", routeIds.get(0), data.getRouteIdValue().getNewValue());
+          Assertions.assertThat(data.getRouteIdValue().getNewValue()).as("new route_id")
+              .isEqualTo(routeIds.get(0));
         }
         break;
       case Event.PULL_OUT_OF_ROUTE_EVENT:
-        assertEquals("data.route_id", routeIds.get(0), data.getRouteId());
+        Assertions.assertThat(data.getRouteId()).as("data.route_id")
+            .isEqualTo(routeIds.get(0));
         break;
       case Event.CANCEL:
         break;
       default: {
         //ADD_TO_ROUTE, DRIVER_INBOUND_SCAN, DRIVER_PICKUP_SCAN
-        assertEquals("data.route_id", routeId, data.getRouteId());
+        if (data.getRouteId() != null) {
+          Assertions.assertThat(data.getRouteId()).as("data.route_id")
+              .isEqualTo(routeId);
+        }
       }
     }
   }

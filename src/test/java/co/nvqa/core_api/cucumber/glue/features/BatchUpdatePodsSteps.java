@@ -51,7 +51,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   private static String KEY_LIST_OF_WEBHOOK_REQUEST = "key-list-of-webhook-request";
   public static String KEY_LIST_OF_PARTIAL_SUCCESS_TID = "key-list-partial-success-tid";
   public static String KEY_LIST_OF_PARTIAL_FAIL_TID = "key-list-partial-fail-tid";
-  private static String KEY_MAP_PROOF_WEBHOOK_DETAILS = "key-proof-webhook-details";
+  public static String KEY_MAP_PROOF_WEBHOOK_DETAILS = "key-proof-webhook-details";
   private static String KEY_PROOF_RESERVATION_REQUEST = "key-proof-reservation-request";
   private static String KEY_WEBHOOK_POD_TYPE = "key-webhook-pod-type";
   private RequestBinClient binClient;
@@ -312,8 +312,16 @@ public class BatchUpdatePodsSteps extends BaseSteps {
         Bin bin = binClient.requestNewBin(shipperGlobalId + "-" + eventTemp);
         put(Bin.KEY_CREATED_BIN + e, bin);
         if (webhooks.stream().noneMatch(o -> o.getEvent().equalsIgnoreCase(e))) {
-          Webhook webhook = new Webhook(e, Webhook.WEBHOOK_METHOD, bin.getEndpoint(),
-              Webhook.VERSION_1_1);
+          Webhook webhook;
+          if (e.equalsIgnoreCase("First Attempt Delivery Fail") ||
+              e.equalsIgnoreCase("Pending Reschedule") ||
+              e.equalsIgnoreCase("Arrived at Sorting Hub")) {
+            webhook = new Webhook(e, Webhook.WEBHOOK_METHOD, bin.getEndpoint(),
+                "1.2");
+          } else {
+            webhook = new Webhook(e, Webhook.WEBHOOK_METHOD, bin.getEndpoint(),
+                Webhook.VERSION_1_1);
+          }
           getShipperClient().createWebhookSubscription(shipperGlobalId, webhook);
           NvLogger.successf("webhook event %s subscribed to %s", e, bin.getEndpoint());
         }
@@ -386,47 +394,74 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     WebhookRequest request = webhookRequest.get(trackingId);
     OrderRequestV4 order = get(KEY_ORDER_CREATE_REQUEST);
     callWithRetry(() -> {
-      assertEquals("status", status.toLowerCase(), request.getStatus().toLowerCase());
-      assertEquals("tracking id", trackingId.toLowerCase(), request.getTrackingId().toLowerCase());
-      Webhook.WebhookStatus webhookStatus = Webhook.WebhookStatus.fromString(status);
-      Pickup pickup = get(KEY_CREATED_RESERVATION);
-      Map<String, ProofDetails> proofDetails = get(KEY_MAP_PROOF_WEBHOOK_DETAILS);
-      switch (webhookStatus) {
-        case SUCCESSFUL_DELIVERY:
-          if (proofDetails == null) {
-            Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
-          } else {
-            checkDeliverySuccesPod(request, trackingId);
+          assertEquals("status", status.toLowerCase(), request.getStatus().toLowerCase());
+          assertEquals("tracking id", trackingId.toLowerCase(), request.getTrackingId().toLowerCase());
+          Webhook.WebhookStatus webhookStatus = Webhook.WebhookStatus.fromString(status);
+          Pickup pickup = get(KEY_CREATED_RESERVATION);
+          Map<String, ProofDetails> proofDetails = get(KEY_MAP_PROOF_WEBHOOK_DETAILS);
+          switch (webhookStatus) {
+            case SUCCESSFUL_DELIVERY:
+              final Long dpJobId = get(KEY_DP_JOB_ID);
+              if (proofDetails == null || dpJobId != null) {
+                Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
+              } else {
+                checkDeliverySuccesPod(request, trackingId);
+              }
+              if (order.getParcelJob().getCashOnDelivery() != null) {
+                Double cod = order.getParcelJob().getCashOnDelivery();
+                Assertions.assertThat(request.getCodCollected()).as("cod_collected field equal")
+                    .isEqualTo(cod);
+              }
+              break;
+            case SUCCESSFUL_PICKUP:
+              //to exclude POD on Pickup with Normal Order
+              if ((pickup != null && order.getServiceType().equalsIgnoreCase("Parcel"))
+                  || proofDetails == null) {
+                Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
+              } else {
+                checkDeliverySuccesPod(request, trackingId);
+              }
+            case CANCELLED:
+              String comment = get(KEY_CANCELLATION_REASON);
+              Assertions.assertThat(request.getComments()).as("cancel comment equal")
+                  .isEqualTo(comment);
+            case ON_VEHICLE_DELIVERY:
+              Hub hubInfo = get(KEY_HUB_INFO);
+              if (hubInfo != null) {
+                String hubName = StringUtils.lowerCase(
+                    f("%s-%s-%s", hubInfo.getCountry(), hubInfo.getCity(), hubInfo.getShortName()));
+                Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
+                    .isEqualTo(hubName);
+              }
+              break;
+            case DELIVERY_FAIL_FIRST_ATTEMPT:
+              Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
+                  .isEqualTo(StringUtils.lowerCase(TestConstants.DELIVERY_FAILURE_REASON));
+              break;
+            case PENDING_RESCHEDULE:
+              final Integer attemptCount = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT);
+              Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
+                  .isEqualTo(StringUtils.lowerCase(TestConstants.DELIVERY_FAILURE_REASON));
+              if (attemptCount != null) {
+                Assertions.assertThat(request.getDeliveryAttempts()).as("delivery attempt count equal")
+                    .isEqualTo(attemptCount);
+              }
+              break;
+            case ARRIVED_AT_SORTING_HUB:
+              final Hub hub = get(KEY_HUB_INFO);
+              final int attemptCounts = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT);
+              if (hub != null) {
+                String hubName = StringUtils.lowerCase(
+                    f("%s-%s-%s", hub.getCountry(), hub.getCity(), hub.getShortName()));
+                Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
+                    .isEqualTo(hubName);
+                Assertions.assertThat(request.getDeliveryAttempts()).as("delivery attempt count equal")
+                    .isEqualTo(attemptCounts);
+              }
+              break;
           }
-          if (order.getParcelJob().getCashOnDelivery() != null) {
-            Double cod = order.getParcelJob().getCashOnDelivery();
-            Assertions.assertThat(request.getCodCollected()).as("cod_collected field equal")
-                .isEqualTo(cod);
-          }
-          break;
-        case SUCCESSFUL_PICKUP:
-          //to exclude POD on Pickup with Normal Order
-          if ((pickup != null && order.getServiceType().equalsIgnoreCase("Parcel"))
-              || proofDetails == null) {
-            Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
-          } else {
-            checkDeliverySuccesPod(request, trackingId);
-          }
-        case CANCELLED:
-          String comment = get(KEY_CANCELLATION_REASON);
-          Assertions.assertThat(request.getComments()).as("cancel comment equal")
-              .isEqualTo(comment);
-        case ON_VEHICLE_DELIVERY:
-          Hub hubInfo = get(KEY_HUB_INFO);
-          if (hubInfo != null) {
-            String hubName = StringUtils.lowerCase(
-                f("%s-%s-%s", hubInfo.getCountry(), hubInfo.getCity(), hubInfo.getShortName()));
-            Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
-                .isEqualTo(hubName);
-          }
-          break;
-      }
-    }, f("verify webhook payload %s", trackingId), 30);
+        },
+        f("verify webhook payload %s", trackingId), 30);
   }
 
   @Given("^Verify blob data is correct$")
@@ -487,6 +522,11 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
       shipperverifiesWebhookPayload(status);
     });
+  }
+
+  @Given("Shipper id {string} removes webhook subscriptions")
+  public void shipperRemoveWebhookSubs(String shipperGlobalId) {
+    callWithRetry(() -> cleanWebhookSubs(Long.valueOf(shipperGlobalId)), "remove webhook subs");
   }
 
   private JobV5 createTransactionJob(String trackingId, String action, String jobMode,
@@ -839,7 +879,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
 
   private void checkDeliverySuccesPod(WebhookRequest webhookRequest, String trackingId) {
     Map<String, ProofDetails> proofDetails = get(KEY_MAP_PROOF_WEBHOOK_DETAILS);
-    String podType = get(KEY_WEBHOOK_POD_TYPE);
+    String podType = get(KEY_WEBHOOK_POD_TYPE, "RECIPIENT");
     ProofDetails podDetails = proofDetails.get(trackingId);
     if (podDetails != null) {
       Assertions.assertThat(webhookRequest.getPod().getName().toLowerCase()).as("name equal")
@@ -848,8 +888,13 @@ public class BatchUpdatePodsSteps extends BaseSteps {
           .isEqualTo(podDetails.getContact().toLowerCase());
       Assertions.assertThat(Boolean.parseBoolean(webhookRequest.getPod().getLeftInSafePlace()))
           .as("left_in_safe_place = false").isFalse();
-      Assertions.assertThat(webhookRequest.getPod().getUri().toLowerCase()).as("url equal")
-          .isEqualTo(podDetails.getSignatureImageUrl().toLowerCase());
+      if (podDetails.getSignatureImageUrl() != null) {
+        Assertions.assertThat(webhookRequest.getPod().getUri().toLowerCase()).as("url equal")
+            .isEqualTo(podDetails.getSignatureImageUrl().toLowerCase());
+      } else {
+        Assertions.assertThat(webhookRequest.getPod().getUri()).as("url not null")
+            .isNotNull();
+      }
       Assertions.assertThat(webhookRequest.getPod().getType().toLowerCase())
           .as(f("type is %s", podType))
           .isEqualTo(podType.toLowerCase());
