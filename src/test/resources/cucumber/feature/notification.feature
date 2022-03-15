@@ -151,3 +151,126 @@ Feature: Notification
     And Shipper gets webhook request for event "On Vehicle for Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "On Vehicle for Delivery"
 
+  Scenario: Send First Attempt Delivery Fail & First Pending Reschedule Webhook on Driver Fails Delivery Order
+    Given Shipper id "{shipper-id}" subscribes to "First Attempt Delivery Fail" webhook
+    Given Shipper id "{shipper-id}" subscribes to "Pending Reschedule" webhook
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for created order
+    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator add order to driver "DD" route
+    And Operator get "DELIVERY" transaction waypoint Ids for all orders
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
+    And Driver Starts the route
+    And Driver "FAIL" Parcel "DELIVERY"
+    Then Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
+    And Shipper gets webhook request for event "First Attempt Delivery Fail" for all orders
+    And Shipper verifies webhook request payload has correct details for status "First Attempt Delivery Fail"
+    And Shipper gets webhook request for event "Pending Reschedule" for all orders
+    And Shipper verifies webhook request payload has correct details for status "Pending Reschedule"
+
+  Scenario: Send First Attempt Delivery Fail & Second Pending Reschedule Webhook on Driver Fails Rescheduled Delivery Order
+    Given Shipper id "{shipper-id}" removes webhook subscriptions
+    Given Shipper id "{shipper-id}" subscribes to "First Attempt Delivery Fail" webhook
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for created order
+    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator add order to driver "DD" route
+    And Operator get "DELIVERY" transaction waypoint Ids for all orders
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
+    And Driver Starts the route
+    And Driver "FAIL" Parcel "DELIVERY"
+    Then Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
+    When API Operator reschedule failed delivery order
+    And Operator search for "DELIVERY" transaction with status "PENDING"
+    Then Operator verify that order status-granular status is "Transit"-"Enroute_to_sorting_hub"
+    And Operator add order to driver "DD" route
+    And Operator get "DELIVERY" transaction waypoint Ids for all orders
+    And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
+    And Driver Starts the route
+    Given Shipper id "{shipper-id}" subscribes to "Pending Reschedule" webhook
+    And Driver "FAIL" Parcel "DELIVERY"
+    Then Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
+    And Shipper gets webhook request for event "First Attempt Delivery Fail" for all orders
+    And Shipper verifies webhook request payload has correct details for status "First Attempt Delivery Fail"
+    And Shipper gets webhook request for event "Pending Reschedule" for all orders
+    And Shipper verifies webhook request payload has correct details for status "Pending Reschedule"
+
+  Scenario: Send First Attempt Delivery Fail & First Pending Reschedule Webhook on Global Inbound Rescheduled Delivery Order
+    Given Shipper id "{shipper-id}" removes webhook subscriptions
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for created order
+    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator add order to driver "DD" route
+    And Operator get "DELIVERY" transaction waypoint Ids for all orders
+    Given Shipper id "{shipper-id}" subscribes to "First Attempt Delivery Fail" webhook
+    Given Shipper id "{shipper-id}" subscribes to "Pending Reschedule" webhook
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
+    And Driver Starts the route
+    And Driver "FAIL" Parcel "DELIVERY"
+    Then Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
+    When API Operator reschedule failed delivery order
+    And Operator search for "DELIVERY" transaction with status "PENDING"
+    Then Operator verify that order status-granular status is "Transit"-"Enroute_to_sorting_hub"
+    Given Shipper id "{shipper-id}" subscribes to "Arrived at Sorting Hub" webhook
+    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator get info of hub details string id "{sorting-hub-id}"
+    And Shipper gets webhook request for event "First Attempt Delivery Fail" for all orders
+    And Shipper verifies webhook request payload has correct details for status "First Attempt Delivery Fail"
+    And Shipper gets webhook request for event "Pending Reschedule" for all orders
+    And Shipper verifies webhook request payload has correct details for status "Pending Reschedule"
+    And Shipper gets webhook request for event "Arrived at Sorting Hub" for all orders
+    And Shipper verifies webhook request payload has correct details for status "Arrived at Sorting Hub"
+
+  Scenario: Send Successful Delivery Webhook with COD - Driver Success Delivery with COD
+    Given Shipper id "{shipper-id}" subscribes to "Successful Delivery" webhook
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+      | parcel_job_cash_on_delivery   | 50.67    |
+    And Operator search for created order
+    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator add order to driver "DD" route
+    And Operator get "DELIVERY" transaction waypoint Ids for all orders
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
+    And Driver Starts the route
+    And Driver "SUCCESS" Parcel "DELIVERY"
+    Then Shipper gets webhook request for event "Successful Delivery" for all orders
+    And Shipper verifies webhook request payload has correct details for status "Successful Delivery"

@@ -22,7 +22,6 @@ Feature: Order Tag to DP
     And Operator checks that "HUB_INBOUND_SCAN" event is published
     And Operator checks that "ASSIGNED_TO_DP" event is published
     And Operator checks that "UPDATE_ADDRESS" event is published
-    And Operator checks that "CUSTOMER_NOTIFICATION" event is published
     And Operator checks that "UPDATE_AV" event is published
 
   @ArchiveDriverRoutes
