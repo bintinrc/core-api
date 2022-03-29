@@ -109,7 +109,7 @@ public class ReservationSteps extends BaseSteps {
   @And("Operator Route the Reservation Pickup")
   public void operatorRouteReservation() {
     Pickup pickup = get(KEY_CREATED_RESERVATION);
-    long reservationId = pickup.getId();
+    long reservationId = pickup.getReservationId();
     Route route = get(KEY_CREATED_ROUTE);
     long routeId = route.getId();
     callWithRetry(() -> {
