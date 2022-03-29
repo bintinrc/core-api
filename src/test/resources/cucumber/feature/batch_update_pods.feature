@@ -225,7 +225,7 @@ Feature: Batch Update PODs
     And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "SUCCESS" All Orders under the reservation
-    Then Operator verify that reservation status is "SUCCESS"
+    Then Operator verify that reservation status is "Success"
     And DB Operator verifies waypoint status is "SUCCESS"
     And Operator verify that all orders status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
     And Shipper gets webhook request for event "En-route to Sorting Hub" for all orders

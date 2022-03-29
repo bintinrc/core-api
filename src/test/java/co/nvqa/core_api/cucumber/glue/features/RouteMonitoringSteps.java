@@ -18,6 +18,7 @@ import io.cucumber.guice.ScenarioScoped;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.assertj.core.api.Assertions;
 
 /**
  * @author Binti Cahayati on 2020-07-06
@@ -213,8 +214,9 @@ public class RouteMonitoringSteps extends BaseSteps {
       List<Waypoint> waypoints = getRouteMonitoringClient().getInvalidFailedReservations(routeId)
           .getPickupAppointments();
       pickups.forEach(e -> {
-        boolean found = waypoints.stream().anyMatch(o -> e.getId().equals(o.getId()));
-        assertTrue(String.format("reservation id %d found", e.getId()), found);
+        boolean found = waypoints.stream().anyMatch(o -> e.getReservationId().equals(o.getId()));
+        Assertions.assertThat(found).as(f("reservation id %d found", e.getReservationId()))
+            .isTrue();
       });
       put(KEY_ROUTE_MONITORING_RESULT, waypoints);
     }, "get invalid failed reservation details", 30);
@@ -228,23 +230,26 @@ public class RouteMonitoringSteps extends BaseSteps {
     callWithRetry(() -> {
       operatorGetInvalidFailedReservationDetails();
       List<Waypoint> waypoints = get(KEY_ROUTE_MONITORING_RESULT);
-      assertEquals("invalid failed reservation count", pickups.size(), waypoints.size());
+      Assertions.assertThat(waypoints.size()).as("invalid failed reservation count")
+          .isEqualTo(pickups.size());
+
       pickups.forEach(e -> {
         Waypoint waypoint = waypoints.stream()
-            .filter(o -> o.getId().equals(e.getId()))
+            .filter(o -> o.getId().equals(e.getReservationId()))
             .findAny()
             .orElseThrow(
-                () -> new NvTestRuntimeException("reservation details not found: " + e.getId()));
-
-        assertEquals("reservation id", e.getId(), waypoint.getId());
-        assertEquals("name", e.getName().toLowerCase(), waypoint.getName().toLowerCase());
-        assertEquals("contact", e.getContact(), waypoint.getContact());
-
-        assertEquals("address", createExpectedReservationAddress(e),
-            waypoint.getAddress().toLowerCase());
-        assertEquals("time window",
-            getFormattedTimeslot(timeslot.getStartTime(), timeslot.getEndTime()),
-            waypoint.getTimeWindow().toLowerCase());
+                () -> new NvTestRuntimeException(
+                    "reservation details not found: " + e.getReservationId()));
+        Assertions.assertThat(waypoint.getId()).as("reservation id")
+            .isEqualTo(e.getReservationId());
+        Assertions.assertThat(waypoint.getName().toLowerCase()).as("name")
+            .isEqualTo(e.getName().toLowerCase());
+        Assertions.assertThat(waypoint.getContact()).as("contact")
+            .isEqualTo(e.getContact());
+        Assertions.assertThat(waypoint.getAddress().toLowerCase()).as("address")
+            .isEqualTo(createExpectedReservationAddress(e));
+        Assertions.assertThat(waypoint.getTimeWindow().toLowerCase()).as("time window")
+            .isEqualTo(getFormattedTimeslot(timeslot.getStartTime(), timeslot.getEndTime()));
       });
     }, "get invalid failed reservation details", 30);
   }

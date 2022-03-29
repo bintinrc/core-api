@@ -33,7 +33,7 @@ Feature: Route Manifest
       | parcel_job_is_pickup_required | false           |
     And DP user authenticated to login with username "{dp-user-username}" and password "{dp-user-password}"
     And DP user lodge in as SEND order to dp id "{dp-id}"
-    And Operator search for created DP reservation with status "PENDING"
+    And Operator search for created DP reservation with status "Pending"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |

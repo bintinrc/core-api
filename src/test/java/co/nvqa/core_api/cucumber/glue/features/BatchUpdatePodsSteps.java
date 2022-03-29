@@ -159,7 +159,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     Pickup pickup = get(KEY_CREATED_RESERVATION);
-    long reservationId = pickup.getId();
+    long reservationId = pickup.getReservationId();
     callWithRetry(() -> {
       long waypointId = get(KEY_WAYPOINT_ID);
       List<JobUpdate> request = createReservationJobRequest(trackingIds, reservationId, action,
@@ -186,7 +186,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     Pickup pickup = get(KEY_CREATED_RESERVATION);
-    long reservationId = pickup.getId();
+    long reservationId = pickup.getReservationId();
     callWithRetry(() -> {
       long waypointId = get(KEY_WAYPOINT_ID);
       List<JobUpdate> request = createReservationUpdateProofRequest(reservationId, trackingIds,
@@ -218,7 +218,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   public void apiBatchProofsUpdateReservationPartialSuccess() {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     Pickup pickup = get(KEY_CREATED_RESERVATION);
-    long reservationId = pickup.getId();
+    long reservationId = pickup.getReservationId();
     callWithRetry(() -> {
       long waypointId = get(KEY_WAYPOINT_ID);
       List<JobUpdate> request = createReservationPartialSuccessProofRequest(reservationId);
@@ -231,7 +231,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   public void apiBatchProofsUpdateReservationNoOrders(String action) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     Pickup pickup = get(KEY_CREATED_RESERVATION);
-    long reservationId = pickup.getId();
+    long reservationId = pickup.getReservationId();
     callWithRetry(() -> {
       long waypointId = get(KEY_WAYPOINT_ID);
       List<JobUpdate> request = createReservationUpdateProofRequest(reservationId,
@@ -246,7 +246,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     Pickup pickup = get(KEY_CREATED_RESERVATION);
-    long reservationId = pickup.getId();
+    long reservationId = pickup.getReservationId();
     callWithRetry(() -> {
       long waypointId = get(KEY_WAYPOINT_ID);
       List<JobUpdate> request = createReservationPartialSuccessJobRequest(trackingIds,
@@ -259,7 +259,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   public void apiBatchJobUpdateReservationWithoutOrder(String action) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     Pickup pickup = get(KEY_CREATED_RESERVATION);
-    long reservationId = pickup.getId();
+    long reservationId = pickup.getReservationId();
     callWithRetry(() -> {
       long waypointId = get(KEY_WAYPOINT_ID);
       List<JobUpdate> request = createReservationJobWithoutParcelRequest(reservationId, action);
