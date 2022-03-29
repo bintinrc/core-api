@@ -222,10 +222,10 @@ Feature: Batch Update PODs
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "PENDING"
+    And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "SUCCESS" All Orders under the reservation
-    Then Operator verify that reservation status is "SUCCESS"
+    Then Operator verify that reservation status is "Success"
     And DB Operator verifies waypoint status is "SUCCESS"
     And Operator verify that all orders status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
     And Shipper gets webhook request for event "En-route to Sorting Hub" for all orders
@@ -250,7 +250,7 @@ Feature: Batch Update PODs
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "PENDING"
+    And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     And Shipper creates multiple "Return" orders
       | service_type                  | Return   |
@@ -283,7 +283,7 @@ Feature: Batch Update PODs
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "PENDING"
+    And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "SUCCESS" Reservation without any Parcel
     Then Operator verify that reservation status is "SUCCESS"
@@ -307,7 +307,7 @@ Feature: Batch Update PODs
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "PENDING"
+    And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to Partial Success Orders under the reservation
     Then Operator verify that reservation status is "SUCCESS"
@@ -333,7 +333,7 @@ Feature: Batch Update PODs
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "PENDING"
+    And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "FAIL" All Orders under the reservation
     Then Operator verify that reservation status is "FAIL"
@@ -359,7 +359,7 @@ Feature: Batch Update PODs
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "PENDING"
+    And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     And Shipper creates multiple "Return" orders
       | service_type                  | Return   |
@@ -390,7 +390,7 @@ Feature: Batch Update PODs
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "PENDING"
+    And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "FAIL" Reservation without any Parcel
     Then Operator verify that reservation status is "FAIL"

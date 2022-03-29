@@ -63,7 +63,7 @@ public class ReservationSteps extends BaseSteps {
           filter(e -> (e.getAddress1() + " " + e.getAddress2())
               .equalsIgnoreCase(pickupAddress))
           .findAny().orElseThrow(() -> new NvTestRuntimeException("reservation details not found"));
-      NvLogger.successf("reservation id %d found", pickup.getId());
+      NvLogger.successf("reservation id %d found", pickup.getReservationId());
       put(KEY_CREATED_RESERVATION, pickup);
       String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
       putInList(KEY_LIST_OF_CREATED_RESERVATIONS, pickup);
@@ -78,7 +78,7 @@ public class ReservationSteps extends BaseSteps {
     List<String> addresses = get(OrderCreateSteps.KEY_LIST_OF_PICKUP_ADDRESS_STRING);
     addresses.forEach(e -> {
       put(KEY_PICKUP_ADDRESS_STRING, e);
-      searchPickup(legacyId, "PENDING");
+      searchPickup(legacyId, "Pending");
     });
   }
 
@@ -90,7 +90,7 @@ public class ReservationSteps extends BaseSteps {
     callWithRetry(() -> {
       searchPickup(pickup.getShipperId(), status);
       Pickup result = get(KEY_CREATED_RESERVATION);
-      assertEquals(String.format("reservation status id %d", result.getId()), status.toLowerCase(),
+      assertEquals(String.format("reservation status id %d", result.getReservationId()), status.toLowerCase(),
           result.getStatus().toLowerCase());
     }, "operator verify reservation status");
   }
@@ -109,7 +109,7 @@ public class ReservationSteps extends BaseSteps {
   @And("Operator Route the Reservation Pickup")
   public void operatorRouteReservation() {
     Pickup pickup = get(KEY_CREATED_RESERVATION);
-    long reservationId = pickup.getId();
+    long reservationId = pickup.getReservationId();
     Route route = get(KEY_CREATED_ROUTE);
     long routeId = route.getId();
     callWithRetry(() -> {
@@ -133,7 +133,7 @@ public class ReservationSteps extends BaseSteps {
   @And("^Operator Pull Reservation Out of Route$")
   public void operatorPullReservationRoute() {
     Pickup pickup = get(KEY_CREATED_RESERVATION);
-    long reservationId = pickup.getId();
+    long reservationId = pickup.getReservationId();
     Route route = get(KEY_CREATED_ROUTE);
     long routeId = route.getId();
     callWithRetry(() -> {
@@ -198,7 +198,7 @@ public class ReservationSteps extends BaseSteps {
       }
       //clear reservations
       pickups.forEach(e -> {
-        getReservationV2Client().deleteReservation(e.getId(), e.getShipperId());
+        getReservationV2Client().deleteReservation(e.getReservationId(), e.getShipperId());
         put(KEY_SHIPPER_OWNER_LEGACY_ID, e.getShipperId());
       });
       // clear addresses
