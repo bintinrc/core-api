@@ -108,14 +108,13 @@ public class DriverSteps extends BaseSteps {
       if (order != null) {
         request.setContact(order.getToContact());
         request.setName(order.getToName());
+        ProofDetails proofDetails = new ProofDetails();
+        proofDetails.setContact(request.getContact());
+        proofDetails.setName(request.getName());
+        putInMap(BatchUpdatePodsSteps.KEY_MAP_PROOF_WEBHOOK_DETAILS, order.getTrackingId(),
+            proofDetails);
       }
       driverClient.deliverV5(routeId, waypointId, request);
-
-      ProofDetails proofDetails = new ProofDetails();
-      proofDetails.setContact(request.getContact());
-      proofDetails.setName(request.getName());
-      putInMap(BatchUpdatePodsSteps.KEY_MAP_PROOF_WEBHOOK_DETAILS, order.getTrackingId(),
-          proofDetails);
       if (action.equalsIgnoreCase(Job.ACTION_FAIL)) {
         int attempCount = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT, 0);
         put(KEY_DRIVER_FAIL_ATTEMPT_COUNT, ++attempCount);

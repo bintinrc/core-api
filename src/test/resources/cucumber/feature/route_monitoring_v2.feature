@@ -78,7 +78,7 @@ Feature: Route Monitoring V2
       | service_level                 | <service_level>                 |
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
-    And Operator Search for Created Pickup for Shipper "{shipper-2-legacy-id}" with status "PENDING"
+    And Operator Search for Created Pickup for Shipper "{shipper-2-legacy-id}" with status "Pending"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
@@ -105,7 +105,7 @@ Feature: Route Monitoring V2
       | service_level                 | <service_level>                 |
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
-    And Operator Search for Created Pickup for Shipper "{shipper-2-legacy-id}" with status "PENDING"
+    And Operator Search for Created Pickup for Shipper "{shipper-2-legacy-id}" with status "Pending"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
@@ -118,7 +118,7 @@ Feature: Route Monitoring V2
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator Route the Reservation Pickup
-    And Operator Search for Created Pickup for Shipper "{shipper-2-legacy-id}" with status "PENDING"
+    And Operator Search for Created Pickup for Shipper "{shipper-2-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for "Pending" Case
@@ -329,7 +329,7 @@ Feature: Route Monitoring V2
       | service_type                  | <service_type>  |
       | service_level                 | <service_level> |
       | parcel_job_is_pickup_required | true            |
-    And Operator Search for Created Pickup for Shipper "{shipper-2-legacy-id}" with status "PENDING"
+    And Operator Search for Created Pickup for Shipper "{shipper-2-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies total pending priority parcels and other details
@@ -454,7 +454,7 @@ Feature: Route Monitoring V2
       | service_type                  | <service_type>  |
       | service_level                 | <service_level> |
       | parcel_job_is_pickup_required | true            |
-    And Operator Search for Created Pickup for Shipper "{shipper-2-legacy-id}" with status "PENDING"
+    And Operator Search for Created Pickup for Shipper "{shipper-2-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies total invalid failed is 0 and other details
@@ -575,7 +575,7 @@ Feature: Route Monitoring V2
       | service_type                  | Parcel          |
       | service_level                 | <service_level> |
       | parcel_job_is_pickup_required | true            |
-    And Operator Search for Created Pickup for Shipper "{shipper-2-legacy-id}" with status "PENDING"
+    And Operator Search for Created Pickup for Shipper "{shipper-2-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies total invalid failed is 0 and other details

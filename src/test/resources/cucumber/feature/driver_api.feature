@@ -49,7 +49,7 @@ Feature: Driver API
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
-    And Operator Search for Created Pickup for Shipper "{shipper-3-legacy-id}" with status "PENDING"
+    And Operator Search for Created Pickup for Shipper "{shipper-3-legacy-id}" with status "Pending"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
