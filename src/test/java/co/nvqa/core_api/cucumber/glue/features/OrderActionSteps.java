@@ -1,7 +1,6 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
 import co.nvqa.commons.constants.HttpConstants;
-import co.nvqa.commons.model.core.BulkForceSuccessRequest;
 import co.nvqa.commons.model.core.Dimension;
 import co.nvqa.commons.model.core.Order;
 import co.nvqa.commons.model.core.Transaction;
@@ -255,6 +254,19 @@ public class OrderActionSteps extends BaseSteps {
     });
   }
 
+  //to remove not transferred parcel from being asserted
+  @Then("Operator gets only eligible parcel for route transfer")
+  public void getEligibleRouteTransfer() {
+    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
+    trackingIds.remove(0);
+    orderIds.remove(0);
+    remove(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    remove(KEY_LIST_OF_CREATED_ORDER_ID);
+    putAllInList(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, trackingIds);
+    putAllInList(KEY_LIST_OF_CREATED_ORDER_ID, orderIds);
+  }
+
   @Then("^Operator verify that \"([^\"]*)\" orders status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
   public void operatortVerifiesPartialOrderStatus(String actionMode, String status,
       String granularStatus) {
@@ -431,6 +443,7 @@ public class OrderActionSteps extends BaseSteps {
     if (dimension.getWeight() == 0) {
       dimension.setWeight(null);
     }
+    put(KEY_EXPECTED_NEW_WEIGHT, dimension.getWeight());
     callWithRetry(() -> getOrderClient().updateParcelDimensions(orderId, dimension),
         "update order dimension");
   }
