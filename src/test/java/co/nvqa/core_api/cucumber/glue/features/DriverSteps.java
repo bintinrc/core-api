@@ -331,6 +331,9 @@ public class DriverSteps extends BaseSteps {
     }
     request.setRouteDate(DateUtil.getTodayDateTime_YYYY_MM_DD_HH_MM_SS());
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    if (source.containsKey("to_exclude_routed_order")) {
+      trackingIds.remove(0);
+    }
     List<co.nvqa.commons.model.core.route.Parcel> orders = new ArrayList<>();
     trackingIds.forEach(e -> {
       co.nvqa.commons.model.core.route.Parcel parcel = new co.nvqa.commons.model.core.route.Parcel();

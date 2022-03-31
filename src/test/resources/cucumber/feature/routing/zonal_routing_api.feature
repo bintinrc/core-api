@@ -147,13 +147,14 @@ Feature: Zonal Routing API
     When Operator edit route by removing waypoints from Zonal Routing API
       | driver_id  | {driver-id}  |
       | vehicle_id | {vehicle-id} |
-  # check for still routed waypoint
+    # check for still routed waypoint
     Then DB Operator verifies transaction routed to new route id
     And DB Operator verifies route_waypoint record exist
     And DB Operator verifies waypoint status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
     And DB Operator verifies route_monitoring_data record
+    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
   # check for removed waypoints
     Then DB Operator verifies all transactions route id is null
     And DB Operator verifies all waypoints status is "PENDING"
@@ -200,6 +201,7 @@ Feature: Zonal Routing API
       | vehicle_id | {vehicle-id} |
   # check for still routed waypoint
     And DB Operator verifies routed waypoint remains in old route
+    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
   # check for moved waypoints to another route
     And DB Operator verifies waypoint moved to another route
     And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
@@ -207,3 +209,4 @@ Feature: Zonal Routing API
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that waypoints are shown on driver "{driver-id}" list route correctly
     And Verify that waypoints are not shown on previous driver list route
+    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint

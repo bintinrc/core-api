@@ -21,6 +21,7 @@ public class OrderCreateSteps extends BaseSteps {
   public static final String KEY_LIST_OF_ORDER_CREATE_RESPONSE = "key-list-of-order-create-response";
   public static final String KEY_LIST_OF_ORDER_CREATE_REQUEST = "key-list-of-order-create-request";
   public static final String KEY_LIST_OF_PICKUP_ADDRESS_STRING = "key-list-of-pickup-address-string";
+  public static final String KEY_EXPECTED_OLD_WEIGHT = "KEY_EXPECTED_OLD_WEIGHT";
   private static final String DOMAIN = "ORDER-CREATION-STEPS";
   private OrderCreateClientV4 orderCreateClientV4;
 
@@ -62,6 +63,12 @@ public class OrderCreateSteps extends BaseSteps {
         put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ADD_BY_ORDER_DP");
         put(KEY_ROUTE_SOURCE_BY_INBOUND, "ADD_BY_ORDER_DP");
       }
+      //custom weight for weight = 0 or null
+      Double weight = request.getParcelJob().getDimensions().getWeight();
+      if (weight == null || weight <= 0) {
+        weight = 0.1;
+      }
+      put(KEY_EXPECTED_OLD_WEIGHT, weight);
       putInList(KEY_LIST_OF_PICKUP_ADDRESS_STRING, pickupAddress);
     }, "shipper create order");
   }

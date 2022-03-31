@@ -51,6 +51,7 @@ public class InboundSteps extends BaseSteps {
       final String json = toJsonSnakeCase(dimensions);
       final Dimension dimension = fromJsonSnakeCase(json, Dimension.class);
       request.setDimensions(dimension);
+      put(KEY_EXPECTED_NEW_WEIGHT, dimension.getWeight());
       put(KEY_INBOUND_DIMENSION_REQUEST, dimension);
       GlobalInboundResponse response = getInboundClient().globalInbound(request);
       assertEquals("status", "SUCCESSFUL_INBOUND", response.getStatus());
