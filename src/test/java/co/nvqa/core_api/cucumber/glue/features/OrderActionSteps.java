@@ -3,6 +3,7 @@ package co.nvqa.core_api.cucumber.glue.features;
 import co.nvqa.commons.constants.HttpConstants;
 import co.nvqa.commons.model.core.Dimension;
 import co.nvqa.commons.model.core.Order;
+import co.nvqa.commons.model.core.Rts;
 import co.nvqa.commons.model.core.Transaction;
 import co.nvqa.commons.model.core.event.Event;
 import co.nvqa.commons.model.core.event.EventDetail;
@@ -368,6 +369,24 @@ public class OrderActionSteps extends BaseSteps {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     Response r = getOrderClient()
         .editDeliveryVerificationRequiredAndGetRawResponse(trackingId, method);
+    put(KEY_API_RAW_RESPONSE, r);
+  }
+
+  @When("Operator RTS invalid state Order")
+  public void operatorRtsInvalidState(Map<String, String> request) {
+    final Long orderId = get(KEY_CREATED_ORDER_ID);
+    final Rts rtsRequest = fromJsonSnakeCase(request.get("request"), Rts.class);
+    rtsRequest.setOrderId(orderId);
+    Response r = getOrderClient()
+        .setReturnedToSenderAndGetRawResponse(rtsRequest);
+    put(KEY_API_RAW_RESPONSE, r);
+  }
+
+  @When("Operator force success invalid state Order")
+  public void operatorForceSuccessInvalidState() {
+    final Long orderId = get(KEY_CREATED_ORDER_ID);
+    Response r = getOrderClient()
+        .forceSuccessAndGetRawResponse(orderId, false);
     put(KEY_API_RAW_RESPONSE, r);
   }
 
