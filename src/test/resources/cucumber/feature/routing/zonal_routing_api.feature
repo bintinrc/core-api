@@ -140,7 +140,7 @@ Feature: Zonal Routing API
     When Operator edit route by removing waypoints from Zonal Routing API
       | driver_id  | {driver-id}  |
       | vehicle_id | {vehicle-id} |
-  # check for still routed waypoint
+    # check for still routed waypoint
     Then DB Operator verifies transaction routed to new route id
     And DB Operator verifies route_waypoint record exist
     And DB Operator verifies waypoint status is "ROUTED"

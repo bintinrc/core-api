@@ -1,9 +1,9 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
 import co.nvqa.commons.constants.HttpConstants;
-import co.nvqa.commons.model.core.BulkForceSuccessRequest;
 import co.nvqa.commons.model.core.Dimension;
 import co.nvqa.commons.model.core.Order;
+import co.nvqa.commons.model.core.Rts;
 import co.nvqa.commons.model.core.Transaction;
 import co.nvqa.commons.model.core.event.Event;
 import co.nvqa.commons.model.core.event.EventDetail;
@@ -255,6 +255,19 @@ public class OrderActionSteps extends BaseSteps {
     });
   }
 
+  //to remove not transferred parcel from being asserted
+  @Then("Operator gets only eligible parcel for route transfer")
+  public void getEligibleRouteTransfer() {
+    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
+    trackingIds.remove(0);
+    orderIds.remove(0);
+    remove(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    remove(KEY_LIST_OF_CREATED_ORDER_ID);
+    putAllInList(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, trackingIds);
+    putAllInList(KEY_LIST_OF_CREATED_ORDER_ID, orderIds);
+  }
+
   @Then("^Operator verify that \"([^\"]*)\" orders status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
   public void operatortVerifiesPartialOrderStatus(String actionMode, String status,
       String granularStatus) {
@@ -359,6 +372,24 @@ public class OrderActionSteps extends BaseSteps {
     put(KEY_API_RAW_RESPONSE, r);
   }
 
+  @When("Operator RTS invalid state Order")
+  public void operatorRtsInvalidState(Map<String, String> request) {
+    final Long orderId = get(KEY_CREATED_ORDER_ID);
+    final Rts rtsRequest = fromJsonSnakeCase(request.get("request"), Rts.class);
+    rtsRequest.setOrderId(orderId);
+    Response r = getOrderClient()
+        .setReturnedToSenderAndGetRawResponse(rtsRequest);
+    put(KEY_API_RAW_RESPONSE, r);
+  }
+
+  @When("Operator force success invalid state Order")
+  public void operatorForceSuccessInvalidState() {
+    final Long orderId = get(KEY_CREATED_ORDER_ID);
+    Response r = getOrderClient()
+        .forceSuccessAndGetRawResponse(orderId, false);
+    put(KEY_API_RAW_RESPONSE, r);
+  }
+
   @When("^Operator validate order for ATL$")
   public void operatorValidateDeliveryVerification() {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
@@ -431,6 +462,7 @@ public class OrderActionSteps extends BaseSteps {
     if (dimension.getWeight() == 0) {
       dimension.setWeight(null);
     }
+    put(KEY_EXPECTED_NEW_WEIGHT, dimension.getWeight());
     callWithRetry(() -> getOrderClient().updateParcelDimensions(orderId, dimension),
         "update order dimension");
   }

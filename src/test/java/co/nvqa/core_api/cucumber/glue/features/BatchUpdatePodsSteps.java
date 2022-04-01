@@ -459,6 +459,23 @@ public class BatchUpdatePodsSteps extends BaseSteps {
                     .isEqualTo(attemptCounts);
               }
               break;
+            case PARCEL_MEASUREMENTS_UPDATE: {
+              final Double oldWeight = get(OrderCreateSteps.KEY_EXPECTED_OLD_WEIGHT, 0.1);
+              final Double newWeight = get(KEY_EXPECTED_NEW_WEIGHT);
+              Assertions.assertThat(request.getPreviousMeasurements().getMeasuredWeight()).as("old weigh equal")
+                  .isEqualTo(oldWeight);
+              Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight()).as("new weigh equal")
+                  .isEqualTo(newWeight);
+            }
+            break;
+            case PARCEL_WEIGHT: {
+              final Double oldWeight = get(OrderCreateSteps.KEY_EXPECTED_OLD_WEIGHT, 0.1);
+              final Double newWeight = get(KEY_EXPECTED_NEW_WEIGHT);
+              Assertions.assertThat(Double.valueOf(request.getPreviousWeight())).as("old weigh equal")
+                  .isEqualTo(oldWeight);
+              Assertions.assertThat(Double.valueOf(request.getNewWeight())).as("new weigh equal")
+                  .isEqualTo(newWeight);
+            }
           }
         },
         f("verify webhook payload %s", trackingId), 30);

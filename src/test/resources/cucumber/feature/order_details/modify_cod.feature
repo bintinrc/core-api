@@ -38,10 +38,10 @@ Feature: Order Details
     And Operator force success order
     When Operator "<action>" Order COD value with value 50
     Then Operator verify response code is 500 with error message details as follow
-      | code        | 103042                                          |
+      | code        | 103042                                           |
       | message     | Not allowed to update 'Returned to Sender' order |
-      | application | core                                            |
-      | description | INVALID_ORDER_EXCEPTION                         |
+      | application | core                                             |
+      | description | INVALID_ORDER_EXCEPTION                          |
 
     Examples:
       | Note       | action | cod | hiptest-uid                              |
