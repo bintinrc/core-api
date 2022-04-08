@@ -54,7 +54,7 @@ public class RoutingSteps extends BaseSteps {
     route.setComments("Created for Core API testing, created at: " + DateUtil
         .getTodayDateTime_YYYY_MM_DD_HH_MM_SS());
     route.setTags(Arrays.asList(1, 4));
-    route.setDate(generateUTCTodayDate());
+    route.setDate(DateUtil.generateUTCTodayDate());
     callWithRetry(() -> {
       Route result = getRouteClient().createRoute(route);
       Assertions.assertThat(route).as("created route is not null").isNotNull();
@@ -72,7 +72,7 @@ public class RoutingSteps extends BaseSteps {
     final Route route = fromJsonSnakeCase(json, Route.class);
     route.setComments("Created for Core API testing");
     route.setTags(Arrays.asList(1, 4));
-    route.setDate(generateUTCYesterdayDate());
+    route.setDate(DateUtil.generateUTCYesterdayDate());
     callWithRetry(() -> {
       final Route result = getRouteClient().createRoute(route);
       Assertions.assertThat(route).as("created route is not null").isNotNull();
@@ -297,19 +297,7 @@ public class RoutingSteps extends BaseSteps {
 
     }, "verify archive driver route v2");
   }
-
-  public static String generateUTCTodayDate() {
-    ZonedDateTime startDateTime = DateUtil.getStartOfDay(DateUtil.getDate());
-    return DateUtil
-        .displayDateTime(startDateTime.withZoneSameInstant(ZoneId.of("UTC")));
-  }
-
-  private String generateUTCYesterdayDate() {
-    ZonedDateTime startDateTime = DateUtil.getStartOfDay(DateUtil.getDate()).minusDays(1);
-    return DateUtil
-        .displayDateTime(startDateTime.withZoneSameInstant(ZoneId.of("UTC")));
-  }
-
+  
   @After("@ArchiveDriverRoutes")
   public void cleanCreatedRoute() {
     final List<Long> routeIds = get(KEY_LIST_OF_CREATED_ROUTE_ID);

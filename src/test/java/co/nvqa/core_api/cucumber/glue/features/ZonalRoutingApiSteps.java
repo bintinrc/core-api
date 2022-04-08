@@ -2,6 +2,7 @@ package co.nvqa.core_api.cucumber.glue.features;
 
 import co.nvqa.commons.model.core.route.Route;
 import co.nvqa.commons.model.core.route.ZonalRoutingRouteRequest;
+import co.nvqa.commons.support.DateUtil;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import io.cucumber.java.en.When;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class ZonalRoutingApiSteps extends BaseSteps {
     final ZonalRoutingRouteRequest route = fromJsonSnakeCase(json, ZonalRoutingRouteRequest.class);
     final List<Long> waypointIds = get(KEY_LIST_OF_WAYPOINT_IDS);
     route.setTags(Arrays.asList(1, 4));
-    route.setDate(RoutingSteps.generateUTCTodayDate());
+    route.setDate(DateUtil.generateUTCTodayDate());
     route.setWaypoints(waypointIds);
     callWithRetry(() -> {
       List<Route> result = getRouteClient()
