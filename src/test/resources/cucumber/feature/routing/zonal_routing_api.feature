@@ -201,3 +201,41 @@ Feature: Zonal Routing API
     And Verify that waypoints are shown on driver "{driver-id}" list route correctly
     And Verify that waypoints are not shown on previous driver list route
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+
+  Scenario: Add Merged Unrouted Waypoint to a Route from Zonal Routing Edit Route
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    When API Operator create new shipper address V2 using data below:
+      | shipperId       | {shipper-2-id} |
+      | generateAddress | RANDOM         |
+    And API Operator create V2 reservation using data below:
+      | reservationRequest | { "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    When Shipper creates multiple orders : 2 orders with the same params
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for multiple "DELIVERY" transactions with status "PENDING"
+    And Operator create a route and assign waypoint from Zonal Routing API
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And DB Operator get routes dummy waypoints
+    When Operator edit route by removing merged waypoints from Zonal Routing API
+      | driver_id  | {driver-id}  |
+      | vehicle_id | {vehicle-id} |
+    And Operator add order to driver "DELIVERY" route
+    And Operator gets only eligible routed orders
+#    verify remaining unrouted order
+    And DB Operator verifies transaction route id is null
+    And DB Operator verifies waypoint status is "PENDING"
+    And DB Operator verifies waypoints.route_id & seq_no is NULL
+    And DB Operator verifies route_waypoint is hard-deleted
+    And DB Operator verifies route_monitoring_data is hard-deleted
+#    verify routed orders
+    Then DB Operator verifies all transactions routed to new route id
+    And DB Operator verifies all route_waypoint records
+    And DB Operator verifies all waypoints status is "ROUTED"
+    And DB Operator verifies all waypoints.route_id & seq_no is populated correctly
+    And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
+    And DB Operator verifies all route_monitoring_data records
+    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published

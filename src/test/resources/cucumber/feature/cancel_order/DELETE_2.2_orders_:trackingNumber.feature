@@ -196,7 +196,12 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And API Operator cancel created order
     Then Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And DB Operator gets async handle of an order from its Tracking ID
-    When API Operator cancel order with DELETE /2.2/orders/:trackingNumber
+    When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
+    Then Operator verify response code is 400 with error message details as follow
+      | code        | 103098                     |
+      | message     | Order is already cancelled |
+      | application | core                       |
+      | description | ORDER_ALREADY_CANCELLED    |
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
 
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Arrived at Distribution Point (uid:3477397f-01ca-4a83-93b1-3f4121609d1d)

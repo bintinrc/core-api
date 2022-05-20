@@ -184,7 +184,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | description | ORDER_DETAILS_INVALID |
     And Operator verify that order status-granular status is "Completed"-"Completed"
     And Operator checks that "CANCEL" event is NOT published
-
+    
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Cancelled (uid:dcb58c27-e768-4030-a531-c032a1c6287c)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -194,9 +194,12 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator search for created order
     And API Operator cancel created order
     Then Operator verify that order status-granular status is "Cancelled"-"Cancelled"
-    When API Operator cancel order with PUT /orders/:orderId/cancel
-      | reason | Cancelled by automated test {gradle-current-date-yyyy-MM-dd} |
-    And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
+    When Operator failed to cancel invalid status with PUT /orders/:orderId/cancel
+    Then Operator verify response code is 400 with error message details as follow
+      | code        | 103098                     |
+      | message     | Order is already cancelled |
+      | application | core                       |
+      | description | ORDER_ALREADY_CANCELLED    |
 
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Arrived at Distribution Point (uid:fd902296-466d-40d9-b7cd-76c7ecee4f7e)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
