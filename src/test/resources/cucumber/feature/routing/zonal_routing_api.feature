@@ -219,7 +219,6 @@ Feature: Zonal Routing API
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And DB Operator get routes dummy waypoints
     When Operator edit route by removing merged waypoints from Zonal Routing API
       | driver_id  | {driver-id}  |
       | vehicle_id | {vehicle-id} |
@@ -236,6 +235,5 @@ Feature: Zonal Routing API
     And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies all waypoints.route_id & seq_no is populated correctly
-    And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
     And DB Operator verifies all route_monitoring_data records
     And Operator checks that for all orders, "ADD_TO_ROUTE" event is published

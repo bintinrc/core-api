@@ -362,7 +362,6 @@ Feature: Parcel Route Transfer
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And DB Operator get routes dummy waypoints
     And Operator add order by tracking id to driver "DD" route
     And Shipper creates multiple orders : 3 orders
       | service_type                  | Parcel   |
@@ -378,7 +377,6 @@ Feature: Parcel Route Transfer
     And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies all waypoints.route_id & seq_no is populated correctly
-    And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
     And DB Operator verifies all route_monitoring_data records
     When Operator gets only eligible parcel for route transfer
     Then Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
