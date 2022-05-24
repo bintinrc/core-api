@@ -12,7 +12,7 @@ Feature: Order Tag to DP
       | dp-holding-route-id           | {dp-holding-route-id}    |
     And Operator perform global inbound for created order at hub "{sorting-hub-id}"
     And Operator search for "DELIVERY" transaction with status "PENDING"
-    And DB Operator get routes dummy waypoints
+
     Then DB Operator verifies transaction routed to new route id
     And DB Operator verifies route_waypoint record exist
     And DB Operator verifies waypoint status is "ROUTED"
@@ -39,12 +39,12 @@ Feature: Order Tag to DP
       | zone_id    | {zone-id}        |
     When Operator new add parcel to DP holding route
     And Operator search for "DELIVERY" transaction with status "PENDING"
-    And DB Operator get routes dummy waypoints
+
     Then DB Operator verifies transaction routed to new route id
     And DB Operator verifies route_waypoint record exist
     And DB Operator verifies waypoint status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
-    And DB Operator verifies first & last waypoints.seq_no are dummy waypoints
+
     And DB Operator verifies route_monitoring_data record
     And Operator checks that "ADD_TO_ROUTE" event is published
 
@@ -60,7 +60,7 @@ Feature: Order Tag to DP
     And Operator perform global inbound for created order at hub "{sorting-hub-id}"
     When Operator pull DP order out of route
     And Operator search for "DELIVERY" transaction with status "PENDING"
-    And DB Operator get routes dummy waypoints
+
     Then DB Operator verifies transaction route id is null
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL

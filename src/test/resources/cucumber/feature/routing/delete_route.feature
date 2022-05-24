@@ -18,9 +18,7 @@ Feature: Delete Route
     And DB Operator verifies transaction route id is null
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
-    And DB Operator verifies dummy waypoints.route_id & seq_no is NULL
     And DB Operator verifies route_waypoint is hard-deleted
-    And DB Operator verifies dummy route_waypoint is hard-deleted
     And DB Operator verifies route_monitoring_data is hard-deleted
     And Operator checks that "PULL_OUT_OF_ROUTE" event is published
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
@@ -45,9 +43,9 @@ Feature: Delete Route
     And DB Operator verifies soft-deleted route
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
-    And DB Operator verifies dummy waypoints.route_id & seq_no is NULL
+
     And DB Operator verifies route_waypoint is hard-deleted
-    And DB Operator verifies dummy route_waypoint is hard-deleted
+
     And DB Operator verifies route_monitoring_data is hard-deleted
     And DB Operator verifies shipper_pickups_search data updated correctly
       | status          | PENDING |
@@ -81,9 +79,9 @@ Feature: Delete Route
     And DB Operator verifies all transactions route id is null
     And DB Operator verifies all waypoints status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
-    And DB Operator verifies dummy waypoints.route_id & seq_no is NULL
+
     And DB Operator verifies all route_waypoint route id is hard-deleted
-    And DB Operator verifies dummy route_waypoint is hard-deleted
+
     And DB Operator verifies all route_monitoring_data is hard-deleted
     And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
@@ -99,8 +97,8 @@ Feature: Delete Route
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     When Operator delete driver route with status code "200"
     Then DB Operator verifies soft-deleted route
-    And DB Operator verifies dummy waypoints.route_id & seq_no is NULL
-    And DB Operator verifies dummy route_waypoint is hard-deleted
+
+
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
     Examples:
@@ -141,7 +139,7 @@ Feature: Delete Route
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And DB Operator get routes dummy waypoints
+
     And Operator Route the Reservation Pickup
     And Operator admin manifest force "<action>" reservation
     Then Operator delete driver route with status code "500"
@@ -168,7 +166,7 @@ Feature: Delete Route
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And DB Operator get routes dummy waypoints
+
     And Operator add order to driver "DD" route
     And Operator force "<terminal_state>" "DELIVERY" waypoint
     And Operator search for "DELIVERY" transaction with status "<terminal_state>"
@@ -196,7 +194,7 @@ Feature: Delete Route
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And DB Operator get routes dummy waypoints
+
     And Operator add order to driver "PP" route
     And Operator force "<terminal_state>" "PICKUP" waypoint
     And Operator search for "PICKUP" transaction with status "<terminal_state>"

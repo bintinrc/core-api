@@ -114,7 +114,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And DB Operator get routes dummy waypoints
+
     And Operator add order to driver "PP" route
     And Operator force "FAIL" "PICKUP" waypoint
     And API Operator add parcel to the route using data below:
