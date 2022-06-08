@@ -171,7 +171,8 @@ public class RoutingSteps extends BaseSteps {
       Assertions.assertThat(r.getBody().asString()).as("response message is correct")
           .containsIgnoringCase(String
               .format("Reservation %d for Shipper %d has status %s. Cannot delete route.",
-                  pickup.getReservationId(), pickup.getShipperId(), pickup.getStatus().toUpperCase()));
+                  pickup.getReservationId(), pickup.getShipperId(),
+                  pickup.getStatus().toUpperCase()));
     } else {
       final Order order = get(KEY_CREATED_ORDER);
       String type;
@@ -297,7 +298,7 @@ public class RoutingSteps extends BaseSteps {
 
     }, "verify archive driver route v2");
   }
-  
+
   @After("@ArchiveDriverRoutes")
   public void cleanCreatedRoute() {
     final List<Long> routeIds = get(KEY_LIST_OF_CREATED_ROUTE_ID);

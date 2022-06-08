@@ -58,6 +58,7 @@ Feature: Batch Update PODs
     And Verify for "Success" Orders, Shipper gets webhook event "Successful Pickup"
     And Verify for "Failed" Orders, Shipper gets webhook event "Pickup fail"
     When API Batch Update Proof Request to Partial Success Orders "Pickup"
+    And DB Operator verifies all transaction_failure_reason is created correctly
     Then DB Operator verifies transaction_blob is created
     And Verify blob data is correct
 
@@ -83,7 +84,8 @@ Feature: Batch Update PODs
     And Shipper gets webhook request for event "Pickup fail" for all orders
     And Shipper verifies webhook request payload has correct details for status "Pickup fail" for all orders
     When API Batch Update Proof Request to Fail All Created Orders "Pickup"
-    Then DB Operator verifies transaction_blob is created
+    Then DB Operator verifies all transaction_failure_reason is created correctly
+    And DB Operator verifies transaction_blob is created
     And Verify blob data is correct
 
   Scenario Outline: Driver delivers all X number of normal parcels in one waypoint with POD type - <Note> (<hiptest-uid>)
@@ -180,6 +182,7 @@ Feature: Batch Update PODs
     And Verify for "Failed" Orders, Shipper gets webhook event "First Attempt Delivery Fail"
     When API Batch Update Proof Request to Partial Success Orders "Delivery"
     Then DB Operator verifies transaction_blob is created
+    And DB Operator verifies all transaction_failure_reason is created correctly
     And Verify blob data is correct
 
   Scenario: Driver fails all X number of Deliveries in one waypoint (uid:9073a13d-8707-4075-944a-a227e394fa27)
@@ -206,8 +209,9 @@ Feature: Batch Update PODs
     And Shipper verifies webhook request payload has correct details for status "Pending Reschedule" for all orders
     And Shipper gets webhook request for event "First Attempt Delivery Fail" for all orders
     And Shipper verifies webhook request payload has correct details for status "First Attempt Delivery Fail" for all orders
-    When API Batch Update Proof Request to Success All Created Orders "Delivery"
+    When API Batch Update Proof Request to Fail All Created Orders "Delivery"
     Then DB Operator verifies transaction_blob is created
+    And DB Operator verifies all transaction_failure_reason is created correctly
     And Verify blob data is correct
 
   Scenario: Driver picks up all X number of Normal parcels in one reservation (uid:e3adbedd-c9f6-4d68-8299-41cfbe2c2073)
@@ -344,6 +348,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to "FAIL" All Orders under the reservation
     Then DB Operator verifies reservation_blob is created
     And Verify blob data is correct
+    And DB Operator verifies reservation_failure_reason is created correctly
     And Operator get proof details for "FAIL" transaction of "Normal" orders
     And DB Operator verifies transaction_blob is NOT created
 
@@ -374,6 +379,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to "FAIL" All Orders under the reservation
     Then DB Operator verifies reservation_blob is created
     And Verify blob data is correct
+    And DB Operator verifies reservation_failure_reason is created correctly
     And Operator get proof details for "FAIL" transaction of "Return" orders
     And DB Operator verifies transaction_blob is created
     And Verify blob data is correct
@@ -400,6 +406,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to "FAIL" Reservation without any Parcel
     Then DB Operator verifies reservation_blob is created
     And Verify blob data is correct
+    And DB Operator verifies reservation_failure_reason is created correctly
 
   Scenario: Shipper Got POD Webhook (Successful Pickup) with NO PODs Details after Driver Success Return Pickup with NO Proof Details (uid:d95ca9a7-5572-45b6-9990-88547abff44f)
     Given Shipper id "{shipper-id}" subscribes to "Successful Pickup" webhook

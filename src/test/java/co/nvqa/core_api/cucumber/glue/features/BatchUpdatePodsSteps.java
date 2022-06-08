@@ -462,9 +462,11 @@ public class BatchUpdatePodsSteps extends BaseSteps {
             case PARCEL_MEASUREMENTS_UPDATE: {
               final Double oldWeight = get(OrderCreateSteps.KEY_EXPECTED_OLD_WEIGHT, 0.1);
               final Double newWeight = get(KEY_EXPECTED_NEW_WEIGHT);
-              Assertions.assertThat(request.getPreviousMeasurements().getMeasuredWeight()).as("old weigh equal")
+              Assertions.assertThat(request.getPreviousMeasurements().getMeasuredWeight())
+                  .as("old weigh equal")
                   .isEqualTo(oldWeight);
-              Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight()).as("new weigh equal")
+              Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight())
+                  .as("new weigh equal")
                   .isEqualTo(newWeight);
             }
             break;
@@ -527,6 +529,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "check blob data");
   }
 
+
   @Then("^Shipper verifies webhook request payload has correct details for status \"([^\"]*)\" with NO Pod details$")
   public void shipperverifiesWebhookPayloadNoPod(String status) {
     shipperverifiesWebhookPayload(status);
@@ -573,10 +576,14 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       if (jobMode.equalsIgnoreCase(PICKUP_JOB_MODE)) {
         job.setFailureReasonId(TestConstants.PICKUP_FAILURE_REASON_ID);
         job.setFailureReason(TestConstants.PICKUP_FAILURE_REASON);
+        job.setFailureReasonCodeId(TestConstants.PICKUP_FAILURE_REASON_CODE_ID);
       } else {
         job.setFailureReasonId(TestConstants.DELIVERY_FAILURE_REASON_ID);
         job.setFailureReason(TestConstants.DELIVERY_FAILURE_REASON);
+        job.setFailureReasonCodeId(TestConstants.DELIVERY_FAILURE_REASON_CODE_ID);
       }
+      put(KEY_FAILURE_REASON_ID, job.getFailureReasonId());
+      put(KEY_FAILURE_REASON_CODE_ID, job.getFailureReasonCodeId());
     }
     if (withCod) {
       job.setCod(order.getCod().getGoodsAmount());
@@ -669,6 +676,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
 
     Integer failureReasonId = TestConstants.RESERVATION_FAILURE_REASON_ID;
     String failureReasonString = TestConstants.RESERVATION_FAILURE_REASON;
+    Integer failureReasonCodeId = TestConstants.RESERVATION_FAILURE_REASON_CODE_ID;
 
     JobV5 job = new JobBuilder().setAction(action)
         .setId(jobId)
@@ -679,6 +687,9 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     if (action.equalsIgnoreCase(ACTION_MODE_FAIL)) {
       job.setFailureReason(failureReasonString);
       job.setFailureReasonId(failureReasonId);
+      job.setFailureReasonCodeId(failureReasonCodeId);
+      put(KEY_FAILURE_REASON_ID, failureReasonId);
+      put(KEY_FAILURE_REASON_CODE_ID, failureReasonCodeId);
     }
 
     return job;
