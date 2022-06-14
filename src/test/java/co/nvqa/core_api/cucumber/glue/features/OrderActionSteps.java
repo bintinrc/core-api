@@ -118,6 +118,9 @@ public class OrderActionSteps extends BaseSteps {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
       operatorSearchTransaction(type, status);
       Transaction transaction = get(KEY_TRANSACTION_DETAILS);
+      if (status.equalsIgnoreCase("fail")){
+        putInList(KEY_LIST_OF_TRANSACTION_DETAILS, transaction);
+      }
       assertEquals(String.format("transaction id %d status", transaction.getId()),
           status.toLowerCase(), transaction.getStatus().toLowerCase());
     });

@@ -84,6 +84,7 @@ Feature: Driver API
     Then Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
     When API Operator reschedule failed delivery order
     And Operator search for "DELIVERY" transaction with status "PENDING"
+    And Operator search for "DELIVERY" transaction with status "FAIL"
     Then Operator verify that order status-granular status is "Transit"-"Enroute_to_sorting_hub"
     When Operator add order to driver "DD" route
     And Driver "SUCCESS" Parcel previous "DELIVERY"
