@@ -452,3 +452,35 @@ Feature: Batch Update PODs
     And Operator verify all "DELIVERY" transactions status is "SUCCESS"
     And Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery" for all orders
+
+  Scenario: Driver delivers order with COD to collect
+    Given Shipper id "{shipper-id}" subscribes to "Successful Delivery, Completed" webhook
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+      | parcel_job_cash_on_delivery   | 56.78    |
+    When Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator search for created order
+    And Operator add order to driver "DD" route
+    When API Batch Update Job Request to Success COD Delivery
+    Then DB Operator verifies waypoint status is "SUCCESS"
+    And Operator verify that all orders status-granular status is "Completed"-"Completed"
+    And Operator verify all "DELIVERY" transactions status is "SUCCESS"
+    And DB Operator verify the collected sum stored in cod_collections using data below:
+      | transactionMode   | DELIVERY      |
+      | expectedCodAmount | 56.78         |
+      | driverId          | {driver-2-id} |
+    And Shipper gets webhook request for event "Completed" for all orders
+    And Shipper verifies webhook request payload has correct details for status "Completed" for all orders
+    And Shipper gets webhook request for event "Successful Delivery" for all orders
+    And Shipper verifies webhook request payload has correct details for status "Successful Delivery" for all orders
+    When API Batch Update Proof Request to Success All Created Orders "Delivery"
+    Then DB Operator verifies transaction_blob is created
+    And Verify blob data is correct

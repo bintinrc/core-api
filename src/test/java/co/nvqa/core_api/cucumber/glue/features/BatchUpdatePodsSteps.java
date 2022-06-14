@@ -71,11 +71,39 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       List<JobUpdate> request;
       if (transactionType.equalsIgnoreCase(Transaction.TYPE_PICKUP)) {
         request = createTransactionJobRequest(trackingIds, ACTION_MODE_SUCCESS, PICKUP_JOB_MODE,
-            false, podType);
+            false, podType, false);
       } else {
         request = createTransactionJobRequest(trackingIds, ACTION_MODE_SUCCESS, DELIVERY_JOB_MODE,
-            false, podType);
+            false, podType, false);
       }
+      getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
+    }, "batch update jobs", 30);
+  }
+
+  @Given("API Batch Update Job Request to Success COD Delivery")
+  public void apiBatchJobUpdateOrdersCodSuccess() {
+    long routeId = get(KEY_CREATED_ROUTE_ID);
+    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    callWithRetry(() -> {
+      getTransactionWaypointId(Transaction.TYPE_DELIVERY);
+      long waypointId = get(KEY_WAYPOINT_ID);
+      List<JobUpdate> request = createTransactionJobRequest(trackingIds, ACTION_MODE_SUCCESS,
+          DELIVERY_JOB_MODE,
+          true, WebhookRequest.Pod.POD_TYPE_RECIPIENT, false);
+      getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
+    }, "batch update jobs", 30);
+  }
+
+  @Given("API Batch Update Job Request to fail and reschedule Delivery")
+  public void apiBatchJobUpdateOrderReschedule() {
+    long routeId = get(KEY_CREATED_ROUTE_ID);
+    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    callWithRetry(() -> {
+      getTransactionWaypointId(Transaction.TYPE_DELIVERY);
+      long waypointId = get(KEY_WAYPOINT_ID);
+      List<JobUpdate> request = createTransactionJobRequest(trackingIds, ACTION_MODE_FAIL,
+          DELIVERY_JOB_MODE,
+          false, WebhookRequest.Pod.POD_TYPE_RECIPIENT, true);
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
     }, "batch update jobs", 30);
   }
@@ -126,10 +154,10 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       List<JobUpdate> request;
       if (transactionType.equalsIgnoreCase(Transaction.TYPE_PICKUP)) {
         request = createTransactionJobRequest(trackingIds, ACTION_MODE_FAIL, PICKUP_JOB_MODE, false,
-            WebhookRequest.Pod.POD_TYPE_RECIPIENT);
+            WebhookRequest.Pod.POD_TYPE_RECIPIENT, false);
       } else {
         request = createTransactionJobRequest(trackingIds, ACTION_MODE_FAIL, DELIVERY_JOB_MODE,
-            false, WebhookRequest.Pod.POD_TYPE_RECIPIENT);
+            false, WebhookRequest.Pod.POD_TYPE_RECIPIENT, false);
       }
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
     }, "batch update jobs", 30);
@@ -550,7 +578,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   }
 
   private JobV5 createTransactionJob(String trackingId, String action, String jobMode,
-      boolean withCod) {
+      boolean withCod, boolean allowReschedule) {
 
     Order order = OrderDetailHelper.getOrderDetails(trackingId);
     if (Objects.isNull(order)) {
@@ -571,6 +599,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
         .setMode(jobMode)
         .setType(Job.TYPE_TRANSACTION)
         .createBatchUpdateJob();
+    job.setAllowReschedule(allowReschedule);
     if (action.equalsIgnoreCase(ACTION_MODE_FAIL)) {
 
       if (jobMode.equalsIgnoreCase(PICKUP_JOB_MODE)) {
@@ -615,13 +644,13 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   }
 
   private List<JobUpdate> createTransactionJobRequest(List<String> trackingIds, String jobAction,
-      String jobMode, boolean withCod, String podType) {
+      String jobMode, boolean withCod, String podType, boolean allowReschedule) {
     List<JobUpdate> result = new ArrayList<>();
     trackingIds.forEach(e -> {
       JobUpdate temp = new JobUpdate();
       temp.setToUpdateJob(true);
       temp.setCommitDate(Instant.now().toEpochMilli());
-      temp.setJob(createTransactionJob(e, jobAction, jobMode, withCod));
+      temp.setJob(createTransactionJob(e, jobAction, jobMode, withCod, allowReschedule));
       temp.setParcel(createTransactionOrder(e, jobAction, jobMode));
       temp.setProofWebhookDetails(createProofWebhookDetails(podType, jobMode));
       result.add(temp);
@@ -636,7 +665,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       JobUpdate temp = new JobUpdate();
       temp.setToUpdateJob(true);
       temp.setCommitDate(Instant.now().toEpochMilli());
-      temp.setJob(createTransactionJob(e, ACTION_MODE_SUCCESS, jobMode, false));
+      temp.setJob(createTransactionJob(e, ACTION_MODE_SUCCESS, jobMode, false, false));
       temp.setParcel(createTransactionOrder(e, ACTION_MODE_SUCCESS, jobMode));
       result.add(temp);
     });
@@ -653,9 +682,9 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     List<JobUpdate> result = new ArrayList<>();
     result.addAll(
         createTransactionJobRequest(successTrackingIds, ACTION_MODE_SUCCESS, jobMode, false,
-            WebhookRequest.Pod.POD_TYPE_RECIPIENT));
+            WebhookRequest.Pod.POD_TYPE_RECIPIENT, false));
     result.addAll(createTransactionJobRequest(failedTrackingIds, ACTION_MODE_FAIL, jobMode, false,
-        WebhookRequest.Pod.POD_TYPE_RECIPIENT));
+        WebhookRequest.Pod.POD_TYPE_RECIPIENT, false));
     return result;
   }
 
@@ -878,7 +907,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     trackingIds.forEach(e -> {
       JobUpdate temp = new JobUpdate();
       temp.setCommitDate(Instant.now().toEpochMilli());
-      temp.setJob(createTransactionJob(e, jobAction, jobMode, witCod));
+      temp.setJob(createTransactionJob(e, jobAction, jobMode, witCod, false));
       temp.setProofDetails(createProofDetails(e));
       result.add(temp);
     });
