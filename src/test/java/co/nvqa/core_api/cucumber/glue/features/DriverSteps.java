@@ -39,6 +39,7 @@ public class DriverSteps extends BaseSteps {
   public static final String KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS = "key-list-of-driver-waypoint-details";
   private static final String KEY_DRIVER_WAYPOINT_DETAILS = "key-driver-waypoint-details";
   private static final String KEY_LIST_OF_DRIVER_JOBS = "key-driver-jobs";
+  private static final String KEY_DRIVER_SUBMIT_POD_REQUEST = "KEY_DRIVER_SUBMIT_POD_REQUEST";
   private static final String WAYPOINT_TYPE_RESERVATION = "RESERVATION";
   private static final String KEY_BOOLEAN_DRIVER_FAILED_VALID = "key-boolean-driver-failed-valid";
   private DriverClient driverClient;
@@ -105,6 +106,7 @@ public class DriverSteps extends BaseSteps {
       co.nvqa.commons.model.core.Order order = get(KEY_CREATED_ORDER);
 
       DeliveryRequestV5 request = DriverHelper.createDefaultDeliveryRequestV5(waypointId, jobs);
+      put(KEY_DRIVER_SUBMIT_POD_REQUEST, request);
       if (order != null) {
         request.setContact(order.getToContact());
         request.setName(order.getToName());
@@ -125,12 +127,15 @@ public class DriverSteps extends BaseSteps {
   //to success/fail previously rescheduled failed delivery/pickup
   @Given("^Driver \"([^\"]*)\" Parcel previous \"([^\"]*)\"$")
   public void driverDeliverPreviousFailedParcels(String action, String type) {
+    co.nvqa.commons.model.core.Order order = get(KEY_CREATED_ORDER);
     callWithRetry(() -> {
       createDriverJobs(action.toUpperCase());
       List<JobV5> jobs = get(KEY_LIST_OF_DRIVER_JOBS);
+      DeliveryRequestV5 prevRequest = get(KEY_DRIVER_SUBMIT_POD_REQUEST);
       long routeId = get(KEY_CREATED_ROUTE_ID);
-      long waypointId = get(KEY_WAYPOINT_ID);
+      long waypointId = prevRequest.getWaypointId();
       DeliveryRequestV5 request = DriverHelper.createDefaultDeliveryRequestV5(waypointId, jobs);
+      request.setName(order.getToName());
       put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "TRANSACTION_UNROUTE");
       driverClient.deliverV5(routeId, waypointId, request);
     }, "driver attempts waypoint");
@@ -268,9 +273,9 @@ public class DriverSteps extends BaseSteps {
     List<Job> jobs = waypoint.getJobs();
     jobs.forEach(e -> {
       List<co.nvqa.commons.model.driver.Order> parcels = e.getParcels();
-      Order parcel = parcels.stream().filter(o -> o.getTrackingId().equalsIgnoreCase(trackingId))
-          .findAny()
-          .orElseThrow(() -> new NvTestRuntimeException("Parcel Data not found " + trackingId));
+      parcels.stream().filter(o -> o.getTrackingId().equalsIgnoreCase(trackingId))
+          .forEach(o -> put("parcel", o));
+      Order parcel = get(("parcel"));
       createPhysicalItems(parcel, action, e.getMode());
       List<Order> orders = get(KEY_LIST_OF_CREATED_JOB_ORDERS);
       JobV5 job = createDefaultDriverJobs(e, action);
