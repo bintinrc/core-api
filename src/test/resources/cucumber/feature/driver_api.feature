@@ -42,13 +42,14 @@ Feature: Driver API
     Then Operator verify that order status-granular status is "Transit"-"Enroute_to_sorting_hub"
     And Operator checks that "DRIVER_PICKUP_SCAN" event is published
     And DB Operator verifies inbound_scans record with type "1" and correct route_id
-
+    
   Scenario: Driver Success a Reservation Pickup by Scanning Normal Order (uid:53cfcc56-2c2f-40f3-a06c-ced1a86b1bc2)
     Given Shipper authenticates using client id "{shipper-3-client-id}" and client secret "{shipper-3-client-secret}"
     When Shipper creates a reservation
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
+    And Operator search for created order
     And Operator Search for Created Pickup for Shipper "{shipper-3-legacy-id}" with status "Pending"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
@@ -84,7 +85,6 @@ Feature: Driver API
     Then Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
     When API Operator reschedule failed delivery order
     And Operator search for "DELIVERY" transaction with status "PENDING"
-    And Operator search for "DELIVERY" transaction with status "FAIL"
     Then Operator verify that order status-granular status is "Transit"-"Enroute_to_sorting_hub"
     When Operator add order to driver "DD" route
     And Driver "SUCCESS" Parcel previous "DELIVERY"
