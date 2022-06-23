@@ -42,7 +42,7 @@ Feature: Driver API
     Then Operator verify that order status-granular status is "Transit"-"Enroute_to_sorting_hub"
     And Operator checks that "DRIVER_PICKUP_SCAN" event is published
     And DB Operator verifies inbound_scans record with type "1" and correct route_id
-    
+
   Scenario: Driver Success a Reservation Pickup by Scanning Normal Order (uid:53cfcc56-2c2f-40f3-a06c-ced1a86b1bc2)
     Given Shipper authenticates using client id "{shipper-3-client-id}" and client secret "{shipper-3-client-secret}"
     When Shipper creates a reservation
@@ -89,5 +89,8 @@ Feature: Driver API
     When Operator add order to driver "DD" route
     And Driver "SUCCESS" Parcel previous "DELIVERY"
     Then Operator checks that "PULL_OUT_OF_ROUTE" event is published
-    And DB Operator verifies transaction route id is null
     And DB Operator verifies transaction is soft-deleted
+    And DB Operator verifies waypoint status is "PENDING"
+    And DB Operator verifies waypoints.route_id & seq_no is NULL
+    And DB Operator verifies route_waypoint is hard-deleted
+    And DB Operator verifies route_monitoring_data is hard-deleted
