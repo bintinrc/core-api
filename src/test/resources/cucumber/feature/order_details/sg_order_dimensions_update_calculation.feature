@@ -11,7 +11,7 @@ Feature: SG - Order Dimensions Update Calculation
       | parcel_job_is_pickup_required | false    |
       | weight                        | 0        |
     And Operator search for created order
-    When Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    When Operator perform global inbound at hub "{sorting-hub-id}"
     Then DB Operator verifies orders.weight and dimensions updated correctly
       | orders.weight                         | 0.1 |
       | orders.dimensions.weight              | 0   |
@@ -30,7 +30,7 @@ Feature: SG - Order Dimensions Update Calculation
       | generateFromAndTo | RANDOM                                                                                                                                                                                                                                                                                                                                                                                |
       | v4OrderRequest    | { "service_type":"Parcel","service_level":"Standard", "parcel_job":{"dimensions": {"height": 2.7,"length": 2.8,"width": 1},"is_pickup_required":false, "pickup_date":"{{next-1-day-yyyy-MM-dd}}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
     And Operator search for created order
-    When Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    When Operator perform global inbound at hub "{sorting-hub-id}"
     Then DB Operator verifies orders.weight and dimensions updated correctly
       | orders.weight                         | 0.1 |
       | orders.data.originalWeight            | 0.1 |
@@ -48,7 +48,7 @@ Feature: SG - Order Dimensions Update Calculation
       | parcel_job_is_pickup_required | false    |
       | weight                        | 3.5      |
     And Operator search for created order
-    When Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    When Operator perform global inbound at hub "{sorting-hub-id}"
     Then DB Operator verifies orders.weight and dimensions updated correctly
       | orders.weight                         | 3.5 |
       | orders.dimensions.weight              | 3.5 |

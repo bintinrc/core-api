@@ -23,18 +23,19 @@ public class InboundSteps extends BaseSteps {
   public void init() {
   }
 
-  @Then("^Operator perform global inbound for created order at hub \"([^\"]*)\"$")
-  public void globalInbound(long hubId) {
+  @Then("Operator perform global inbound at hub {string}")
+  public void globalInbound(String hubInboundId) {
+    String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+    Long hubId = Long.valueOf(hubInboundId);
     callWithRetry(() -> {
-      String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
       GlobalInboundResponse response = getInboundClient().globalInbound(
           new GlobalInboundRequest(trackingId, GlobalInboundRequest.TYPE_SORTING_HUB, hubId));
       assertEquals("status", "SUCCESSFUL_INBOUND", response.getStatus());
     }, "operator global inbound");
   }
 
-  @Then("^Operator inbounds all orders at hub \"([^\"]*)\"$")
-  public void globalInboundMultipleOrders(long hubId) {
+  @Then("Operator inbounds all orders at hub {string}")
+  public void globalInboundMultipleOrders(String hubId) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     trackingIds.forEach(e -> {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);

@@ -461,7 +461,7 @@ Feature: Batch Update PODs
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
       | parcel_job_cash_on_delivery   | 56.78    |
-    When Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    When Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
