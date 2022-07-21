@@ -251,7 +251,7 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator search for created order
     And Operator tags order with PRIOR tag
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
@@ -415,7 +415,7 @@ Feature: Route Monitoring V2
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator search for created order
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
@@ -444,7 +444,7 @@ Feature: Route Monitoring V2
       | service_level                 | <service_level>                 |
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |

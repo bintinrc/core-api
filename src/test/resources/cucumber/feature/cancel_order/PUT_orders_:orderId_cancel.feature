@@ -153,7 +153,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And API Operator RTS created order:
       | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
     And Operator force success order
@@ -208,7 +208,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And API Operator assign delivery waypoint of an order to DP Include Today with ID = "{dpms-id}"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
@@ -234,7 +234,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator verify that order status-granular status is "Transit"-"Arrived_at_Sorting_Hub"
     When Operator failed to cancel invalid status with PUT /orders/:orderId/cancel
     Then Operator verify response code is 500 with error message details as follow

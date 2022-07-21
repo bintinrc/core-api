@@ -32,7 +32,7 @@ Feature: Order Details
       | parcel_job_is_pickup_required | false    |
       | parcel_job_cash_on_delivery   | <cod>    |
     And Operator search for created order
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And API Operator RTS created order:
       | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
     And Operator force success order
@@ -57,7 +57,7 @@ Feature: Order Details
       | parcel_job_is_pickup_required | false    |
       | parcel_job_cash_on_delivery   | <cod>    |
     And Operator search for created order
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route
       | driver_id  | {driver-id}      |
       | hub_id     | {sorting-hub-id} |
@@ -106,7 +106,7 @@ Feature: Order Details
       | parcel_job_is_pickup_required | false    |
       | parcel_job_cash_on_delivery   | 50       |
     And Operator search for created order
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And API Operator RTS created order:
       | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
     And Operator force success order
@@ -126,7 +126,7 @@ Feature: Order Details
       | parcel_job_is_pickup_required | false    |
       | parcel_job_cash_on_delivery   | 50       |
     And Operator search for created order
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route
       | driver_id  | {driver-id}      |
       | hub_id     | {sorting-hub-id} |

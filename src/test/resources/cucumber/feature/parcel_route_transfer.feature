@@ -140,7 +140,7 @@ Feature: Parcel Route Transfer
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route
       | driver_id  | {driver-id}      |
       | hub_id     | {sorting-hub-id} |
@@ -179,7 +179,7 @@ Feature: Parcel Route Transfer
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator search for "DELIVERY" transaction with status "PENDING"
     And Operator create an empty route
       | driver_id  | {driver-id}      |
@@ -260,7 +260,7 @@ Feature: Parcel Route Transfer
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator search for "DELIVERY" transaction with status "PENDING"
     And API Operator RTS created order:
       | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
@@ -336,7 +336,7 @@ Feature: Parcel Route Transfer
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route with past date
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |

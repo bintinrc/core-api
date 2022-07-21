@@ -21,7 +21,7 @@ Feature: Notification
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
@@ -40,7 +40,7 @@ Feature: Notification
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And API Operator assign delivery waypoint of an order to DP Include Today with ID = "{dpms-id}"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
@@ -83,7 +83,7 @@ Feature: Notification
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
       | parcel_job_cash_on_delivery   | 45.0     |
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
@@ -135,7 +135,7 @@ Feature: Notification
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
@@ -160,7 +160,7 @@ Feature: Notification
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
@@ -187,7 +187,7 @@ Feature: Notification
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
@@ -223,7 +223,7 @@ Feature: Notification
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
@@ -242,7 +242,7 @@ Feature: Notification
     And Operator search for "DELIVERY" transaction with status "PENDING"
     Then Operator verify that order status-granular status is "Transit"-"Enroute_to_sorting_hub"
     Given Shipper id "{shipper-id}" subscribes to "Arrived at Sorting Hub" webhook
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator get info of hub details string id "{sorting-hub-id}"
     And Shipper gets webhook request for event "First Attempt Delivery Fail" for all orders
     And Shipper verifies webhook request payload has correct details for status "First Attempt Delivery Fail"
@@ -260,7 +260,7 @@ Feature: Notification
       | parcel_job_is_pickup_required | false    |
       | parcel_job_cash_on_delivery   | 50.67    |
     And Operator search for created order
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |

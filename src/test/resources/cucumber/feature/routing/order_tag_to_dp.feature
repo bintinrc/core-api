@@ -10,7 +10,7 @@ Feature: Order Tag to DP
       | dp-address-unit-number        | {dp-address-unit-number} |
       | dp-address-postcode           | {dp-address-postcode}    |
       | dp-holding-route-id           | {dp-holding-route-id}    |
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator search for "DELIVERY" transaction with status "PENDING"
 
     Then DB Operator verifies transaction routed to new route id
@@ -57,7 +57,7 @@ Feature: Order Tag to DP
       | dp-address-unit-number        | {dp-address-unit-number} |
       | dp-address-postcode           | {dp-address-postcode}    |
       | dp-holding-route-id           | {dp-holding-route-id}    |
-    And Operator perform global inbound for created order at hub "{sorting-hub-id}"
+    And Operator perform global inbound at hub "{sorting-hub-id}"
     When Operator pull DP order out of route
     And Operator search for "DELIVERY" transaction with status "PENDING"
 
