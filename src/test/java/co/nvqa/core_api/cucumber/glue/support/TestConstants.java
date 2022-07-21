@@ -23,7 +23,9 @@ public class TestConstants extends StandardTestConstants {
   public static final int RESERVATION_FAILURE_REASON_ID;
   public static final int RESERVATION_FAILURE_REASON_CODE_ID;
   public static final int PICKUP_VALID_FAILURE_REASON_ID;
+  public static final int PICKUP_VALID_FAILURE_REASON_CODE_ID;
   public static final int DELIVERY_VALID_FAILURE_REASON_ID;
+  public static final int DELIVERY_VALID_FAILURE_REASON_CODE_ID;
   public static final int RESERVATION_VALID_FAILURE_REASON_ID;
   public static final String PICKUP_VALID_FAILURE_REASON;
   public static final String DELIVERY_VALID_FAILURE_REASON;
@@ -47,7 +49,9 @@ public class TestConstants extends StandardTestConstants {
     DELIVERY_FAILURE_REASON = getString("delivery-failure-reason-string");
     RESERVATION_FAILURE_REASON = getString("reservation-failure-reason-string");
     PICKUP_VALID_FAILURE_REASON_ID = getInt("pickup-valid-failure-reason-id");
+    PICKUP_VALID_FAILURE_REASON_CODE_ID = getInt("pickup-valid-failure-reason-code-id");
     DELIVERY_VALID_FAILURE_REASON_ID = getInt("delivery-valid-failure-reason-id");
+    DELIVERY_VALID_FAILURE_REASON_CODE_ID = getInt("delivery-valid-failure-reason-code-id");
     RESERVATION_VALID_FAILURE_REASON_ID = getInt("reservation-valid-failure-reason-id");
     PICKUP_VALID_FAILURE_REASON = getString("pickup-valid-failure-reason-string");
     DELIVERY_VALID_FAILURE_REASON = getString("delivery-valid-failure-reason-string");

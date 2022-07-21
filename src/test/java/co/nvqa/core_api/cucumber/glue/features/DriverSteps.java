@@ -311,20 +311,28 @@ public class DriverSteps extends BaseSteps {
     if (jobType.equalsIgnoreCase(Job.TYPE_DELIVERY)) {
       order.setFailureReason(TestConstants.DELIVERY_FAILURE_REASON);
       order.setFailureReasonId(TestConstants.DELIVERY_FAILURE_REASON_ID);
+      order.setFailureReasonCodeId(TestConstants.DELIVERY_FAILURE_REASON_CODE_ID);
     } else {
       order.setFailureReason(TestConstants.PICKUP_FAILURE_REASON);
       order.setFailureReasonId(TestConstants.PICKUP_FAILURE_REASON_ID);
+      order.setFailureReasonCodeId(TestConstants.PICKUP_FAILURE_REASON_CODE_ID);
     }
+    put(KEY_FAILURE_REASON_ID, order.getFailureReasonId());
+    put(KEY_FAILURE_REASON_CODE_ID, order.getFailureReasonCodeId());
   }
 
   private void setOrderValidFailureReason(String jobType, Order order) {
     if (jobType.equalsIgnoreCase(Job.TYPE_DELIVERY)) {
       order.setFailureReason(TestConstants.DELIVERY_VALID_FAILURE_REASON);
       order.setFailureReasonId(TestConstants.DELIVERY_VALID_FAILURE_REASON_ID);
+      order.setFailureReasonCodeId(TestConstants.DELIVERY_VALID_FAILURE_REASON_CODE_ID);
     } else {
       order.setFailureReason(TestConstants.PICKUP_VALID_FAILURE_REASON);
       order.setFailureReasonId(TestConstants.PICKUP_VALID_FAILURE_REASON_ID);
+      order.setFailureReasonCodeId(TestConstants.PICKUP_VALID_FAILURE_REASON_CODE_ID);
     }
+    put(KEY_FAILURE_REASON_ID, order.getFailureReasonId());
+    put(KEY_FAILURE_REASON_CODE_ID, order.getFailureReasonCodeId());
   }
 
   private ParcelRouteTransferRequest createParcelRouteTransferRequest(Map<String, String> source) {
