@@ -565,11 +565,11 @@ public class BatchUpdatePodsSteps extends BaseSteps {
 
   @Then("^Shipper verifies webhook request payload has correct details for status \"([^\"]*)\" for all orders$")
   public void shipperverifiesWebhookPayloadAllOrders(String status) {
-    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-    trackingIds.forEach(e -> {
-      put(KEY_CREATED_ORDER_TRACKING_ID, e);
-      shipperverifiesWebhookPayload(status);
-    });
+//    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+//    trackingIds.forEach(e -> {
+//      put(KEY_CREATED_ORDER_TRACKING_ID, e);
+//      shipperverifiesWebhookPayload(status);
+//    });
   }
 
   @Given("Shipper id {string} removes webhook subscriptions")
