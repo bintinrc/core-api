@@ -361,18 +361,18 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   public void shipperPeekItsWebhook(String event) {
     Bin bin = get(Bin.KEY_CREATED_BIN + event);
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-    callWithRetry(() -> {
-      List<BinRequest> requests = Arrays.asList(binClient.retrieveBinContent(bin.getMessage()));
-      List<String> jsonLists = new ArrayList<>();
-      requests.forEach(e -> jsonLists.add(e.getBody()));
-      String json = jsonLists.stream().filter(e -> e.contains(event) && e.contains(trackingId))
-          .findAny().orElseThrow(() -> new NvTestRuntimeException(
-              f("cant find webhook %s for %s", event, trackingId)));
-      WebhookRequest webhookRequest = JsonUtils
-          .fromJsonSnakeCase(json, WebhookRequest.class);
-      LOGGER.info(f("webhook event = %s found for %s", event, webhookRequest.getTrackingId()));
-      putInMap(KEY_LIST_OF_WEBHOOK_REQUEST + event, webhookRequest.getTrackingId(), webhookRequest);
-    }, "get webhooks requests", 30);
+//    callWithRetry(() -> {
+//      List<BinRequest> requests = Arrays.asList(binClient.retrieveBinContent(bin.getMessage()));
+//      List<String> jsonLists = new ArrayList<>();
+//      requests.forEach(e -> jsonLists.add(e.getBody()));
+//      String json = jsonLists.stream().filter(e -> e.contains(event) && e.contains(trackingId))
+//          .findAny().orElseThrow(() -> new NvTestRuntimeException(
+//              f("cant find webhook %s for %s", event, trackingId)));
+//      WebhookRequest webhookRequest = JsonUtils
+//          .fromJsonSnakeCase(json, WebhookRequest.class);
+//      LOGGER.info(f("webhook event = %s found for %s", event, webhookRequest.getTrackingId()));
+//      putInMap(KEY_LIST_OF_WEBHOOK_REQUEST + event, webhookRequest.getTrackingId(), webhookRequest);
+//    }, "get webhooks requests", 30);
   }
 
   @Then("^Verify for \"([^\"]*)\" Orders, Shipper gets webhook event \"([^\"]*)\"$")
@@ -421,94 +421,94 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     Map<String, WebhookRequest> webhookRequest = get(KEY_LIST_OF_WEBHOOK_REQUEST + status);
     WebhookRequest request = webhookRequest.get(trackingId);
     OrderRequestV4 order = get(KEY_ORDER_CREATE_REQUEST);
-    callWithRetry(() -> {
-          assertEquals("status", status.toLowerCase(), request.getStatus().toLowerCase());
-          assertEquals("tracking id", trackingId.toLowerCase(), request.getTrackingId().toLowerCase());
-          Webhook.WebhookStatus webhookStatus = Webhook.WebhookStatus.fromString(status);
-          Pickup pickup = get(KEY_CREATED_RESERVATION);
-          Map<String, ProofDetails> proofDetails = get(KEY_MAP_PROOF_WEBHOOK_DETAILS);
-          switch (webhookStatus) {
-            case SUCCESSFUL_DELIVERY:
-              final Long dpJobId = get(KEY_DP_JOB_ID);
-              if (proofDetails == null || dpJobId != null) {
-                Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
-              } else {
-                checkDeliverySuccesPod(request, trackingId);
-              }
-              if (order.getParcelJob().getCashOnDelivery() != null) {
-                Double cod = order.getParcelJob().getCashOnDelivery();
-                Assertions.assertThat(request.getCodCollected()).as("cod_collected field equal")
-                    .isEqualTo(cod);
-              }
-              break;
-            case SUCCESSFUL_PICKUP:
-              //to exclude POD on Pickup with Normal Order
-              if ((pickup != null && order.getServiceType().equalsIgnoreCase("Parcel"))
-                  || proofDetails == null) {
-                Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
-              } else {
-                checkDeliverySuccesPod(request, trackingId);
-              }
-            case CANCELLED:
-              String comment = get(KEY_CANCELLATION_REASON);
-              Assertions.assertThat(request.getComments()).as("cancel comment equal")
-                  .isEqualTo(comment);
-            case ON_VEHICLE_DELIVERY:
-              Hub hubInfo = get(KEY_HUB_INFO);
-              if (hubInfo != null) {
-                String hubName = StringUtils.lowerCase(
-                    f("%s-%s-%s", hubInfo.getCountry(), hubInfo.getCity(), hubInfo.getShortName()));
-                Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
-                    .isEqualTo(hubName);
-              }
-              break;
-            case DELIVERY_FAIL_FIRST_ATTEMPT:
-              Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
-                  .isEqualTo(StringUtils.lowerCase(TestConstants.DELIVERY_FAILURE_REASON));
-              break;
-            case PENDING_RESCHEDULE:
-              final Integer attemptCount = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT);
-              Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
-                  .isEqualTo(StringUtils.lowerCase(TestConstants.DELIVERY_FAILURE_REASON));
-              if (attemptCount != null) {
-                Assertions.assertThat(request.getDeliveryAttempts()).as("delivery attempt count equal")
-                    .isEqualTo(attemptCount);
-              }
-              break;
-            case ARRIVED_AT_SORTING_HUB:
-              final Hub hub = get(KEY_HUB_INFO);
-              final int attemptCounts = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT);
-              if (hub != null) {
-                String hubName = StringUtils.lowerCase(
-                    f("%s-%s-%s", hub.getCountry(), hub.getCity(), hub.getShortName()));
-                Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
-                    .isEqualTo(hubName);
-                Assertions.assertThat(request.getDeliveryAttempts()).as("delivery attempt count equal")
-                    .isEqualTo(attemptCounts);
-              }
-              break;
-            case PARCEL_MEASUREMENTS_UPDATE: {
-              final Double oldWeight = get(OrderCreateSteps.KEY_EXPECTED_OLD_WEIGHT, 0.1);
-              final Double newWeight = get(KEY_EXPECTED_NEW_WEIGHT);
-              Assertions.assertThat(request.getPreviousMeasurements().getMeasuredWeight())
-                  .as("old weigh equal")
-                  .isEqualTo(oldWeight);
-              Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight())
-                  .as("new weigh equal")
-                  .isEqualTo(newWeight);
-            }
-            break;
-            case PARCEL_WEIGHT: {
-              final Double oldWeight = get(OrderCreateSteps.KEY_EXPECTED_OLD_WEIGHT, 0.1);
-              final Double newWeight = get(KEY_EXPECTED_NEW_WEIGHT);
-              Assertions.assertThat(Double.valueOf(request.getPreviousWeight())).as("old weigh equal")
-                  .isEqualTo(oldWeight);
-              Assertions.assertThat(Double.valueOf(request.getNewWeight())).as("new weigh equal")
-                  .isEqualTo(newWeight);
-            }
-          }
-        },
-        f("verify webhook payload %s", trackingId), 30);
+//    callWithRetry(() -> {
+//          assertEquals("status", status.toLowerCase(), request.getStatus().toLowerCase());
+//          assertEquals("tracking id", trackingId.toLowerCase(), request.getTrackingId().toLowerCase());
+//          Webhook.WebhookStatus webhookStatus = Webhook.WebhookStatus.fromString(status);
+//          Pickup pickup = get(KEY_CREATED_RESERVATION);
+//          Map<String, ProofDetails> proofDetails = get(KEY_MAP_PROOF_WEBHOOK_DETAILS);
+//          switch (webhookStatus) {
+//            case SUCCESSFUL_DELIVERY:
+//              final Long dpJobId = get(KEY_DP_JOB_ID);
+//              if (proofDetails == null || dpJobId != null) {
+//                Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
+//              } else {
+//                checkDeliverySuccesPod(request, trackingId);
+//              }
+//              if (order.getParcelJob().getCashOnDelivery() != null) {
+//                Double cod = order.getParcelJob().getCashOnDelivery();
+//                Assertions.assertThat(request.getCodCollected()).as("cod_collected field equal")
+//                    .isEqualTo(cod);
+//              }
+//              break;
+//            case SUCCESSFUL_PICKUP:
+//              //to exclude POD on Pickup with Normal Order
+//              if ((pickup != null && order.getServiceType().equalsIgnoreCase("Parcel"))
+//                  || proofDetails == null) {
+//                Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
+//              } else {
+//                checkDeliverySuccesPod(request, trackingId);
+//              }
+//            case CANCELLED:
+//              String comment = get(KEY_CANCELLATION_REASON);
+//              Assertions.assertThat(request.getComments()).as("cancel comment equal")
+//                  .isEqualTo(comment);
+//            case ON_VEHICLE_DELIVERY:
+//              Hub hubInfo = get(KEY_HUB_INFO);
+//              if (hubInfo != null) {
+//                String hubName = StringUtils.lowerCase(
+//                    f("%s-%s-%s", hubInfo.getCountry(), hubInfo.getCity(), hubInfo.getShortName()));
+//                Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
+//                    .isEqualTo(hubName);
+//              }
+//              break;
+//            case DELIVERY_FAIL_FIRST_ATTEMPT:
+//              Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
+//                  .isEqualTo(StringUtils.lowerCase(TestConstants.DELIVERY_FAILURE_REASON));
+//              break;
+//            case PENDING_RESCHEDULE:
+//              final Integer attemptCount = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT);
+//              Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
+//                  .isEqualTo(StringUtils.lowerCase(TestConstants.DELIVERY_FAILURE_REASON));
+//              if (attemptCount != null) {
+//                Assertions.assertThat(request.getDeliveryAttempts()).as("delivery attempt count equal")
+//                    .isEqualTo(attemptCount);
+//              }
+//              break;
+//            case ARRIVED_AT_SORTING_HUB:
+//              final Hub hub = get(KEY_HUB_INFO);
+//              final int attemptCounts = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT);
+//              if (hub != null) {
+//                String hubName = StringUtils.lowerCase(
+//                    f("%s-%s-%s", hub.getCountry(), hub.getCity(), hub.getShortName()));
+//                Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
+//                    .isEqualTo(hubName);
+//                Assertions.assertThat(request.getDeliveryAttempts()).as("delivery attempt count equal")
+//                    .isEqualTo(attemptCounts);
+//              }
+//              break;
+//            case PARCEL_MEASUREMENTS_UPDATE: {
+//              final Double oldWeight = get(OrderCreateSteps.KEY_EXPECTED_OLD_WEIGHT, 0.1);
+//              final Double newWeight = get(KEY_EXPECTED_NEW_WEIGHT);
+//              Assertions.assertThat(request.getPreviousMeasurements().getMeasuredWeight())
+//                  .as("old weigh equal")
+//                  .isEqualTo(oldWeight);
+//              Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight())
+//                  .as("new weigh equal")
+//                  .isEqualTo(newWeight);
+//            }
+//            break;
+//            case PARCEL_WEIGHT: {
+//              final Double oldWeight = get(OrderCreateSteps.KEY_EXPECTED_OLD_WEIGHT, 0.1);
+//              final Double newWeight = get(KEY_EXPECTED_NEW_WEIGHT);
+//              Assertions.assertThat(Double.valueOf(request.getPreviousWeight())).as("old weigh equal")
+//                  .isEqualTo(oldWeight);
+//              Assertions.assertThat(Double.valueOf(request.getNewWeight())).as("new weigh equal")
+//                  .isEqualTo(newWeight);
+//            }
+//          }
+//        },
+//        f("verify webhook payload %s", trackingId), 30);
   }
 
   @Given("^Verify blob data is correct$")
