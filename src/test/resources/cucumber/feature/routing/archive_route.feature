@@ -8,7 +8,7 @@ Feature: Archive Route
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And Operator archives driver route with status code 204
+    And Operator archives driver route with status code 200
     Then DB Operator verifies route status is archived
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Archived route is not shown on his list routes
@@ -28,7 +28,7 @@ Feature: Archive Route
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
-    And Operator archives driver route with status code 204
+    And Operator archives driver route with status code 200
     Then DB Operator verifies route status is archived
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Archived route is not shown on his list routes
@@ -49,7 +49,7 @@ Feature: Archive Route
     And Operator add order to driver "DD" route
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     And Driver Starts the route
-    When Operator archives driver route with status code 204
+    When Operator archives driver route with status code 200
     Then DB Operator verifies route status is archived
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     And Archived route is not shown on his list routes
@@ -72,8 +72,10 @@ Feature: Archive Route
     Then DB Operator verifies route status is archived
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Archived route is not shown on his list routes
-    When Operator archives driver route with status code 400
-    Then Operator verify archive route response with proper error message : Route "is already archived!"
+    And Operator archives driver route with status code 200
+    Then DB Operator verifies route status is archived
+    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
+    Then Archived route is not shown on his list routes
 
   @route-archive
   Scenario: Operator not Allowed to Archive Driver Invalid Route Id - Deleted Route  (uid:10fd732f-6326-4e7d-9ad2-6ec0da9ef4e8)
@@ -91,9 +93,9 @@ Feature: Archive Route
     And Operator add order to driver "DD" route
     When Operator delete driver route
     And Operator archives driver route with status code 404
-    Then Operator verify archive route response with proper error message : Route "not found!"
+    Then Operator verify archive route response with proper error message : "The requested route '[:routeId=%s]' not found"
 
   @route-archive
   Scenario: Operator not Allowed to Archive Driver Invalid Route Id - Route Not Found (uid:547956f4-da74-462e-9a14-ce8ed59a3a67)
     Given Operator archives driver route with status code 404
-    Then Operator verify archive route response with proper error message : Route "not found!"
+    Then Operator verify archive route response with proper error message : "The requested route '[:routeId=%s]' not found"

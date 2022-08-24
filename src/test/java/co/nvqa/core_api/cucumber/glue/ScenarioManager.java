@@ -35,20 +35,8 @@ public class ScenarioManager extends StandardScenarioManager {
         );
   }
 
-  @Before
-  public void onCucumberInit(Scenario scenario) {
-    NvLogger.infof("on cucumber init: %s", scenario.getName());
-  }
-
   @After
   public void afterScenario(Scenario scenario) {
-    final String DOMAIN = "SUMMARY";
     testCaseService.pushExecutionResultViaApi(scenario);
-
-    if (scenario.isFailed() && NvLogger.isInMemoryEnabled()) {
-      NvLogger.error(DOMAIN, "scenario: " + scenario.getName() + " error");
-      NvLogger.info(NvLogger.getLogStash());
-    }
-    NvLogger.reset();
   }
 }

@@ -288,13 +288,13 @@ public class RoutingSteps extends BaseSteps {
     }, "archive driver route V2");
   }
 
-  @When("Operator verify archive route response with proper error message : Route {string}")
+  @When("Operator verify archive route response with proper error message : {string}")
   public void operatorVerifyArchiveV2Route(String message) {
     callWithRetry(() -> {
       long routeId = get(KEY_CREATED_ROUTE_ID, 1234L);
       Response response = get(KEY_ARCHIVE_ROUTE_RESPONSE);
       assertTrue("response message", response.getBody().asString()
-          .contains(String.format("Route with id=%d %s", routeId, message)));
+          .contains(f(message, routeId)));
 
     }, "verify archive driver route v2");
   }
