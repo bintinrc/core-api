@@ -39,10 +39,9 @@ Feature: Unarchive Route
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    When Operator unarchives driver route with status code 400
-    Then Operator verify unarchive route response with proper error message : Route "is not archived!"
+    When Operator unarchives driver route with status code 200
 
   @route-unarchive
   Scenario: Operator Unarchive Invalid Route Id (uid:27d2eaec-d712-46db-b29d-300669495267)
     When Operator unarchives driver route with status code 404
-    Then Operator verify unarchive route response with proper error message : Route "not found!"
+    Then Operator verify unarchive route response with proper error message : "The requested route '[:routeId=%s]' not found"

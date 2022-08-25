@@ -12,7 +12,7 @@ Feature: Delete Route
     And API Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     And Operator add order to driver "<route_type>" route
-    When Operator delete driver route with status code "200"
+    When Operator delete driver route with status code 200
     Then DB Operator verifies soft-deleted route
     And Operator search for "<transaction_type>" transaction with status "PENDING"
     And DB Operator verifies transaction route id is null
@@ -39,7 +39,7 @@ Feature: Delete Route
     And API Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     And Operator Route the Reservation Pickup
-    When Operator delete driver route with status code "200"
+    When Operator delete driver route with status code 200
     And DB Operator verifies soft-deleted route
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
@@ -73,7 +73,7 @@ Feature: Delete Route
     And Operator add order by tracking id to driver "<route_type>" route
     And Operator search for all created orders
     And Operator merge transaction waypoints
-    When Operator delete driver route with status code "200"
+    When Operator delete driver route with status code 200
     Then DB Operator verifies soft-deleted route
     And Operator search for multiple "<transaction_type>" transactions with status "PENDING"
     And DB Operator verifies all transactions route id is null
@@ -95,7 +95,7 @@ Feature: Delete Route
   Scenario Outline: Operator Delete Driver Route Successfully - Single Empty Route (<hiptest-uid>)
     When API Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
-    When Operator delete driver route with status code "200"
+    When Operator delete driver route with status code 200
     Then DB Operator verifies soft-deleted route
 
 
@@ -142,7 +142,7 @@ Feature: Delete Route
 
     And Operator Route the Reservation Pickup
     And Operator admin manifest force "<action>" reservation
-    Then Operator delete driver route with status code "500"
+    Then Operator delete driver route with status code 500
     And Operator verify delete route response with proper error message : "Reservation $reservation_id for Shipper $shipper_id has status <action>. Cannot delete route."
     And DB Operator verifies waypoint status is "<action>"
     And DB Operator verifies route_waypoint record exist
@@ -170,7 +170,7 @@ Feature: Delete Route
     And Operator add order to driver "DD" route
     And Operator force "<terminal_state>" "DELIVERY" waypoint
     And Operator search for "DELIVERY" transaction with status "<terminal_state>"
-    When Operator delete driver route with status code "500"
+    When Operator delete driver route with status code 500
     And Operator verify delete route response with proper error message : "Delivery for Order $order_id has already been attempted. Cannot delete route."
     Then DB Operator verifies transaction routed to new route id
     And DB Operator verifies waypoint status is "<terminal_state>"
@@ -198,7 +198,7 @@ Feature: Delete Route
     And Operator add order to driver "PP" route
     And Operator force "<terminal_state>" "PICKUP" waypoint
     And Operator search for "PICKUP" transaction with status "<terminal_state>"
-    When Operator delete driver route with status code "500"
+    When Operator delete driver route with status code 500
     Then Operator verify delete route response with proper error message : "Pickup for Order $order_id has already been attempted. Cannot delete route."
     Then DB Operator verifies transaction routed to new route id
     And DB Operator verifies waypoint status is "<terminal_state>"
