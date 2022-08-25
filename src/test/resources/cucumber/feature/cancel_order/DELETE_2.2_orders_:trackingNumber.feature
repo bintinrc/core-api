@@ -2,8 +2,8 @@
 Feature: Cancel DELETE /2.2/orders/:trackingNumber
 
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Staging (uid:b80be344-3ec8-493f-bd21-64a1b29f2dfc)
-    Given Shipper id "{shipper-id}" subscribes to "Cancelled" webhook
-    And Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper id "{shipper-4-id}" subscribes to "Cancelled" webhook
+    And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -30,8 +30,8 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Pending Pickup (uid:7cbab742-2853-42ac-bb36-38fc1f370f7e)
-    Given Shipper id "{shipper-id}" subscribes to "Cancelled" webhook
-    And Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper id "{shipper-4-id}" subscribes to "Cancelled" webhook
+    And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -57,8 +57,8 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Van En-route to Pickup (uid:b1acc37c-40e7-48ce-a161-f4c329bc6f20)
-    Given Shipper id "{shipper-id}" subscribes to "Cancelled" webhook
-    And Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper id "{shipper-4-id}" subscribes to "Cancelled" webhook
+    And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -101,8 +101,8 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Pickup Fail (uid:3e840d42-8e45-4650-adff-9873cd914202)
-    Given Shipper id "{shipper-id}" subscribes to "Cancelled" webhook
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper id "{shipper-4-id}" subscribes to "Cancelled" webhook
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -146,7 +146,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Returned to Sender (uid:a4f65af2-e265-4aa6-abf0-56d6e85fded9)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -168,7 +168,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Operator checks that "CANCEL" event is NOT published
 
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Completed (uid:eda4dd11-ef04-40ac-9cd5-d3154f9cc424)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -187,7 +187,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Operator checks that "CANCEL" event is NOT published
 
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Cancelled (uid:dae34644-0089-480a-abf2-afdb64ac6d15)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -205,7 +205,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
 
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Arrived at Distribution Point (uid:3477397f-01ca-4a83-93b1-3f4121609d1d)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -232,7 +232,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Operator checks that "CANCEL" event is NOT published
 
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Arrived at Sorting Hub (uid:54452d45-8c0d-4da3-b4f9-261ca95496cc)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -251,7 +251,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Operator checks that "CANCEL" event is NOT published
 
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - En-route to Sorting Hub (uid:b18462c8-25e9-4415-ba8c-76509b2879ea)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -270,7 +270,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Operator checks that "CANCEL" event is NOT published
 
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - On Vehicle for Delivery (uid:dc14f525-cff7-4161-9ca1-1dffc4047a9e)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -289,7 +289,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Operator checks that "CANCEL" event is NOT published
 
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - On Hold (uid:088e2953-1442-437f-b9d8-60f8d6be37bb)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -308,7 +308,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Operator checks that "CANCEL" event is NOT published
 
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Transferred to 3PL (uid:3c302884-8b26-49d1-a0db-78004e2ae42d)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |

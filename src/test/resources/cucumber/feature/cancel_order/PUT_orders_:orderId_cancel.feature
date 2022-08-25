@@ -2,8 +2,8 @@
 Feature: Cancel PUT /orders/:orderId/cancel
 
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Staging (uid:a8318a2e-c5fd-4595-a839-0b60c553024c)
-    Given Shipper id "{shipper-id}" subscribes to "Cancelled" webhook
-    And Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper id "{shipper-4-id}" subscribes to "Cancelled" webhook
+    And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -31,8 +31,8 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Pending Pickup (uid:199151d8-7802-47fe-b914-3ec0fadfd408)
-    Given Shipper id "{shipper-id}" subscribes to "Cancelled" webhook
-    And Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper id "{shipper-4-id}" subscribes to "Cancelled" webhook
+    And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -58,8 +58,8 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Van En-route to Pickup (uid:d3899d82-04c6-4d3a-8fcc-82502527f51d)
-    Given Shipper id "{shipper-id}" subscribes to "Cancelled" webhook
-    And Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper id "{shipper-4-id}" subscribes to "Cancelled" webhook
+    And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -102,8 +102,8 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Pickup Fail (uid:a6afe21a-e12f-4ba8-8e9b-f205efca5ce1)
-    Given Shipper id "{shipper-id}" subscribes to "Cancelled" webhook
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper id "{shipper-4-id}" subscribes to "Cancelled" webhook
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -147,7 +147,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Returned to Sender (uid:fb2b328c-50cc-4475-9b8a-29240f44f3aa)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -168,7 +168,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator checks that "CANCEL" event is NOT published
 
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Completed (uid:c08ce809-a342-4241-b813-57e621c54f90)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -186,7 +186,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator checks that "CANCEL" event is NOT published
     
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Cancelled (uid:dcb58c27-e768-4030-a531-c032a1c6287c)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -202,7 +202,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | description | ORDER_ALREADY_CANCELLED    |
 
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Arrived at Distribution Point (uid:fd902296-466d-40d9-b7cd-76c7ecee4f7e)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -228,7 +228,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator checks that "CANCEL" event is NOT published
 
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Arrived at Sorting Hub (uid:7ac86ee5-7981-4237-80e1-d971b650bedc)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -246,7 +246,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator checks that "CANCEL" event is NOT published
 
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - En-route to Sorting Hub (uid:8ef8c913-b7ef-44ae-933e-928f81350d08)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -264,7 +264,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator checks that "CANCEL" event is NOT published
 
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - On Vehicle for Delivery (uid:062e255b-d942-4a43-8811-d95b467a8eef)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -282,7 +282,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator checks that "CANCEL" event is NOT published
 
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - On Hold (uid:57748039-3703-458b-82a0-279fdc48deb9)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -300,7 +300,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator checks that "CANCEL" event is NOT published
 
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Transferred to 3PL (uid:5a222459-5b11-4e37-b6c7-39721ed88e3a)
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -316,5 +316,3 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | description | ORDER_DETAILS_INVALID        |
     And Operator verify that order status-granular status is "Transit"-"Transferred_to_3PL"
     And Operator checks that "CANCEL" event is NOT published
-
-
