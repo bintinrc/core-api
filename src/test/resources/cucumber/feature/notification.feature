@@ -179,7 +179,6 @@ Feature: Notification
     And Shipper verifies webhook request payload has correct details for status "Pending Reschedule"
 
   Scenario: Send First Attempt Delivery Fail & Second Pending Reschedule Webhook on Driver Fails Rescheduled Delivery Order
-    Given Shipper id "{shipper-4-id}" removes webhook subscriptions
     Given Shipper id "{shipper-4-id}" subscribes to "First Attempt Delivery Fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
@@ -215,8 +214,8 @@ Feature: Notification
     And Shipper gets webhook request for event "Pending Reschedule" for all orders
     And Shipper verifies webhook request payload has correct details for status "Pending Reschedule"
 
+
   Scenario: Send First Attempt Delivery Fail & First Pending Reschedule Webhook on Global Inbound Rescheduled Delivery Order
-    Given Shipper id "{shipper-4-id}" removes webhook subscriptions
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Parcel   |

@@ -22,7 +22,7 @@ Feature: Order Tag to DP
     And Operator checks that "HUB_INBOUND_SCAN" event is published
     And Operator checks that "ASSIGNED_TO_DP" event is published
     And Operator checks that "UPDATE_ADDRESS" event is published
-    And Operator checks that "UPDATE_AV" event is published
+#    And Operator checks that "UPDATE_AV" event is published
 
   @ArchiveDriverRoutes
   Scenario: Add Order to DP Holding Route -  PUT /2.0/orders/:orderId/routes-dp (uid:eddb26ba-5d01-4256-9916-3c4f9216a7e4)
