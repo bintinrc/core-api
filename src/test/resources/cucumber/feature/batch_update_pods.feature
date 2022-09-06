@@ -1,4 +1,5 @@
-@ForceSuccessOrder @ArchiveDriverRoutes @batch-update-pods
+#@ForceSuccessOrder
+@ArchiveDriverRoutes @batch-update-pods
 Feature: Batch Update PODs
 
   Scenario Outline: Driver picks up all X number of return parcels in one waypoint with POD type - <Note> (<hiptest-uid>)
