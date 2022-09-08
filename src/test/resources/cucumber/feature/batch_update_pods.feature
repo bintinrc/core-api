@@ -1,4 +1,5 @@
-@ForceSuccessOrder @ArchiveDriverRoutes @batch-update-pods
+#@ForceSuccessOrder
+@ArchiveDriverRoutes @batch-update-pods
 Feature: Batch Update PODs
 
   Scenario Outline: Driver picks up all X number of return parcels in one waypoint with POD type - <Note> (<hiptest-uid>)
@@ -61,7 +62,7 @@ Feature: Batch Update PODs
     And DB Operator verifies all transaction_failure_reason is created correctly
     Then DB Operator verifies transaction_blob is created
     And Verify blob data is correct
-
+@wip
   Scenario: Driver fails all X number of return pickup parcels in one waypoint (uid:5cfb9c8c-2fc8-49f1-b30a-3105c30e854d)
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -184,7 +185,7 @@ Feature: Batch Update PODs
     Then DB Operator verifies transaction_blob is created
     And DB Operator verifies all transaction_failure_reason is created correctly
     And Verify blob data is correct
-
+@wip
   Scenario: Driver fails all X number of Deliveries in one waypoint (uid:9073a13d-8707-4075-944a-a227e394fa27)
     Given Shipper id "{shipper-4-id}" subscribes to "Pending Reschedule, First Attempt Delivery Fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -324,7 +325,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to Partial Success & Fail Orders under the reservation
     Then DB Operator verifies reservation_blob is created
     And Verify blob data is correct
-
+@wip
   Scenario: Driver fails the reservation and fail all X number of normal parcels under a reservation (uid:5c2299fa-cd51-4be8-9027-5f2bce2e7621)
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
