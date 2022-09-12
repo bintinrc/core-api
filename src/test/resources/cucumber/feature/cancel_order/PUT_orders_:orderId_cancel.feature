@@ -142,9 +142,11 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And DB Operator verifies waypoints.route_id & seq_no is NULL
     And DB Operator verifies route_waypoint is hard-deleted
     And DB Operator verifies route_monitoring_data is hard-deleted
-    And DB Operator verify Jaro Scores of the created order after cancel
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
+    And DB Operator verify Jaro Scores record
+      | waypointId        | archived | status  |
+      | {KEY_WAYPOINT_ID} | 1        | Pending |
 
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Returned to Sender (uid:fb2b328c-50cc-4475-9b8a-29240f44f3aa)
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
