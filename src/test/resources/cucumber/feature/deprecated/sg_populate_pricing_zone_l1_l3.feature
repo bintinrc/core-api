@@ -1,4 +1,3 @@
-@ForceSuccessOrder @order-details @Populate-Pricing-Zone-L1-L3-SG
 Feature: SG - Populate Pricing Zone L1-L3
 
   Scenario Outline: SG - Populate Pricing Info with Address Billing Zone L1-L3 upon Global Inbound (uid:9e87ca32-6dc0-4c1e-aac9-c727f626e3d4)

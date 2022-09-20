@@ -17,3 +17,6 @@ Feature: Route 1.5
     And Operator get "DELIVERY" transaction waypoint Ids for all orders
     Then DB Operator verifies all waypoints status is "PENDING"
     And DB Operator verifies all waypoints.route_id & seq_no is NULL
+
+  Scenario: add to shipment temp
+    And API Operator adds all order to shipment
