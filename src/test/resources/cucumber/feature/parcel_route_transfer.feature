@@ -387,3 +387,47 @@ Feature: Parcel Route Transfer
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
+
+  @routing-refactor
+  Scenario: Driver Route Transfer Parcel - Merged Waypoints
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    And Shipper creates multiple orders : 3 orders with the same params
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator inbounds all orders at hub "{sorting-hub-id}"
+    And Operator create an empty route
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator search for all created orders
+    And Operator add all orders to driver "DD" route
+    And Operator merge transaction waypoints
+    Then API Operator verifies Delivery transactions of following orders have same waypoint id:
+      | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+    When Driver Transfer Parcel to Another Driver
+      | to_driver_id     | {driver-2-id}    |
+      | to_driver_hub_id | {sorting-hub-id} |
+      | to_create_route  | true             |
+    Then API Operator verifies Delivery transactions of following orders have different waypoint id:
+      | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+    And Operator search for multiple "DELIVERY" transactions with status "PENDING"
+    And DB Operator verifies all transactions routed to new route id
+    And DB Operator verifies all route_waypoint records
+    And DB Operator verifies all waypoints status is "ROUTED"
+    And DB Operator verifies waypoints.route_id & seq_no is populated correctly
+    And DB Operator verifies all route_monitoring_data records
+    And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
+    And Operator checks that for all orders, "ROUTE_TRANSFER_SCAN" event is published
+    And Operator checks that for all orders, "DRIVER_INBOUND_SCAN" event is published
+    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
+    And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
+    And DB Operator verifies inbound_scans record with type "4" and correct route_id
+    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+    When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
+    And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
