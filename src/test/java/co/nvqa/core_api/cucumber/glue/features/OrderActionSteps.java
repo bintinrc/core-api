@@ -102,13 +102,15 @@ public class OrderActionSteps extends BaseSteps {
     }, "retrieve transaction details from core");
   }
 
-  @Then("^Operator search for multiple \"([^\"]*)\" transactions with status \"([^\"]*)\"$")
+  @Then("Operator search for multiple {string} transactions with status {string}")
   public void operatorSearchMultipleTransaction(String type, String status) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     trackingIds.forEach(e -> {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
       operatorSearchTransaction(type, status);
     });
+    List<Long> waypointIds = get(KEY_LIST_OF_WAYPOINT_IDS);
+    put(KEY_LIST_OF_WAYPOINTS_SEQUENCE, waypointIds);
   }
 
   @Then("^Operator verify all \"([^\"]*)\" transactions status is \"([^\"]*)\"$")
@@ -118,7 +120,7 @@ public class OrderActionSteps extends BaseSteps {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
       operatorSearchTransaction(type, status);
       Transaction transaction = get(KEY_TRANSACTION_DETAILS);
-      if (status.equalsIgnoreCase("fail")){
+      if (status.equalsIgnoreCase("fail")) {
         putInList(KEY_LIST_OF_TRANSACTION_DETAILS, transaction);
       }
       assertEquals(String.format("transaction id %d status", transaction.getId()),
