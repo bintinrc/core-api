@@ -137,7 +137,7 @@ Feature: Parcel Route Transfer
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
-  @routing-refactor @wip
+  @routing-refactor
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Fail Delivery (uid:48ae2613-9747-4cae-a581-80e9b79d9070)
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
