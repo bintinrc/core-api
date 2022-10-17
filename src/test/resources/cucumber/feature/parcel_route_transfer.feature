@@ -29,6 +29,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
+    And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
   @routing-refactor
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Delivery (uid:4f8348c7-6b73-4e1a-9563-c8c4d4534a11)
@@ -66,6 +67,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
+    And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
   @routing-refactor
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Unrouted Delivery (uid:f132d051-4ba0-4042-ae79-e83ea1beead6)
@@ -95,6 +97,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
+    And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
   @routing-refactor
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Routed Delivery (uid:1b362123-7a95-45d9-aa63-4037d236a017)
@@ -132,6 +135,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
+    And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
   @routing-refactor
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Fail Delivery (uid:48ae2613-9747-4cae-a581-80e9b79d9070)
