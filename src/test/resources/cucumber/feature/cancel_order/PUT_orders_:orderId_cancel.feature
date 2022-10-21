@@ -16,6 +16,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And API Operator get order details
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And Operator checks that "CANCEL" event is published
+    And Operator checks that "UPDATE_STATUS" event is published
     And Operator verify that order comment is appended with cancel reason = "cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd}"
     When API Operator get order details
     And API Operator verify Pickup transaction of the created order using data below:
@@ -43,6 +44,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | reason | Cancelled by automated test {gradle-current-date-yyyy-MM-dd} |
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And Operator checks that "CANCEL" event is published
+    And Operator checks that "UPDATE_STATUS" event is published
     And Operator verify that order comment is appended with cancel reason = "cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd}"
     When API Operator get order details
     And API Operator verify Pickup transaction of the created order using data below:
@@ -78,6 +80,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And API Operator get order details
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And Operator checks that "CANCEL" event is published
+    And Operator checks that "UPDATE_STATUS" event is published
     And Operator verify that order comment is appended with cancel reason = "cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd}"
     When API Operator get order details
     And API Operator verify Pickup transaction of the created order using data below:
@@ -125,6 +128,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And API Operator get order details
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And Operator checks that "CANCEL" event is published
+    And Operator checks that "UPDATE_STATUS" event is published
     And Operator verify that order comment is appended with cancel reason = "cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd}"
     When API Operator get order details
     And API Operator verify Pickup transaction of the created order using data below:
@@ -186,7 +190,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | description | ORDER_DETAILS_INVALID |
     And Operator verify that order status-granular status is "Completed"-"Completed"
     And Operator checks that "CANCEL" event is NOT published
-    
+
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Cancelled (uid:dcb58c27-e768-4030-a531-c032a1c6287c)
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
