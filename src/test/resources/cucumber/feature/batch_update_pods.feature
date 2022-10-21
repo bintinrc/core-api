@@ -27,6 +27,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to Success All Created Orders "Pickup"
     Then DB Operator verifies transaction_blob is created
     And Verify blob data is correct
+    And Operator checks that for all orders, "UPDATE_STATUS" event is published
 
     Examples:
       | Note       | hiptest-uid                              | type       |
@@ -61,6 +62,7 @@ Feature: Batch Update PODs
     And DB Operator verifies all transaction_failure_reason is created correctly
     Then DB Operator verifies transaction_blob is created
     And Verify blob data is correct
+    And Operator checks that for all orders, "UPDATE_STATUS" event is published
 
   Scenario: Driver fails all X number of return pickup parcels in one waypoint (uid:5cfb9c8c-2fc8-49f1-b30a-3105c30e854d)
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
@@ -87,6 +89,7 @@ Feature: Batch Update PODs
     Then DB Operator verifies all transaction_failure_reason is created correctly
     And DB Operator verifies transaction_blob is created
     And Verify blob data is correct
+    And Operator checks that for all orders, "UPDATE_STATUS" event is published
 
   Scenario Outline: Driver delivers all X number of normal parcels in one waypoint with POD type - <Note> (<hiptest-uid>)
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery, Completed" webhook
@@ -115,6 +118,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to Success All Created Orders "Delivery"
     Then DB Operator verifies transaction_blob is created
     And Verify blob data is correct
+    And Operator checks that for all orders, "UPDATE_STATUS" event is published
 
     Examples:
       | Note       | hiptest-uid                              | type       |
@@ -148,6 +152,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to Success All Created Orders "Delivery"
     Then DB Operator verifies transaction_blob is created
     And Verify blob data is correct
+    And Operator checks that for all orders, "UPDATE_STATUS" event is published
 
     Examples:
       | Note       | hiptest-uid                              | type       |
@@ -184,6 +189,7 @@ Feature: Batch Update PODs
     Then DB Operator verifies transaction_blob is created
     And DB Operator verifies all transaction_failure_reason is created correctly
     And Verify blob data is correct
+    And Operator checks that for all orders, "UPDATE_STATUS" event is published
 
   Scenario: Driver fails all X number of Deliveries in one waypoint (uid:9073a13d-8707-4075-944a-a227e394fa27)
     Given Shipper id "{shipper-4-id}" subscribes to "Pending Reschedule, First Attempt Delivery Fail" webhook
@@ -213,6 +219,7 @@ Feature: Batch Update PODs
     Then DB Operator verifies transaction_blob is created
     And DB Operator verifies all transaction_failure_reason is created correctly
     And Verify blob data is correct
+    And Operator checks that for all orders, "UPDATE_STATUS" event is published
 
   Scenario: Driver picks up all X number of Normal parcels in one reservation (uid:e3adbedd-c9f6-4d68-8299-41cfbe2c2073)
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
@@ -274,6 +281,7 @@ Feature: Batch Update PODs
     And Operator get proof details for "SUCCESS" transaction of "Return" orders
     And DB Operator verifies transaction_blob is created
     And Verify blob data is correct
+    And Operator checks that for all orders, "UPDATE_STATUS" event is published
 
   Scenario: Driver success reservation without scanning any parcel (uid:e9166198-1c27-447e-bb75-62de915715eb)
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
@@ -383,6 +391,7 @@ Feature: Batch Update PODs
     And Operator get proof details for "FAIL" transaction of "Return" orders
     And DB Operator verifies transaction_blob is created
     And Verify blob data is correct
+    And Operator checks that for all orders, "UPDATE_STATUS" event is published
 
   Scenario: Driver fails the reservation without failing any parcel (uid:82380b11-8ee9-48bd-a47c-9defda349ab8)
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
@@ -484,3 +493,4 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to Success All Created Orders "Delivery"
     Then DB Operator verifies transaction_blob is created
     And Verify blob data is correct
+    And Operator checks that for all orders, "UPDATE_STATUS" event is published

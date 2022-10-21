@@ -40,6 +40,7 @@ public class OrderActionSteps extends BaseSteps {
   public static final String KEY_LIST_OF_ORDER_TAG_IDS = "key-order-tag-ids";
   public static final String KEY_LIST_OF_PRIOR_TRACKING_IDS = "key-list-prior-tracking-ids";
   public static final String KEY_API_RAW_RESPONSE = "key-api-raw-response";
+  public static final String KEY_UPDATE_STATUS_REASON = "key-update-status-reason";
 
   @Override
   public void init() {
@@ -186,6 +187,14 @@ public class OrderActionSteps extends BaseSteps {
           .filter(e -> e.getData().getSource().equalsIgnoreCase(source))
           .findAny().orElseThrow(() -> new NvTestRuntimeException(
               "order event not found"));
+    } else if (eventType.equalsIgnoreCase(Event.UPDATE_STATUS)) {
+      String reason = get(OrderActionSteps.KEY_UPDATE_STATUS_REASON);
+      event = events.stream()
+          .filter(e -> e.getOrderId() == orderId)
+          .filter(e -> e.getType().equalsIgnoreCase(eventType))
+          .filter(e -> e.getData().getReason().equalsIgnoreCase(reason))
+          .findAny().orElseThrow(() -> new NvTestRuntimeException(
+              "order event not found"));
     } else {
       event = events.stream()
           .filter(e -> e.getOrderId() == orderId)
@@ -213,6 +222,11 @@ public class OrderActionSteps extends BaseSteps {
             .isEqualTo(routeIds.get(0));
         break;
       case Event.CANCEL:
+        break;
+      case Event.UPDATE_STATUS:
+        String reason = get(OrderActionSteps.KEY_UPDATE_STATUS_REASON);
+        Assertions.assertThat(data.getReason()).as("update status reason")
+            .isEqualTo(reason);
         break;
       default: {
         //ADD_TO_ROUTE, DRIVER_INBOUND_SCAN, DRIVER_PICKUP_SCAN

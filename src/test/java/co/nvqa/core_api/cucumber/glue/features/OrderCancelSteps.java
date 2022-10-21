@@ -26,6 +26,7 @@ public class OrderCancelSteps extends BaseSteps {
     getOrderClient().cancelOrderV1(orderId, reason);
     put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_CANCEL");
     put(KEY_CANCELLATION_REASON, f("Cancellation reason : %s", reason));
+    put(OrderActionSteps.KEY_UPDATE_STATUS_REASON, "CANCEL");
   }
 
   @Given("^API Operator cancel order with DELETE /2.0/orders/:uuid$")
@@ -43,6 +44,7 @@ public class OrderCancelSteps extends BaseSteps {
     getShipperOrderClient(shipperToken).cancelOrderV3(trackingId);
     put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_CANCEL");
     put(KEY_CANCELLATION_REASON, "Cancellation reason : API CANCELLATION REQUEST");
+    put(OrderActionSteps.KEY_UPDATE_STATUS_REASON, "CANCEL");
   }
 
   @Given("^API Operator cancel order with DELETE /orders/cancel by TID$")

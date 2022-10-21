@@ -15,6 +15,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     When API Operator cancel order with DELETE /2.2/orders/:trackingNumber
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And Operator checks that "CANCEL" event is published
+    And Operator checks that "UPDATE_STATUS" event is published
     And Operator verify that order comment is appended with cancel reason = "cancellation reason : api cancellation request"
     When API Operator get order details
     And API Operator verify Pickup transaction of the created order using data below:
@@ -42,6 +43,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And API Operator get order details
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And Operator checks that "CANCEL" event is published
+    And Operator checks that "UPDATE_STATUS" event is published
     And Operator verify that order comment is appended with cancel reason = "Cancellation reason : api cancellation request"
     When API Operator get order details
     And API Operator verify Pickup transaction of the created order using data below:
@@ -77,6 +79,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And API Operator get order details
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And Operator checks that "CANCEL" event is published
+    And Operator checks that "UPDATE_STATUS" event is published
     And Operator verify that order comment is appended with cancel reason = "cancellation reason : api cancellation request"
     When API Operator get order details
     And API Operator verify Pickup transaction of the created order using data below:
@@ -124,6 +127,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And API Operator get order details
     Then Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And Operator checks that "CANCEL" event is published
+    And Operator checks that "UPDATE_STATUS" event is published
     And Operator verify that order comment is appended with cancel reason = "cancellation reason : api cancellation request"
     When API Operator get order details
     And API Operator verify Pickup transaction of the created order using data below:
