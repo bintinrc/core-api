@@ -2,7 +2,7 @@
 Feature: Order Details
 
   @modify-cod
-  Scenario Outline: Do not allow to Modify COD if Order State is Completed - <Note> (<hiptest-uid>)
+  Scenario Outline: Do not allow to Modify COD if Order State is Completed - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -24,7 +24,7 @@ Feature: Order Details
       | Update COD | Update | 30  | uid:3c77e509-5b9d-46d9-a6ab-593a939b2101 |
 
   @modify-cod
-  Scenario Outline: Do not allow to Modify COD if Order State is Returned to Sender - <Note> (<hiptest-uid>)
+  Scenario Outline: Do not allow to Modify COD if Order State is Returned to Sender - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -49,7 +49,7 @@ Feature: Order Details
       | Update COD | Update | 50  | uid:ca54ac49-1b0b-4753-bca3-42059040b975 |
 
   @modify-cod @ArchiveDriverRoutes
-  Scenario Outline: Do not allow to Modify COD if Order State is On Vehicle for Delivery - <Note> (<hiptest-uid>)
+  Scenario Outline: Do not allow to Modify COD if Order State is On Vehicle for Delivery - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -81,7 +81,7 @@ Feature: Order Details
       | Update COD | Update | 50  | uid:469e522e-7d0a-4010-bfae-529daea0b8e0 |
 
   @modify-cod
-  Scenario: Do not allow to Modify COD if Order State is Completed - Delete COD (uid:b1c5ad3a-474c-4b8a-b108-2d7e5f9ee5fc)
+  Scenario: Do not allow to Modify COD if Order State is Completed - Delete COD
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -98,7 +98,7 @@ Feature: Order Details
       | description | INVALID_ORDER_EXCEPTION                 |
 
   @modify-cod
-  Scenario: Do not allow to Modify COD if Order State is Returned to Sender - Delete COD (uid:4477d811-4166-4655-9186-5b7fa60e52c4)
+  Scenario: Do not allow to Modify COD if Order State is Returned to Sender - Delete COD
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -118,7 +118,7 @@ Feature: Order Details
       | description | INVALID_ORDER_EXCEPTION                         |
 
   @modify-cod @ArchiveDriverRoutes
-  Scenario: Do not allow to Modify COD if Order State is On Vehicle for Delivery - Delete COD (uid:77c86505-a1f0-400d-b0f8-4b82e87f4c93)
+  Scenario: Do not allow to Modify COD if Order State is On Vehicle for Delivery - Delete COD
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |

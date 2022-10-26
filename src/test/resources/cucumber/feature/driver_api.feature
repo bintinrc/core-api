@@ -2,7 +2,7 @@
 Feature: Driver API
 
   @ForceSuccessOrder
-  Scenario: Driver Van Inbound an Order Delivery (uid:1d621734-5703-41e5-9c91-5aac51abf358)
+  Scenario: Driver Van Inbound an Order Delivery
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -24,7 +24,7 @@ Feature: Driver API
     And Operator checks that "DRIVER_INBOUND_SCAN" event is published
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
 
-  Scenario: Driver Success a Return Pickup (uid:1b8ddf1f-9112-4919-a27a-4e1090e35ade)
+  Scenario: Driver Success a Return Pickup
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |
@@ -44,7 +44,7 @@ Feature: Driver API
     And Operator checks that "DRIVER_PICKUP_SCAN" event is published
     And DB Operator verifies inbound_scans record with type "1" and correct route_id
 
-  Scenario: Driver Success a Reservation Pickup by Scanning Normal Order (uid:53cfcc56-2c2f-40f3-a06c-ced1a86b1bc2)
+  Scenario: Driver Success a Reservation Pickup by Scanning Normal Order
     Given Shipper authenticates using client id "{shipper-3-client-id}" and client secret "{shipper-3-client-secret}"
     When Shipper creates a reservation
       | service_type                  | Parcel   |
@@ -64,7 +64,7 @@ Feature: Driver API
     And Operator checks that "DRIVER_PICKUP_SCAN" event is published
     And DB Operator verifies inbound_scans record with type "1" and correct route_id
 
-  Scenario: Driver Success a Failed Delivery that was Rescheduled (uid:601a050d-a9a7-47c3-b886-1572264012f3)
+  Scenario: Driver Success a Failed Delivery that was Rescheduled
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -105,7 +105,7 @@ Feature: Driver API
       | new_delivery_status | Pending |
       | new_delivery_type   | DD      |
 
-  Scenario: Driver Success a Failed Pickup that was Rescheduled (uid:601a050d-a9a7-47c3-b886-1572264012f3)
+  Scenario: Driver Success a Failed Pickup that was Rescheduled
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Return   |

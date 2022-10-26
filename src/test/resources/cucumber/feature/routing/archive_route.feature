@@ -2,7 +2,7 @@
 Feature: Archive Route
 
   @route-archive
-  Scenario: Operator Archive Driver Route Successfully - Empty Route (uid:6274cf87-9e6d-4087-912c-937093311538)
+  Scenario: Operator Archive Driver Route Successfully - Empty Route
     Given Operator create an empty route
       | driver_id  | {driver-id}      |
       | hub_id     | {sorting-hub-id} |
@@ -14,7 +14,7 @@ Feature: Archive Route
     Then Archived route is not shown on his list routes
 
   @route-archive
-  Scenario: Operator Archive Driver Route Successfully - Status = PENDING (uid:8a99328a-9070-4fe4-9a51-a40ff025975c)
+  Scenario: Operator Archive Driver Route Successfully - Status = PENDING
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Parcel                      |
@@ -34,7 +34,7 @@ Feature: Archive Route
     Then Archived route is not shown on his list routes
 
   @route-archive
-  Scenario: Operator Archive Driver Route Successfully - Status = IN_PROGRESS (uid:33dfaebd-6ce1-4022-abc3-8c443db4e72e)
+  Scenario: Operator Archive Driver Route Successfully - Status = IN_PROGRESS
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -55,7 +55,7 @@ Feature: Archive Route
     And Archived route is not shown on his list routes
 
   @route-archive
-  Scenario: Operator not Allowed to Archive an already Archived Route (uid:0d211076-23da-4e20-ba06-c41fc1b122e3)
+  Scenario: Operator not Allowed to Archive an already Archived Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -78,7 +78,7 @@ Feature: Archive Route
     Then Archived route is not shown on his list routes
 
   @route-archive
-  Scenario: Operator not Allowed to Archive Driver Invalid Route Id - Deleted Route  (uid:10fd732f-6326-4e7d-9ad2-6ec0da9ef4e8)
+  Scenario: Operator not Allowed to Archive Driver Invalid Route Id - Deleted Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -96,6 +96,6 @@ Feature: Archive Route
     Then Operator verify archive route response with proper error message : "The requested route '[:routeId=%s]' not found"
 
   @route-archive
-  Scenario: Operator not Allowed to Archive Driver Invalid Route Id - Route Not Found (uid:547956f4-da74-462e-9a14-ce8ed59a3a67)
+  Scenario: Operator not Allowed to Archive Driver Invalid Route Id - Route Not Found
     Given Operator archives driver route with status code 404
     Then Operator verify archive route response with proper error message : "The requested route '[:routeId=%s]' not found"

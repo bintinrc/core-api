@@ -1,7 +1,7 @@
 @ForceSuccessOrder @order-details-id @OrderDimensionsUpdateCalculationID
 Feature: ID - Order Dimensions Update Calculation
 
-  Scenario Outline: ID - Update Weight upon Global Inbound - Shipper Submitted Weight > 100 KG (divide by 1000), Adjusted Weight <shipper_weight_case> - <Note> (uid:2275c571-7692-470e-82d7-aa188eea0863)
+  Scenario Outline: ID - Update Weight upon Global Inbound - Shipper Submitted Weight > 100 KG (divide by 1000), Adjusted Weight <shipper_weight_case> - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel                     |
@@ -21,7 +21,7 @@ Feature: ID - Order Dimensions Update Calculation
       | Highest Weight = Measured Weight         | <= 0.6 KG           | 450                      | 0.59            | 40     | 6     | 10     |
       | Highest Weight = Volumetric Weight       | <= 0.6 KG           | 450                      | 0.49            | 33     | 10    | 10     |
 
-  Scenario Outline: ID - Update Weight upon Global Inbound - Shipper Submitted weight > 100 KG (divide by 1000), Adjusted Weight > 0.6 & <shipper_weight_case> - <Note> (uid:2275c571-7692-470e-82d7-aa188eea0863)
+  Scenario Outline: ID - Update Weight upon Global Inbound - Shipper Submitted weight > 100 KG (divide by 1000), Adjusted Weight > 0.6 & <shipper_weight_case> - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel                     |
@@ -43,7 +43,7 @@ Feature: ID - Order Dimensions Update Calculation
       | Highest Weight = Measured Weight         | < 100 KG            | false            | 2.0             | 1500                     | 2               | 10     | 10    | 60     |
       | Highest Weight = Volumetric Weight       | < 100 KG            | false            | 3.0             | 1500                     | 1               | 20     | 30    | 30     |
 
-  Scenario Outline: ID - Update Weight upon Global Inbound - Shipper Submitted Weight <shipper_weight_case> - <Note> (uid:2275c571-7692-470e-82d7-aa188eea0863)
+  Scenario Outline: ID - Update Weight upon Global Inbound - Shipper Submitted Weight <shipper_weight_case> - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel                     |
@@ -63,7 +63,7 @@ Feature: ID - Order Dimensions Update Calculation
       | Highest Weight = Measured Weight         | <= 0.6 KG           | 450                      | 0.59            | 40     | 6     | 10     |
       | Highest Weight = Volumetric Weight       | <= 0.6 KG           | 450                      | 0.49            | 33     | 10    | 10     |
 
-  Scenario Outline: ID - Update Weight upon Global Inbound - Shipper Submitted Weight > 0.6 & <shipper_weight_case> - <Note> (uid:2275c571-7692-470e-82d7-aa188eea0863)
+  Scenario Outline: ID - Update Weight upon Global Inbound - Shipper Submitted Weight > 0.6 & <shipper_weight_case> - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel                     |
@@ -85,7 +85,7 @@ Feature: ID - Order Dimensions Update Calculation
       | Highest Weight = Measured Weight         | < 100 KG            | false            | 2.0             | 1.5                      | 2               | 10     | 10    | 60     |
       | Highest Weight = Volumetric Weight       | < 100 KG            | false            | 3.0             | 1.5                      | 1               | 20     | 30    | 30     |
 
-  Scenario Outline: ID - Update Weight upon Edit Order Dimensions - Shipper Submitted Weight <shipper_weight_case> - <Note> (uid:2275c571-7692-470e-82d7-aa188eea0863)
+  Scenario Outline: ID - Update Weight upon Edit Order Dimensions - Shipper Submitted Weight <shipper_weight_case> - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel                     |
@@ -107,7 +107,7 @@ Feature: ID - Order Dimensions Update Calculation
       | Highest Weight = Measured Weight         | <= 0.6 KG           | 0.59            | 0.45                     | 0.59            | 40     | 6     | 10     |
       | Highest Weight = Volumetric Weight       | <= 0.6 KG           | 0.55            | 0.45                     | 0               | 33     | 10    | 10     |
 
-  Scenario Outline: ID - Update Weight upon Edit Order Dimensions - Shipper Submitted Weight > 100 KG - <Note> (uid:2275c571-7692-470e-82d7-aa188eea0863)
+  Scenario Outline: ID - Update Weight upon Edit Order Dimensions - Shipper Submitted Weight > 100 KG - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel                     |
@@ -129,7 +129,7 @@ Feature: ID - Order Dimensions Update Calculation
       | Highest Weight = Measured Weight         | 456             | 450                      | 456             | 60     | 100   | 400    |
       | Highest Weight = Volumetric Weight       | 550             | 550                      | 0               | 330    | 100   | 100    |
 
-  Scenario Outline: ID - Update Weight upon Edit Order Dimensions - Shipper Submitted Weight > 0.6 & <shipper_weight_case> - <Note> (uid:2275c571-7692-470e-82d7-aa188eea0863)
+  Scenario Outline: ID - Update Weight upon Edit Order Dimensions - Shipper Submitted Weight > 0.6 & <shipper_weight_case> - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel                     |

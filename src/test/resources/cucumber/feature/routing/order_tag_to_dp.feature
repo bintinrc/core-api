@@ -1,7 +1,7 @@
 @ForceSuccessOrder @DeleteReservationAndAddress @routing @order-tag-to-dp @routing-refactor
 Feature: Order Tag to DP
 
-  Scenario: Add to DP Holding Route upon Hub Inbound (uid:5cbbfa8e-f896-42b4-b4b0-217d79475e4c)
+  Scenario: Add to DP Holding Route upon Hub Inbound
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Parcel                   |
@@ -25,7 +25,7 @@ Feature: Order Tag to DP
     And Operator checks that "UPDATE_AV" event is published
 
   @ArchiveDriverRoutes
-  Scenario: Add Order to DP Holding Route -  PUT /2.0/orders/:orderId/routes-dp (uid:eddb26ba-5d01-4256-9916-3c4f9216a7e4)
+  Scenario: Add Order to DP Holding Route -  PUT /2.0/orders/:orderId/routes-dp
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -48,7 +48,7 @@ Feature: Order Tag to DP
     And DB Operator verifies route_monitoring_data record
     And Operator checks that "ADD_TO_ROUTE" event is published
 
-  Scenario: Remove DP Order From Holding Route - DELETE /2.0/orders/:orderId/routes-dp (uid:7c6abd1e-6591-4027-9217-8e6e69c07232)
+  Scenario: Remove DP Order From Holding Route - DELETE /2.0/orders/:orderId/routes-dp
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Parcel                   |

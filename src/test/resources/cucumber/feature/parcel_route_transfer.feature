@@ -2,7 +2,7 @@
 Feature: Parcel Route Transfer
 
   @routing-refactor
-  Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Unrouted Delivery (uid:fc7d3611-01fd-442a-bdf0-cde62c2460e1)
+  Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Unrouted Delivery
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper creates multiple orders : 3 orders
       | service_type                  | Parcel   |
@@ -32,7 +32,7 @@ Feature: Parcel Route Transfer
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
   @routing-refactor
-  Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Delivery (uid:4f8348c7-6b73-4e1a-9563-c8c4d4534a11)
+  Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Delivery
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -70,7 +70,7 @@ Feature: Parcel Route Transfer
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
   @routing-refactor
-  Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Unrouted Delivery (uid:f132d051-4ba0-4042-ae79-e83ea1beead6)
+  Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Unrouted Delivery
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -100,7 +100,7 @@ Feature: Parcel Route Transfer
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
   @routing-refactor
-  Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Routed Delivery (uid:1b362123-7a95-45d9-aa63-4037d236a017)
+  Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Routed Delivery
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper creates multiple orders : 3 orders
       | service_type                  | Parcel   |
@@ -138,7 +138,7 @@ Feature: Parcel Route Transfer
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
   @routing-refactor
-  Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Fail Delivery (uid:48ae2613-9747-4cae-a581-80e9b79d9070)
+  Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Fail Delivery
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -177,7 +177,7 @@ Feature: Parcel Route Transfer
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
   @routing-refactor
-  Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Routed Fail Delivery (uid:3a4ad2dd-8073-45d0-a42d-e9b79787aa1f)
+  Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Routed Fail Delivery
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -214,7 +214,7 @@ Feature: Parcel Route Transfer
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
-  Scenario: Driver Not Allowed to Route Transfer Parcel with Status = Completed (uid:9efcbcf9-5e97-4ec4-90e3-bde7dd41aa79)
+  Scenario: Driver Not Allowed to Route Transfer Parcel with Status = Completed
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper creates multiple orders : 2 orders
       | service_type                  | Parcel   |
@@ -236,7 +236,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies all transactions route id is null
     And Operator checks that "ROUTE_TRANSFER_SCAN" event is NOT published
 
-  Scenario: Driver Not Allowed to Route Transfer Parcel with Status = Cancelled (uid:cac31db7-be90-45e0-8b54-6b0859c25617)
+  Scenario: Driver Not Allowed to Route Transfer Parcel with Status = Cancelled
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -257,7 +257,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies transaction route id is null
     And Operator checks that "ROUTE_TRANSFER_SCAN" event is NOT published
 
-  Scenario: Driver Not Allowed to Route Transfer Parcel with Status = Returned to Sender (uid:e7c20dcc-dcf6-42fd-8dfd-b1e0011cf490)
+  Scenario: Driver Not Allowed to Route Transfer Parcel with Status = Returned to Sender
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -282,7 +282,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies transaction route id is null
     And Operator checks that "ROUTE_TRANSFER_SCAN" event is NOT published
 
-  Scenario: Driver Not Allowed to Route Transfer Marketplace Sort Order - RTS = 0 (uid:af38bd8c-0656-4a7a-81b5-cfa7844002f3)
+  Scenario: Driver Not Allowed to Route Transfer Marketplace Sort Order - RTS = 0
     Given API Shipper set Shipper V4 using data below:
       | shipperV4ClientId     | {shipper-v4-marketplace-sort-client-id}     |
       | shipperV4ClientSecret | {shipper-v4-marketplace-sort-client-secret} |
@@ -302,7 +302,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies transaction route id is null
     And Operator checks that "ROUTE_TRANSFER_SCAN" event is NOT published
 
-  Scenario: Driver Route Transfer Marketplace Sort Order - RTS = 1 (uid:21425816-4891-4f21-b416-a83e9e25566b)
+  Scenario: Driver Route Transfer Marketplace Sort Order - RTS = 1
     Given API Shipper set Shipper V4 using data below:
       | shipperV4ClientId     | {shipper-v4-marketplace-sort-client-id}     |
       | shipperV4ClientSecret | {shipper-v4-marketplace-sort-client-secret} |
@@ -334,7 +334,7 @@ Feature: Parcel Route Transfer
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
-  Scenario: Driver Not Allowed to Route Transfer Parcel to Past Date Route (uid:22437d8b-1443-4e99-9367-777dfadc4043)
+  Scenario: Driver Not Allowed to Route Transfer Parcel to Past Date Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |

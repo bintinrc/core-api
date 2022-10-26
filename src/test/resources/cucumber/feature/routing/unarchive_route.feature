@@ -2,7 +2,7 @@
 Feature: Unarchive Route
 
   @route-unarchive
-  Scenario: Operator Unarchive Driver Route Successfully - Empty Route (uid:33e2b7c1-51ef-4021-b71d-122de32e10d1)
+  Scenario: Operator Unarchive Driver Route Successfully - Empty Route
     Given Operator create an empty route
       | driver_id  | {driver-id}      |
       | hub_id     | {sorting-hub-id} |
@@ -14,7 +14,7 @@ Feature: Unarchive Route
     Then DB Operator verifies route status = IN_PROGRESS & archived = 0
 
   @route-unarchive
-  Scenario: Operator Unarchive Driver Route Successfully - Route has Waypoints (uid:9621bd52-7238-4b37-a542-2e4850a5ed1e)
+  Scenario: Operator Unarchive Driver Route Successfully - Route has Waypoints
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper creates multiple orders : 3 orders
       | service_type                  | Parcel   |
@@ -33,7 +33,7 @@ Feature: Unarchive Route
     Then DB Operator verifies route status = IN_PROGRESS & archived = 0
 
   @route-unarchive
-  Scenario: Operator Unarchive NON-archived Route (uid:d0370a75-e80e-4ba2-a0a9-19007af580e4)
+  Scenario: Operator Unarchive NON-archived Route
     Given Operator create an empty route
       | driver_id  | {driver-id}      |
       | hub_id     | {sorting-hub-id} |
@@ -42,6 +42,6 @@ Feature: Unarchive Route
     When Operator unarchives driver route with status code 200
 
   @route-unarchive
-  Scenario: Operator Unarchive Invalid Route Id (uid:27d2eaec-d712-46db-b29d-300669495267)
+  Scenario: Operator Unarchive Invalid Route Id
     When Operator unarchives driver route with status code 404
     Then Operator verify unarchive route response with proper error message : "The requested route '[:routeId=%s]' not found"
