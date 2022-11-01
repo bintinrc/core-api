@@ -2,7 +2,7 @@
 Feature: Route Monitoring V2
 
   @rmv2-empty-route
-  Scenario Outline: Operator Create Empty Route And Verifies Route Monitoring Data (<hiptest-uid>)
+  Scenario Outline: Operator Create Empty Route And Verifies Route Monitoring Data
     Given Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
@@ -16,7 +16,7 @@ Feature: Route Monitoring V2
       |      | uid:c7b7310d-2693-48ef-8245-789af66b802d |
 
   @rmv2-add-to-route @rmv2-pull-out-of-route
-  Scenario Outline: Operator Add to Route & Pull Out Of Route And Verifies Route Monitoring Data - Single Waypoint - Transaction - <Note> (<hiptest-uid>)
+  Scenario Outline: Operator Add to Route & Pull Out Of Route And Verifies Route Monitoring Data - Single Waypoint - Transaction - <Note>
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -44,7 +44,7 @@ Feature: Route Monitoring V2
       | Delivery | uid:15d6dd67-f31c-4cf1-b192-b2759c0089a3 | DD         | DELIVERY         | Parcel       | Standard      | false                         |
 
   @rmv2-add-to-route
-  Scenario Outline: Operator Add to Route And Verifies Route Monitoring Data - Single Waypoint - Multiple Merged Transactions - <Note> (<hiptest-uid>)
+  Scenario Outline: Operator Add to Route And Verifies Route Monitoring Data - Single Waypoint - Multiple Merged Transactions - <Note>
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -71,7 +71,7 @@ Feature: Route Monitoring V2
       | Delivery | uid:4c58d0dc-cdc4-4396-a352-b02405a84672 | DD         | Parcel       | Standard      | false                         |
 
   @rmv2-add-to-route @rmv2-pull-out-of-route
-  Scenario Outline: Operator Add to Route & Pull Out of Route And Verifies Route Monitoring Data - Single Waypoint - Single Reservation <Note> (<hiptest-uid>)
+  Scenario Outline: Operator Add to Route & Pull Out of Route And Verifies Route Monitoring Data - Single Waypoint - Single Reservation <Note>
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -98,7 +98,7 @@ Feature: Route Monitoring V2
       |      | uid:8d3d3129-cdb3-447b-b0a0-47732f32d05a | PP         | Parcel       | Standard      | true                          |
 
   @rmv2-add-to-route
-  Scenario Outline: Operator Add to Route And Verifies Route Monitoring Data - Multiple Waypoints - Multiple Reservations <Note> (<hiptest-uid>)
+  Scenario Outline: Operator Add to Route And Verifies Route Monitoring Data - Multiple Waypoints - Multiple Reservations <Note>
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -129,7 +129,7 @@ Feature: Route Monitoring V2
       |      | uid:a2fb0a53-0443-4f1c-8eb7-400247271488 | PP         | Parcel       | Standard      | true                          |
 
   @rmv2-add-to-route @rmv2-pull-out-of-route
-  Scenario Outline: Operator Add to Route & Pull Out Of Route And Verifies Route Monitoring Data - Multiple Waypoints - Multiple Transactions - <Note> (<hiptest-uid>)
+  Scenario Outline: Operator Add to Route & Pull Out Of Route And Verifies Route Monitoring Data - Multiple Waypoints - Multiple Transactions - <Note>
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -162,7 +162,7 @@ Feature: Route Monitoring V2
       | Delivery | uid:a0d8285a-b8f9-44c7-8fa5-a8ec42f71e43 | DD         | DELIVERY         | Parcel       | Standard      | false                         |
 
   @rmv2-add-to-route @rmv2-pull-out-of-route
-  Scenario Outline: Operator Add to Route & Pull Out Of Route And Verifies Route Monitoring Data - Multiple Waypoints - Mix of PP, DD, & Reservation (<hiptest-uid>)
+  Scenario Outline: Operator Add to Route & Pull Out Of Route And Verifies Route Monitoring Data - Multiple Waypoints - Mix of PP, DD, & Reservation
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -214,7 +214,7 @@ Feature: Route Monitoring V2
       |      | uid:75ac2e9a-7cf0-4704-94a4-eb4257fbbec1 |
 
   @rmv2-pending-priority-parcels
-  Scenario Outline: Operator Tag Routed Orders as PRIOR Parcels And Verifies Route Monitoring Data - <Note> (<hiptest-uid>)
+  Scenario Outline: Operator Tag Routed Orders as PRIOR Parcels And Verifies Route Monitoring Data - <Note>
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates multiple orders : 3 orders
       | service_type                  | <service_type>                  |
@@ -242,7 +242,7 @@ Feature: Route Monitoring V2
       | Delivery | uid:e8e138af-e86e-450c-beaa-b79d83c31d52 | DD         | Parcel       | Standard      | false                         |
 
   @rmv2-pending-priority-parcels
-  Scenario Outline: Exclude Attempted PRIOR Parcel as Pending Priority On Route Monitoring - Delivery - <Note> (<hiptest-uid>)
+  Scenario Outline: Exclude Attempted PRIOR Parcel as Pending Priority On Route Monitoring - Delivery - <Note>
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -275,7 +275,7 @@ Feature: Route Monitoring V2
       | Success | uid:88c82f11-db09-493b-acb5-a93d87dbb23f | SUCCESS | Parcel       | Standard      | false                         |
 
   @rmv2-pending-priority-parcels
-  Scenario Outline: Exclude Attempted PRIOR Parcel as Pending Priority On Route Monitoring - Pickup - <Note> (<hiptest-uid>)
+  Scenario Outline: Exclude Attempted PRIOR Parcel as Pending Priority On Route Monitoring - Pickup - <Note>
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -307,7 +307,7 @@ Feature: Route Monitoring V2
       | Success | uid:93ba3047-3e8e-4591-aa63-be7cbdcf5ecc | SUCCESS | Return       | Standard      | true                          |
 
   @rmv2-pending-priority-parcels
-  Scenario Outline: Operator Get Pending Priority Parcel Details Inside a Route with NON-PRIOR Waypoints (Reservation & Non-PRIOR Delivery) (<hiptest-uid>)
+  Scenario Outline: Operator Get Pending Priority Parcel Details Inside a Route with NON-PRIOR Waypoints (Reservation & Non-PRIOR Delivery)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -343,7 +343,7 @@ Feature: Route Monitoring V2
       |      | uid:ee4c2d09-e6ed-4ba9-996c-6fa1036e71ce | Parcel       | Standard      | false                         |
 
   @rmv2-invalid-failed-deliveries
-  Scenario Outline: Operator Get Invalid Failed Deliveries Details After Driver Failed with Invalid Reason - Order with No Tags (<hiptest-uid>)
+  Scenario Outline: Operator Get Invalid Failed Deliveries Details After Driver Failed with Invalid Reason - Order with No Tags
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates multiple orders : 3 orders
       | service_type                  | <service_type>                  |
@@ -374,7 +374,7 @@ Feature: Route Monitoring V2
       |      | uid:0a866bb1-4faa-4bc7-88ed-0f6e6c167b04 | FAIL   | Parcel       | Standard      | false                         |
 
   @rmv2-invalid-failed-deliveries
-  Scenario Outline: Operator Get Invalid Failed Deliveries Details After Driver Failed with Invalid Reason - Order Has PRIOR Tag (<hiptest-uid>)
+  Scenario Outline: Operator Get Invalid Failed Deliveries Details After Driver Failed with Invalid Reason - Order Has PRIOR Tag
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates multiple orders : 2 orders
       | service_type                  | <service_type>                  |
@@ -407,7 +407,7 @@ Feature: Route Monitoring V2
 
 
   @rmv2-invalid-failed-deliveries
-  Scenario Outline: Operator Get Invalid Failed Deliveries Details on Route with NON-Invalid Failed Deliveries (Failed Delivery with Valid Reason) (<hiptest-uid>)
+  Scenario Outline: Operator Get Invalid Failed Deliveries Details on Route with NON-Invalid Failed Deliveries (Failed Delivery with Valid Reason)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -437,7 +437,7 @@ Feature: Route Monitoring V2
       |      | uid:ef58d1f6-0fc8-452d-9fb8-4e218322ec77 | Parcel       | Standard      | false                         |
 
   @rmv2-invalid-failed-deliveries
-  Scenario Outline: Operator Get Invalid Failed Deliveries Details on Route with NON-Invalid Failed Deliveries (Pending Delivery & Reservation) (<hiptest-uid>)
+  Scenario Outline: Operator Get Invalid Failed Deliveries Details on Route with NON-Invalid Failed Deliveries (Pending Delivery & Reservation)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -467,7 +467,7 @@ Feature: Route Monitoring V2
       |      | uid:9eb23b81-043d-4581-8e9e-add8d7a7f99d | Parcel       | Standard      | false                         |
 
   @rmv2-invalid-failed-pickups
-  Scenario Outline: Operator Get Invalid Failed Pickup Details After Driver Failed with Invalid Reason - Order with No Tags (<hiptest-uid>)
+  Scenario Outline: Operator Get Invalid Failed Pickup Details After Driver Failed with Invalid Reason - Order with No Tags
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates multiple orders : 3 orders
       | service_type                  | <service_type>                  |
@@ -497,7 +497,7 @@ Feature: Route Monitoring V2
       |      | uid:84c25fc3-2f5b-4282-a9a6-717eb80fe0f9 | FAIL   | Return       | Standard      | true                          |
 
   @rmv2-invalid-failed-pickups
-  Scenario Outline: Operator Get Invalid Failed Pickup Details After Driver Failed with Invalid Reason - Order Has PRIOR Tag (<hiptest-uid>)
+  Scenario Outline: Operator Get Invalid Failed Pickup Details After Driver Failed with Invalid Reason - Order Has PRIOR Tag
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates multiple orders : 2 orders
       | service_type                  | <service_type>                  |
@@ -529,7 +529,7 @@ Feature: Route Monitoring V2
 
 
   @rmv2-invalid-failed-pickups
-  Scenario Outline: Operator Get Invalid Failed Pickup Details on Route with NON-Invalid Failed Pickup (Failed Pickup with Valid Reason) (<hiptest-uid>)
+  Scenario Outline: Operator Get Invalid Failed Pickup Details on Route with NON-Invalid Failed Pickup (Failed Pickup with Valid Reason)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -558,7 +558,7 @@ Feature: Route Monitoring V2
       |      | uid:e140c322-853a-494b-b6b6-c8dfbff5ea0a | Return       | Standard      | true                          |
 
   @rmv2-invalid-failed-pickups
-  Scenario Outline: Operator Get Invalid Failed Pickup Details on Route with NON-Invalid Failed Pickup (Pending Return Pickup & Reservation) (<hiptest-uid>)
+  Scenario Outline: Operator Get Invalid Failed Pickup Details on Route with NON-Invalid Failed Pickup (Pending Return Pickup & Reservation)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -589,7 +589,7 @@ Feature: Route Monitoring V2
 
 
   @rmv2-invalid-failed-reservations
-  Scenario Outline: Operator Get Invalid Failed Reservation Details After Driver Failed with Invalid Reason (<hiptest-uid>)
+  Scenario Outline: Operator Get Invalid Failed Reservation Details After Driver Failed with Invalid Reason
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates multiple 3 reservations
       | service_type                  | Parcel   |
@@ -617,7 +617,7 @@ Feature: Route Monitoring V2
 
 
   @rmv2-invalid-failed-reservations
-  Scenario Outline: Operator Get Invalid Failed Reservation Details on Route with NON-Invalid Failed Reservation (Failed Reservation with Valid Reason) (<hiptest-uid>)
+  Scenario Outline: Operator Get Invalid Failed Reservation Details on Route with NON-Invalid Failed Reservation (Failed Reservation with Valid Reason)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates a reservation
       | service_type                  | Parcel   |
@@ -644,7 +644,7 @@ Feature: Route Monitoring V2
 
 
   @rmv2-invalid-failed-reservations
-  Scenario Outline: Operator Get Invalid Failed Reservation Details on Route with NON-Invalid Failed Reservation (Pending Reservation) (<hiptest-uid>)
+  Scenario Outline: Operator Get Invalid Failed Reservation Details on Route with NON-Invalid Failed Reservation (Pending Reservation)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates a reservation
       | service_type                  | Parcel   |

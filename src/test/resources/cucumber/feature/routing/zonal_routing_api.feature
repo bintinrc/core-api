@@ -1,7 +1,7 @@
 @ForceSuccessOrder @ArchiveDriverRoutes @DeleteReservationAndAddress @routing @zonal-routing-api @routing-refactor
 Feature: Zonal Routing API
 
-  Scenario: Zonal Routing API - Create Driver Route & Assign Waypoints (uid:a7196db7-0635-45a8-a9d5-e201740e95b8)
+  Scenario: Zonal Routing API - Create Driver Route & Assign Waypoints
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When API Operator create new shipper address V2 using data below:
       | shipperId       | {shipper-2-id} |
@@ -33,7 +33,7 @@ Feature: Zonal Routing API
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that waypoints are shown on driver "{driver-id}" list route correctly
 
-  Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Add Unrouted Waypoints to Route (uid:a7196db7-0635-45a8-a9d5-e201740e95b8)
+  Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Add Unrouted Waypoints to Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -73,7 +73,7 @@ Feature: Zonal Routing API
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that waypoints are shown on driver "{driver-id}" list route correctly
 
-  Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Edit Waypoint Sequence (uid:a7196db7-0635-45a8-a9d5-e201740e95b8)
+  Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Edit Waypoint Sequence
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When API Operator create new shipper address V2 using data below:
       | shipperId       | {shipper-2-id} |
@@ -109,7 +109,7 @@ Feature: Zonal Routing API
     And Verify that waypoints are shown on driver "{driver-id}" list route correctly
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
-  Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Remove Waypoints From Route (uid:a7196db7-0635-45a8-a9d5-e201740e95b8)
+  Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Remove Waypoints From Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When API Operator create new shipper address V2 using data below:
       | shipperId       | {shipper-2-id} |
@@ -157,7 +157,7 @@ Feature: Zonal Routing API
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that driver "{driver-id}" list route showing only routed waypoints
 
-  Scenario: Zonal Routing Edit Route API - Bulk Edit Waypoints Inside Multiple Routes - Move Routed Waypoints to Another Route (uid:a7196db7-0635-45a8-a9d5-e201740e95b8)
+  Scenario: Zonal Routing Edit Route API - Bulk Edit Waypoints Inside Multiple Routes - Move Routed Waypoints to Another Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When API Operator create new shipper address V2 using data below:
       | shipperId       | {shipper-2-id} |

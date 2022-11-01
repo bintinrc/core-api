@@ -148,7 +148,7 @@ Feature: SG - Order Dimensions Update Calculation
     And Operator search for created order
     When Operator updates order dimensions with following details
       | weight | <new_weight> |
-      | length | 10           |
+      | length | 60           |
       | width  | 20           |
       | height | 30           |
     Then DB Operator verifies orders.weight and dimensions updated correctly

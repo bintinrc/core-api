@@ -2,7 +2,7 @@
 Feature: Delete Route
 
   @route-delete @routing-refactor
-  Scenario Outline: Operator Delete Driver Route Successfully - Single Pending Transaction - <Note> (<hiptest-uid>)
+  Scenario Outline: Operator Delete Driver Route Successfully - Single Pending Transaction - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -29,7 +29,7 @@ Feature: Delete Route
       | Delivery | uid:c5e68f1d-09f8-4d9e-8632-8b9a5bd9d572 | DD         | DELIVERY         | Parcel       | Standard      | false                         |
 
   @route-delete @routing-refactor
-  Scenario Outline: Operator Delete Driver Route Successfully - Single Pending Reservation (<hiptest-uid>)
+  Scenario Outline: Operator Delete Driver Route Successfully - Single Pending Reservation
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -59,7 +59,7 @@ Feature: Delete Route
       |      | uid:5cf6b734-73e3-4689-b052-b04dc3fd467c | Parcel       | Standard      | true                          |
 
   @route-delete @routing-refactor
-  Scenario Outline: Operator Delete Driver Route Successfully - Merged Pending Waypoint - <Note> (<hiptest-uid>)
+  Scenario Outline: Operator Delete Driver Route Successfully - Merged Pending Waypoint - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -92,7 +92,7 @@ Feature: Delete Route
       | Delivery | uid:e806f2f4-a939-4e3d-89f0-0363d439880e | DD         | DELIVERY         | Parcel       | Standard      | false                         |
 
   @route-delete @routing-refactor
-  Scenario Outline: Operator Delete Driver Route Successfully - Single Empty Route (<hiptest-uid>)
+  Scenario Outline: Operator Delete Driver Route Successfully - Single Empty Route
     When API Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     When Operator delete driver route with status code 200
@@ -106,7 +106,7 @@ Feature: Delete Route
       |      | uid:24bdb220-fac4-4791-81d1-65ce3bcf2061 |
 
   @route-delete
-  Scenario Outline: Operator Delete Driver Route Successfully - Multiple Routes (<hiptest-uid>)
+  Scenario Outline: Operator Delete Driver Route Successfully - Multiple Routes
     When Operator create an empty route
       | driver_id  | {driver-id}      |
       | hub_id     | {sorting-hub-id} |
@@ -126,7 +126,7 @@ Feature: Delete Route
       |      | uid:991188e0-9c44-421b-b549-5b37d1f386af |
 
   @route-delete
-  Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - <Note> (<hiptest-uid>)
+  Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -152,7 +152,7 @@ Feature: Delete Route
       | Fail    | uid:540916c7-68d9-4692-85b3-0097f460cc88 | Fail    | Parcel       | Standard      | true                          |
 
   @route-delete
-  Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Delivery Transaction - <Note> (<hiptest-uid>)
+  Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Delivery Transaction - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -181,7 +181,7 @@ Feature: Delete Route
       | Fail    | uid:8dc735c2-de57-4caf-b0f6-e407cc287753 | FAIL           | Parcel       | Standard      | false                         |
 
   @route-delete
-  Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Pickup Transaction - <Note> (<hiptest-uid>)
+  Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Pickup Transaction - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |

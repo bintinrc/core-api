@@ -2,7 +2,7 @@
 Feature: Delivery Verification Method
 
   @update-verification-method
-  Scenario: DO NOT Allow to Change Delivery Verification Method of Order Tagged to DP (uid:790dc171-e624-4606-b78d-ae7d073f7e98)
+  Scenario: DO NOT Allow to Change Delivery Verification Method of Order Tagged to DP
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -18,7 +18,7 @@ Feature: Delivery Verification Method
       | description | WAYPOINT_ROUTED_TO_DP_EXCEPTION |
 
   @update-verification-method
-  Scenario Outline: DO NOT Allow to Change Delivery Verification Method of Order with NO ATL - <Note> (<hiptest-uid>)
+  Scenario Outline: DO NOT Allow to Change Delivery Verification Method of Order with NO ATL - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                             | Parcel   |
@@ -42,7 +42,7 @@ Feature: Delivery Verification Method
       | delivery verification = IDENTIFICATION | IDENTIFICATION | uid:1943e648-14bd-4b48-a7de-a43e6377e631 |
 
   @update-verification-method
-  Scenario: DO NOT Allow to Change Delivery Verification Method of RTS Order (uid:3cd9e3b0-a576-4c1e-b098-09513ea85702)
+  Scenario: DO NOT Allow to Change Delivery Verification Method of RTS Order
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -60,7 +60,7 @@ Feature: Delivery Verification Method
       | description | ORDER_ALREADY_RTS        |
 
   @update-verification-method
-  Scenario: DO NOT Allow to Change Delivery Verification Method for High Value Shipper (uid:140795fb-0905-4992-ba1d-6db8a807348d)
+  Scenario: DO NOT Allow to Change Delivery Verification Method for High Value Shipper
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -75,7 +75,7 @@ Feature: Delivery Verification Method
       | description | BAD_REQUEST_EXCEPTION                                   |
 
   @update-verification-method
-  Scenario: DO NOT Allow to Change Delivery Verification Method for Terminal State Order - Completed (uid:a38d0d53-e63d-4061-abe2-88ab1c1438aa)
+  Scenario: DO NOT Allow to Change Delivery Verification Method for Terminal State Order - Completed
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -92,7 +92,7 @@ Feature: Delivery Verification Method
       | description | ORDER_COMPLETED_EXCEPTION |
 
   @update-verification-method
-  Scenario: DO NOT Allow to Change Delivery Verification Method for Terminal State Order - Cancelled (uid:69e77074-370a-4c8b-9186-a29d68330408)
+  Scenario: DO NOT Allow to Change Delivery Verification Method for Terminal State Order - Cancelled
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -109,7 +109,7 @@ Feature: Delivery Verification Method
       | description | ORDER_COMPLETED_EXCEPTION |
 
   @update-verification-method
-  Scenario: DO NOT Allow to Change Delivery Verification Method for Terminal State Order - Returned to Sender (uid:b0a51f09-ad5b-43af-9d5e-ff971ee912b7)
+  Scenario: DO NOT Allow to Change Delivery Verification Method for Terminal State Order - Returned to Sender
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -129,7 +129,7 @@ Feature: Delivery Verification Method
       | description | ORDER_COMPLETED_EXCEPTION |
 
   @update-verification-method
-  Scenario: DO NOT Allow to Change Delivery Verification Method for Terminal State Order - Arrived at Distribution Point (uid:d2d4e7a1-9959-4623-a2f3-bfcc4db11106)
+  Scenario: DO NOT Allow to Change Delivery Verification Method for Terminal State Order - Arrived at Distribution Point
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -154,7 +154,7 @@ Feature: Delivery Verification Method
       | description | ORDER_COMPLETED_EXCEPTION |
 
   @validate-verification-method
-  Scenario: Validate ATL for Order Tagged to DP (uid:158376d9-af19-4ef8-a6df-9f77d53df76a)
+  Scenario: Validate ATL for Order Tagged to DP
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -166,7 +166,7 @@ Feature: Delivery Verification Method
     Then Operator verify that response returns "false"
 
   @validate-verification-method
-  Scenario Outline: Validate ATL for Order with NO ATL - <Note> (<hiptest-uid>)
+  Scenario Outline: Validate ATL for Order with NO ATL - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                             | Parcel   |
@@ -186,7 +186,7 @@ Feature: Delivery Verification Method
       | delivery verification = IDENTIFICATION | IDENTIFICATION | uid:8b8552dc-af46-445a-93af-bff76b246b35 |
 
   @validate-verification-method
-  Scenario: Validate ATL for RTS Order (uid:160f1bfa-5594-460b-b2e1-cf1aab113ae0)
+  Scenario: Validate ATL for RTS Order
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -200,7 +200,7 @@ Feature: Delivery Verification Method
     Then Operator verify that response returns "false"
 
   @validate-verification-method
-  Scenario: Validate ATL for High Value Shipper Order (uid:fb2120a0-a6b5-4b7f-a5f1-bdb91e372766)
+  Scenario: Validate ATL for High Value Shipper Order
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -211,7 +211,7 @@ Feature: Delivery Verification Method
     Then Operator verify that response returns "false"
 
   @validate-verification-method
-  Scenario: Validate ATL for Terminal State Order - Completed (uid:f66498f9-3628-447a-ad01-db18930c7e0c)
+  Scenario: Validate ATL for Terminal State Order - Completed
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -224,7 +224,7 @@ Feature: Delivery Verification Method
     Then Operator verify that response returns "false"
 
   @validate-verification-method
-  Scenario: Validate ATL for Terminal State Order - Cancelled (uid:b8c87dda-5638-4805-821b-a884f258cb2d)
+  Scenario: Validate ATL for Terminal State Order - Cancelled
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -237,7 +237,7 @@ Feature: Delivery Verification Method
     Then Operator verify that response returns "false"
 
   @validate-verification-method
-  Scenario: Validate ATL for Terminal State Order - Returned to Sender (uid:9be3e5fe-fc73-4401-a2a5-63da56c8b7d5)
+  Scenario: Validate ATL for Terminal State Order - Returned to Sender
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -253,7 +253,7 @@ Feature: Delivery Verification Method
     Then Operator verify that response returns "false"
 
   @validate-verification-method
-  Scenario: Validate ATL for Terminal State Order - Arrived at Distribution Point (uid:a01527f7-2b70-41e6-85f8-8c7cffd47ff0)
+  Scenario: Validate ATL for Terminal State Order - Arrived at Distribution Point
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -274,7 +274,7 @@ Feature: Delivery Verification Method
     Then Operator verify that response returns "false"
 
   @validate-verification-method
-  Scenario Outline: Validate ATL Order with Delivery Verification Method - <Note> (<hiptest-uid>)
+  Scenario Outline: Validate ATL Order with Delivery Verification Method - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                             | Parcel   |

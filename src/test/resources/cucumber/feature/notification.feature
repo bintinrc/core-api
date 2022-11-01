@@ -1,7 +1,7 @@
 @DeleteReservationAndAddress @ArchiveDriverRoutes @notification
 Feature: Notification
 
-  Scenario: Send Successful Delivery Webhook on Force Success from Edit Order (uid:ed820a8f-35e0-4cd4-b775-0891905e25df)
+  Scenario: Send Successful Delivery Webhook on Force Success from Edit Order
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
@@ -13,7 +13,7 @@ Feature: Notification
     Then Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
 
-  Scenario: Send Successful Delivery Webhook on Force Success from Route Manifest (uid:06bb32b5-d5a1-46f0-bd0c-204c1ad9a530)
+  Scenario: Send Successful Delivery Webhook on Force Success from Route Manifest
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
@@ -32,7 +32,7 @@ Feature: Notification
     Then Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
 
-  Scenario: Send Successful Delivery Webhook on Customer Collection of DP Order (uid:bbf64882-2f0d-482f-8d1b-6413b1b02fa5)
+  Scenario: Send Successful Delivery Webhook on Customer Collection of DP Order
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
@@ -58,7 +58,7 @@ Feature: Notification
     Then Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
 
-  Scenario Outline: Send Successful Delivery Webhook with COD - Single Force Success - <Note> (uid:ed820a8f-35e0-4cd4-b775-0891905e25df)
+  Scenario Outline: Send Successful Delivery Webhook with COD - Single Force Success - <Note>
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
@@ -75,7 +75,7 @@ Feature: Notification
       | COD Collected     | true         |
       | COD not Collected | false        |
 
-  Scenario Outline: Send Successful Delivery Webhook with COD - Admin Force Success Route Manifest - <Note> (uid:ed820a8f-35e0-4cd4-b775-0891905e25df)
+  Scenario Outline: Send Successful Delivery Webhook with COD - Admin Force Success Route Manifest - <Note>
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
@@ -98,7 +98,7 @@ Feature: Notification
       | COD Collected     | true         |
       | COD not Collected | false        |
 
-  Scenario Outline: Send Successful Delivery Webhook with COD - Bulk Force Success - <Note> (uid:ed820a8f-35e0-4cd4-b775-0891905e25df)
+  Scenario Outline: Send Successful Delivery Webhook with COD - Bulk Force Success - <Note>
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
@@ -115,7 +115,7 @@ Feature: Notification
       | COD Collected     | true         |
       | COD not Collected | false        |
 
-  Scenario: Send Successful Delivery Webhook with COD - Bulk Force Success (uid:ed820a8f-35e0-4cd4-b775-0891905e25df)
+  Scenario: Send Successful Delivery Webhook with COD - Bulk Force Success
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below

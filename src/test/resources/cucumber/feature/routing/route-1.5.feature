@@ -1,7 +1,7 @@
 @ForceSuccessOrder @ArchiveDriverRoutes @DeleteReservationAndAddress @routing @route-1.5-refactor @routing-refactor
 Feature: Route 1.5
 
-  Scenario: Unmerge waypoint with multiple transactions (uid:a7196db7-0635-45a8-a9d5-e201740e95b8)
+  Scenario: Unmerge waypoint with multiple transactions
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper creates multiple orders : 3 orders with the same params
       | service_type                  | Parcel   |
