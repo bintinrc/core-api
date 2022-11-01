@@ -482,6 +482,7 @@ public class OrderActionSteps extends BaseSteps {
       dimension.setWeight(null);
     }
     put(KEY_EXPECTED_NEW_WEIGHT, dimension.getWeight());
+    put(KEY_INBOUND_DIMENSION_REQUEST, dimension);
     callWithRetry(() -> getOrderClient().updateParcelDimensions(orderId, dimension),
         "update order dimension");
   }
