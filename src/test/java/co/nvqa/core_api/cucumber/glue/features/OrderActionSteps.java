@@ -369,10 +369,10 @@ public class OrderActionSteps extends BaseSteps {
     operatorTagsOrder(tagId);
   }
 
-  @When("Operator {string} Order COD value with value")
-  public void operatorModifyCod(String type, long amount) {
+  @When("Operator {string} Order COD value with value {double}")
+  public void operatorModifyCod(String type, double amount) {
     long orderId = get(KEY_CREATED_ORDER_ID);
-    Response r = getOrderClient().addCodValueAndGetRawResponse(orderId, 50L);
+    Response r = getOrderClient().addCodValueAndGetRawResponse(orderId, amount);
     put(KEY_API_RAW_RESPONSE, r);
   }
 
@@ -426,7 +426,7 @@ public class OrderActionSteps extends BaseSteps {
     assertEquals("response data", expectedData, actualData);
   }
 
-  @When("Operator verify response code is (\\d+) with error message details as follow")
+  @When("Operator verify response code is {int} with error message details as follow")
   public void operatorVerifyResponseWithParams(int expectedHttpStatus, Map<String, String> params) {
     callWithRetry(() -> {
       Response response = get(KEY_API_RAW_RESPONSE);
