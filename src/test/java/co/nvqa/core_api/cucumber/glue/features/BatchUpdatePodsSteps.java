@@ -61,7 +61,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     this.binClient = new RequestBinClient();
   }
 
-  @Given("^API Batch Update Job Request to Success All Created Orders \"([^\"]*)\" with pod type \"([^\"]*)\"$")
+  @Given("API Batch Update Job Request to Success All Created Orders {string} with pod type {string}")
   public void apiBatchJobUpdateOrdersSuccess(String transactionType, String podType) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
@@ -111,7 +111,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "batch update jobs", 30);
   }
 
-  @Given("^API Batch Update Job Request to Success All Created Orders \"([^\"]*)\" with NO Proof Details$")
+  @Given("API Batch Update Job Request to Success All Created Orders {string} with NO Proof Details")
   public void apiBatchJobUpdateOrdersSuccessNoPods(String transactionType) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
@@ -129,7 +129,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "batch update jobs", 30);
   }
 
-  @Given("^API Batch Update Proof Request to Success All Created Orders \"([^\"]*)\"$")
+  @Given("API Batch Update Proof Request to Success All Created Orders {string}")
   public void apiBatchProofsUpdateOrdersSuccess(String transactionType) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
@@ -149,7 +149,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "batch update proofs", 30);
   }
 
-  @Given("^API Batch Update Job Request to Fail All Created Orders \"([^\"]*)\"$")
+  @Given("API Batch Update Job Request to Fail All Created Orders {string}")
   public void apiBatchJobUpdateOrdersFail(String transactionType) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
@@ -169,7 +169,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "batch update jobs", 30);
   }
 
-  @Given("^API Batch Update Proof Request to Fail All Created Orders \"([^\"]*)\"$")
+  @Given("API Batch Update Proof Request to Fail All Created Orders {string}")
   public void apiBatchProofsUpdateOrdersFail(String transactionType) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
@@ -189,7 +189,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "batch update proofs", 30);
   }
 
-  @Given("^API Batch Update Job Request to \"([^\"]*)\" All Orders under the reservation$")
+  @Given("API Batch Update Job Request to {string} All Orders under the reservation")
   public void apiBatchJobUpdateReservationAllOrders(String action) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
@@ -204,7 +204,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "batch update jobs", 30);
   }
 
-  @Given("^API Batch Update Job Request to \"([^\"]*)\" All Return Orders under the reservation$")
+  @Given("API Batch Update Job Request to {string} All Return Orders under the reservation")
   public void apiBatchJobUpdateReservationAllReturnOrders(String action) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     List<OrderRequestV4> orderRequest = get(OrderCreateSteps.KEY_LIST_OF_ORDER_CREATE_RESPONSE);
@@ -218,7 +218,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     put(OrderActionSteps.KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
   }
 
-  @Given("^API Batch Update Proof Request to \"([^\"]*)\" All Orders under the reservation$")
+  @Given("API Batch Update Proof Request to {string} All Orders under the reservation")
   public void apiBatchProofsUpdateReservationAllOrders(String action) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
@@ -233,7 +233,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "batch update proofs", 30);
   }
 
-  @Given("^Operator get proof details for \"([^\"]*)\" transaction of \"([^\"]*)\" orders$")
+  @Given("Operator get proof details for {string} transaction of {string} orders")
   public void dbOperatorVerifiesTransactionBlobCreatedReturn(String action, String type) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     List<JobUpdate> reservationProof = get(KEY_UPDATE_PROOFS_REQUEST);
@@ -251,7 +251,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     put(KEY_UPDATE_PROOFS_REQUEST, request);
   }
 
-  @Given("^API Batch Update Proof Request to Partial Success & Fail Orders under the reservation$")
+  @Given("API Batch Update Proof Request to Partial Success & Fail Orders under the reservation")
   public void apiBatchProofsUpdateReservationPartialSuccess() {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     Pickup pickup = get(KEY_CREATED_RESERVATION);
@@ -264,7 +264,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "batch update proofs", 30);
   }
 
-  @Given("^API Batch Update Proof Request to \"([^\"]*)\" Reservation without any Parcel$")
+  @Given("API Batch Update Proof Request to {string} Reservation without any Parcel")
   public void apiBatchProofsUpdateReservationNoOrders(String action) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     Pickup pickup = get(KEY_CREATED_RESERVATION);
@@ -278,7 +278,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "batch update proofs", 30);
   }
 
-  @Given("^API Batch Update Job Request to Partial Success Orders under the reservation$")
+  @Given("API Batch Update Job Request to Partial Success Orders under the reservation")
   public void apiBatchJobUpdateReservationPartialOrders() {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
@@ -293,7 +293,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "batch update jobs", 30);
   }
 
-  @Given("^API Batch Update Job Request to \"([^\"]*)\" Reservation without any Parcel$")
+  @Given("API Batch Update Job Request to {string} Reservation without any Parcel")
   public void apiBatchJobUpdateReservationWithoutOrder(String action) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     Pickup pickup = get(KEY_CREATED_RESERVATION);
@@ -306,7 +306,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "batch update jobs", 30);
   }
 
-  @Given("^API Batch Update Proof Request to Partial Success Orders \"([^\"]*)\"$")
+  @Given("API Batch Update Proof Request to Partial Success Orders {string}")
   public void apiBatchJobUpdatePartialSuccessProofs(String transactionType) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
@@ -323,7 +323,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "batch update jobs", 30);
   }
 
-  @Given("^API Batch Update Job Request to Partial Success Orders \"([^\"]*)\"$")
+  @Given("API Batch Update Job Request to Partial Success Orders {string}")
   public void apiBatchJobUpdatePartialSuccessOrders(String transactionType) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
@@ -369,7 +369,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "subscribe webhook event: " + eventName, 30);
   }
 
-  @Then("^Shipper gets webhook request for event \"([^\"]*)\"$")
+  @Then("Shipper gets webhook request for event {string}")
   public void shipperPeekItsWebhook(String event) {
     Bin bin = get(Bin.KEY_CREATED_BIN + event);
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
@@ -387,7 +387,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "get webhooks requests", 30);
   }
 
-  @Then("^Verify for \"([^\"]*)\" Orders, Shipper gets webhook event \"([^\"]*)\"$")
+  @Then("Verify for {string} Orders, Shipper gets webhook event {string}")
   public void verifyPartialWebhookStatus(String actionMode, String webhookEvent) {
     List<String> trackingIds;
     if (actionMode.equalsIgnoreCase(ACTION_MODE_SUCCESS)) {
@@ -401,7 +401,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     });
   }
 
-  @Then("^Shipper gets webhook request for event \"([^\"]*)\" for all orders$")
+  @Then("Shipper gets webhook request for event {string} for all orders")
   public void shipperPeekItsWebhookAllOrders(String event) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     trackingIds.forEach(e -> {
@@ -410,7 +410,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     });
   }
 
-  @Then("^Verify NO \"([^\"]*)\" event sent for all orders$")
+  @Then("Verify NO {string} event sent for all orders")
   public void verifyNoWebhookSent(String event) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     trackingIds.forEach(o -> {
@@ -427,7 +427,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     });
   }
 
-  @Then("^Shipper verifies webhook request payload has correct details for status \"([^\"]*)\"$")
+  @Then("Shipper verifies webhook request payload has correct details for status {string}")
   public void shipperverifiesWebhookPayload(String status) {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     Map<String, WebhookRequest> webhookRequest = get(KEY_LIST_OF_WEBHOOK_REQUEST + status);
@@ -523,7 +523,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
         f("verify webhook payload %s", trackingId), 30);
   }
 
-  @Given("^Verify blob data is correct$")
+  @Given("Verify blob data is correct")
   public void dbOperatorVerifiesBlobData() {
     List<JobUpdate> proofRequest = get(KEY_UPDATE_PROOFS_REQUEST);
     Map<Long, String> blobDataMap = get(KEY_LIST_OF_BLOB_DATA);
@@ -570,12 +570,12 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   }
 
 
-  @Then("^Shipper verifies webhook request payload has correct details for status \"([^\"]*)\" with NO Pod details$")
+  @Then("Shipper verifies webhook request payload has correct details for status {string} with NO Pod details")
   public void shipperverifiesWebhookPayloadNoPod(String status) {
     shipperverifiesWebhookPayload(status);
   }
 
-  @Then("^Shipper verifies webhook request payload has correct details for status \"([^\"]*)\" for all orders$")
+  @Then("Shipper verifies webhook request payload has correct details for status {string} for all orders")
   public void shipperverifiesWebhookPayloadAllOrders(String status) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     trackingIds.forEach(e -> {

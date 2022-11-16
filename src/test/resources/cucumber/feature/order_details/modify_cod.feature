@@ -11,7 +11,7 @@ Feature: Order Details
       | parcel_job_cash_on_delivery   | <cod>    |
     And Operator search for created order
     And Operator force success order
-    When Operator "<action>" Order COD value with value 50
+    When Operator "<action>" Order COD value with value
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103042                                  |
       | message     | Not allowed to update 'Completed' order |
@@ -36,7 +36,7 @@ Feature: Order Details
     And API Operator RTS created order:
       | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
     And Operator force success order
-    When Operator "<action>" Order COD value with value 50
+    When Operator "<action>" Order COD value with value
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103042                                           |
       | message     | Not allowed to update 'Returned to Sender' order |
@@ -68,7 +68,7 @@ Feature: Order Details
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     And API Operator Van Inbound parcel
     And Driver Starts the route
-    When Operator "<action>" Order COD value with value 50
+    When Operator "<action>" Order COD value with value
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103042                                               |
       | message     | Not allowed to update 'On Vehicle for Delivery' order |

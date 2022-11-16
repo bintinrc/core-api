@@ -72,7 +72,7 @@ public class DriverSteps extends BaseSteps {
     }, "get list driver routes");
   }
 
-  @Given("^Archived route is not shown on his list routes$")
+  @Given("Archived route is not shown on his list routes")
   public void archivedDriverRouteNotShown() {
     driverRouteNotShown();
   }
@@ -84,17 +84,17 @@ public class DriverSteps extends BaseSteps {
     callWithRetry(() -> driverClient.startRoute(routeId), "driver starts route");
   }
 
-  @Given("^Driver Van Inbound Parcel at hub id \"([^\"]*)\"$")
-  public void driverVanInboundParcel(long hubId) {
+  @Given("Driver Van Inbound Parcel at hub id {string}")
+  public void driverVanInboundParcel(String hubId) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     long waypointId = get(KEY_WAYPOINT_ID);
     callWithRetry(() -> driverClient.scan(String.valueOf(routeId),
-        VanInboundScanRequest.createSimpleRequest(hubId, trackingId, waypointId)),
+        VanInboundScanRequest.createSimpleRequest(Long.valueOf(hubId), trackingId, waypointId)),
         "driver van inbound parcel");
   }
 
-  @Given("^Driver \"([^\"]*)\" Parcel \"([^\"]*)\"$")
+  @Given("Driver {string} Parcel {string}")
   public void driverDeliverParcels(String action, String type) {
     callWithRetry(() -> {
       getWaypointId(type);
@@ -125,7 +125,7 @@ public class DriverSteps extends BaseSteps {
   }
 
   //to success/fail previously rescheduled failed delivery/pickup
-  @Given("^Driver \"([^\"]*)\" Parcel previous \"([^\"]*)\"$")
+  @Given("Driver {string} Parcel previous {string}")
   public void driverDeliverPreviousFailedParcels(String action, String type) {
     co.nvqa.commons.model.core.Order order = get(KEY_CREATED_ORDER);
     callWithRetry(() -> {
@@ -141,13 +141,13 @@ public class DriverSteps extends BaseSteps {
     }, "driver attempts waypoint");
   }
 
-  @Given("^Driver Fails Parcel \"([^\"]*)\" with Valid Reason$")
+  @Given("Driver Fails Parcel {string} with Valid Reason")
   public void driverFailedWithValidReason(String type) {
     put(KEY_BOOLEAN_DRIVER_FAILED_VALID, true);
     driverDeliverParcels("FAIL", type);
   }
 
-  @Then("^Driver \"([^\"]*)\" \"([^\"]*)\" for All Orders$")
+  @Then("Driver {string} {string} for All Orders")
   public void driverDeliverParcelsMultipleOrders(String action, String type) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     trackingIds.forEach(e -> {
@@ -156,12 +156,12 @@ public class DriverSteps extends BaseSteps {
     });
   }
 
-  @Given("^Driver \"([^\"]*)\" Reservation Pickup$")
+  @Given("Driver {string} Reservation Pickup")
   public void driverPickupReservation(String action) {
     driverDeliverParcels(action.toUpperCase(), WAYPOINT_TYPE_RESERVATION);
   }
 
-  @When("^Driver Transfer Parcel to Another Driver$")
+  @When("Driver Transfer Parcel to Another Driver")
   public void driverTransferRoute(Map<String, String> source) {
     ParcelRouteTransferRequest request = createParcelRouteTransferRequest(source);
     callWithRetry(() -> {
@@ -172,7 +172,7 @@ public class DriverSteps extends BaseSteps {
         "driver parcel route transfer");
   }
 
-  @When("^Driver Transfer Parcel to Route with past date$")
+  @When("Driver Transfer Parcel to Route with past date")
   public void driverTransferRoutePastDate(Map<String, String> source) {
     ParcelRouteTransferRequest request = createParcelRouteTransferRequest(source);
     callWithRetry(() -> {
@@ -184,7 +184,7 @@ public class DriverSteps extends BaseSteps {
         "driver parcel route transfer");
   }
 
-  @Then("^Verify Parcel Route Transfer Response$")
+  @Then("Verify Parcel Route Transfer Response")
   public void verifyRouteTransferReponse() {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     ParcelRouteTransferResponse response = get(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS);
@@ -203,7 +203,7 @@ public class DriverSteps extends BaseSteps {
     });
   }
 
-  @Then("^Verify Parcel Route Transfer Failed Orders with message : \"([^\"]*)\"$")
+  @Then("Verify Parcel Route Transfer Failed Orders with message : {string}")
   public void verifyRouteTransferReponseFailed(String message) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     ParcelRouteTransferResponse response = get(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS);

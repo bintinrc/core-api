@@ -47,7 +47,7 @@ public class OrderActionSteps extends BaseSteps {
 
   }
 
-  @Then("^Operator search for created order$")
+  @Then("Operator search for created order")
   public void operatorSearchOrderByTrackingId() {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     callWithRetry(() -> {
@@ -64,7 +64,7 @@ public class OrderActionSteps extends BaseSteps {
     }, "retrieve order details from core");
   }
 
-  @Then("^Operator search for all created orders$")
+  @Then("Operator search for all created orders")
   public void operatorSearchAllOrdersByTrackingIds() {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     trackingIds.forEach(e -> {
@@ -73,7 +73,7 @@ public class OrderActionSteps extends BaseSteps {
     });
   }
 
-  @Then("^Operator search for \"([^\"]*)\" transaction with status \"([^\"]*)\"$")
+  @Then("Operator search for {string} transaction with status {string}")
   public void operatorSearchTransaction(String type, String status) {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     callWithRetry(() -> {
@@ -114,7 +114,7 @@ public class OrderActionSteps extends BaseSteps {
     put(KEY_LIST_OF_WAYPOINTS_SEQUENCE, waypointIds);
   }
 
-  @Then("^Operator verify all \"([^\"]*)\" transactions status is \"([^\"]*)\"$")
+  @Then("Operator verify all {string} transactions status is {string}")
   public void operatorVerifyAllTransactionStatus(String type, String status) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     trackingIds.forEach(e -> {
@@ -129,7 +129,7 @@ public class OrderActionSteps extends BaseSteps {
     });
   }
 
-  @Then("^Operator verify that \"([^\"]*)\" orders \"([^\"]*)\" transactions status is \"([^\"]*)\"$")
+  @Then("Operator verify that {string} orders {string} transactions status is {string}")
   public void operatortVerifiesPartialTransactionStatus(String actionMode, String transactionType,
       String transactionStatus) {
     List<String> trackingIds;
@@ -144,7 +144,7 @@ public class OrderActionSteps extends BaseSteps {
     });
   }
 
-  @Then("^Operator checks that \"([^\"]*)\" event is published$")
+  @Then("Operator checks that {string} event is published")
   public void operatortVerifiesOrderEvent(String event) {
     long orderId = get(KEY_CREATED_ORDER_ID);
     callWithRetry(() -> {
@@ -162,7 +162,7 @@ public class OrderActionSteps extends BaseSteps {
     }, String.format("%s event is published for order id %d", event, orderId));
   }
 
-  @Then("^Operator checks that \"([^\"]*)\" event is NOT published$")
+  @Then("Operator checks that {string} event is NOT published")
   public void operatortVerifiesOrderEventNotPUblished(String event) {
     long orderId = get(KEY_CREATED_ORDER_ID);
     callWithRetry(() -> {
@@ -171,7 +171,7 @@ public class OrderActionSteps extends BaseSteps {
     }, String.format("%s event is NOT published", event));
   }
 
-  @Then("^Operator verifies that order event \"([^\"]*)\" data has correct details$")
+  @Then("Operator verifies that order event {string} data has correct details")
   public void operatortVerifiesOrderEventData(String eventType) {
     List<Event> events = get(KEY_LIST_OF_ORDER_EVENTS);
     List<Long> routeIds = get(KEY_LIST_OF_CREATED_ROUTE_ID);
@@ -238,7 +238,7 @@ public class OrderActionSteps extends BaseSteps {
     }
   }
 
-  @Then("^Operator verify that order status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
+  @Then("Operator verify that order status-granular status is {string}-{string}")
   public void operatortVerifiesOrderStatus(String status, String granularStatus) {
     operatorSearchOrderByTrackingId();
     final Order o = get(KEY_CREATED_ORDER);
@@ -253,7 +253,7 @@ public class OrderActionSteps extends BaseSteps {
     }, f("check order granular status of %s", o.getTrackingId()));
   }
 
-  @Then("^Operator verify that order comment is appended with cancel reason = \"([^\"]*)\"$")
+  @Then("Operator verify that order comment is appended with cancel reason = {string}")
   public void operatortVerifiesOrderComment(String comment) {
     operatorSearchOrderByTrackingId();
     final Order o = get(KEY_CREATED_ORDER);
@@ -265,7 +265,7 @@ public class OrderActionSteps extends BaseSteps {
     }, f("check order comment", o.getTrackingId()));
   }
 
-  @Then("^Operator verify that all orders status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
+  @Then("Operator verify that all orders status-granular status is {string}-{string}")
   public void operatortVerifiesAllOrderStatus(String status, String granularStatus) {
     List<String> trackingIds = get(OrderCreateSteps.KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     trackingIds.forEach(e -> {
@@ -287,7 +287,7 @@ public class OrderActionSteps extends BaseSteps {
     putAllInList(KEY_LIST_OF_CREATED_ORDER_ID, orderIds);
   }
 
-  @Then("^Operator verify that \"([^\"]*)\" orders status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
+  @Then("Operator verify that {string} orders status-granular status is {string}-{string}")
   public void operatortVerifiesPartialOrderStatus(String actionMode, String status,
       String granularStatus) {
     List<String> trackingIds;
@@ -302,7 +302,7 @@ public class OrderActionSteps extends BaseSteps {
     });
   }
 
-  @Then("^Operator checks that for all orders, \"([^\"]*)\" event is published$")
+  @Then("Operator checks that for all orders, {string} event is published")
   public void operatortVerifiesOrderEventForEach(String event) {
     List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
     orderIds.forEach(e -> {
@@ -313,7 +313,7 @@ public class OrderActionSteps extends BaseSteps {
         Arrays.toString(orderIds.toArray())));
   }
 
-  @When("^Operator force success order$")
+  @When("Operator force success order")
   public void operatorForceSuccessOrder() {
     long orderId = get(KEY_CREATED_ORDER_ID);
     callWithRetry(() -> {
@@ -322,7 +322,7 @@ public class OrderActionSteps extends BaseSteps {
     }, "force success order");
   }
 
-  @When("^Operator force success all orders$")
+  @When("Operator force success all orders")
   public void operatorForceSuccessAllOrders() {
     List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
     orderIds.stream().distinct().forEach(e -> {
@@ -331,7 +331,7 @@ public class OrderActionSteps extends BaseSteps {
     });
   }
 
-  @When("^Operator force \"([^\"]*)\" \"([^\"]*)\" waypoint$")
+  @When("Operator force {string} {string} waypoint")
   public void operatorForceFailOrder(String action, String type) {
     operatorSearchTransaction(type, Transaction.STATUS_PENDING);
     long waypointId = get(KEY_WAYPOINT_ID);
@@ -363,27 +363,27 @@ public class OrderActionSteps extends BaseSteps {
     }, "admin force finish success with cod");
   }
 
-  @When("^Operator tags order with PRIOR tag$")
+  @When("Operator tags order with PRIOR tag")
   public void tagPriorOrder() {
     long tagId = TestConstants.ORDER_TAG_PRIOR_ID;
     operatorTagsOrder(tagId);
   }
 
-  @When("^Operator \"([^\"]*)\" Order COD value with value (\\d+)$")
+  @When("Operator {string} Order COD value with value")
   public void operatorModifyCod(String type, long amount) {
     long orderId = get(KEY_CREATED_ORDER_ID);
-    Response r = getOrderClient().addCodValueAndGetRawResponse(orderId, amount);
+    Response r = getOrderClient().addCodValueAndGetRawResponse(orderId, 50L);
     put(KEY_API_RAW_RESPONSE, r);
   }
 
-  @When("^Operator deletes Order COD value$")
+  @When("Operator deletes Order COD value")
   public void operatorDeleteCod() {
     long orderId = get(KEY_CREATED_ORDER_ID);
     Response r = getOrderClient().deleteCodAndGetRawResponse(orderId);
     put(KEY_API_RAW_RESPONSE, r);
   }
 
-  @When("^Operator update delivery verfication with value \"([^\"]*)\"$")
+  @When("Operator update delivery verfication with value {string}")
   public void operatorUpdateDeliveryVerification(String method) {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     Response r = getOrderClient()
@@ -409,7 +409,7 @@ public class OrderActionSteps extends BaseSteps {
     put(KEY_API_RAW_RESPONSE, r);
   }
 
-  @When("^Operator validate order for ATL$")
+  @When("Operator validate order for ATL")
   public void operatorValidateDeliveryVerification() {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     Response r = getOrderClient()
@@ -418,7 +418,7 @@ public class OrderActionSteps extends BaseSteps {
     put(KEY_API_RAW_RESPONSE, r);
   }
 
-  @When("^Operator verify that response returns \"([^\"]*)\"$")
+  @When("Operator verify that response returns {string}")
   public void operatorVerifyResponseValidationDeliveryVerification(String data) {
     Response r = get(KEY_API_RAW_RESPONSE);
     String actualData = r.body().asString();
@@ -426,7 +426,7 @@ public class OrderActionSteps extends BaseSteps {
     assertEquals("response data", expectedData, actualData);
   }
 
-  @When("^Operator verify response code is (\\d+) with error message details as follow$")
+  @When("Operator verify response code is (\\d+) with error message details as follow")
   public void operatorVerifyResponseWithParams(int expectedHttpStatus, Map<String, String> params) {
     callWithRetry(() -> {
       Response response = get(KEY_API_RAW_RESPONSE);
