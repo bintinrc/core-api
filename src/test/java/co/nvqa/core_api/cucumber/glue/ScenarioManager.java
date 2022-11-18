@@ -1,14 +1,10 @@
 package co.nvqa.core_api.cucumber.glue;
 
-import co.nvqa.commons.cucumber.StandardScenarioManager;
-import co.nvqa.commons.util.NvLogger;
+import co.nvqa.common.cucumber.StandardScenarioManager;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Singleton;
-import io.cucumber.java.Scenario;
-import io.cucumber.java.After;
-import io.cucumber.java.Before;
 import io.restassured.RestAssured;
 import io.restassured.config.ObjectMapperConfig;
 import io.restassured.config.RedirectConfig;
@@ -33,10 +29,5 @@ public class ScenarioManager extends StandardScenarioManager {
                 .and()
                 .maxRedirects(20)
         );
-  }
-
-  @After
-  public void afterScenario(Scenario scenario) {
-    testCaseService.pushExecutionResultViaApi(scenario);
   }
 }

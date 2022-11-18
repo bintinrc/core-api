@@ -7,27 +7,32 @@ import co.nvqa.commons.model.core.route.FailedOrder;
 import co.nvqa.commons.model.core.route.ParcelRouteTransferRequest;
 import co.nvqa.commons.model.core.route.ParcelRouteTransferResponse;
 import co.nvqa.commons.model.core.route.Route;
-import co.nvqa.commons.model.driver.*;
+import co.nvqa.commons.model.driver.DriverLoginRequest;
+import co.nvqa.commons.model.driver.Job;
+import co.nvqa.commons.model.driver.JobV5;
+import co.nvqa.commons.model.driver.Order;
+import co.nvqa.commons.model.driver.RouteResponse;
+import co.nvqa.commons.model.driver.Waypoint;
 import co.nvqa.commons.model.driver.scan.DeliveryRequestV5;
 import co.nvqa.commons.model.driver.scan.VanInboundScanRequest;
 import co.nvqa.commons.support.DateUtil;
 import co.nvqa.commons.support.DriverHelper;
-import co.nvqa.commons.util.NvLogger;
 import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
+import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.guice.ScenarioScoped;
-
 import io.restassured.response.Response;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.assertj.core.api.Assertions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Binti Cahayati on 2020-07-03
@@ -35,13 +40,8 @@ import org.assertj.core.api.Assertions;
 @ScenarioScoped
 public class DriverSteps extends BaseSteps {
 
-  public static final String KEY_LIST_OF_CREATED_JOB_ORDERS = "key-list-of-created-job-orders";
-  public static final String KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS = "key-list-of-driver-waypoint-details";
-  private static final String KEY_DRIVER_WAYPOINT_DETAILS = "key-driver-waypoint-details";
-  private static final String KEY_LIST_OF_DRIVER_JOBS = "key-driver-jobs";
-  private static final String KEY_DRIVER_SUBMIT_POD_REQUEST = "KEY_DRIVER_SUBMIT_POD_REQUEST";
-  private static final String WAYPOINT_TYPE_RESERVATION = "RESERVATION";
-  private static final String KEY_BOOLEAN_DRIVER_FAILED_VALID = "key-boolean-driver-failed-valid";
+  private static final Logger LOGGER = LoggerFactory.getLogger(DriverSteps.class);
+
   private DriverClient driverClient;
 
   @Override
@@ -67,7 +67,7 @@ public class DriverSteps extends BaseSteps {
       List<co.nvqa.commons.model.driver.Route> result = routeResponse.getRoutes();
       routes.forEach(e -> {
         boolean found = result.stream().anyMatch(o -> o.getId().equals(e));
-        assertFalse("route is shown in driver list routes", found);
+        Assertions.assertThat(found).as("route is not shown in driver list routes").isFalse();
       });
     }, "get list driver routes");
   }
@@ -90,7 +90,7 @@ public class DriverSteps extends BaseSteps {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     long waypointId = get(KEY_WAYPOINT_ID);
     callWithRetry(() -> driverClient.scan(String.valueOf(routeId),
-        VanInboundScanRequest.createSimpleRequest(Long.valueOf(hubId), trackingId, waypointId)),
+            VanInboundScanRequest.createSimpleRequest(Long.valueOf(hubId), trackingId, waypointId)),
         "driver van inbound parcel");
   }
 
@@ -101,8 +101,8 @@ public class DriverSteps extends BaseSteps {
       driverGetWaypointDetails();
       createDriverJobs(action.toUpperCase());
       List<JobV5> jobs = get(KEY_LIST_OF_DRIVER_JOBS);
-      long routeId = get(KEY_CREATED_ROUTE_ID);
-      long waypointId = get(KEY_WAYPOINT_ID);
+      Long routeId = get(KEY_CREATED_ROUTE_ID);
+      Long waypointId = get(KEY_WAYPOINT_ID);
       co.nvqa.commons.model.core.Order order = get(KEY_CREATED_ORDER);
 
       DeliveryRequestV5 request = DriverHelper.createDefaultDeliveryRequestV5(waypointId, jobs);
@@ -113,13 +113,13 @@ public class DriverSteps extends BaseSteps {
         ProofDetails proofDetails = new ProofDetails();
         proofDetails.setContact(request.getContact());
         proofDetails.setName(request.getName());
-        putInMap(BatchUpdatePodsSteps.KEY_MAP_PROOF_WEBHOOK_DETAILS, order.getTrackingId(),
+        putInMap(KEY_MAP_PROOF_WEBHOOK_DETAILS, order.getTrackingId(),
             proofDetails);
       }
       driverClient.deliverV5(routeId, waypointId, request);
       if (action.equalsIgnoreCase(Job.ACTION_FAIL)) {
-        int attempCount = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT, 0);
-        put(KEY_DRIVER_FAIL_ATTEMPT_COUNT, ++attempCount);
+        int attemptCount = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT, 0);
+        put(KEY_DRIVER_FAIL_ATTEMPT_COUNT, ++attemptCount);
       }
     }, "driver attempts waypoint");
   }
@@ -132,11 +132,11 @@ public class DriverSteps extends BaseSteps {
       createDriverJobs(action.toUpperCase());
       List<JobV5> jobs = get(KEY_LIST_OF_DRIVER_JOBS);
       DeliveryRequestV5 prevRequest = get(KEY_DRIVER_SUBMIT_POD_REQUEST);
-      long routeId = get(KEY_CREATED_ROUTE_ID);
-      long waypointId = prevRequest.getWaypointId();
+      Long routeId = get(KEY_CREATED_ROUTE_ID);
+      Long waypointId = prevRequest.getWaypointId();
       DeliveryRequestV5 request = DriverHelper.createDefaultDeliveryRequestV5(waypointId, jobs);
       request.setName(order.getToName());
-      put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "TRANSACTION_UNROUTE");
+      put(KEY_ROUTE_EVENT_SOURCE, "TRANSACTION_UNROUTE");
       driverClient.deliverV5(routeId, waypointId, request);
     }, "driver attempts waypoint");
   }
@@ -165,27 +165,25 @@ public class DriverSteps extends BaseSteps {
   public void driverTransferRoute(Map<String, String> source) {
     ParcelRouteTransferRequest request = createParcelRouteTransferRequest(source);
     callWithRetry(() -> {
-          ParcelRouteTransferResponse response = getRouteClient().parcelRouteTransfer(request);
-          put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, response);
-          put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ROUTE_TRANSFER");
-        },
-        "driver parcel route transfer");
+      ParcelRouteTransferResponse response = getRouteClient().parcelRouteTransfer(request);
+      put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, response);
+      put(KEY_ROUTE_EVENT_SOURCE, "ROUTE_TRANSFER");
+    }, "driver parcel route transfer");
   }
 
   @When("Driver Transfer Parcel to Route with past date")
   public void driverTransferRoutePastDate(Map<String, String> source) {
     ParcelRouteTransferRequest request = createParcelRouteTransferRequest(source);
     callWithRetry(() -> {
-          Response response = getRouteClient().parcelRouteTransferAndGetRawResponse(request);
-          put(OrderActionSteps.KEY_API_RAW_RESPONSE, response);
-          put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, response);
-          put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ROUTE_TRANSFER");
-        },
-        "driver parcel route transfer");
+      Response response = getRouteClient().parcelRouteTransferAndGetRawResponse(request);
+      put(KEY_API_RAW_RESPONSE, response);
+      put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, response);
+      put(KEY_ROUTE_EVENT_SOURCE, "ROUTE_TRANSFER");
+    }, "driver parcel route transfer");
   }
 
   @Then("Verify Parcel Route Transfer Response")
-  public void verifyRouteTransferReponse() {
+  public void verifyRouteTransferResponse() {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     ParcelRouteTransferResponse response = get(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS);
     co.nvqa.commons.model.driver.Route route = response.getRoutes().get(0);
@@ -193,30 +191,32 @@ public class DriverSteps extends BaseSteps {
     putInList(KEY_LIST_OF_CREATED_ROUTE_ID, route.getId());
     List<Waypoint> waypoints = route.getWaypoints();
     trackingIds.forEach(e -> {
-      Waypoint waypoint = waypoints.stream()
-          .filter(o -> !o.getJobs().isEmpty())
+      Waypoint waypoint = waypoints.stream().filter(o -> !o.getJobs().isEmpty())
           .filter(o -> o.getJobs().get(0).getOrders().get(0).getTrackingId().equalsIgnoreCase(e))
-          .findAny().orElseThrow(() -> new NvTestRuntimeException(
-              "Tracking Id is not available in response"));
-      assertTrue(String.format("tracking id %s found", e),
-          waypoint.getJobs().get(0).getOrders().get(0).getTrackingId().equals(e));
+          .findAny().orElseThrow(
+              () -> new NvTestRuntimeException("Tracking Id is not available in response"));
+      Assertions.assertThat(waypoint.getJobs().get(0).getOrders().get(0).getTrackingId())
+          .as(String.format("tracking id %s found", e)).isEqualTo(e);
     });
   }
 
   @Then("Verify Parcel Route Transfer Failed Orders with message : {string}")
-  public void verifyRouteTransferReponseFailed(String message) {
+  public void verifyRouteTransferResponseFailed(String message) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     ParcelRouteTransferResponse response = get(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS);
     List<FailedOrder> failedOrders = response.getFailedOrders();
-    assertTrue("contains all failed orders", failedOrders.size() == trackingIds.size());
+    Assertions.assertThat(failedOrders.size() == trackingIds.size())
+        .as("contains all failed orders").isTrue();
     trackingIds.forEach(e -> {
       FailedOrder failedOrder = failedOrders.stream()
-          .filter(o -> o.getTrackingIds().get(0).equalsIgnoreCase(e))
-          .findAny().orElseThrow(() -> new NvTestRuntimeException(
-              String.format("tracking id %s not found", e)));
-      assertEquals("tracking id size", 1, failedOrder.getTrackingIds().size());
-      assertEquals("tracking id", e, failedOrder.getTrackingIds().get(0));
-      assertEquals("reason", message, failedOrder.getReason());
+          .filter(o -> o.getTrackingIds().get(0).equalsIgnoreCase(e)).findAny().orElseThrow(
+              () -> new NvTestRuntimeException(String.format("tracking id %s not found", e)));
+      Assertions.assertThat(failedOrder.getTrackingIds().size()).as("tracking id size is 1")
+          .isEqualTo(1);
+      Assertions.assertThat(failedOrder.getTrackingIds().get(0)).as(f("tracking id is: %s", e))
+          .isEqualTo(e);
+      Assertions.assertThat(failedOrder.getReason()).as(f("reason is: %s", message))
+          .isEqualTo(message);
     });
   }
 
@@ -297,13 +297,13 @@ public class DriverSteps extends BaseSteps {
 
   private void getWaypointId(String transactionType) {
     if (transactionType.equalsIgnoreCase(WAYPOINT_TYPE_RESERVATION)) {
-      NvLogger.info("reservation waypoint, no need get from order waypoint");
+      LOGGER.info("reservation waypoint, no need get from order waypoint");
       return;
     }
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     co.nvqa.commons.model.core.Order order = OrderDetailHelper.getOrderDetails(trackingId);
-    Transaction transaction = OrderDetailHelper
-        .getTransaction(order, transactionType, Transaction.STATUS_PENDING);
+    Transaction transaction = OrderDetailHelper.getTransaction(order, transactionType,
+        Transaction.STATUS_PENDING);
     put(KEY_WAYPOINT_ID, transaction.getWaypointId());
   }
 
@@ -339,7 +339,7 @@ public class DriverSteps extends BaseSteps {
     String json = toJsonCamelCase(source);
     ParcelRouteTransferRequest request = fromJsonSnakeCase(json, ParcelRouteTransferRequest.class);
     if (!source.containsKey("to_create_route")) {
-      long routeId = get(KEY_CREATED_ROUTE_ID);
+      Long routeId = get(KEY_CREATED_ROUTE_ID);
       request.setRouteId(routeId);
     }
     request.setRouteDate(DateUtil.getTodayDateTime_YYYY_MM_DD_HH_MM_SS());

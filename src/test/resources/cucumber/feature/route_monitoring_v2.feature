@@ -595,7 +595,7 @@ Feature: Route Monitoring V2
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
-    And Operator search for all reservations for shipper legacy id "{shipper-2-legacy-id}"
+    And Operator search for all reservations for shipper legacy id {shipper-2-legacy-id}
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
@@ -623,7 +623,7 @@ Feature: Route Monitoring V2
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
-    And Operator search for all reservations for shipper legacy id "{shipper-2-legacy-id}"
+    And Operator search for all reservations for shipper legacy id {shipper-2-legacy-id}
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
@@ -650,7 +650,7 @@ Feature: Route Monitoring V2
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
-    And Operator search for all reservations for shipper legacy id "{shipper-2-legacy-id}"
+    And Operator search for all reservations for shipper legacy id {shipper-2-legacy-id}
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |

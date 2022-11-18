@@ -1,3 +1,0 @@
-[submodule "commons"]
-	path = commons
-	url = ssh://git@git.ninjavan.co:7999/qa/commons.git

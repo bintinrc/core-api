@@ -1,5 +1,7 @@
 package co.nvqa.core_api.cucumber.glue;
 
+import co.nvqa.common.cucumber.glue.StandardSteps;
+import co.nvqa.commonauth.utils.TokenUtils;
 import co.nvqa.commons.client.core.BatchUpdatePodClient;
 import co.nvqa.commons.client.core.EventClient;
 import co.nvqa.commons.client.core.InboundClient;
@@ -10,18 +12,18 @@ import co.nvqa.commons.client.core.ShipperPickupClient;
 import co.nvqa.commons.client.order_search.OrderSearchClient;
 import co.nvqa.commons.client.reservation.ReservationV2Client;
 import co.nvqa.commons.client.shipper.ShipperClient;
-import co.nvqa.commons.cucumber.glue.StandardSteps;
 import co.nvqa.commons.util.StandardTestUtils;
-import co.nvqa.core_api.cucumber.glue.support.AuthHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
+import co.nvqa.core_api.cucumber.glue.util.CoreApiScenarioStorageKeys;
 
 /**
  * put any common methods here all step class should extend this class
  */
-public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
+public abstract class BaseSteps extends StandardSteps<ScenarioManager> implements
+    CoreApiScenarioStorageKeys {
 
   private static final long DEFAULT_FALLBACK_MS = 500;
-  private static final int DEFAULT_RETRY = 30;
+  private static final int DEFAULT_RETRY = 10;
 
   private static OrderSearchClient orderSearchClient;
   private static OrderClient orderClient;
@@ -33,6 +35,25 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
   private ShipperClient shipperClient;
   private RouteMonitoringClient routeMonitoringClient;
   private BatchUpdatePodClient batchUpdatePodClient;
+
+  protected static synchronized OrderSearchClient getOrderSearchClient() {
+    if (orderSearchClient == null) {
+      orderSearchClient = new OrderSearchClient(TestConstants.API_BASE_URL,
+          TokenUtils.getOperatorAuthToken());
+    }
+    return orderSearchClient;
+  }
+
+  protected static synchronized OrderClient getOrderClient() {
+    if (orderClient == null) {
+      orderClient = new OrderClient(TestConstants.API_BASE_URL, TokenUtils.getOperatorAuthToken());
+    }
+    return orderClient;
+  }
+
+  protected static synchronized OrderClient getShipperOrderClient(String shipperToken) {
+    return new OrderClient(TestConstants.API_BASE_URL, shipperToken);
+  }
 
   @SuppressWarnings("unchecked")
   protected void callWithRetry(Runnable runnable, String methodName) {
@@ -52,7 +73,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
 
   protected synchronized RouteClient getRouteClient() {
     if (routeClient == null) {
-      routeClient = new RouteClient(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());
+      routeClient = new RouteClient(TestConstants.API_BASE_URL, TokenUtils.getOperatorAuthToken());
     }
     return routeClient;
   }
@@ -60,33 +81,14 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
   protected synchronized RouteMonitoringClient getRouteMonitoringClient() {
     if (routeMonitoringClient == null) {
       routeMonitoringClient = new RouteMonitoringClient(TestConstants.API_BASE_URL,
-          AuthHelper.getOperatorAuthToken());
+          TokenUtils.getOperatorAuthToken());
     }
     return routeMonitoringClient;
   }
 
-  protected static synchronized OrderSearchClient getOrderSearchClient() {
-    if (orderSearchClient == null) {
-      orderSearchClient = new OrderSearchClient(TestConstants.API_BASE_URL,
-          AuthHelper.getOperatorAuthToken());
-    }
-    return orderSearchClient;
-  }
-
-  protected static synchronized OrderClient getOrderClient() {
-    if (orderClient == null) {
-      orderClient = new OrderClient(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());
-    }
-    return orderClient;
-  }
-
-  protected static synchronized OrderClient getShipperOrderClient(String shipperToken) {
-    return new OrderClient(TestConstants.API_BASE_URL, shipperToken);
-  }
-
   protected synchronized EventClient getEventClient() {
     if (eventClient == null) {
-      eventClient = new EventClient(TestConstants.API_BASE_URL, AuthHelper.getOperatorAuthToken());
+      eventClient = new EventClient(TestConstants.API_BASE_URL, TokenUtils.getOperatorAuthToken());
     }
     return eventClient;
   }
@@ -94,7 +96,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
   protected synchronized ShipperPickupClient getShipperPickupClient() {
     if (shipperPickupClient == null) {
       shipperPickupClient = new ShipperPickupClient(TestConstants.API_BASE_URL,
-          AuthHelper.getOperatorAuthToken());
+          TokenUtils.getOperatorAuthToken());
     }
     return shipperPickupClient;
   }
@@ -102,7 +104,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
   protected synchronized ReservationV2Client getReservationV2Client() {
     if (reservationV2Client == null) {
       reservationV2Client = new ReservationV2Client(TestConstants.API_BASE_URL,
-          AuthHelper.getOperatorAuthToken());
+          TokenUtils.getOperatorAuthToken());
     }
     return reservationV2Client;
   }
@@ -110,7 +112,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
   protected synchronized InboundClient getInboundClient() {
     if (inboundClient == null) {
       inboundClient = new InboundClient(TestConstants.API_BASE_URL,
-          AuthHelper.getOperatorAuthToken());
+          TokenUtils.getOperatorAuthToken());
     }
     return inboundClient;
   }
@@ -118,7 +120,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
   protected synchronized ShipperClient getShipperClient() {
     if (shipperClient == null) {
       shipperClient = new ShipperClient(TestConstants.API_BASE_URL,
-          AuthHelper.getOperatorAuthToken());
+          TokenUtils.getOperatorAuthToken());
     }
     return shipperClient;
   }
@@ -126,7 +128,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> {
   protected synchronized BatchUpdatePodClient getBatchUpdatePodClient() {
     if (batchUpdatePodClient == null) {
       batchUpdatePodClient = new BatchUpdatePodClient(TestConstants.API_BASE_URL,
-          AuthHelper.getOperatorAuthToken());
+          TokenUtils.getOperatorAuthToken());
     }
     return batchUpdatePodClient;
   }

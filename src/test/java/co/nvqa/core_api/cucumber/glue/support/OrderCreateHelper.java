@@ -1,21 +1,30 @@
 package co.nvqa.core_api.cucumber.glue.support;
 
+import co.nvqa.common.utils.JsonUtils;
+import co.nvqa.common.utils.NvCountry;
+import co.nvqa.common.utils.NvTestRuntimeException;
+import co.nvqa.common.utils.StandardTestConstants;
+import co.nvqa.common.utils.StandardTestUtils;
 import co.nvqa.commons.cucumber.glue.AddressFactory;
 import co.nvqa.commons.model.core.Address;
 import co.nvqa.commons.model.core.Dimension;
-import co.nvqa.commons.model.order_create.v4.*;
+import co.nvqa.commons.model.order_create.v4.OrderRequestV4;
+import co.nvqa.commons.model.order_create.v4.Timeslot;
+import co.nvqa.commons.model.order_create.v4.UserDetail;
 import co.nvqa.commons.model.order_create.v4.job.ParcelJob;
 import co.nvqa.commons.support.DateUtil;
 import co.nvqa.commons.support.RandomUtil;
 import co.nvqa.commons.support.ReflectionUtil;
-import co.nvqa.commons.util.*;
 import co.nvqa.core_api.cucumber.glue.features.RouteMonitoringSteps;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -83,7 +92,7 @@ public class OrderCreateHelper {
   private static UserDetail createUserDetail(String type, String uniqueId,
       Map<String, String> source) {
     UserDetail result = new UserDetail();
-    String contact = NvCountry.fromString(TestConstants.COUNTRY_CODE).getCountryCallingCode()
+    String contact = NvCountry.fromString(TestConstants.NV_SYSTEM_ID).getCountryCallingCode()
         + generateRandomNumber(8);
     String name;
     if (type.equalsIgnoreCase(TYPE_SHIPPER)) {

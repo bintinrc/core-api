@@ -1,15 +1,14 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
+import co.nvqa.commonauth.utils.TokenUtils;
 import co.nvqa.commons.client.order_create.OrderCreateClientV4;
 import co.nvqa.commons.model.order_create.v4.OrderRequestV4;
 import co.nvqa.commons.util.NvLogger;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
-import co.nvqa.core_api.cucumber.glue.support.AuthHelper;
 import co.nvqa.core_api.cucumber.glue.support.OrderCreateHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
-import io.cucumber.java.en.Given;
 import io.cucumber.guice.ScenarioScoped;
-
+import io.cucumber.java.en.Given;
 import java.util.Map;
 
 /**
@@ -18,10 +17,6 @@ import java.util.Map;
 @ScenarioScoped
 public class OrderCreateSteps extends BaseSteps {
 
-  public static final String KEY_LIST_OF_ORDER_CREATE_RESPONSE = "key-list-of-order-create-response";
-  public static final String KEY_LIST_OF_ORDER_CREATE_REQUEST = "key-list-of-order-create-request";
-  public static final String KEY_LIST_OF_PICKUP_ADDRESS_STRING = "key-list-of-pickup-address-string";
-  public static final String KEY_EXPECTED_OLD_WEIGHT = "KEY_EXPECTED_OLD_WEIGHT";
   private static final String DOMAIN = "ORDER-CREATION-STEPS";
   private OrderCreateClientV4 orderCreateClientV4;
 
@@ -30,10 +25,10 @@ public class OrderCreateSteps extends BaseSteps {
 
   }
 
-  @Given("^Shipper authenticates using client id \"([^\"]*)\" and client secret \"([^\"]*)\"$")
+  @Given("Shipper authenticates using client id {string} and client secret {string}")
   public void shipperAuthenticate(String clientId, String clientSecret) {
     callWithRetry(() -> {
-      String token = AuthHelper.getShipperToken(clientId, clientSecret);
+      String token = TokenUtils.getShipperToken(clientId, clientSecret);
       orderCreateClientV4 = new OrderCreateClientV4(TestConstants.API_BASE_URL,
           token);
       put(KEY_SHIPPER_V4_ACCESS_TOKEN, token);
@@ -60,7 +55,7 @@ public class OrderCreateSteps extends BaseSteps {
         long routeId = Long.parseLong(source.get("dp-holding-route-id"));
         put(KEY_CREATED_ROUTE_ID, routeId);
         putInList(KEY_LIST_OF_CREATED_ROUTE_ID, routeId);
-        put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ADD_BY_ORDER_DP");
+        put(KEY_ROUTE_EVENT_SOURCE, "ADD_BY_ORDER_DP");
         put(KEY_ROUTE_SOURCE_BY_INBOUND, "ADD_BY_ORDER_DP");
       }
       //custom weight for weight = 0 or null
@@ -79,7 +74,7 @@ public class OrderCreateSteps extends BaseSteps {
     shipperCreateAnotherOrderWithSameParams();
   }
 
-  @Given("^Shipper creates a reservation$")
+  @Given("Shipper creates a reservation")
   public void shipperCreateSingleReservation(Map<String, String> source) {
     shipperCreateOrder(source);
   }

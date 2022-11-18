@@ -9,9 +9,8 @@ import co.nvqa.commons.util.StandardTestUtils;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
-import io.cucumber.java.en.Given;
 import io.cucumber.guice.ScenarioScoped;
-
+import io.cucumber.java.en.Given;
 import java.util.List;
 
 /**
@@ -21,7 +20,7 @@ import java.util.List;
 @ScenarioScoped
 public class DpSteps extends BaseSteps {
 
-  public static String KEY_DP_SHIPPER_LEGACY_ID = "key-dp-shipper-legacy-id";
+
   private DpClient dpClient;
 
   @Override
@@ -38,7 +37,7 @@ public class DpSteps extends BaseSteps {
 
   @Given("DP user lodge in the return dp order to dp id {string}")
   public void dpUserLodgeInReturnOrder(String dpId) {
-    List<String> trackingIds = get(OrderCreateSteps.KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     callWithRetry(() ->
             trackingIds.forEach(e -> {
               ReturnRequest request = createDpReturnOrderRequest(e);
@@ -50,7 +49,7 @@ public class DpSteps extends BaseSteps {
 
   @Given("DP user lodge in as SEND order to dp id {string}")
   public void dpUserLodgeInSendOrder(String dpId) {
-    List<String> trackingIds = get(OrderCreateSteps.KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     callWithRetry(() ->
             trackingIds.forEach(e -> {
               LodgeInRequest request = createLodgeInRequest(e);

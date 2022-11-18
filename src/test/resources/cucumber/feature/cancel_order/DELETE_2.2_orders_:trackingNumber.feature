@@ -1,4 +1,4 @@
-@ForceSuccessOrder @ArchiveDriverRoutes @DeleteReservationAndAddress @cancel-order @/2.2/orders/:trackingNumber
+@ForceSuccessOrder @ArchiveDriverRoutes @DeleteReservationAndAddress @cancel-order @/2.2/orders/:trackingNumber @RT
 Feature: Cancel DELETE /2.2/orders/:trackingNumber
 
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Staging

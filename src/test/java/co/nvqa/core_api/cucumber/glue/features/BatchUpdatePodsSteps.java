@@ -18,17 +18,19 @@ import co.nvqa.commons.model.requestbin.BinRequest;
 import co.nvqa.commons.model.shipper.v2.Webhook;
 import co.nvqa.commons.model.shipper.v2.WebhookRequest;
 import co.nvqa.commons.util.JsonUtils;
-import co.nvqa.commons.util.NvLogger;
 import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
+import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import io.cucumber.guice.ScenarioScoped;
-
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.slf4j.Logger;
@@ -42,18 +44,12 @@ public class BatchUpdatePodsSteps extends BaseSteps {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BatchUpdatePodsSteps.class);
 
-  private static String PICKUP_JOB_MODE = "PICK_UP";
-  private static String DELIVERY_JOB_MODE = "DELIVERY";
-  private static String ACTION_MODE_FAIL = "FAIL";
-  private static String ACTION_MODE_SUCCESS = "SUCCESS";
-  private static String URL_IMAGE = "https://cdn.ninjavan.co/sg/pods/signature_3f2fa65d-1fec-4546-9efe-4703cb081aa0.png";
-  private static String IMEI = "41e74ed6b321e2f9";
-  private static String KEY_LIST_OF_WEBHOOK_REQUEST = "key-list-of-webhook-request";
-  public static String KEY_LIST_OF_PARTIAL_SUCCESS_TID = "key-list-partial-success-tid";
-  public static String KEY_LIST_OF_PARTIAL_FAIL_TID = "key-list-partial-fail-tid";
-  public static String KEY_MAP_PROOF_WEBHOOK_DETAILS = "key-proof-webhook-details";
-  private static String KEY_PROOF_RESERVATION_REQUEST = "key-proof-reservation-request";
-  private static String KEY_WEBHOOK_POD_TYPE = "key-webhook-pod-type";
+  private static final String PICKUP_JOB_MODE = "PICK_UP";
+  private static final String DELIVERY_JOB_MODE = "DELIVERY";
+  private static final String ACTION_MODE_FAIL = "FAIL";
+  private static final String ACTION_MODE_SUCCESS = "SUCCESS";
+  private static final String URL_IMAGE = "https://cdn.ninjavan.co/sg/pods/signature_3f2fa65d-1fec-4546-9efe-4703cb081aa0.png";
+  private static final String IMEI = "41e74ed6b321e2f9";
   private RequestBinClient binClient;
 
   @Override
@@ -77,7 +73,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
             false, podType, false);
       }
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(OrderActionSteps.KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
+      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update jobs", 30);
   }
 
@@ -92,7 +88,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
           DELIVERY_JOB_MODE,
           true, WebhookRequest.Pod.POD_TYPE_RECIPIENT, false);
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(OrderActionSteps.KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
+      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update jobs", 30);
   }
 
@@ -107,7 +103,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
           DELIVERY_JOB_MODE,
           false, WebhookRequest.Pod.POD_TYPE_RECIPIENT, true);
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(OrderActionSteps.KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
+      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update jobs", 30);
   }
 
@@ -125,7 +121,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
         request = createTransactionJobRequestWithoutPods(trackingIds, DELIVERY_JOB_MODE);
       }
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(OrderActionSteps.KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
+      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update jobs", 30);
   }
 
@@ -138,14 +134,14 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       List<JobUpdate> request;
       if (transactionType.equalsIgnoreCase(Transaction.TYPE_PICKUP)) {
         request = createTransactionUpdateProofRequest(trackingIds, ACTION_MODE_SUCCESS,
-            PICKUP_JOB_MODE, false);
+            PICKUP_JOB_MODE);
       } else {
         request = createTransactionUpdateProofRequest(trackingIds, ACTION_MODE_SUCCESS,
-            DELIVERY_JOB_MODE, false);
+            DELIVERY_JOB_MODE);
       }
       put(KEY_UPDATE_PROOFS_REQUEST, request);
       getBatchUpdatePodClient().batchUpdatePodProofs(routeId, waypointId, request);
-      put(OrderActionSteps.KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
+      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update proofs", 30);
   }
 
@@ -165,7 +161,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
             false, WebhookRequest.Pod.POD_TYPE_RECIPIENT, false);
       }
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(OrderActionSteps.KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
+      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update jobs", 30);
   }
 
@@ -178,14 +174,14 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       List<JobUpdate> request;
       if (transactionType.equalsIgnoreCase(Transaction.TYPE_PICKUP)) {
         request = createTransactionUpdateProofRequest(trackingIds, ACTION_MODE_FAIL,
-            PICKUP_JOB_MODE, false);
+            PICKUP_JOB_MODE);
       } else {
         request = createTransactionUpdateProofRequest(trackingIds, ACTION_MODE_FAIL,
-            DELIVERY_JOB_MODE, false);
+            DELIVERY_JOB_MODE);
       }
       put(KEY_UPDATE_PROOFS_REQUEST, request);
       getBatchUpdatePodClient().batchUpdatePodProofs(routeId, waypointId, request);
-      put(OrderActionSteps.KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
+      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update proofs", 30);
   }
 
@@ -200,14 +196,14 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       List<JobUpdate> request = createReservationJobRequest(trackingIds, reservationId, action,
           action);
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(OrderActionSteps.KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
+      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update jobs", 30);
   }
 
   @Given("API Batch Update Job Request to {string} All Return Orders under the reservation")
   public void apiBatchJobUpdateReservationAllReturnOrders(String action) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-    List<OrderRequestV4> orderRequest = get(OrderCreateSteps.KEY_LIST_OF_ORDER_CREATE_RESPONSE);
+    List<OrderRequestV4> orderRequest = get(KEY_LIST_OF_ORDER_CREATE_RESPONSE);
     String normalTid = orderRequest.stream()
         .filter(e -> e.getServiceType().equalsIgnoreCase("Parcel"))
         .findAny().orElseThrow(() -> new NvTestRuntimeException("cant find order response"))
@@ -215,7 +211,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     trackingIds.remove(normalTid);
     put(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, trackingIds);
     apiBatchJobUpdateReservationAllOrders(action);
-    put(OrderActionSteps.KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
+    put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
   }
 
   @Given("API Batch Update Proof Request to {string} All Orders under the reservation")
@@ -238,7 +234,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     List<JobUpdate> reservationProof = get(KEY_UPDATE_PROOFS_REQUEST);
     List<JobUpdate> request = createTransactionUpdateProofRequest(trackingIds, action,
-        PICKUP_JOB_MODE, false);
+        PICKUP_JOB_MODE);
     request.forEach(e -> {
       ProofDetails temp = reservationProof.get(0).getProofDetails();
       e.getProofDetails().setName(temp.getName());
@@ -289,7 +285,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       List<JobUpdate> request = createReservationPartialSuccessJobRequest(trackingIds,
           reservationId);
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(OrderActionSteps.KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
+      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update jobs", 30);
   }
 
@@ -302,7 +298,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       long waypointId = get(KEY_WAYPOINT_ID);
       List<JobUpdate> request = createReservationJobWithoutParcelRequest(reservationId, action);
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(OrderActionSteps.KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
+      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update jobs", 30);
   }
 
@@ -314,9 +310,9 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       long waypointId = get(KEY_WAYPOINT_ID);
       List<JobUpdate> request;
       if (transactionType.equalsIgnoreCase(Transaction.TYPE_PICKUP)) {
-        request = createTransactionPartialSuccesProofRequest(trackingIds, PICKUP_JOB_MODE);
+        request = createTransactionPartialSuccessProofRequest(trackingIds, PICKUP_JOB_MODE);
       } else {
-        request = createTransactionPartialSuccesProofRequest(trackingIds, DELIVERY_JOB_MODE);
+        request = createTransactionPartialSuccessProofRequest(trackingIds, DELIVERY_JOB_MODE);
       }
       put(KEY_UPDATE_PROOFS_REQUEST, request);
       getBatchUpdatePodClient().batchUpdatePodProofs(routeId, waypointId, request);
@@ -337,7 +333,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
         request = createTransactionPartialSuccessJobRequest(trackingIds, DELIVERY_JOB_MODE);
       }
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(OrderActionSteps.KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
+      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update proofs", 30);
   }
 
@@ -345,7 +341,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   public void shipperSubscribeWebhook(String shipperGlobalId, String eventName) {
     callWithRetry(() -> {
       List<Webhook> webhooks = Arrays
-          .asList(getShipperClient().getWebhookSubscription(Long.valueOf(shipperGlobalId)));
+          .asList(getShipperClient().getWebhookSubscription(Long.parseLong(shipperGlobalId)));
       List<String> events = Arrays.asList(eventName.split(", "));
       events.forEach(e -> {
         String eventTemp = StringUtils.join(e.split(" "), "-").trim();
@@ -356,14 +352,17 @@ public class BatchUpdatePodsSteps extends BaseSteps {
           if (e.equalsIgnoreCase("First Attempt Delivery Fail") ||
               e.equalsIgnoreCase("Pending Reschedule") ||
               e.equalsIgnoreCase("Arrived at Sorting Hub")) {
-            webhook = new Webhook(e, Webhook.WEBHOOK_METHOD, bin.getEndpoint(TestConstants.COUNTRY_CODE),
+            webhook = new Webhook(e, Webhook.WEBHOOK_METHOD,
+                bin.getEndpoint(TestConstants.NV_SYSTEM_ID),
                 "1.2");
           } else {
-            webhook = new Webhook(e, Webhook.WEBHOOK_METHOD, bin.getEndpoint(TestConstants.COUNTRY_CODE),
+            webhook = new Webhook(e, Webhook.WEBHOOK_METHOD,
+                bin.getEndpoint(TestConstants.NV_SYSTEM_ID),
                 Webhook.VERSION_1_1);
           }
-          getShipperClient().createWebhookSubscription(Long.valueOf(shipperGlobalId), webhook);
-          NvLogger.successf("webhook event %s subscribed to %s", e, bin.getEndpoint(TestConstants.COUNTRY_CODE));
+          getShipperClient().createWebhookSubscription(Long.parseLong(shipperGlobalId), webhook);
+          LOGGER.info("webhook event %s subscribed to %s", e,
+              bin.getEndpoint(TestConstants.NV_SYSTEM_ID));
         }
       });
     }, "subscribe webhook event: " + eventName, 30);
@@ -391,9 +390,9 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   public void verifyPartialWebhookStatus(String actionMode, String webhookEvent) {
     List<String> trackingIds;
     if (actionMode.equalsIgnoreCase(ACTION_MODE_SUCCESS)) {
-      trackingIds = get(BatchUpdatePodsSteps.KEY_LIST_OF_PARTIAL_SUCCESS_TID);
+      trackingIds = get(KEY_LIST_OF_PARTIAL_SUCCESS_TID);
     } else {
-      trackingIds = get(BatchUpdatePodsSteps.KEY_LIST_OF_PARTIAL_FAIL_TID);
+      trackingIds = get(KEY_LIST_OF_PARTIAL_FAIL_TID);
     }
     trackingIds.forEach(e -> {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
@@ -422,20 +421,23 @@ public class BatchUpdatePodsSteps extends BaseSteps {
                 .equalsIgnoreCase(event)
                 && JsonUtils.fromJsonSnakeCase(e.getBody(), WebhookRequest.class).getTrackingId()
                 .equalsIgnoreCase(o));
-        assertTrue(String.format("no %s webhook sent for %s", event, o), !found);
+        Assertions.assertThat(!found).as(String.format("no %s webhook sent for %s", event, o))
+            .isTrue();
       }, "get webhooks requests", 30);
     });
   }
 
   @Then("Shipper verifies webhook request payload has correct details for status {string}")
-  public void shipperverifiesWebhookPayload(String status) {
+  public void shipperVerifiesWebhookPayload(String status) {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     Map<String, WebhookRequest> webhookRequest = get(KEY_LIST_OF_WEBHOOK_REQUEST + status);
     WebhookRequest request = webhookRequest.get(trackingId);
     OrderRequestV4 order = get(KEY_ORDER_CREATE_REQUEST);
     callWithRetry(() -> {
-          assertEquals("status", status.toLowerCase(), request.getStatus().toLowerCase());
-          assertEquals("tracking id", trackingId.toLowerCase(), request.getTrackingId().toLowerCase());
+          Assertions.assertThat(request.getStatus().toLowerCase()).as("status")
+              .isEqualTo(status.toLowerCase());
+          Assertions.assertThat(request.getTrackingId().toLowerCase()).as("tracking id")
+              .isEqualTo(trackingId.toLowerCase());
           Webhook.WebhookStatus webhookStatus = Webhook.WebhookStatus.fromString(status);
           Pickup pickup = get(KEY_CREATED_RESERVATION);
           Map<String, ProofDetails> proofDetails = get(KEY_MAP_PROOF_WEBHOOK_DETAILS);
@@ -445,7 +447,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
               if (proofDetails == null || dpJobId != null) {
                 Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
               } else {
-                checkDeliverySuccesPod(request, trackingId);
+                checkDeliverySuccessPod(request, trackingId);
               }
               if (order.getParcelJob().getCashOnDelivery() != null) {
                 Double cod = order.getParcelJob().getCashOnDelivery();
@@ -459,7 +461,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
                   || proofDetails == null) {
                 Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
               } else {
-                checkDeliverySuccesPod(request, trackingId);
+                checkDeliverySuccessPod(request, trackingId);
               }
             case CANCELLED:
               String comment = get(KEY_CANCELLATION_REASON);
@@ -500,7 +502,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
               }
               break;
             case PARCEL_MEASUREMENTS_UPDATE: {
-              final Double oldWeight = get(OrderCreateSteps.KEY_EXPECTED_OLD_WEIGHT, 0.1);
+              final Double oldWeight = get(KEY_EXPECTED_OLD_WEIGHT, 0.1);
               final Double newWeight = get(KEY_EXPECTED_NEW_WEIGHT);
               Assertions.assertThat(request.getPreviousMeasurements().getMeasuredWeight())
                   .as("old weigh equal")
@@ -511,7 +513,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
             }
             break;
             case PARCEL_WEIGHT: {
-              final Double oldWeight = get(OrderCreateSteps.KEY_EXPECTED_OLD_WEIGHT, 0.1);
+              final Double oldWeight = get(KEY_EXPECTED_OLD_WEIGHT, 0.1);
               final Double newWeight = get(KEY_EXPECTED_NEW_WEIGHT);
               Assertions.assertThat(Double.valueOf(request.getPreviousWeight())).as("old weigh equal")
                   .isEqualTo(oldWeight);
@@ -531,39 +533,45 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       proofRequest.forEach(e -> {
         BlobData blobData = fromJsonSnakeCase(blobDataMap.get(e.getJob().getId()), BlobData.class);
         ProofDetails proofDetails = e.getProofDetails();
-        assertEquals("name", proofDetails.getName().toLowerCase(),
-            blobData.getName().toLowerCase());
-        assertEquals("contact", proofDetails.getContact(), blobData.getContact());
+        Assertions.assertThat(blobData.getName().toLowerCase()).as("name")
+            .isEqualTo(proofDetails.getName().toLowerCase());
+        Assertions.assertThat(blobData.getContact()).as("contact")
+            .isEqualTo(proofDetails.getContact());
         String signCoordinates = proofDetails.getLongitude() + "," + proofDetails.getLatitude();
-        assertEquals("sign coordinates", signCoordinates, blobData.getSignCoordinates());
-        assertEquals("imei", proofDetails.getImei(), blobData.getImei());
-        assertEquals("url", proofDetails.getSignatureImageUrl(), blobData.getUrl());
+        Assertions.assertThat(blobData.getSignCoordinates()).as("sign coordinates")
+            .isEqualTo(signCoordinates);
+        Assertions.assertThat(blobData.getImei()).as("imei").isEqualTo(proofDetails.getImei());
+        Assertions.assertThat(blobData.getUrl()).as("url")
+            .isEqualTo(proofDetails.getSignatureImageUrl());
         if (e.getJob().getAction().equalsIgnoreCase(ACTION_MODE_FAIL)) {
-          assertEquals("failure reason id", e.getJob().getFailureReasonId(),
-              blobData.getFailureReasonId());
-          assertTrue("failure reason translations",
-              blobData.getFailureReasonTranslations().contains(e.getJob().getFailureReason()));
+          Assertions.assertThat(blobData.getFailureReasonId()).as("failure reason id")
+              .isEqualTo(e.getJob().getFailureReasonId());
+          Assertions.assertThat(
+                  blobData.getFailureReasonTranslations().contains(e.getJob().getFailureReason()))
+              .as("failure reason translations").isTrue();
         }
         if (e.getJob().getType().equalsIgnoreCase("RESERVATION")) {
-          assertNull("status", blobData.getStatus());
+          Assertions.assertThat(blobData.getStatus()).as("Status is null").isNull();
           if (e.getJob().getAction().equalsIgnoreCase(ACTION_MODE_FAIL)) {
-            assertEquals("comments",
-                e.getJob().getFailureReason() + ". " + e.getProofDetails().getComments(),
-                blobData.getComments());
+            Assertions.assertThat(blobData.getComments()).as("comments").isEqualTo(
+                e.getJob().getFailureReason() + ". " + e.getProofDetails().getComments());
           } else {
-            assertTrue("scanned parcels contains scanned tracking ids",
-                blobData.getScannedParcels().containsAll(e.getProofDetails().getTrackingIds()));
-            assertEquals("received parcels", e.getProofDetails().getPickupQuantity(),
-                blobData.getReceivedParcels());
+            Assertions.assertThat(
+                    blobData.getScannedParcels().containsAll(e.getProofDetails().getTrackingIds()))
+                .as("scanned parcels contains scanned tracking ids").isTrue();
+            Assertions.assertThat(blobData.getReceivedParcels()).as("received parcels")
+                .isEqualTo(e.getProofDetails().getPickupQuantity());
           }
           return;
         }
-        assertEquals("status", e.getJob().getAction(), blobData.getStatus());
+        Assertions.assertThat(blobData.getStatus()).as("status").isEqualTo(e.getJob().getAction());
         Pickup pickup = get(KEY_CREATED_RESERVATION);
         if (pickup == null) {
-          assertEquals("verification method", "NO_VERIFICATION", blobData.getVerificationMethod());
+          Assertions.assertThat(blobData.getVerificationMethod()).as("verification method")
+              .isEqualTo("NO_VERIFICATION");
         } else {
-          assertNull("verification method", blobData.getVerificationMethod());
+          Assertions.assertThat(blobData.getVerificationMethod()).as("Verification method is null")
+              .isNull();
         }
       });
     }, "check blob data");
@@ -571,22 +579,22 @@ public class BatchUpdatePodsSteps extends BaseSteps {
 
 
   @Then("Shipper verifies webhook request payload has correct details for status {string} with NO Pod details")
-  public void shipperverifiesWebhookPayloadNoPod(String status) {
-    shipperverifiesWebhookPayload(status);
+  public void shipperVerifiesWebhookPayloadNoPod(String status) {
+    shipperVerifiesWebhookPayload(status);
   }
 
   @Then("Shipper verifies webhook request payload has correct details for status {string} for all orders")
-  public void shipperverifiesWebhookPayloadAllOrders(String status) {
+  public void shipperVerifiesWebhookPayloadAllOrders(String status) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     trackingIds.forEach(e -> {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
-      shipperverifiesWebhookPayload(status);
+      shipperVerifiesWebhookPayload(status);
     });
   }
 
   @Given("Shipper id {string} removes webhook subscriptions")
   public void shipperRemoveWebhookSubs(String shipperGlobalId) {
-    callWithRetry(() -> cleanWebhookSubs(Long.valueOf(shipperGlobalId)), "remove webhook subs");
+    callWithRetry(() -> cleanWebhookSubs(Long.parseLong(shipperGlobalId)), "remove webhook subs");
   }
 
   private JobV5 createTransactionJob(String trackingId, String action, String jobMode,
@@ -594,7 +602,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
 
     Order order = OrderDetailHelper.getOrderDetails(trackingId);
     if (Objects.isNull(order)) {
-      NvLogger.infof("null order: " + trackingId);
+      LOGGER.info("null order: " + trackingId);
     }
     put(KEY_CREATED_ORDER, order);
     Transaction transaction;
@@ -700,16 +708,16 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     return result;
   }
 
-  private List<JobUpdate> createTransactionPartialSuccesProofRequest(List<String> trackingIds,
+  private List<JobUpdate> createTransactionPartialSuccessProofRequest(List<String> trackingIds,
       String jobMode) {
     List<String> failedTrackingIds = get(KEY_LIST_OF_PARTIAL_FAIL_TID);
     List<String> successTrackingIds = get(KEY_LIST_OF_PARTIAL_SUCCESS_TID);
     List<JobUpdate> result = new ArrayList<>();
     result.addAll(
-        createTransactionUpdateProofRequest(successTrackingIds, ACTION_MODE_SUCCESS, jobMode,
-            false));
+        createTransactionUpdateProofRequest(successTrackingIds, ACTION_MODE_SUCCESS, jobMode
+        ));
     result.addAll(
-        createTransactionUpdateProofRequest(failedTrackingIds, ACTION_MODE_FAIL, jobMode, false));
+        createTransactionUpdateProofRequest(failedTrackingIds, ACTION_MODE_FAIL, jobMode));
     return result;
   }
 
@@ -769,7 +777,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     return result;
   }
 
-  private List<JobUpdate> createReservationJobWithoutParcelRequest(long rsvnId, String jobAction) {
+  private List<JobUpdate> createReservationJobWithoutParcelRequest(Long rsvnId, String jobAction) {
     List<JobUpdate> result = new ArrayList<>();
     JobUpdate temp = new JobUpdate();
     temp.setToUpdateJob(true);
@@ -780,7 +788,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   }
 
   private List<JobUpdate> createReservationPartialSuccessJobRequest(List<String> trackingIds,
-      long rsvnId) {
+      Long rsvnId) {
     int halfIndex = trackingIds.size() / 2;
     List<String> failedTrackingIds = trackingIds.subList(0, halfIndex);
     put(KEY_LIST_OF_PARTIAL_FAIL_TID, failedTrackingIds);
@@ -794,7 +802,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     return result;
   }
 
-  private List<JobUpdate> createReservationPartialSuccessProofRequest(long rsvnId) {
+  private List<JobUpdate> createReservationPartialSuccessProofRequest(Long rsvnId) {
     List<String> failedTrackingIds = get(KEY_LIST_OF_PARTIAL_FAIL_TID);
     List<String> successTrackingIds = get(KEY_LIST_OF_PARTIAL_SUCCESS_TID);
     List<JobUpdate> result = new ArrayList<>();
@@ -914,19 +922,19 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   }
 
   private List<JobUpdate> createTransactionUpdateProofRequest(List<String> trackingIds,
-      String jobAction, String jobMode, boolean witCod) {
+      String jobAction, String jobMode) {
     List<JobUpdate> result = new ArrayList<>();
     trackingIds.forEach(e -> {
       JobUpdate temp = new JobUpdate();
       temp.setCommitDate(Instant.now().toEpochMilli());
-      temp.setJob(createTransactionJob(e, jobAction, jobMode, witCod, false));
+      temp.setJob(createTransactionJob(e, jobAction, jobMode, false, false));
       temp.setProofDetails(createProofDetails(e));
       result.add(temp);
     });
     return result;
   }
 
-  private List<JobUpdate> createReservationUpdateProofRequest(long rsvnId, List<String> trackingIds,
+  private List<JobUpdate> createReservationUpdateProofRequest(Long rsvnId, List<String> trackingIds,
       String jobAction) {
     List<JobUpdate> result = new ArrayList<>();
     JobUpdate temp = new JobUpdate();
@@ -946,7 +954,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     put(KEY_WAYPOINT_ID, transaction.getWaypointId());
   }
 
-  private void checkDeliverySuccesPod(WebhookRequest webhookRequest, String trackingId) {
+  private void checkDeliverySuccessPod(WebhookRequest webhookRequest, String trackingId) {
     Map<String, ProofDetails> proofDetails = get(KEY_MAP_PROOF_WEBHOOK_DETAILS);
     String podType = get(KEY_WEBHOOK_POD_TYPE, "RECIPIENT");
     ProofDetails podDetails = proofDetails.get(trackingId);
@@ -970,14 +978,14 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }
   }
 
-  private void cleanWebhookSubs(long shipperId) {
+  private void cleanWebhookSubs(Long shipperId) {
     try {
       Webhook[] webhooks = getShipperClient().getWebhookSubscription(shipperId);
       Arrays.asList(webhooks)
           .forEach(e -> getShipperClient().removeWebhookSubscription(shipperId, e.getId()));
-      NvLogger.infof("webhook subscription cleared");
+      LOGGER.info("webhook subscription cleared");
     } catch (Throwable t) {
-      NvLogger.warn("Failed to clean webhook subs");
+      LOGGER.warn("Failed to clean webhook subs");
     }
   }
 }

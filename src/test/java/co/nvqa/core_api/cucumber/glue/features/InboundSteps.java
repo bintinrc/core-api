@@ -4,12 +4,12 @@ import co.nvqa.commons.model.core.Dimension;
 import co.nvqa.commons.model.core.GlobalInboundRequest;
 import co.nvqa.commons.model.core.GlobalInboundResponse;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
+import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import io.cucumber.guice.ScenarioScoped;
-
 import java.util.List;
 import java.util.Map;
+import org.assertj.core.api.Assertions;
 
 /**
  * @author Binti Cahayati on 2020-07-04
@@ -30,7 +30,7 @@ public class InboundSteps extends BaseSteps {
     callWithRetry(() -> {
       GlobalInboundResponse response = getInboundClient().globalInbound(
           new GlobalInboundRequest(trackingId, GlobalInboundRequest.TYPE_SORTING_HUB, hubId));
-      assertEquals("status", "SUCCESSFUL_INBOUND", response.getStatus());
+      Assertions.assertThat(response.getStatus()).as("status").isEqualTo("SUCCESSFUL_INBOUND");
     }, "operator global inbound");
   }
 
@@ -55,7 +55,7 @@ public class InboundSteps extends BaseSteps {
       put(KEY_EXPECTED_NEW_WEIGHT, dimension.getWeight());
       put(KEY_INBOUND_DIMENSION_REQUEST, dimension);
       GlobalInboundResponse response = getInboundClient().globalInbound(request);
-      assertEquals("status", "SUCCESSFUL_INBOUND", response.getStatus());
+      Assertions.assertThat(response.getStatus()).as("status").isEqualTo("SUCCESSFUL_INBOUND");
     }, "operator global inbound with changes in dimensions");
   }
 }
