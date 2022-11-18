@@ -1,4 +1,5 @@
 #@ForceSuccessOrder  @ArchiveDriverRoutes @DeleteReservationAndAddress @cancel-order @/2.0/orders/:uuid
+  @RT
 Feature: Cancel DELETE /2.0/orders/:uuid
 
   Scenario: DELETE 2.0/orders/:uuidId - Cancel Order - Staging (uid:f375785d-1963-4329-8087-b5c9192557a2)

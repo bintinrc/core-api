@@ -20,7 +20,7 @@ public class OrderCancelSteps extends BaseSteps {
 
   }
 
-  @Given("API Operator cancel order with PUT /orders/:orderId/cancel")
+  @Given("API Operator cancel order with PUT \\/orders\\/:orderId\\/cancel")
   public void apiOperatorCancelCreatedOrder(Map<String, String> source) {
     long orderId = get(KEY_CREATED_ORDER_ID);
     String reason = source.get("reason");
@@ -30,7 +30,7 @@ public class OrderCancelSteps extends BaseSteps {
     put(KEY_UPDATE_STATUS_REASON, "CANCEL");
   }
 
-  @Given("API Operator cancel order with DELETE /2.0/orders/:uuid")
+  @Given("API Operator cancel order with DELETE \\/2.0\\/orders\\/:uuid")
   public void apiOperatorCancelOrderV2() {
     String asyncHandle = get(KEY_CREATED_ORDER_ASYNC_ID);
     getOrderClient().cancelOrderV2(asyncHandle);
@@ -38,7 +38,7 @@ public class OrderCancelSteps extends BaseSteps {
     put(KEY_CANCELLATION_REASON, "Cancellation reason : API CANCELLATION REQUEST");
   }
 
-  @Given("API Operator cancel order with DELETE /2.2/orders/:trackingNumber")
+  @Given("API Operator cancel order with DELETE \\/2.2\\/orders\\/:trackingNumber")
   public void apiOperatorCancelOrderV3() {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     String shipperToken = get(KEY_SHIPPER_V4_ACCESS_TOKEN);
@@ -48,7 +48,7 @@ public class OrderCancelSteps extends BaseSteps {
     put(KEY_UPDATE_STATUS_REASON, "CANCEL");
   }
 
-  @Given("API Operator cancel order with DELETE /orders/cancel by TID")
+  @Given("API Operator cancel order with DELETE \\/orders\\/cancel by TID")
   public void apiOperatorCancelOrderV4byTid(Map<String, String> source) {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     String shipperToken = get(KEY_SHIPPER_V4_ACCESS_TOKEN);
@@ -67,7 +67,7 @@ public class OrderCancelSteps extends BaseSteps {
     put(KEY_CANCELLATION_REASON, f("Cancellation reason : %s", reason));
   }
 
-  @Given("API Operator cancel order with DELETE /orders/cancel by UUID")
+  @Given("API Operator cancel order with DELETE \\/orders\\/cancel by UUID")
   public void apiOperatorCancelOrderV4byUuid(Map<String, String> source) {
     String asyncHandle = get(KEY_CREATED_ORDER_ASYNC_ID);
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
@@ -87,7 +87,7 @@ public class OrderCancelSteps extends BaseSteps {
     put(KEY_CANCELLATION_REASON, f("Cancellation reason : %s", reason));
   }
 
-  @Given("API Operator cancel order with DELETE /dashboard/shippers/:shipperId/orders/cancel by TID")
+  @Given("API Operator cancel order with DELETE \\/dashboard\\/shippers\\/:shipperId\\/orders\\/cancel by TID")
   public void apiOperatorCancelOrderV5byTid(Map<String, String> source) {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     String shipperToken = get(KEY_SHIPPER_V4_ACCESS_TOKEN);
@@ -107,7 +107,7 @@ public class OrderCancelSteps extends BaseSteps {
     put(KEY_CANCELLATION_REASON, f("Cancellation reason : %s", reason));
   }
 
-  @Given("API Operator cancel order with DELETE /dashboard/shippers/:shipperId/orders/cancel by UUID")
+  @Given("API Operator cancel order with DELETE \\/dashboard\\/shippers\\/:shipperId\\/orders\\/cancel by UUID")
   public void apiOperatorCancelOrderV5byUuid(Map<String, String> source) {
     String asyncHandle = get(KEY_CREATED_ORDER_ASYNC_ID);
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
@@ -128,7 +128,7 @@ public class OrderCancelSteps extends BaseSteps {
     put(KEY_CANCELLATION_REASON, f("Cancellation reason : %s", reason));
   }
 
-  @When("Operator failed to cancel invalid status with PUT /orders/:orderId/cancel")
+  @When("Operator failed to cancel invalid status with PUT \\/orders\\/:orderId\\/cancel")
   public void operatorCancelV1() {
     long orderId = get(KEY_CREATED_ORDER_ID);
     Response r = getOrderClient().cancelOrderV1AndGetRawResponse(orderId, "invalid cancel");
@@ -136,7 +136,7 @@ public class OrderCancelSteps extends BaseSteps {
     put(KEY_API_RAW_RESPONSE, r);
   }
 
-  @When("Operator failed to cancel invalid status with DELETE /2.0/orders/:uuid")
+  @When("Operator failed to cancel invalid status with DELETE \\/2.0\\/orders\\/:uuid")
   public void operatorCancelInvalidV2() {
     String asyncHandle = get(KEY_CREATED_ORDER_ASYNC_ID);
     Response r = getOrderClient().cancelOrderV2AndGetRawResponse(asyncHandle);
@@ -144,7 +144,7 @@ public class OrderCancelSteps extends BaseSteps {
     put(KEY_API_RAW_RESPONSE, r);
   }
 
-  @When("Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber")
+  @When("Operator failed to cancel invalid status with DELETE \\/2.2\\/orders\\/:trackingNumber")
   public void operatorCancelInvalidV3() {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     String shipperToken = get(KEY_SHIPPER_V4_ACCESS_TOKEN);
@@ -153,7 +153,7 @@ public class OrderCancelSteps extends BaseSteps {
     put(KEY_API_RAW_RESPONSE, r);
   }
 
-  @Given("Operator failed to cancel order with DELETE /orders/cancel by TID")
+  @Given("Operator failed to cancel order with DELETE \\/orders\\/cancel by TID")
   public void invalidCancelOrderV4byTid() {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     String shipperToken = get(KEY_SHIPPER_V4_ACCESS_TOKEN);
@@ -171,7 +171,7 @@ public class OrderCancelSteps extends BaseSteps {
     put(KEY_CANCELLATION_REASON, f("Cancellation reason : %s", "invalid cancel order status"));
   }
 
-  @Given("Operator failed to cancel order with DELETE /orders/cancel by UUID")
+  @Given("Operator failed to cancel order with DELETE \\/orders\\/cancel by UUID")
   public void invalidCancelOrderV4byUuid() {
     String asyncHandle = get(KEY_CREATED_ORDER_ASYNC_ID);
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
@@ -190,7 +190,7 @@ public class OrderCancelSteps extends BaseSteps {
     put(KEY_CANCELLATION_REASON, f("Cancellation reason : %s", "invalid cancel order status"));
   }
 
-  @Given("Operator failed to cancel order with DELETE /dashboard/shippers/:shipperId/orders/cancel by TID")
+  @Given("Operator failed to cancel order with DELETE \\/dashboard\\/shippers\\/:shipperId\\/orders\\/cancel by TID")
   public void invalidCancelOrderV5byTid(Map<String, Long> source) {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     String shipperToken = get(KEY_SHIPPER_V4_ACCESS_TOKEN);
@@ -209,7 +209,7 @@ public class OrderCancelSteps extends BaseSteps {
     put(KEY_CANCELLATION_REASON, f("Cancellation reason : %s", "invalid cancel order status"));
   }
 
-  @Given("Operator failed to cancel order with DELETE /dashboard/shippers/:shipperId/orders/cancel by UUID")
+  @Given("Operator failed to cancel order with DELETE \\/dashboard\\/shippers\\/:shipperId\\/orders\\/cancel by UUID")
   public void invalidCancelOrderV5byUuid(Map<String, Long> source) {
     String asyncHandle = get(KEY_CREATED_ORDER_ASYNC_ID);
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
