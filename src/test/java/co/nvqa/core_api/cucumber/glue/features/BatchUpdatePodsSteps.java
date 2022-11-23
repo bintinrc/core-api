@@ -361,7 +361,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
                 Webhook.VERSION_1_1);
           }
           getShipperClient().createWebhookSubscription(Long.parseLong(shipperGlobalId), webhook);
-          LOGGER.info("webhook event %s subscribed to %s", e,
+          LOGGER.info("webhook event {} subscribed to {}", e,
               bin.getEndpoint(TestConstants.NV_SYSTEM_ID));
         }
       });
@@ -434,9 +434,9 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     WebhookRequest request = webhookRequest.get(trackingId);
     OrderRequestV4 order = get(KEY_ORDER_CREATE_REQUEST);
     callWithRetry(() -> {
-          Assertions.assertThat(request.getStatus().toLowerCase()).as("status")
+          Assertions.assertThat(request.getStatus().toLowerCase()).as(f("status is %s", status))
               .isEqualTo(status.toLowerCase());
-          Assertions.assertThat(request.getTrackingId().toLowerCase()).as("tracking id")
+          Assertions.assertThat(request.getTrackingId().toLowerCase()).as("tracking id is correct")
               .isEqualTo(trackingId.toLowerCase());
           Webhook.WebhookStatus webhookStatus = Webhook.WebhookStatus.fromString(status);
           Pickup pickup = get(KEY_CREATED_RESERVATION);
@@ -564,10 +564,10 @@ public class BatchUpdatePodsSteps extends BaseSteps {
           }
           return;
         }
-        Assertions.assertThat(blobData.getStatus()).as("status").isEqualTo(e.getJob().getAction());
+        Assertions.assertThat(blobData.getStatus()).as("status is correct").isEqualTo(e.getJob().getAction());
         Pickup pickup = get(KEY_CREATED_RESERVATION);
         if (pickup == null) {
-          Assertions.assertThat(blobData.getVerificationMethod()).as("verification method")
+          Assertions.assertThat(blobData.getVerificationMethod()).as("no verification method")
               .isEqualTo("NO_VERIFICATION");
         } else {
           Assertions.assertThat(blobData.getVerificationMethod()).as("Verification method is null")

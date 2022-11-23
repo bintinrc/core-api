@@ -444,11 +444,11 @@ public class RouteMonitoringSteps extends BaseSteps {
           String startTime;
           String endTime;
           if (waypointCase.equalsIgnoreCase(WAYPOINT_TYPE_PENDING)) {
-            Assertions.assertThat(waypoint.getStatus()).as("status").isEqualTo("Routed");
+            Assertions.assertThat(waypoint.getStatus()).as("status is routed").isEqualTo("Routed");
             Assertions.assertThat(waypoint.getServiceEndTime()).as("Service end time is null")
                 .isNull();
           } else {
-            Assertions.assertThat(waypoint.getStatus()).as("status").isEqualTo("Fail");
+            Assertions.assertThat(waypoint.getStatus()).as("status is fail").isEqualTo("Fail");
           }
 
           if (e.getServiceType().equalsIgnoreCase("RETURN")) {
@@ -512,7 +512,7 @@ public class RouteMonitoringSteps extends BaseSteps {
           String endTime = e.getParcelJob().getPickupTimeslot().getEndTime();
           Assertions.assertThat(waypoint.getTimeWindow()).as("time window")
               .isEqualToIgnoringCase(getFormattedTimeslot(startTime, endTime));
-          Assertions.assertThat(waypoint.getStatus()).as("status").isEqualTo("Routed");
+          Assertions.assertThat(waypoint.getStatus()).as("status is Routed").isEqualTo("Routed");
           Assertions.assertThat(waypoint.getServiceEndTime()).as("Service end time is null")
               .isNull();
 
