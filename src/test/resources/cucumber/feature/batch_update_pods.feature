@@ -233,7 +233,7 @@ Feature: Batch Update PODs
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And Operator Search for Created Pickup for Shipper {shipper-4-legacy-id} with status "Pending"
+    And Operator Search for Created Pickup for Shipper "{shipper-4-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "SUCCESS" All Orders under the reservation
     Then Operator verify that reservation status is "Success"

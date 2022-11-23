@@ -39,41 +39,9 @@ public class ReservationSteps extends BaseSteps {
 
   }
 
-  @Given("Operator Search for Created Pickup for Shipper {long} with status {string}")
-  public void searchPickup(long legacyId, String status) {
-    String pickupAddress = get(KEY_PICKUP_ADDRESS_STRING);
-    put(KEY_INITIAL_RESERVATION_ADDRESS, pickupAddress);
-    ZonedDateTime startDateTime = DateUtil.getStartOfDay(DateUtil.getDate());
-
-    final ZonedDateTime endDateTime = startDateTime.plusDays(3L).minusSeconds(1L);
-
-    final String fromDateTime = DateUtil.displayDateTime(
-        startDateTime.withZoneSameInstant(ZoneId.of("UTC")));
-    final String toDateTime = DateUtil.displayDateTime(
-        endDateTime.withZoneSameInstant(ZoneId.of("UTC")));
-
-    final Map<String, Object> param = new HashMap<>();
-    param.put("from_datetime", fromDateTime);
-    param.put("to_datetime", toDateTime);
-    param.put("max_result", 1000);
-    param.put("shipper_ids", Collections.singletonList(legacyId));
-    param.put("waypoint_status", Collections.singletonList(status));
-
-    callWithRetry(() -> {
-      LOGGER.info("Try to find reservation with address2: {}", pickupAddress);
-      doStepPause();
-      List<Pickup> pickups = getShipperPickupClient().search(param);
-      Pickup pickup = pickups.stream()
-          .filter(e -> (e.getAddress1() + " " + e.getAddress2()).equalsIgnoreCase(pickupAddress))
-          .findAny().orElseThrow(() -> new NvTestRuntimeException("reservation details not found"));
-      LOGGER.info("reservation id {} found", pickup.getReservationId());
-      put(KEY_CREATED_RESERVATION, pickup);
-      String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-      putInList(KEY_LIST_OF_CREATED_RESERVATIONS, pickup);
-      putInList(KEY_LIST_OF_RESERVATION_TRACKING_IDS, trackingId);
-      put(KEY_WAYPOINT_ID, pickup.getWaypointId());
-      putInList(KEY_LIST_OF_WAYPOINT_IDS, pickup.getWaypointId());
-    }, f("search reservation with status %s", status), 30);
+  @Given("Operator Search for Created Pickup for Shipper {string} with status {string}")
+  public void operatorSearchForCreatedPickupForShipperWithStatus(String legacyId, String status) {
+    searchPickup(Long.parseLong(legacyId),status);
   }
 
   @And("Operator search for all reservations for shipper legacy id {long}")
@@ -221,5 +189,41 @@ public class ReservationSteps extends BaseSteps {
     } catch (Throwable t) {
       LOGGER.warn("Failed to clear any reservation and/or address due to: {}", t.getMessage());
     }
+  }
+
+  private void searchPickup(Long legacyId, String status) {
+    String pickupAddress = get(KEY_PICKUP_ADDRESS_STRING);
+    put(KEY_INITIAL_RESERVATION_ADDRESS, pickupAddress);
+    ZonedDateTime startDateTime = DateUtil.getStartOfDay(DateUtil.getDate());
+
+    final ZonedDateTime endDateTime = startDateTime.plusDays(3L).minusSeconds(1L);
+
+    final String fromDateTime = DateUtil.displayDateTime(
+        startDateTime.withZoneSameInstant(ZoneId.of("UTC")));
+    final String toDateTime = DateUtil.displayDateTime(
+        endDateTime.withZoneSameInstant(ZoneId.of("UTC")));
+
+    final Map<String, Object> param = new HashMap<>();
+    param.put("from_datetime", fromDateTime);
+    param.put("to_datetime", toDateTime);
+    param.put("max_result", 1000);
+    param.put("shipper_ids", Collections.singletonList(legacyId));
+    param.put("waypoint_status", Collections.singletonList(status));
+
+    callWithRetry(() -> {
+      LOGGER.info("Try to find reservation with address2: {}", pickupAddress);
+      doStepPause();
+      List<Pickup> pickups = getShipperPickupClient().search(param);
+      Pickup pickup = pickups.stream()
+          .filter(e -> (e.getAddress1() + " " + e.getAddress2()).equalsIgnoreCase(pickupAddress))
+          .findAny().orElseThrow(() -> new NvTestRuntimeException("reservation details not found"));
+      LOGGER.info("reservation id {} found", pickup.getReservationId());
+      put(KEY_CREATED_RESERVATION, pickup);
+      String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+      putInList(KEY_LIST_OF_CREATED_RESERVATIONS, pickup);
+      putInList(KEY_LIST_OF_RESERVATION_TRACKING_IDS, trackingId);
+      put(KEY_WAYPOINT_ID, pickup.getWaypointId());
+      putInList(KEY_LIST_OF_WAYPOINT_IDS, pickup.getWaypointId());
+    }, f("search reservation with status %s", status), 30);
   }
 }
