@@ -471,9 +471,9 @@ public class BatchUpdatePodsSteps extends BaseSteps {
               Hub hubInfo = get(KEY_HUB_INFO);
               if (hubInfo != null) {
                 String hubName = StringUtils.lowerCase(
-                    f("%s-%s-%s", hubInfo.getCountry(), hubInfo.getCity(), hubInfo.getShortName()));
-                Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
-                    .isEqualTo(hubName);
+                    f("%s-%s", hubInfo.getCountry(), hubInfo.getCity()));
+                Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment contains hub name")
+                    .contains(hubName);
               }
               break;
             case DELIVERY_FAIL_FIRST_ATTEMPT:
