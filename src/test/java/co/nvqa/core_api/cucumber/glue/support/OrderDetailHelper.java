@@ -4,9 +4,8 @@ import co.nvqa.commons.model.core.Order;
 import co.nvqa.commons.model.core.Transaction;
 import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
-import io.cucumber.java.en.Then;
 import io.cucumber.guice.ScenarioScoped;
-
+import io.cucumber.java.en.Then;
 import java.util.List;
 
 /**
@@ -14,20 +13,6 @@ import java.util.List;
  */
 @ScenarioScoped
 public class OrderDetailHelper extends BaseSteps {
-
-  @Override
-  public void init() {
-
-  }
-
-  @Then("Operator get {string} transaction waypoint Ids for all orders")
-  public void getWaypointIdAllOrders(String transactionType) {
-    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-    trackingIds.forEach(e -> {
-      put(KEY_CREATED_ORDER_TRACKING_ID, e);
-      getTransactionWaypointId(transactionType);
-    });
-  }
 
   public static Order searchOrder(String trackingIdOrStampId) {
     return getOrderSearchClient().searchOrderByTrackingId(trackingIdOrStampId);
@@ -47,6 +32,20 @@ public class OrderDetailHelper extends BaseSteps {
         .filter(e -> e.getStatus().equalsIgnoreCase(status))
         .findAny().orElseThrow(() -> new NvTestRuntimeException("transaction details not found"));
     return result;
+  }
+
+  @Override
+  public void init() {
+
+  }
+
+  @Then("Operator get {string} transaction waypoint Ids for all orders")
+  public void getWaypointIdAllOrders(String transactionType) {
+    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    trackingIds.forEach(e -> {
+      put(KEY_CREATED_ORDER_TRACKING_ID, e);
+      getTransactionWaypointId(transactionType);
+    });
   }
 
   private void getTransactionWaypointId(String transactionType) {

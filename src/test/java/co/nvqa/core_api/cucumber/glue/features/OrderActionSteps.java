@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
@@ -33,21 +34,14 @@ import org.slf4j.LoggerFactory;
 public class OrderActionSteps extends BaseSteps {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(OrderActionSteps.class);
-
-  private static final String DOMAIN = "ORDER-ACTION-STEP";
   private static final String ACTION_SUCCESS = "success";
   private static final String ACTION_FAIL = "fail";
-  public static final String KEY_LIST_OF_ORDER_TAG_IDS = "key-order-tag-ids";
-  public static final String KEY_LIST_OF_PRIOR_TRACKING_IDS = "key-list-prior-tracking-ids";
-  public static final String KEY_API_RAW_RESPONSE = "key-api-raw-response";
-  public static final String KEY_UPDATE_STATUS_REASON = "key-update-status-reason";
 
   @Override
   public void init() {
-
   }
 
-  @Then("^Operator search for created order$")
+  @Then("Operator search for created order")
   public void operatorSearchOrderByTrackingId() {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     callWithRetry(() -> {
@@ -56,15 +50,15 @@ public class OrderActionSteps extends BaseSteps {
       Order order = getOrderDetails(trackingId);
       put(KEY_CREATED_ORDER, order);
       putInList(KEY_LIST_OF_CREATED_ORDER, order);
-      assertNotNull("retrieved order", order);
+      Assertions.assertThat(order).as("retrieved order").isNotNull();
       put(KEY_CREATED_ORDER_ID, order.getId());
       putInList(KEY_LIST_OF_CREATED_ORDER_ID, order.getId());
-      assertNotNull("order id", order.getId());
+      Assertions.assertThat(order.getId()).as("order id").isNotNull();
       LOGGER.info(f("order id = %d is successfully retrieved from core", order.getId()));
     }, "retrieve order details from core");
   }
 
-  @Then("^Operator search for all created orders$")
+  @Then("Operator search for all created orders")
   public void operatorSearchAllOrdersByTrackingIds() {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     trackingIds.forEach(e -> {
@@ -73,7 +67,7 @@ public class OrderActionSteps extends BaseSteps {
     });
   }
 
-  @Then("^Operator search for \"([^\"]*)\" transaction with status \"([^\"]*)\"$")
+  @Then("Operator search for {string} transaction with status {string}")
   public void operatorSearchTransaction(String type, String status) {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     callWithRetry(() -> {
@@ -82,7 +76,7 @@ public class OrderActionSteps extends BaseSteps {
       put(KEY_CREATED_ORDER_ID, order.getId());
       putInList(KEY_LIST_OF_CREATED_ORDER_ID, order.getId());
       Transaction transaction = getTransaction(order, type, status);
-      assertNotNull("retrieved transaction", transaction);
+      Assertions.assertThat(transaction).as("retrieved transaction").isNotNull();
       LOGGER.info(f("retrieved transaction for id %d", transaction.getId()));
       put(KEY_TRANSACTION_DETAILS, transaction);
       put(KEY_TRANSACTION_ID, transaction.getId());
@@ -91,9 +85,9 @@ public class OrderActionSteps extends BaseSteps {
       put(KEY_WAYPOINT_ID, transaction.getWaypointId());
       putInMap(KEY_MAP_OF_WAYPOINT_IDS_ORDER, transaction.getWaypointId(), trackingId);
       //to get newly create route id from parcel route transfer
-      String routeSource = get(RoutingSteps.KEY_ROUTE_EVENT_SOURCE);
-      if (get(DriverSteps.KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS) != null && routeSource
-          .equalsIgnoreCase("ROUTE_TRANSFER")) {
+      String routeSource = get(KEY_ROUTE_EVENT_SOURCE);
+      if (get(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS) != null
+          && routeSource.equalsIgnoreCase("ROUTE_TRANSFER")) {
         put(KEY_CREATED_ROUTE_ID, transaction.getRouteId());
         putInList(KEY_LIST_OF_CREATED_ROUTE_ID, transaction.getRouteId());
       }
@@ -114,7 +108,7 @@ public class OrderActionSteps extends BaseSteps {
     put(KEY_LIST_OF_WAYPOINTS_SEQUENCE, waypointIds);
   }
 
-  @Then("^Operator verify all \"([^\"]*)\" transactions status is \"([^\"]*)\"$")
+  @Then("Operator verify all {string} transactions status is {string}")
   public void operatorVerifyAllTransactionStatus(String type, String status) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     trackingIds.forEach(e -> {
@@ -124,19 +118,20 @@ public class OrderActionSteps extends BaseSteps {
       if (status.equalsIgnoreCase("fail")) {
         putInList(KEY_LIST_OF_TRANSACTION_DETAILS, transaction);
       }
-      assertEquals(String.format("transaction id %d status", transaction.getId()),
-          status.toLowerCase(), transaction.getStatus().toLowerCase());
+      Assertions.assertThat(transaction.getStatus().toLowerCase())
+          .as(String.format("transaction id %d status", transaction.getId()))
+          .isEqualTo(status.toLowerCase());
     });
   }
 
-  @Then("^Operator verify that \"([^\"]*)\" orders \"([^\"]*)\" transactions status is \"([^\"]*)\"$")
-  public void operatortVerifiesPartialTransactionStatus(String actionMode, String transactionType,
+  @Then("Operator verify that {string} orders {string} transactions status is {string}")
+  public void operatorVerifiesPartialTransactionStatus(String actionMode, String transactionType,
       String transactionStatus) {
     List<String> trackingIds;
     if (actionMode.equalsIgnoreCase(ACTION_SUCCESS)) {
-      trackingIds = get(BatchUpdatePodsSteps.KEY_LIST_OF_PARTIAL_SUCCESS_TID);
+      trackingIds = get(KEY_LIST_OF_PARTIAL_SUCCESS_TID);
     } else {
-      trackingIds = get(BatchUpdatePodsSteps.KEY_LIST_OF_PARTIAL_FAIL_TID);
+      trackingIds = get(KEY_LIST_OF_PARTIAL_FAIL_TID);
     }
     trackingIds.forEach(e -> {
       put(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, trackingIds);
@@ -144,8 +139,8 @@ public class OrderActionSteps extends BaseSteps {
     });
   }
 
-  @Then("^Operator checks that \"([^\"]*)\" event is published$")
-  public void operatortVerifiesOrderEvent(String event) {
+  @Then("Operator checks that {string} event is published")
+  public void operatorVerifiesOrderEvent(String event) {
     long orderId = get(KEY_CREATED_ORDER_ID);
     callWithRetry(() -> {
       List<Event> result = getOrderEvent(event, orderId);
@@ -154,53 +149,48 @@ public class OrderActionSteps extends BaseSteps {
         throw new NvTestRuntimeException(
             f("events should not empty, order id: %d, event: %s", orderId, event));
       }
-      assertEquals(String.format("%s event is published", event), event.toLowerCase(),
-          result.get(0).getType().toLowerCase());
+      Assertions.assertThat(result.get(0).getType().toLowerCase())
+          .as(String.format("%s event is published", event)).isEqualTo(event.toLowerCase());
       put(KEY_ORDER_EVENTS, result);
       putAllInList(KEY_LIST_OF_ORDER_EVENTS, result);
-      operatortVerifiesOrderEventData(event);
+      operatorVerifiesOrderEventData(event);
     }, String.format("%s event is published for order id %d", event, orderId));
   }
 
-  @Then("^Operator checks that \"([^\"]*)\" event is NOT published$")
-  public void operatortVerifiesOrderEventNotPUblished(String event) {
+  @Then("Operator checks that {string} event is NOT published")
+  public void operatorVerifiesOrderEventNotPublished(String event) {
     long orderId = get(KEY_CREATED_ORDER_ID);
     callWithRetry(() -> {
       List<Event> result = getOrderEvent(event, orderId);
-      assertTrue(String.format("%s event is NOT published", event), result.isEmpty());
+      Assertions.assertThat(result.isEmpty()).as(String.format("%s event is NOT published", event))
+          .isTrue();
     }, String.format("%s event is NOT published", event));
   }
 
-  @Then("^Operator verifies that order event \"([^\"]*)\" data has correct details$")
-  public void operatortVerifiesOrderEventData(String eventType) {
+  @Then("Operator verifies that order event {string} data has correct details")
+  public void operatorVerifiesOrderEventData(String eventType) {
     List<Event> events = get(KEY_LIST_OF_ORDER_EVENTS);
     List<Long> routeIds = get(KEY_LIST_OF_CREATED_ROUTE_ID);
     Long routeId = get(KEY_CREATED_ROUTE_ID);
-    long orderId = get(KEY_CREATED_ORDER_ID);
+    Long orderId = get(KEY_CREATED_ORDER_ID);
     Event event;
-    if (eventType.equalsIgnoreCase(Event.ADD_TO_ROUTE_EVENT) || eventType
-        .equalsIgnoreCase(Event.PULL_OUT_OF_ROUTE_EVENT)) {
-      String source = get(RoutingSteps.KEY_ROUTE_EVENT_SOURCE);
-      event = events.stream()
-          .filter(e -> e.getOrderId() == orderId)
+    if (eventType.equalsIgnoreCase(Event.ADD_TO_ROUTE_EVENT) || eventType.equalsIgnoreCase(
+        Event.PULL_OUT_OF_ROUTE_EVENT)) {
+      String source = get(KEY_ROUTE_EVENT_SOURCE);
+      event = events.stream().filter(e -> Objects.equals(e.getOrderId(), orderId))
           .filter(e -> e.getType().equalsIgnoreCase(eventType))
-          .filter(e -> e.getData().getSource().equalsIgnoreCase(source))
-          .findAny().orElseThrow(() -> new NvTestRuntimeException(
-              "order event not found"));
+          .filter(e -> e.getData().getSource().equalsIgnoreCase(source)).findAny()
+          .orElseThrow(() -> new NvTestRuntimeException("order event not found"));
     } else if (eventType.equalsIgnoreCase(Event.UPDATE_STATUS)) {
-      String reason = get(OrderActionSteps.KEY_UPDATE_STATUS_REASON);
-      event = events.stream()
-          .filter(e -> e.getOrderId() == orderId)
+      String reason = get(KEY_UPDATE_STATUS_REASON);
+      event = events.stream().filter(e -> Objects.equals(e.getOrderId(), orderId))
           .filter(e -> e.getType().equalsIgnoreCase(eventType))
-          .filter(e -> e.getData().getReason().equalsIgnoreCase(reason))
-          .findAny().orElseThrow(() -> new NvTestRuntimeException(
-              "order event not found"));
+          .filter(e -> e.getData().getReason().equalsIgnoreCase(reason)).findAny()
+          .orElseThrow(() -> new NvTestRuntimeException("order event not found"));
     } else {
-      event = events.stream()
-          .filter(e -> e.getOrderId() == orderId)
-          .filter(e -> e.getType().equalsIgnoreCase(eventType))
-          .findAny().orElseThrow(() -> new NvTestRuntimeException(
-              "order event not found"));
+      event = events.stream().filter(e -> Objects.equals(e.getOrderId(), orderId))
+          .filter(e -> e.getType().equalsIgnoreCase(eventType)).findAny()
+          .orElseThrow(() -> new NvTestRuntimeException("order event not found"));
     }
     EventDetail data = event.getData();
     switch (eventType) {
@@ -218,59 +208,57 @@ public class OrderActionSteps extends BaseSteps {
         }
         break;
       case Event.PULL_OUT_OF_ROUTE_EVENT:
-        Assertions.assertThat(data.getRouteId()).as("data.route_id")
-            .isEqualTo(routeIds.get(0));
+        Assertions.assertThat(data.getRouteId()).as("data.route_id").isEqualTo(routeIds.get(0));
         break;
       case Event.CANCEL:
         break;
       case Event.UPDATE_STATUS:
-        String reason = get(OrderActionSteps.KEY_UPDATE_STATUS_REASON);
-        Assertions.assertThat(data.getReason()).as("update status reason")
-            .isEqualTo(reason);
+        String reason = get(KEY_UPDATE_STATUS_REASON);
+        Assertions.assertThat(data.getReason()).as("update status reason").isEqualTo(reason);
         break;
       default: {
         //ADD_TO_ROUTE, DRIVER_INBOUND_SCAN, DRIVER_PICKUP_SCAN
         if (data.getRouteId() != null) {
-          Assertions.assertThat(data.getRouteId()).as("data.route_id")
-              .isEqualTo(routeId);
+          Assertions.assertThat(data.getRouteId()).as("data.route_id").isEqualTo(routeId);
         }
       }
     }
   }
 
-  @Then("^Operator verify that order status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
-  public void operatortVerifiesOrderStatus(String status, String granularStatus) {
+  @Then("Operator verify that order status-granular status is {string}-{string}")
+  public void operatorVerifiesOrderStatus(String status, String granularStatus) {
     operatorSearchOrderByTrackingId();
     final Order o = get(KEY_CREATED_ORDER);
     callWithRetry(() -> {
       operatorSearchOrderByTrackingId();
       Order order = get(KEY_CREATED_ORDER);
-      assertEquals(String.format("order %s status = %s", order.getTrackingId(), status),
-          StringUtils.lowerCase(status), StringUtils.lowerCase(order.getStatus()));
-      assertEquals(
-          String.format("order %s granular status = %s", order.getTrackingId(), granularStatus),
-          StringUtils.lowerCase(granularStatus), StringUtils.lowerCase(order.getGranularStatus()));
+      Assertions.assertThat(StringUtils.lowerCase(order.getStatus()))
+          .as(String.format("order %s status = %s", order.getTrackingId(), status))
+          .isEqualTo(StringUtils.lowerCase(status));
+      Assertions.assertThat(order.getGranularStatus())
+          .as(f("order %s granular status = %s", order.getTrackingId(), granularStatus))
+          .isEqualToIgnoringCase(granularStatus);
     }, f("check order granular status of %s", o.getTrackingId()));
   }
 
-  @Then("^Operator verify that order comment is appended with cancel reason = \"([^\"]*)\"$")
-  public void operatortVerifiesOrderComment(String comment) {
+  @Then("Operator verify that order comment is appended with cancel reason = {string}")
+  public void operatorVerifiesOrderComment(String comment) {
     operatorSearchOrderByTrackingId();
     final Order o = get(KEY_CREATED_ORDER);
     callWithRetry(() -> {
       operatorSearchOrderByTrackingId();
       Order order = get(KEY_CREATED_ORDER);
-      assertEquals("order comment", StringUtils.lowerCase(comment),
-          StringUtils.lowerCase(order.getComments()));
+      Assertions.assertThat(StringUtils.lowerCase(order.getComments())).as("order comment")
+          .isEqualTo(StringUtils.lowerCase(comment));
     }, f("check order comment", o.getTrackingId()));
   }
 
-  @Then("^Operator verify that all orders status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
-  public void operatortVerifiesAllOrderStatus(String status, String granularStatus) {
-    List<String> trackingIds = get(OrderCreateSteps.KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+  @Then("Operator verify that all orders status-granular status is {string}-{string}")
+  public void operatorVerifiesAllOrderStatus(String status, String granularStatus) {
+    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     trackingIds.forEach(e -> {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
-      operatortVerifiesOrderStatus(status, granularStatus);
+      operatorVerifiesOrderStatus(status, granularStatus);
     });
   }
 
@@ -287,33 +275,33 @@ public class OrderActionSteps extends BaseSteps {
     putAllInList(KEY_LIST_OF_CREATED_ORDER_ID, orderIds);
   }
 
-  @Then("^Operator verify that \"([^\"]*)\" orders status-granular status is \"([^\"]*)\"-\"([^\"]*)\"$")
-  public void operatortVerifiesPartialOrderStatus(String actionMode, String status,
+  @Then("Operator verify that {string} orders status-granular status is {string}-{string}")
+  public void operatorVerifiesPartialOrderStatus(String actionMode, String status,
       String granularStatus) {
     List<String> trackingIds;
     if (actionMode.equalsIgnoreCase(ACTION_SUCCESS)) {
-      trackingIds = get(BatchUpdatePodsSteps.KEY_LIST_OF_PARTIAL_SUCCESS_TID);
+      trackingIds = get(KEY_LIST_OF_PARTIAL_SUCCESS_TID);
     } else {
-      trackingIds = get(BatchUpdatePodsSteps.KEY_LIST_OF_PARTIAL_FAIL_TID);
+      trackingIds = get(KEY_LIST_OF_PARTIAL_FAIL_TID);
     }
     trackingIds.forEach(e -> {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
-      operatortVerifiesOrderStatus(status, granularStatus);
+      operatorVerifiesOrderStatus(status, granularStatus);
     });
   }
 
-  @Then("^Operator checks that for all orders, \"([^\"]*)\" event is published$")
-  public void operatortVerifiesOrderEventForEach(String event) {
+  @Then("Operator checks that for all orders, {string} event is published")
+  public void operatorVerifiesOrderEventForEach(String event) {
     List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
     orderIds.forEach(e -> {
       put(KEY_CREATED_ORDER_ID, e);
-      operatortVerifiesOrderEvent(event);
+      operatorVerifiesOrderEvent(event);
     });
     LOGGER.info(f("%s event is published for all order ids %s", event,
         Arrays.toString(orderIds.toArray())));
   }
 
-  @When("^Operator force success order$")
+  @When("Operator force success order")
   public void operatorForceSuccessOrder() {
     long orderId = get(KEY_CREATED_ORDER_ID);
     callWithRetry(() -> {
@@ -322,7 +310,7 @@ public class OrderActionSteps extends BaseSteps {
     }, "force success order");
   }
 
-  @When("^Operator force success all orders$")
+  @When("Operator force success all orders")
   public void operatorForceSuccessAllOrders() {
     List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
     orderIds.stream().distinct().forEach(e -> {
@@ -331,7 +319,7 @@ public class OrderActionSteps extends BaseSteps {
     });
   }
 
-  @When("^Operator force \"([^\"]*)\" \"([^\"]*)\" waypoint$")
+  @When("Operator force {string} {string} waypoint")
   public void operatorForceFailOrder(String action, String type) {
     operatorSearchTransaction(type, Transaction.STATUS_PENDING);
     long waypointId = get(KEY_WAYPOINT_ID);
@@ -363,31 +351,31 @@ public class OrderActionSteps extends BaseSteps {
     }, "admin force finish success with cod");
   }
 
-  @When("^Operator tags order with PRIOR tag$")
+  @When("Operator tags order with PRIOR tag")
   public void tagPriorOrder() {
     long tagId = TestConstants.ORDER_TAG_PRIOR_ID;
     operatorTagsOrder(tagId);
   }
 
-  @When("^Operator \"([^\"]*)\" Order COD value with value (\\d+)$")
-  public void operatorModifyCod(String type, long amount) {
+  @When("Operator {string} Order COD value with value {double}")
+  public void operatorModifyCod(String type, double amount) {
     long orderId = get(KEY_CREATED_ORDER_ID);
     Response r = getOrderClient().addCodValueAndGetRawResponse(orderId, amount);
     put(KEY_API_RAW_RESPONSE, r);
   }
 
-  @When("^Operator deletes Order COD value$")
+  @When("Operator deletes Order COD value")
   public void operatorDeleteCod() {
     long orderId = get(KEY_CREATED_ORDER_ID);
     Response r = getOrderClient().deleteCodAndGetRawResponse(orderId);
     put(KEY_API_RAW_RESPONSE, r);
   }
 
-  @When("^Operator update delivery verfication with value \"([^\"]*)\"$")
+  @When("Operator update delivery verfication with value {string}")
   public void operatorUpdateDeliveryVerification(String method) {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-    Response r = getOrderClient()
-        .editDeliveryVerificationRequiredAndGetRawResponse(trackingId, method);
+    Response r = getOrderClient().editDeliveryVerificationRequiredAndGetRawResponse(trackingId,
+        method);
     put(KEY_API_RAW_RESPONSE, r);
   }
 
@@ -396,66 +384,66 @@ public class OrderActionSteps extends BaseSteps {
     final Long orderId = get(KEY_CREATED_ORDER_ID);
     final Rts rtsRequest = fromJsonSnakeCase(request.get("request"), Rts.class);
     rtsRequest.setOrderId(orderId);
-    Response r = getOrderClient()
-        .setReturnedToSenderAndGetRawResponse(rtsRequest);
+    Response r = getOrderClient().setReturnedToSenderAndGetRawResponse(rtsRequest);
     put(KEY_API_RAW_RESPONSE, r);
   }
 
   @When("Operator force success invalid state Order")
   public void operatorForceSuccessInvalidState() {
     final Long orderId = get(KEY_CREATED_ORDER_ID);
-    Response r = getOrderClient()
-        .forceSuccessAndGetRawResponse(orderId, false);
+    Response r = getOrderClient().forceSuccessAndGetRawResponse(orderId, false);
     put(KEY_API_RAW_RESPONSE, r);
   }
 
-  @When("^Operator validate order for ATL$")
+  @When("Operator validate order for ATL")
   public void operatorValidateDeliveryVerification() {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-    Response r = getOrderClient()
-        .validateDeliveryVerificationAndGetRawResponse(trackingId);
-    assertEquals("response code", HttpConstants.RESPONSE_200_SUCCESS, r.statusCode());
+    Response r = getOrderClient().validateDeliveryVerificationAndGetRawResponse(trackingId);
+    Assertions.assertThat(r.statusCode()).as("response code")
+        .isEqualTo(HttpConstants.RESPONSE_200_SUCCESS);
     put(KEY_API_RAW_RESPONSE, r);
   }
 
-  @When("^Operator verify that response returns \"([^\"]*)\"$")
+  @When("Operator verify that response returns {string}")
   public void operatorVerifyResponseValidationDeliveryVerification(String data) {
     Response r = get(KEY_API_RAW_RESPONSE);
     String actualData = r.body().asString();
     String expectedData = "{\"data\":" + data + "}";
-    assertEquals("response data", expectedData, actualData);
+    Assertions.assertThat(actualData).as("response data").isEqualTo(expectedData);
   }
 
-  @When("^Operator verify response code is (\\d+) with error message details as follow$")
+  @When("Operator verify response code is {int} with error message details as follow")
   public void operatorVerifyResponseWithParams(int expectedHttpStatus, Map<String, String> params) {
     callWithRetry(() -> {
       Response response = get(KEY_API_RAW_RESPONSE);
-      assertEquals("Http response code", expectedHttpStatus, response.getStatusCode());
+      Assertions.assertThat(response.getStatusCode()).as("Http response code")
+          .isEqualTo(expectedHttpStatus);
 
       String json = toJsonSnakeCase(params);
       ExceptionResponse expectedError = fromJsonSnakeCase(json, ExceptionResponse.class);
       ExceptionResponse actualError;
       try {
-        actualError = fromJsonSnakeCase(response.body().asString(),
-            ExceptionResponse.class);
+        actualError = fromJsonSnakeCase(response.body().asString(), ExceptionResponse.class);
       } catch (Exception e) {
         LOGGER.error("JSON error: " + e.getMessage());
         throw new RuntimeException("response is not valid JSON");
       }
-      assertEquals("code", expectedError.getCode(), actualError.getCode());
-      assertEquals("messages", params.get("message"),
-          actualError.getMessages().get(0));
-      assertEquals("application", expectedError.getApplication(), actualError.getApplication());
-      assertEquals("description", expectedError.getDescription(), actualError.getDescription());
-      assertEquals("data.message", params.get("message"),
-          actualError.getData().getMessage());
+      Assertions.assertThat(actualError.getCode()).as("code").isEqualTo(expectedError.getCode());
+      Assertions.assertThat(actualError.getMessages().get(0)).as("messages")
+          .isEqualTo(params.get("message"));
+      Assertions.assertThat(actualError.getApplication()).as("application")
+          .isEqualTo(expectedError.getApplication());
+      Assertions.assertThat(actualError.getDescription()).as("description")
+          .isEqualTo(expectedError.getDescription());
+      Assertions.assertThat(actualError.getData().getMessage()).as("data.message")
+          .isEqualTo(params.get("message"));
     }, "verify response");
   }
 
-  @When("^Operator tags order with tag id \"([^\"]*)\"$")
-  public void operatorTagsOrder(long tagId) {
+  @When("Operator tags order with tag id {long}")
+  public void operatorTagsOrder(Long tagId) {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-    List<Long> tagIds = Arrays.asList(tagId);
+    List<Long> tagIds = List.of(tagId);
     callWithRetry(() -> {
       long orderId = searchOrder(trackingId).getId();
       getOrderClient().addOrderLevelTags(orderId, tagIds);
@@ -464,7 +452,7 @@ public class OrderActionSteps extends BaseSteps {
     }, f("tag an order: %s", trackingId));
   }
 
-  @When("^Operator tags all orders with PRIOR tag$")
+  @When("Operator tags all orders with PRIOR tag")
   public void tagMultipleOrders() {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     trackingIds.forEach(e -> {
@@ -494,24 +482,23 @@ public class OrderActionSteps extends BaseSteps {
   private Order getOrderDetails(String trackingId) {
     long orderId = searchOrder(trackingId).getId();
     Order order = getOrderClient().getOrder(orderId);
-    assertNotNull("order details", order);
+    Assertions.assertThat(order).as("order details").isNotNull();
     return order;
   }
 
   private Transaction getTransaction(Order order, String type, String status) {
     List<Transaction> transactions = order.getTransactions();
     Transaction result;
-    result = transactions.stream()
-        .filter(e -> e.getType().equalsIgnoreCase(type))
-        .filter(e -> e.getStatus().equalsIgnoreCase(status))
-        .findAny().orElseThrow(() -> new NvTestRuntimeException(
-            f("transaction details not found: %s", order.getTrackingId())));
+    result = transactions.stream().filter(e -> e.getType().equalsIgnoreCase(type))
+        .filter(e -> e.getStatus().equalsIgnoreCase(status)).findAny().orElseThrow(
+            () -> new NvTestRuntimeException(
+                f("transaction details not found: %s", order.getTrackingId())));
     return result;
   }
 
   private List<Event> getOrderEvent(String event, long orderId) {
     List<Event> events = getEventClient().getOrderEventsByOrderId(orderId).getData();
-    return events.stream()
-        .filter(c -> c.getType().equalsIgnoreCase(event)).collect(Collectors.toList());
+    return events.stream().filter(c -> c.getType().equalsIgnoreCase(event))
+        .collect(Collectors.toList());
   }
 }

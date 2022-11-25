@@ -6,21 +6,15 @@ import co.nvqa.commons.model.core.Pickup;
 import co.nvqa.commons.model.core.route.AddParcelToRouteRequest;
 import co.nvqa.commons.model.core.route.ArchiveRouteResponse;
 import co.nvqa.commons.model.core.route.Route;
-import co.nvqa.commons.model.core.route.ZonalRoutingRouteRequest;
 import co.nvqa.commons.support.DateUtil;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
+import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
-import io.cucumber.guice.ScenarioScoped;
 import io.restassured.response.Response;
-
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import org.assertj.core.api.Assertions;
@@ -35,12 +29,6 @@ public class RoutingSteps extends BaseSteps {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(RoutingSteps.class);
 
-  public static final String KEY_LIST_OF_PULL_OUT_OF_ROUTE_TRACKING_ID = "key-list-pull-out-of-route-tracking-id";
-  private static final String KEY_UNARCHIVE_ROUTE_RESPONSE = "key-unarchive-route-response";
-  private static final String KEY_ARCHIVE_ROUTE_RESPONSE = "key-archive-route-response";
-  private static final String KEY_DELETE_ROUTE_RESPONSE = "key-delete-route-response";
-  public static final String KEY_ROUTE_EVENT_SOURCE = "key-route-event-source";
-
   @Override
   public void init() {
 
@@ -51,8 +39,8 @@ public class RoutingSteps extends BaseSteps {
     final String json = toJsonCamelCase(arg1);
     final Route route = fromJsonSnakeCase(json, Route.class);
     put(KEY_NINJA_DRIVER_ID, route.getDriverId());
-    route.setComments("Created for Core API testing, created at: " + DateUtil
-        .getTodayDateTime_YYYY_MM_DD_HH_MM_SS());
+    route.setComments("Created for Core API testing, created at: "
+        + DateUtil.getTodayDateTime_YYYY_MM_DD_HH_MM_SS());
     route.setTags(Arrays.asList(1, 4));
     route.setDate(DateUtil.generateUTCTodayDate());
     callWithRetry(() -> {
@@ -71,7 +59,7 @@ public class RoutingSteps extends BaseSteps {
     final String json = toJsonCamelCase(arg1);
     final Route route = fromJsonSnakeCase(json, Route.class);
     route.setComments("Created for Core API testing");
-    route.setTags(Arrays.asList(1, 4));
+    route.setTags(List.of(1, 4));
     route.setDate(DateUtil.generateUTCYesterdayDate());
     callWithRetry(() -> {
       final Route result = getRouteClient().createRoute(route);
@@ -118,12 +106,11 @@ public class RoutingSteps extends BaseSteps {
     Long orderId = get(KEY_CREATED_ORDER_ID);
     Long routeId = get(KEY_CREATED_ROUTE_ID);
     getRouteClient().addToRouteDp(orderId, routeId);
-    put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ADD_BY_ORDER_DP");
+    put(KEY_ROUTE_EVENT_SOURCE, "ADD_BY_ORDER_DP");
   }
 
   @When("Operator add all orders to driver {string} route")
-  public void
-  operatorAddMultipleOrdersToRoute(String type) {
+  public void operatorAddMultipleOrdersToRoute(String type) {
     final List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
     orderIds.stream().distinct().forEach(e -> {
       put(KEY_CREATED_ORDER_ID, e);
@@ -154,23 +141,24 @@ public class RoutingSteps extends BaseSteps {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     callWithRetry(() -> {
       Response response = getRouteClient().deleteRouteAndGetRawResponse(routeId);
-      assertEquals("response code", statusCode, response.getStatusCode());
+      Assertions.assertThat(response.getStatusCode()).as("response code").isEqualTo(statusCode);
       if (statusCode == HttpConstants.RESPONSE_200_SUCCESS) {
-        assertEquals("response body", f("[%d]", routeId), response.getBody().asString());
+        Assertions.assertThat(response.getBody().asString()).as("response body ")
+            .isEqualTo(f("[%d]", routeId));
       }
       put(KEY_DELETE_ROUTE_RESPONSE, response);
-      put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "ZONAL_ROUTING_REMOVE");
+      put(KEY_ROUTE_EVENT_SOURCE, "ZONAL_ROUTING_REMOVE");
     }, "delete driver route");
   }
 
-  @When("Operator verify delete route response with proper error message : {}")
+  @When("Operator verify delete route response with proper error message : {string}")
   public void verifyBadDeleteRoute(String message) {
     Response r = get(KEY_DELETE_ROUTE_RESPONSE);
     Pickup pickup = get(KEY_CREATED_RESERVATION);
     if (pickup != null) {
       Assertions.assertThat(r.getBody().asString()).as("response message is correct")
-          .containsIgnoringCase(String
-              .format("Reservation %d for Shipper %d has status %s. Cannot delete route.",
+          .containsIgnoringCase(
+              String.format("Reservation %d for Shipper %d has status %s. Cannot delete route.",
                   pickup.getReservationId(), pickup.getShipperId(),
                   pickup.getStatus().toUpperCase()));
     } else {
@@ -182,9 +170,9 @@ public class RoutingSteps extends BaseSteps {
         type = "Delivery";
       }
       Assertions.assertThat(r.getBody().asString()).as("response message contains the message")
-          .containsIgnoringCase(String
-              .format("%s for Order %d has already been attempted. Cannot delete route.", type,
-                  order.getId()));
+          .containsIgnoringCase(
+              String.format("%s for Order %d has already been attempted. Cannot delete route.",
+                  type, order.getId()));
     }
   }
 
@@ -203,7 +191,7 @@ public class RoutingSteps extends BaseSteps {
     long routeId = get(KEY_CREATED_ROUTE_ID, 89L);
     callWithRetry(() -> {
       Response r = getRouteClient().unarchiveRouteV2AndGetRawResponse(routeId);
-      assertEquals("status code", statusCode, r.getStatusCode());
+      Assertions.assertThat(r.getStatusCode()).as("status code").isEqualTo(statusCode);
       put(KEY_UNARCHIVE_ROUTE_RESPONSE, r);
     }, "unarchive driver route v2");
   }
@@ -212,8 +200,7 @@ public class RoutingSteps extends BaseSteps {
   public void verifyBadUnarchivedRoute(String message) {
     long routeId = get(KEY_CREATED_ROUTE_ID, 89L);
     Response r = get(KEY_UNARCHIVE_ROUTE_RESPONSE);
-    Assertions.assertThat(r.getBody().asString()).as("error Message")
-        .contains(f(message, routeId));
+    Assertions.assertThat(r.getBody().asString()).as("error Message").contains(f(message, routeId));
   }
 
   @When("Operator archives multiple driver routes")
@@ -270,7 +257,7 @@ public class RoutingSteps extends BaseSteps {
       final String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
       final Order order = OrderDetailHelper.getOrderDetails(trackingId);
       getRouteClient().pullOutDpOrderFromRoute(order.getId());
-      put(RoutingSteps.KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_DP");
+      put(KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_DP");
     }, "pull out of route");
   }
 
@@ -279,7 +266,8 @@ public class RoutingSteps extends BaseSteps {
     long routeId = get(KEY_CREATED_ROUTE_ID, 1234L);
     callWithRetry(() -> {
       Response response = getRouteClient().archiveRouteV2AndGetRawResponse(routeId);
-      assertEquals("archive route response", statusCode, response.getStatusCode());
+      Assertions.assertThat(response.getStatusCode()).as("archive route response")
+          .isEqualTo(statusCode);
       put(KEY_ARCHIVE_ROUTE_RESPONSE, response);
     }, "archive driver route V2");
   }
