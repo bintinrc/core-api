@@ -15,6 +15,8 @@ Feature: ID - Order Dimensions Update Calculation
       | width  | <width>           |
       | height | <height>          |
     Then Operator verifies orders.weight is updated to highest weight correctly
+    When Operator perform global inbound at hub "{sorting-hub-id}"
+    Then Operator verifies orders.weight is updated to highest weight correctly
     Examples:
       | Note                                     | shipper_weight_case | shipper_submitted_weight | measured_weight | length | width | height |
       | Highest Weight = Shipper Adjusted Weight | <= 0.6 KG           | 550                      | 0.45            | 40     | 6     | 10     |
@@ -34,6 +36,10 @@ Feature: ID - Order Dimensions Update Calculation
       | length | <length>          |
       | width  | <width>           |
       | height | <height>          |
+    Then DB Operator verifies order weight updated to highest weight within range
+      | weight           | <expected_weight>  |
+      | use_weight_range | <use_weight_range> |
+    When Operator perform global inbound at hub "{sorting-hub-id}"
     Then DB Operator verifies order weight updated to highest weight within range
       | weight           | <expected_weight>  |
       | use_weight_range | <use_weight_range> |
@@ -57,6 +63,8 @@ Feature: ID - Order Dimensions Update Calculation
       | width  | <width>           |
       | height | <height>          |
     Then Operator verifies orders.weight is updated to highest weight correctly
+    When Operator perform global inbound at hub "{sorting-hub-id}"
+    Then Operator verifies orders.weight is updated to highest weight correctly
     Examples:
       | Note                                     | shipper_weight_case | shipper_submitted_weight | measured_weight | length | width | height |
       | Highest Weight = Shipper Adjusted Weight | <= 0.6 KG           | 550                      | 0.45            | 40     | 6     | 10     |
@@ -76,6 +84,10 @@ Feature: ID - Order Dimensions Update Calculation
       | length | <length>          |
       | width  | <width>           |
       | height | <height>          |
+    Then DB Operator verifies order weight updated to highest weight within range
+      | weight           | <expected_weight>  |
+      | use_weight_range | <use_weight_range> |
+    When Operator perform global inbound at hub "{sorting-hub-id}"
     Then DB Operator verifies order weight updated to highest weight within range
       | weight           | <expected_weight>  |
       | use_weight_range | <use_weight_range> |
@@ -101,6 +113,10 @@ Feature: ID - Order Dimensions Update Calculation
     Then DB Operator verifies order weight updated to highest weight within range
       | weight           | <expected_weight> |
       | use_weight_range | false             |
+    When Operator perform global inbound at hub "{sorting-hub-id}"
+    Then DB Operator verifies order weight updated to highest weight within range
+      | weight           | <expected_weight> |
+      | use_weight_range | false             |
     Examples:
       | Note                                     | shipper_weight_case | expected_weight | shipper_submitted_weight | measured_weight | length | width | height |
       | Highest Weight = Shipper Adjusted Weight | <= 0.6 KG           | 0.55            | 0.55                     | 0               | 40     | 6     | 10     |
@@ -120,6 +136,10 @@ Feature: ID - Order Dimensions Update Calculation
       | length | <length>          |
       | width  | <width>           |
       | height | <height>          |
+    Then DB Operator verifies order weight updated to highest weight within range
+      | weight           | <expected_weight> |
+      | use_weight_range | false             |
+    When Operator perform global inbound at hub "{sorting-hub-id}"
     Then DB Operator verifies order weight updated to highest weight within range
       | weight           | <expected_weight> |
       | use_weight_range | false             |
@@ -145,6 +165,10 @@ Feature: ID - Order Dimensions Update Calculation
     Then DB Operator verifies order weight updated to highest weight within range
       | weight           | <expected_weight> |
       | use_weight_range | false             |
+    When Operator perform global inbound at hub "{sorting-hub-id}"
+    Then DB Operator verifies order weight updated to highest weight within range
+      | weight           | <expected_weight> |
+      | use_weight_range | false             |
     Examples:
       | Note                                     | shipper_weight_case | expected_weight | shipper_submitted_weight | measured_weight | length | width | height |
       | Highest Weight = Shipper Adjusted Weight | < 100 KG            | 2.5             | 2.5                      | 0               | 10     | 10    | 60     |
@@ -165,6 +189,8 @@ Feature: ID - Order Dimensions Update Calculation
       | width  | <width>           |
       | height | <height>          |
     Then Operator verifies orders.weight is updated to highest weight correctly
+    When Operator perform global inbound at hub "{sorting-hub-id}"
+    Then Operator verifies orders.weight is updated to highest weight correctly
     Examples:
       | Note                                     | shipper_weight_case | shipper_submitted_weight | measured_weight | length | width | height |
       | Highest Weight = Shipper Adjusted Weight | <= 0.6 KG           | 550                      | 0.45            | 40     | 6     | 10     |
@@ -184,6 +210,10 @@ Feature: ID - Order Dimensions Update Calculation
       | length | <length>          |
       | width  | <width>           |
       | height | <height>          |
+    Then DB Operator verifies order weight updated to highest weight within range
+      | weight           | <expected_weight>  |
+      | use_weight_range | <use_weight_range> |
+    When Operator perform global inbound at hub "{sorting-hub-id}"
     Then DB Operator verifies order weight updated to highest weight within range
       | weight           | <expected_weight>  |
       | use_weight_range | <use_weight_range> |
