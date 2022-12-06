@@ -252,3 +252,20 @@ Feature: ID - Order Dimensions Update Calculation
       | Note                            | weight | pricing_weight |
       | Pricing Weight > Current Weight | 3.6    | 2.5            |
       | Pricing Weight < Current Weight | 3.6    | 1.2            |
+
+  Scenario: ID - Update Weight upon Global Inbound - Inbound Second Time with no Changes
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    And Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+      | weight                        | 1.5      |
+    And Operator search for created order
+    When Operator global inbound at hub "{sorting-hub-id}" with changes in dimensions
+      | weight | 3.2 |
+      | length | 60  |
+      | width  | 20  |
+      | height | 30  |
+    Then Operator verifies orders.weight is updated to highest weight correctly
+    When Operator perform global inbound at hub "{sorting-hub-id}"
+    Then Operator verifies orders.weight is updated to highest weight correctly
