@@ -39,6 +39,7 @@ dependencies {
     implementation "co.nvqa:common-base:1.0.8"
     implementation "co.nvqa:commons:2.2.9"
     implementation "co.nvqa:common-auth:1.+"
+    implementation "co.nvqa:common-sort:1.1.0"
     testImplementation "ch.qos.logback:logback-classic:1.2.3"
     testImplementation "org.apache.poi:poi-ooxml:3.17"
 }
@@ -49,7 +50,8 @@ project.ext {
             "co.nvqa.core_api.cucumber.glue",
             "classpath:co.nvqa.common.cucumber.glue",
             "classpath:co.nvqa.commons.cucumber.glue",
-            "classpath:co.nvqa.commonauth.cucumber.glue"
+            "classpath:co.nvqa.commonauth.cucumber.glue",
+            "classpath:co.nvqa.commonsort.cucumber.glue"
     ]
 }
 

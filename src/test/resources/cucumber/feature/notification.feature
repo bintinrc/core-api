@@ -214,7 +214,6 @@ Feature: Notification
     And Shipper gets webhook request for event "Pending Reschedule" for all orders
     And Shipper verifies webhook request payload has correct details for status "Pending Reschedule"
 
-
   Scenario: Send First Attempt Delivery Fail & First Pending Reschedule Webhook on Global Inbound Rescheduled Delivery Order
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
@@ -242,7 +241,7 @@ Feature: Notification
     Then Operator verify that order status-granular status is "Transit"-"Enroute_to_sorting_hub"
     Given Shipper id "{shipper-4-id}" subscribes to "Arrived at Sorting Hub" webhook
     And Operator perform global inbound at hub "{sorting-hub-id}"
-    And Operator get info of hub details string id "{sorting-hub-id}"
+    And API Sort - Operator get hub  details of hub id "{sorting-hub-id}"
     And Shipper gets webhook request for event "First Attempt Delivery Fail" for all orders
     And Shipper verifies webhook request payload has correct details for status "First Attempt Delivery Fail"
     And Shipper gets webhook request for event "Pending Reschedule" for all orders
