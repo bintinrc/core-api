@@ -27,7 +27,14 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to Success All Created Orders "Pickup"
     Then DB Operator verifies transaction_blob is created
     And Verify blob data is correct
-    And Operator checks that for all orders, "UPDATE_STATUS" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
 
     Examples:
       | Note       | hiptest-uid                              | type       |
@@ -62,7 +69,22 @@ Feature: Batch Update PODs
     And DB Operator verifies all transaction_failure_reason is created correctly
     Then DB Operator verifies transaction_blob is created
     And Verify blob data is correct
-    And Operator checks that for all orders, "UPDATE_STATUS" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[4]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
 
   Scenario: Driver fails all X number of return pickup parcels in one waypoint
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
@@ -89,7 +111,14 @@ Feature: Batch Update PODs
     Then DB Operator verifies all transaction_failure_reason is created correctly
     And DB Operator verifies transaction_blob is created
     And Verify blob data is correct
-    And Operator checks that for all orders, "UPDATE_STATUS" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
 
   Scenario Outline: Driver delivers all X number of normal parcels in one waypoint with POD type - <Note>
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery, Completed" webhook
@@ -118,7 +147,14 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to Success All Created Orders "Delivery"
     Then DB Operator verifies transaction_blob is created
     And Verify blob data is correct
-    And Operator checks that for all orders, "UPDATE_STATUS" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
 
     Examples:
       | Note       | hiptest-uid                              | type       |
@@ -152,7 +188,14 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to Success All Created Orders "Delivery"
     Then DB Operator verifies transaction_blob is created
     And Verify blob data is correct
-    And Operator checks that for all orders, "UPDATE_STATUS" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
 
     Examples:
       | Note       | hiptest-uid                              | type       |
@@ -189,7 +232,22 @@ Feature: Batch Update PODs
     Then DB Operator verifies transaction_blob is created
     And DB Operator verifies all transaction_failure_reason is created correctly
     And Verify blob data is correct
-    And Operator checks that for all orders, "UPDATE_STATUS" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[4]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
 
   Scenario: Driver fails all X number of Deliveries in one waypoint
     Given Shipper id "{shipper-4-id}" subscribes to "Pending Reschedule, First Attempt Delivery Fail" webhook
@@ -219,7 +277,14 @@ Feature: Batch Update PODs
     Then DB Operator verifies transaction_blob is created
     And DB Operator verifies all transaction_failure_reason is created correctly
     And Verify blob data is correct
-    And Operator checks that for all orders, "UPDATE_STATUS" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
 
   Scenario: Driver picks up all X number of Normal parcels in one reservation
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
@@ -248,6 +313,14 @@ Feature: Batch Update PODs
     And Verify blob data is correct
     And Operator get proof details for "SUCCESS" transaction of "Normal" orders
     And DB Operator verifies transaction_blob is NOT created
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
 
   Scenario: Driver Picks Up All X number of Return Parcels in One Reservation
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
@@ -281,7 +354,14 @@ Feature: Batch Update PODs
     And Operator get proof details for "SUCCESS" transaction of "Return" orders
     And DB Operator verifies transaction_blob is created
     And Verify blob data is correct
-    And Operator checks that for all orders, "UPDATE_STATUS" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
 
   Scenario: Driver success reservation without scanning any parcel
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
@@ -391,7 +471,14 @@ Feature: Batch Update PODs
     And Operator get proof details for "FAIL" transaction of "Return" orders
     And DB Operator verifies transaction_blob is created
     And Verify blob data is correct
-    And Operator checks that for all orders, "UPDATE_STATUS" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |
 
   Scenario: Driver fails the reservation without failing any parcel
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
@@ -493,4 +580,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to Success All Created Orders "Delivery"
     Then DB Operator verifies transaction_blob is created
     And Verify blob data is correct
-    And Operator checks that for all orders, "UPDATE_STATUS" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS                     |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | updateStatusReason | BATCH_POD_UPDATE                  |

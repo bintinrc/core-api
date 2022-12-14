@@ -29,7 +29,16 @@ Feature: Zonal Routing API
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies all route_monitoring_data records
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
-    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_CREATED_ROUTE_ID}            |
+      | routeEventSource | ZONAL_ROUTING_CREATE              |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeId          | {KEY_CREATED_ROUTE_ID}            |
+      | routeEventSource | ZONAL_ROUTING_CREATE              |
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that waypoints are shown on driver "{driver-id}" list route correctly
 
@@ -69,7 +78,16 @@ Feature: Zonal Routing API
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies all route_monitoring_data records
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
-    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_CREATED_ROUTE_ID}            |
+      | routeEventSource | ZONAL_ROUTING_UPDATE              |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeId          | {KEY_CREATED_ROUTE_ID}            |
+      | routeEventSource | ZONAL_ROUTING_UPDATE              |
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that waypoints are shown on driver "{driver-id}" list route correctly
 
@@ -153,7 +171,14 @@ Feature: Zonal Routing API
     And DB Operator verifies all waypoints.route_id & seq_no is NULL
     And DB Operator verifies all route_waypoint route id is hard-deleted
     And DB Operator verifies all route_monitoring_data is hard-deleted
-    And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                 |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeEventSource | ZONAL_ROUTING_UPDATE              |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                 |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeEventSource | ZONAL_ROUTING_UPDATE              |
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that driver "{driver-id}" list route showing only routed waypoints
 
@@ -195,8 +220,24 @@ Feature: Zonal Routing API
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
   # check for moved waypoints to another route
     And DB Operator verifies waypoint moved to another route
-    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
-    And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_CREATED_ROUTE_ID}            |
+      | routeEventSource | ZONAL_ROUTING_UPDATE              |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeId          | {KEY_CREATED_ROUTE_ID}            |
+      | routeEventSource | ZONAL_ROUTING_UPDATE              |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                 |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeEventSource | ZONAL_ROUTING_UPDATE              |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                 |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeEventSource | ZONAL_ROUTING_UPDATE              |
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that waypoints are shown on driver "{driver-id}" list route correctly
     And Verify that waypoints are not shown on previous driver list route
@@ -236,4 +277,8 @@ Feature: Zonal Routing API
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies all waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies all route_monitoring_data records
-    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_CREATED_ROUTE_ID}            |
+      | routeEventSource | ADD_BY_ORDER                      |

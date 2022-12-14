@@ -20,7 +20,10 @@ Feature: Delete Route
     And DB Operator verifies waypoints.route_id & seq_no is NULL
     And DB Operator verifies route_waypoint is hard-deleted
     And DB Operator verifies route_monitoring_data is hard-deleted
-    And Operator checks that "PULL_OUT_OF_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE      |
+      | orderId          | {KEY_CREATED_ORDER_ID} |
+      | routeEventSource | ZONAL_ROUTING_REMOVE   |
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
     Examples:
@@ -83,7 +86,10 @@ Feature: Delete Route
     And DB Operator verifies all route_waypoint route id is hard-deleted
 
     And DB Operator verifies all route_monitoring_data is hard-deleted
-    And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE      |
+      | orderId          | {KEY_CREATED_ORDER_ID} |
+      | routeEventSource | ZONAL_ROUTING_REMOVE   |
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
     Examples:

@@ -34,6 +34,7 @@ Feature: Notification
 
   Scenario: Send Successful Delivery Webhook on Customer Collection of DP Order
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
+    Given Shipper id "{shipper-4-id}" subscribes to "Completed" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -55,8 +56,20 @@ Feature: Notification
     And API Operator do the DP Success for From Driver Flow
     And DB Operator gets Customer Unlock Code Based on Tracking ID
     And API DP do the Customer Collection from dp with ID = "{dp-id}"
+    Then Operator verify that order status-granular status is "Completed"-"Completed"
+    And Operator verify all "DELIVERY" transactions status is "SUCCESS"
+    Then DB Operator verifies waypoint status is "SUCCESS"
     Then Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
+    Then Shipper gets webhook request for event "Completed" for all orders
+    And Shipper verifies webhook request payload has correct details for status "Completed"
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS          |
+      | orderId            | {KEY_CREATED_ORDER_ID} |
+      | updateStatusReason | RELEASED_FROM_DP       |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | FROM_DP_TO_CUSTOMER    |
+      | orderId | {KEY_CREATED_ORDER_ID} |
 
   Scenario Outline: Send Successful Delivery Webhook with COD - Single Force Success - <Note>
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook

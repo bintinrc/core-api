@@ -87,7 +87,7 @@ Feature: Route Monitoring V2
     And Operator Route the Reservation Pickup
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies Route Monitoring Data Has Correct Details for "Pending" Case
-      | KEY_TOTAL_EXPECTED_WAYPOINT    | 1 |
+      | KEY_TOTAL_EXPECTED_WAYPOINT | 1 |
     When Operator Pull Reservation Out of Route
     And Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data for Empty Route has correct details
@@ -231,7 +231,7 @@ Feature: Route Monitoring V2
     And Operator add all orders to driver "<route_type>" route
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies total pending priority parcels and other details
-      | KEY_TOTAL_EXPECTED_WAYPOINT                | 3 |
+      | KEY_TOTAL_EXPECTED_WAYPOINT         | 3 |
       | KEY_TOTAL_EXPECTED_PENDING_PRIORITY | 3 |
     And Operator get pending priority parcel details for "<route_type>"
     And Operator verifies pending priority parcel details
@@ -260,7 +260,7 @@ Feature: Route Monitoring V2
     And Operator add order to driver "DD" route
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies total pending priority parcels and other details
-      | KEY_TOTAL_EXPECTED_WAYPOINT                | 1 |
+      | KEY_TOTAL_EXPECTED_WAYPOINT         | 1 |
       | KEY_TOTAL_EXPECTED_PENDING_PRIORITY | 1 |
     When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
@@ -292,7 +292,7 @@ Feature: Route Monitoring V2
     And Operator add order to driver "PP" route
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies total pending priority parcels and other details
-      | KEY_TOTAL_EXPECTED_WAYPOINT                | 1 |
+      | KEY_TOTAL_EXPECTED_WAYPOINT         | 1 |
       | KEY_TOTAL_EXPECTED_PENDING_PRIORITY | 1 |
     When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Starts the route
@@ -333,7 +333,7 @@ Feature: Route Monitoring V2
     And Operator Route the Reservation Pickup
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies total pending priority parcels and other details
-      | KEY_TOTAL_EXPECTED_WAYPOINT                | 3 |
+      | KEY_TOTAL_EXPECTED_WAYPOINT         | 3 |
       | KEY_TOTAL_EXPECTED_PENDING_PRIORITY | 1 |
     And Operator get pending priority parcel details for "DD"
     And Operator verifies pending priority parcel details
@@ -363,7 +363,7 @@ Feature: Route Monitoring V2
     And Driver "<action>" "DELIVERY" for All Orders
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints
-      | KEY_TOTAL_EXPECTED_WAYPOINT      | 3 |
+      | KEY_TOTAL_EXPECTED_WAYPOINT       | 3 |
       | KEY_TOTAL_EXPECTED_INVALID_FAILED | 3 |
       | KEY_TOTAL_EXPECTED_EARLY          | 3 |
     When Operator get "invalid failed deliveries" parcel details
@@ -395,7 +395,7 @@ Feature: Route Monitoring V2
     And Driver "FAIL" "DELIVERY" for All Orders
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints
-      | KEY_TOTAL_EXPECTED_WAYPOINT      | 2 |
+      | KEY_TOTAL_EXPECTED_WAYPOINT       | 2 |
       | KEY_TOTAL_EXPECTED_INVALID_FAILED | 2 |
       | KEY_TOTAL_EXPECTED_EARLY          | 2 |
     When Operator get "invalid failed deliveries" parcel details
@@ -406,7 +406,7 @@ Feature: Route Monitoring V2
       |      | uid:c48d6ef8-f5e8-49fb-9eef-d92744829d9a | DD         | Parcel       | Standard      | false                         |
 
 
-  @rmv2-invalid-failed-deliveries 
+  @rmv2-invalid-failed-deliveries
   Scenario Outline: Operator Get Invalid Failed Deliveries Details on Route with NON-Invalid Failed Deliveries (Failed Delivery with Valid Reason)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
@@ -427,7 +427,7 @@ Feature: Route Monitoring V2
     And Driver Fails Parcel "DELIVERY" with Valid Reason
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies total invalid failed is 0 and other details
-      | KEY_TOTAL_EXPECTED_WAYPOINT    | 1 |
+      | KEY_TOTAL_EXPECTED_WAYPOINT     | 1 |
       | KEY_TOTAL_EXPECTED_VALID_FAILED | 1 |
       | KEY_TOTAL_EXPECTED_EARLY        | 1 |
     And Operator get empty invalid failed deliveries parcel details
@@ -436,7 +436,7 @@ Feature: Route Monitoring V2
       | Note | hiptest-uid                              | service_type | service_level | parcel_job_is_pickup_required |
       |      | uid:ef58d1f6-0fc8-452d-9fb8-4e218322ec77 | Parcel       | Standard      | false                         |
 
-  @rmv2-invalid-failed-deliveries 
+  @rmv2-invalid-failed-deliveries
   Scenario Outline: Operator Get Invalid Failed Deliveries Details on Route with NON-Invalid Failed Deliveries (Pending Delivery & Reservation)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
@@ -486,7 +486,7 @@ Feature: Route Monitoring V2
     And Driver "<action>" "PICKUP" for All Orders
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints
-      | KEY_TOTAL_EXPECTED_WAYPOINT      | 3 |
+      | KEY_TOTAL_EXPECTED_WAYPOINT       | 3 |
       | KEY_TOTAL_EXPECTED_INVALID_FAILED | 3 |
       | KEY_TOTAL_EXPECTED_EARLY          | 3 |
     When Operator get "invalid failed pickups" parcel details
@@ -496,7 +496,7 @@ Feature: Route Monitoring V2
       | Note | hiptest-uid                              | action | service_type | service_level | parcel_job_is_pickup_required |
       |      | uid:84c25fc3-2f5b-4282-a9a6-717eb80fe0f9 | FAIL   | Return       | Standard      | true                          |
 
-  @rmv2-invalid-failed-pickups 
+  @rmv2-invalid-failed-pickups
   Scenario Outline: Operator Get Invalid Failed Pickup Details After Driver Failed with Invalid Reason - Order Has PRIOR Tag
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates multiple orders : 2 orders
@@ -517,7 +517,7 @@ Feature: Route Monitoring V2
     And Driver "FAIL" "PICKUP" for All Orders
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints
-      | KEY_TOTAL_EXPECTED_WAYPOINT      | 2 |
+      | KEY_TOTAL_EXPECTED_WAYPOINT       | 2 |
       | KEY_TOTAL_EXPECTED_INVALID_FAILED | 2 |
       | KEY_TOTAL_EXPECTED_EARLY          | 2 |
     When Operator get "invalid failed pickups" parcel details
@@ -528,7 +528,7 @@ Feature: Route Monitoring V2
       |      | uid:7690b4b1-d616-474a-a51e-2cfc8a67a966 | PP         | Return       | Standard      | true                          |
 
 
-  @rmv2-invalid-failed-pickups 
+  @rmv2-invalid-failed-pickups
   Scenario Outline: Operator Get Invalid Failed Pickup Details on Route with NON-Invalid Failed Pickup (Failed Pickup with Valid Reason)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
@@ -548,7 +548,7 @@ Feature: Route Monitoring V2
     And Driver Fails Parcel "PICKUP" with Valid Reason
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies total invalid failed is 0 and other details
-      | KEY_TOTAL_EXPECTED_WAYPOINT    | 1 |
+      | KEY_TOTAL_EXPECTED_WAYPOINT     | 1 |
       | KEY_TOTAL_EXPECTED_VALID_FAILED | 1 |
       | KEY_TOTAL_EXPECTED_EARLY        | 1 |
     And Operator get empty invalid failed pickup parcel details
@@ -557,7 +557,7 @@ Feature: Route Monitoring V2
       | Note | hiptest-uid                              | service_type | service_level | parcel_job_is_pickup_required |
       |      | uid:e140c322-853a-494b-b6b6-c8dfbff5ea0a | Return       | Standard      | true                          |
 
-  @rmv2-invalid-failed-pickups 
+  @rmv2-invalid-failed-pickups
   Scenario Outline: Operator Get Invalid Failed Pickup Details on Route with NON-Invalid Failed Pickup (Pending Return Pickup & Reservation)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
@@ -588,7 +588,7 @@ Feature: Route Monitoring V2
       |      | uid:ac3dc935-5c7b-43df-b7ca-ee21607e2b7d | Return       | Standard      | true                          |
 
 
-  @rmv2-invalid-failed-reservations 
+  @rmv2-invalid-failed-reservations
   Scenario Outline: Operator Get Invalid Failed Reservation Details After Driver Failed with Invalid Reason
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates multiple 3 reservations
@@ -605,7 +605,7 @@ Feature: Route Monitoring V2
     And Operator admin manifest force fail all reservations with invalid reason
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints
-      | KEY_TOTAL_EXPECTED_WAYPOINT      | 3 |
+      | KEY_TOTAL_EXPECTED_WAYPOINT       | 3 |
       | KEY_TOTAL_EXPECTED_INVALID_FAILED | 3 |
       | KEY_TOTAL_EXPECTED_EARLY          | 0 |
     When Operator get invalid failed reservation details
@@ -616,7 +616,7 @@ Feature: Route Monitoring V2
       |      | uid:cc1bca2d-177b-4bc3-ade5-8965a899a706 |
 
 
-  @rmv2-invalid-failed-reservations 
+  @rmv2-invalid-failed-reservations
   Scenario Outline: Operator Get Invalid Failed Reservation Details on Route with NON-Invalid Failed Reservation (Failed Reservation with Valid Reason)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates a reservation
@@ -633,7 +633,7 @@ Feature: Route Monitoring V2
     And Operator admin manifest force fail reservation with valid reason
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies total invalid failed is 0 and other details
-      | KEY_TOTAL_EXPECTED_WAYPOINT    | 1 |
+      | KEY_TOTAL_EXPECTED_WAYPOINT     | 1 |
       | KEY_TOTAL_EXPECTED_VALID_FAILED | 1 |
       | KEY_TOTAL_EXPECTED_EARLY        | 0 |
     And Operator get empty invalid failed reservation details
@@ -643,7 +643,7 @@ Feature: Route Monitoring V2
       |      | uid:8e12f8da-bd52-4760-b05c-6d8d610b6a51 |
 
 
-  @rmv2-invalid-failed-reservations 
+  @rmv2-invalid-failed-reservations
   Scenario Outline: Operator Get Invalid Failed Reservation Details on Route with NON-Invalid Failed Reservation (Pending Reservation)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates a reservation
