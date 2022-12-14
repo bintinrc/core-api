@@ -139,24 +139,6 @@ public class OrderActionSteps extends BaseSteps {
     });
   }
 
-  @Then("Operator checks that {string} event is published")
-  public void operatorVerifiesOrderEvent(String event, Map<String, String> mapOfData) {
-    long orderId = get(KEY_CREATED_ORDER_ID);
-    callWithRetry(() -> {
-      List<Event> result = getOrderEvent(event, orderId);
-
-      if (result.isEmpty()) {
-        throw new NvTestRuntimeException(
-            f("events should not empty, order id: %d, event: %s", orderId, event));
-      }
-      Assertions.assertThat(result.get(0).getType().toLowerCase())
-          .as(String.format("%s event is published", event)).isEqualTo(event.toLowerCase());
-      put(KEY_ORDER_EVENTS, result);
-      putAllInList(KEY_LIST_OF_ORDER_EVENTS, result);
-      operatorVerifiesOrderEventData(mapOfData);
-    }, String.format("%s event is published for order id %d", event, orderId));
-  }
-
   @Then("API Event - Operator verify that event is published with the following details:")
   public void operatorVerifiesOrderEventDetails(Map<String, String> mapOfData) {
     Map<String, String> expectedData = resolveKeyValues(mapOfData);
@@ -308,17 +290,6 @@ public class OrderActionSteps extends BaseSteps {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
       operatorVerifiesOrderStatus(status, granularStatus);
     });
-  }
-
-  @Then("Operator checks that for all orders, {string} event is published")
-  public void operatorVerifiesOrderEventForEach(String event) {
-    List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
-    orderIds.forEach(e -> {
-      put(KEY_CREATED_ORDER_ID, e);
-//      operatorVerifiesOrderEvent(event);
-    });
-    LOGGER.info(f("%s event is published for all order ids %s", "",
-        Arrays.toString(orderIds.toArray())));
   }
 
   @When("Operator force success order")
