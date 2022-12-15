@@ -197,13 +197,11 @@ public class OrderActionSteps extends BaseSteps {
     switch (eventType) {
       case Event.ROUTE_TRANSFER_SCAN_EVENT:
         if (data.getRouteIdValue().getOldValue() != null) {
-          put(KEY_CREATED_ROUTE_ID, routeIds.get(1));
-          Assertions.assertThat(data.getRouteIdValue().getNewValue()).as("old route_id")
+          Assertions.assertThat(data.getRouteIdValue().getNewValue()).as("new route_id")
               .isEqualTo(routeIds.get(1));
           Assertions.assertThat(data.getRouteIdValue().getOldValue()).as("old route_id")
               .isEqualTo(routeIds.get(0));
         } else {
-          put(KEY_CREATED_ROUTE_ID, routeIds.get(0));
           Assertions.assertThat(data.getRouteIdValue().getNewValue()).as("new route_id")
               .isEqualTo(routeIds.get(0));
         }
