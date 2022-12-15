@@ -37,7 +37,7 @@ Feature: Order Tag to DP
       | orderId | {KEY_CREATED_ORDER_ID} |
 
   @ArchiveDriverRoutes
-  Scenario: Add Order to DP Holding Route -  PUT /2.0/orders/:orderId/routes-dp
+  Scenario: PUT /2.0/orders/:orderId/routes-dp - Add Order to DP Holding Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -63,8 +63,7 @@ Feature: Order Tag to DP
       | routeId          | {KEY_CREATED_ROUTE_ID} |
       | routeEventSource | ADD_BY_ORDER_DP        |
 
-
-  Scenario: Remove DP Order From Holding Route - DELETE /2.0/orders/:orderId/routes-dp
+  Scenario: DELETE /2.0/orders/:orderId/routes-dp - Remove DP Order From Holding Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Parcel                   |

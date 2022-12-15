@@ -140,7 +140,7 @@ Feature: Notification
     Then Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
 
-  Scenario: Send Route Start Webhook Notification (uid:1d621734-5703-41e5-9c91-5aac51abf358)
+  Scenario: Send Route Start Webhook Notification
     Given Shipper id "{shipper-4-id}" subscribes to "On Vehicle for Delivery" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
@@ -158,11 +158,39 @@ Feature: Notification
     And Operator get "DELIVERY" transaction waypoint Ids for all orders
     When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
-    And Operator get info of hub details string id "{sorting-hub-id}"
+    And API Sort - Operator get hub  details of hub id "{sorting-hub-id}"
     And Driver Starts the route
     Then Operator verify that order status-granular status is "Transit"-"On_Vehicle_for_Delivery"
     And Shipper gets webhook request for event "On Vehicle for Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "On Vehicle for Delivery"
+
+  Scenario: Send Route Start Webhook Notification - RTS
+    Given Shipper id "{shipper-4-id}" subscribes to "On Vehicle for Delivery (RTS)" webhook
+    Given Shipper id "{shipper-4-id}" subscribes to "On Vehicle for Delivery" webhook
+    Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for created order
+    And Operator perform global inbound at hub "{sorting-hub-id}"
+    And API Operator RTS created order:
+      | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator add order to driver "DD" route
+    And Operator get "DELIVERY" transaction waypoint Ids for all orders
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
+    And API Sort - Operator get hub  details of hub id "{sorting-hub-id}"
+    And Driver Starts the route
+    Then Operator verify that order status-granular status is "Transit"-"On_Vehicle_for_Delivery"
+    And Shipper gets webhook request for event "On Vehicle for Delivery (RTS)" for all orders
+    And Shipper verifies webhook request payload has correct details for status "On Vehicle for Delivery (RTS)"
+    And Verify NO "On Vehicle for Delivery" event sent for all orders
 
   Scenario: Send First Attempt Delivery Fail & First Pending Reschedule Webhook on Driver Fails Delivery Order
     Given Shipper id "{shipper-4-id}" subscribes to "First Attempt Delivery Fail" webhook

@@ -8,7 +8,6 @@ import co.nvqa.commons.model.core.batch_update_pod.BlobData;
 import co.nvqa.commons.model.core.batch_update_pod.FailedParcels;
 import co.nvqa.commons.model.core.batch_update_pod.JobUpdate;
 import co.nvqa.commons.model.core.batch_update_pod.ProofDetails;
-import co.nvqa.commons.model.core.hub.Hub;
 import co.nvqa.commons.model.driver.Job;
 import co.nvqa.commons.model.driver.JobV5;
 import co.nvqa.commons.model.driver.builder.JobBuilder;
@@ -19,6 +18,8 @@ import co.nvqa.commons.model.shipper.v2.Webhook;
 import co.nvqa.commons.model.shipper.v2.WebhookRequest;
 import co.nvqa.commons.util.JsonUtils;
 import co.nvqa.commons.util.NvTestRuntimeException;
+import co.nvqa.commonsort.cucumber.KeysStorage;
+import co.nvqa.commonsort.model.Hub;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
@@ -467,15 +468,28 @@ public class BatchUpdatePodsSteps extends BaseSteps {
               String comment = get(KEY_CANCELLATION_REASON);
               Assertions.assertThat(request.getComments()).as("cancel comment equal")
                   .isEqualTo(comment);
-            case ON_VEHICLE_DELIVERY:
-              Hub hubInfo = get(KEY_HUB_INFO);
-              if (hubInfo != null) {
+            case ON_VEHICLE_DELIVERY: {
+              Hub hub = get(KeysStorage.KEY_HUB_DETAILS);
+              if (hub != null) {
                 String hubName = StringUtils.lowerCase(
-                    f("%s-%s", hubInfo.getCountry(), hubInfo.getCity()));
-                Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment contains hub name")
+                    f("%s-%s", hub.getCountry(), hub.getCity()));
+                Assertions.assertThat(StringUtils.lowerCase(request.getComments()))
+                    .as("comment contains hub name")
                     .contains(hubName);
               }
-              break;
+            }
+            break;
+            case RTS_ON_VEHICLE_DELIVERY: {
+              Hub hub = get(KeysStorage.KEY_HUB_DETAILS);
+              if (hub != null) {
+                String hubName = StringUtils.lowerCase(
+                    f("%s-%s", hub.getCountry(), hub.getCity()));
+                Assertions.assertThat(StringUtils.lowerCase(request.getComments()))
+                    .as("comment contains hub name")
+                    .contains(hubName);
+              }
+            }
+            break;
             case DELIVERY_FAIL_FIRST_ATTEMPT:
               Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
                   .isEqualTo(StringUtils.lowerCase(TestConstants.DELIVERY_FAILURE_REASON));
@@ -489,8 +503,8 @@ public class BatchUpdatePodsSteps extends BaseSteps {
                     .isEqualTo(attemptCount);
               }
               break;
-            case ARRIVED_AT_SORTING_HUB:
-              final Hub hub = get(KEY_HUB_INFO);
+            case ARRIVED_AT_SORTING_HUB: {
+              Hub hub = get(KeysStorage.KEY_HUB_DETAILS);
               final int attemptCounts = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT);
               if (hub != null) {
                 String hubName = StringUtils.lowerCase(
@@ -500,7 +514,8 @@ public class BatchUpdatePodsSteps extends BaseSteps {
                 Assertions.assertThat(request.getDeliveryAttempts()).as("delivery attempt count equal")
                     .isEqualTo(attemptCounts);
               }
-              break;
+            }
+            break;
             case PARCEL_MEASUREMENTS_UPDATE: {
               final Double oldWeight = get(KEY_EXPECTED_OLD_WEIGHT, 0.1);
               final Double newWeight = get(KEY_EXPECTED_NEW_WEIGHT);
@@ -547,7 +562,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
           Assertions.assertThat(blobData.getFailureReasonId()).as("failure reason id")
               .isEqualTo(e.getJob().getFailureReasonId());
           Assertions.assertThat(
-                  blobData.getFailureReasonTranslations().contains(e.getJob().getFailureReason()))
+              blobData.getFailureReasonTranslations().contains(e.getJob().getFailureReason()))
               .as("failure reason translations").isTrue();
         }
         if (e.getJob().getType().equalsIgnoreCase("RESERVATION")) {
@@ -557,14 +572,15 @@ public class BatchUpdatePodsSteps extends BaseSteps {
                 e.getJob().getFailureReason() + ". " + e.getProofDetails().getComments());
           } else {
             Assertions.assertThat(
-                    blobData.getScannedParcels().containsAll(e.getProofDetails().getTrackingIds()))
+                blobData.getScannedParcels().containsAll(e.getProofDetails().getTrackingIds()))
                 .as("scanned parcels contains scanned tracking ids").isTrue();
             Assertions.assertThat(blobData.getReceivedParcels()).as("received parcels")
                 .isEqualTo(e.getProofDetails().getPickupQuantity());
           }
           return;
         }
-        Assertions.assertThat(blobData.getStatus()).as("status is correct").isEqualTo(e.getJob().getAction());
+        Assertions.assertThat(blobData.getStatus()).as("status is correct")
+            .isEqualTo(e.getJob().getAction());
         Pickup pickup = get(KEY_CREATED_RESERVATION);
         if (pickup == null) {
           Assertions.assertThat(blobData.getVerificationMethod()).as("no verification method")

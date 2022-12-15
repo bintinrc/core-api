@@ -584,7 +584,7 @@ Feature: Parcel Route Transfer
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
-  @routing-refactor @wip
+  @routing-refactor
   Scenario: Driver Route Transfer Parcel - Merged Waypoints
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper creates multiple orders : 3 orders with the same params
