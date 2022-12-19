@@ -469,24 +469,24 @@ public class BatchUpdatePodsSteps extends BaseSteps {
               Assertions.assertThat(request.getComments()).as("cancel comment equal")
                   .isEqualTo(comment);
             case ON_VEHICLE_DELIVERY: {
-              Hub hub = get(KeysStorage.KEY_HUB_DETAILS);
+              Hub hub = get(KeysStorage.KEY_HUB_DETAILS, Hub.class);
               if (hub != null) {
                 String hubName = StringUtils.lowerCase(
                     f("%s-%s", hub.getCountry(), hub.getCity()));
-                Assertions.assertThat(StringUtils.lowerCase(request.getComments()))
-                    .as("comment contains hub name")
-                    .contains(hubName);
+                Assertions.assertThat(request.getComments()).as("comment contains hub name")
+                    .containsIgnoringCase(
+                        hubName);
               }
             }
             break;
             case RTS_ON_VEHICLE_DELIVERY: {
-              Hub hub = get(KeysStorage.KEY_HUB_DETAILS);
+              Hub hub = get(KeysStorage.KEY_HUB_DETAILS, Hub.class);
               if (hub != null) {
                 String hubName = StringUtils.lowerCase(
                     f("%s-%s", hub.getCountry(), hub.getCity()));
-                Assertions.assertThat(StringUtils.lowerCase(request.getComments()))
-                    .as("comment contains hub name")
-                    .contains(hubName);
+                Assertions.assertThat(request.getComments()).as("comment contains hub name")
+                    .containsIgnoringCase(
+                        hubName);
               }
             }
             break;
@@ -504,13 +504,13 @@ public class BatchUpdatePodsSteps extends BaseSteps {
               }
               break;
             case ARRIVED_AT_SORTING_HUB: {
-              Hub hub = get(KeysStorage.KEY_HUB_DETAILS);
+              Hub hub = get(KeysStorage.KEY_HUB_DETAILS, Hub.class);
               final int attemptCounts = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT);
               if (hub != null) {
                 String hubName = StringUtils.lowerCase(
                     f("%s-%s-%s", hub.getCountry(), hub.getCity(), hub.getShortName()));
-                Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
-                    .isEqualTo(hubName);
+                Assertions.assertThat(request.getComments()).as("comment contains hub name")
+                    .isEqualToIgnoringCase(hubName);
                 Assertions.assertThat(request.getDeliveryAttempts()).as("delivery attempt count equal")
                     .isEqualTo(attemptCounts);
               }
