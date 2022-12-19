@@ -82,7 +82,7 @@ Feature: SG - Order Dimensions Update Calculation
     Then Shipper gets webhook request for event "Parcel Measurements Update" for all orders
     And Shipper verifies webhook request payload has correct details for status "Parcel Measurements Update"
 
-  Scenario: SG - Global Inbound Order with No Weight Changes - Shipper Submitted Weight = NULL
+  Scenario: SG - Global Inbound Order with Weight Changes - Shipper Submitted Weight = NULL
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
     Given API Shipper set Shipper V4 using data below:

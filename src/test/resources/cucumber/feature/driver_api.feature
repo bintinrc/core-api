@@ -21,7 +21,10 @@ Feature: Driver API
     And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
     And Driver Starts the route
     Then Operator verify that order status-granular status is "Transit"-"On_Vehicle_for_Delivery"
-    And Operator checks that "DRIVER_INBOUND_SCAN" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN    |
+      | orderId | {KEY_CREATED_ORDER_ID} |
+      | routeId | {KEY_CREATED_ROUTE_ID} |
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
 
   Scenario: Driver Success a Return Pickup
@@ -41,7 +44,10 @@ Feature: Driver API
     And Driver Starts the route
     And Driver "SUCCESS" Parcel "PICKUP"
     Then Operator verify that order status-granular status is "Transit"-"Enroute_to_sorting_hub"
-    And Operator checks that "DRIVER_PICKUP_SCAN" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_PICKUP_SCAN     |
+      | orderId | {KEY_CREATED_ORDER_ID} |
+      | routeId | {KEY_CREATED_ROUTE_ID} |
     And DB Operator verifies inbound_scans record with type "1" and correct route_id
 
   Scenario: Driver Success a Reservation Pickup by Scanning Normal Order
@@ -61,7 +67,10 @@ Feature: Driver API
     When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver "Success" Reservation Pickup
     Then Operator verify that order status-granular status is "Transit"-"Enroute_to_sorting_hub"
-    And Operator checks that "DRIVER_PICKUP_SCAN" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_PICKUP_SCAN     |
+      | orderId | {KEY_CREATED_ORDER_ID} |
+      | routeId | {KEY_CREATED_ROUTE_ID} |
     And DB Operator verifies inbound_scans record with type "1" and correct route_id
 
   Scenario: Driver Success a Failed Delivery that was Rescheduled
@@ -91,7 +100,10 @@ Feature: Driver API
     Then Operator verify that order status-granular status is "Transit"-"Enroute_to_sorting_hub"
     When Operator add order to driver "DD" route
     And Driver "SUCCESS" Parcel previous "DELIVERY"
-    Then Operator checks that "PULL_OUT_OF_ROUTE" event is published
+    Then API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE      |
+      | orderId          | {KEY_CREATED_ORDER_ID} |
+      | routeEventSource | TRANSACTION_UNROUTE    |
     And DB Operator verifies transaction is soft-deleted
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
@@ -130,7 +142,10 @@ Feature: Driver API
     Then Operator verify that order status-granular status is "Pending"-"Pending_Pickup"
     When Operator add order to driver "PP" route
     And Driver "SUCCESS" Parcel previous "PICKUP"
-    Then Operator checks that "PULL_OUT_OF_ROUTE" event is published
+    Then API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE      |
+      | orderId          | {KEY_CREATED_ORDER_ID} |
+      | routeEventSource | TRANSACTION_UNROUTE    |
     And DB Operator verifies transaction is soft-deleted
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL

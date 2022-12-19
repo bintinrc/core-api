@@ -18,14 +18,26 @@ Feature: Order Tag to DP
     And DB Operator verifies waypoint status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies route_monitoring_data record
-    And Operator checks that "ADD_TO_ROUTE" event is published
-    And Operator checks that "HUB_INBOUND_SCAN" event is published
-    And Operator checks that "ASSIGNED_TO_DP" event is published
-    And Operator checks that "UPDATE_ADDRESS" event is published
-    And Operator checks that "UPDATE_AV" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE           |
+      | orderId          | {KEY_CREATED_ORDER_ID} |
+      | routeId          | {KEY_CREATED_ROUTE_ID} |
+      | routeEventSource | ADD_BY_ORDER_DP        |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | HUB_INBOUND_SCAN       |
+      | orderId | {KEY_CREATED_ORDER_ID} |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | ASSIGNED_TO_DP         |
+      | orderId | {KEY_CREATED_ORDER_ID} |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | UPDATE_ADDRESS         |
+      | orderId | {KEY_CREATED_ORDER_ID} |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | UPDATE_AV              |
+      | orderId | {KEY_CREATED_ORDER_ID} |
 
   @ArchiveDriverRoutes
-  Scenario: Add Order to DP Holding Route -  PUT /2.0/orders/:orderId/routes-dp
+  Scenario: PUT /2.0/orders/:orderId/routes-dp - Add Order to DP Holding Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -44,11 +56,14 @@ Feature: Order Tag to DP
     And DB Operator verifies route_waypoint record exist
     And DB Operator verifies waypoint status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
-
     And DB Operator verifies route_monitoring_data record
-    And Operator checks that "ADD_TO_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE           |
+      | orderId          | {KEY_CREATED_ORDER_ID} |
+      | routeId          | {KEY_CREATED_ROUTE_ID} |
+      | routeEventSource | ADD_BY_ORDER_DP        |
 
-  Scenario: Remove DP Order From Holding Route - DELETE /2.0/orders/:orderId/routes-dp
+  Scenario: DELETE /2.0/orders/:orderId/routes-dp - Remove DP Order From Holding Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | Parcel                   |
@@ -66,4 +81,7 @@ Feature: Order Tag to DP
     And DB Operator verifies waypoints.route_id & seq_no is NULL
     And DB Operator verifies route_waypoint is hard-deleted
     And DB Operator verifies route_monitoring_data is hard-deleted
-    And Operator checks that "PULL_OUT_OF_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE      |
+      | orderId          | {KEY_CREATED_ORDER_ID} |
+      | routeEventSource | REMOVE_BY_ORDER_DP     |

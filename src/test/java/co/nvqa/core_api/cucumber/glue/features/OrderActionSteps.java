@@ -139,21 +139,23 @@ public class OrderActionSteps extends BaseSteps {
     });
   }
 
-  @Then("Operator checks that {string} event is published")
-  public void operatorVerifiesOrderEvent(String event) {
-    long orderId = get(KEY_CREATED_ORDER_ID);
+  @Then("API Event - Operator verify that event is published with the following details:")
+  public void operatorVerifiesOrderEventDetails(Map<String, String> mapOfData) {
+    Map<String, String> expectedData = resolveKeyValues(mapOfData);
+    Long orderId = Long.valueOf(expectedData.get("orderId"));
+    String event = expectedData.get("event");
     callWithRetry(() -> {
       List<Event> result = getOrderEvent(event, orderId);
-
       if (result.isEmpty()) {
         throw new NvTestRuntimeException(
-            f("events should not empty, order id: %d, event: %s", orderId, event));
+            f("events should not empty, order id: %d, event: %s", orderId,
+                event));
       }
       Assertions.assertThat(result.get(0).getType().toLowerCase())
           .as(String.format("%s event is published", event)).isEqualTo(event.toLowerCase());
       put(KEY_ORDER_EVENTS, result);
       putAllInList(KEY_LIST_OF_ORDER_EVENTS, result);
-      operatorVerifiesOrderEventData(event);
+      operatorVerifiesOrderEventData(expectedData);
     }, String.format("%s event is published for order id %d", event, orderId));
   }
 
@@ -167,22 +169,21 @@ public class OrderActionSteps extends BaseSteps {
     }, String.format("%s event is NOT published", event));
   }
 
-  @Then("Operator verifies that order event {string} data has correct details")
-  public void operatorVerifiesOrderEventData(String eventType) {
+  private void operatorVerifiesOrderEventData(Map<String, String> mapOfData) {
     List<Event> events = get(KEY_LIST_OF_ORDER_EVENTS);
     List<Long> routeIds = get(KEY_LIST_OF_CREATED_ROUTE_ID);
-    Long routeId = get(KEY_CREATED_ROUTE_ID);
-    Long orderId = get(KEY_CREATED_ORDER_ID);
+    String eventType = mapOfData.get("event");
+    Long orderId = Long.valueOf(mapOfData.get("orderId"));
     Event event;
     if (eventType.equalsIgnoreCase(Event.ADD_TO_ROUTE_EVENT) || eventType.equalsIgnoreCase(
         Event.PULL_OUT_OF_ROUTE_EVENT)) {
-      String source = get(KEY_ROUTE_EVENT_SOURCE);
+      String source = mapOfData.get("routeEventSource");
       event = events.stream().filter(e -> Objects.equals(e.getOrderId(), orderId))
           .filter(e -> e.getType().equalsIgnoreCase(eventType))
           .filter(e -> e.getData().getSource().equalsIgnoreCase(source)).findAny()
           .orElseThrow(() -> new NvTestRuntimeException("order event not found"));
     } else if (eventType.equalsIgnoreCase(Event.UPDATE_STATUS)) {
-      String reason = get(KEY_UPDATE_STATUS_REASON);
+      String reason = mapOfData.get("updateStatusReason");
       event = events.stream().filter(e -> Objects.equals(e.getOrderId(), orderId))
           .filter(e -> e.getType().equalsIgnoreCase(eventType))
           .filter(e -> e.getData().getReason().equalsIgnoreCase(reason)).findAny()
@@ -196,13 +197,11 @@ public class OrderActionSteps extends BaseSteps {
     switch (eventType) {
       case Event.ROUTE_TRANSFER_SCAN_EVENT:
         if (data.getRouteIdValue().getOldValue() != null) {
-          put(KEY_CREATED_ROUTE_ID, routeIds.get(1));
-          Assertions.assertThat(data.getRouteIdValue().getNewValue()).as("old route_id")
+          Assertions.assertThat(data.getRouteIdValue().getNewValue()).as("new route_id")
               .isEqualTo(routeIds.get(1));
           Assertions.assertThat(data.getRouteIdValue().getOldValue()).as("old route_id")
               .isEqualTo(routeIds.get(0));
         } else {
-          put(KEY_CREATED_ROUTE_ID, routeIds.get(0));
           Assertions.assertThat(data.getRouteIdValue().getNewValue()).as("new route_id")
               .isEqualTo(routeIds.get(0));
         }
@@ -213,12 +212,13 @@ public class OrderActionSteps extends BaseSteps {
       case Event.CANCEL:
         break;
       case Event.UPDATE_STATUS:
-        String reason = get(KEY_UPDATE_STATUS_REASON);
+        String reason = mapOfData.get("updateStatusReason");
         Assertions.assertThat(data.getReason()).as("update status reason").isEqualTo(reason);
         break;
       default: {
         //ADD_TO_ROUTE, DRIVER_INBOUND_SCAN, DRIVER_PICKUP_SCAN
         if (data.getRouteId() != null) {
+          Long routeId = Long.valueOf(mapOfData.get("routeId"));
           Assertions.assertThat(data.getRouteId()).as("data.route_id").isEqualTo(routeId);
         }
       }
@@ -288,17 +288,6 @@ public class OrderActionSteps extends BaseSteps {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
       operatorVerifiesOrderStatus(status, granularStatus);
     });
-  }
-
-  @Then("Operator checks that for all orders, {string} event is published")
-  public void operatorVerifiesOrderEventForEach(String event) {
-    List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
-    orderIds.forEach(e -> {
-      put(KEY_CREATED_ORDER_ID, e);
-      operatorVerifiesOrderEvent(event);
-    });
-    LOGGER.info(f("%s event is published for all order ids %s", event,
-        Arrays.toString(orderIds.toArray())));
   }
 
   @When("Operator force success order")

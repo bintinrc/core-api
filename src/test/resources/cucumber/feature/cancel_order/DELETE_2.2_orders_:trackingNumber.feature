@@ -14,8 +14,13 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And DB Operator gets async handle of an order from its Tracking ID
     When API Operator cancel order with DELETE /2.2/orders/:trackingNumber
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
-    And Operator checks that "CANCEL" event is published
-    And Operator checks that "UPDATE_STATUS" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event   | CANCEL                 |
+      | orderId | {KEY_CREATED_ORDER_ID} |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS          |
+      | orderId            | {KEY_CREATED_ORDER_ID} |
+      | updateStatusReason | CANCEL                 |
     And Operator verify that order comment is appended with cancel reason = "cancellation reason : api cancellation request"
     When API Operator get order details
     And API Operator verify Pickup transaction of the created order using data below:
@@ -42,8 +47,13 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     When API Operator cancel order with DELETE /2.2/orders/:trackingNumber
     And API Operator get order details
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
-    And Operator checks that "CANCEL" event is published
-    And Operator checks that "UPDATE_STATUS" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event   | CANCEL                 |
+      | orderId | {KEY_CREATED_ORDER_ID} |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS          |
+      | orderId            | {KEY_CREATED_ORDER_ID} |
+      | updateStatusReason | CANCEL                 |
     And Operator verify that order comment is appended with cancel reason = "Cancellation reason : api cancellation request"
     When API Operator get order details
     And API Operator verify Pickup transaction of the created order using data below:
@@ -78,8 +88,13 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     When API Operator cancel order with DELETE /2.2/orders/:trackingNumber
     And API Operator get order details
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
-    And Operator checks that "CANCEL" event is published
-    And Operator checks that "UPDATE_STATUS" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event   | CANCEL                 |
+      | orderId | {KEY_CREATED_ORDER_ID} |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS          |
+      | orderId            | {KEY_CREATED_ORDER_ID} |
+      | updateStatusReason | CANCEL                 |
     And Operator verify that order comment is appended with cancel reason = "cancellation reason : api cancellation request"
     When API Operator get order details
     And API Operator verify Pickup transaction of the created order using data below:
@@ -90,7 +105,10 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And DB Operator verifies waypoints.route_id & seq_no is NULL
     And DB Operator verifies route_waypoint is hard-deleted
     And DB Operator verifies route_monitoring_data is hard-deleted
-    And Operator checks that "PULL_OUT_OF_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE      |
+      | orderId          | {KEY_CREATED_ORDER_ID} |
+      | routeEventSource | REMOVE_BY_ORDER_CANCEL |
     And API Operator verify Delivery transaction of the created order using data below:
       | status   | CANCELLED                                      |
       | comments | Cancellation reason : API CANCELLATION REQUEST |
@@ -126,8 +144,13 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     When API Operator cancel order with DELETE /2.2/orders/:trackingNumber
     And API Operator get order details
     Then Operator verify that order status-granular status is "Cancelled"-"Cancelled"
-    And Operator checks that "CANCEL" event is published
-    And Operator checks that "UPDATE_STATUS" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event   | CANCEL                 |
+      | orderId | {KEY_CREATED_ORDER_ID} |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS          |
+      | orderId            | {KEY_CREATED_ORDER_ID} |
+      | updateStatusReason | CANCEL                 |
     And Operator verify that order comment is appended with cancel reason = "cancellation reason : api cancellation request"
     When API Operator get order details
     And API Operator verify Pickup transaction of the created order using data below:

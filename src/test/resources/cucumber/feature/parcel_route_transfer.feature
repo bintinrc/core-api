@@ -22,9 +22,48 @@ Feature: Parcel Route Transfer
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies all route_monitoring_data records
     And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
-    And Operator checks that for all orders, "ROUTE_TRANSFER_SCAN" event is published
-    And Operator checks that for all orders, "DRIVER_INBOUND_SCAN" event is published
-    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record for all orders with type "4" and correct route_id
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
@@ -59,10 +98,24 @@ Feature: Parcel Route Transfer
 
     And DB Operator verifies all route_monitoring_data records
     And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
-    And Operator checks that for all orders, "ROUTE_TRANSFER_SCAN" event is published
-    And Operator checks that for all orders, "DRIVER_INBOUND_SCAN" event is published
-    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
-    And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                 |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
@@ -90,9 +143,20 @@ Feature: Parcel Route Transfer
 
     And DB Operator verifies all route_monitoring_data records
     And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
-    And Operator checks that for all orders, "ROUTE_TRANSFER_SCAN" event is published
-    And Operator checks that for all orders, "DRIVER_INBOUND_SCAN" event is published
-    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
@@ -127,10 +191,60 @@ Feature: Parcel Route Transfer
 
     And DB Operator verifies all route_monitoring_data records
     And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
-    And Operator checks that for all orders, "ROUTE_TRANSFER_SCAN" event is published
-    And Operator checks that for all orders, "DRIVER_INBOUND_SCAN" event is published
-    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
-    And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                 |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                 |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                 |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record for all orders with type "4" and correct route_id
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
@@ -167,10 +281,24 @@ Feature: Parcel Route Transfer
 
     And DB Operator verifies route_monitoring_data record
     And Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
-    And Operator checks that for all orders, "ROUTE_TRANSFER_SCAN" event is published
-    And Operator checks that for all orders, "DRIVER_INBOUND_SCAN" event is published
-    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
-    And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                 |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
@@ -205,10 +333,24 @@ Feature: Parcel Route Transfer
 
     And DB Operator verifies route_monitoring_data record
     And Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
-    And Operator checks that for all orders, "ROUTE_TRANSFER_SCAN" event is published
-    And Operator checks that for all orders, "DRIVER_INBOUND_SCAN" event is published
-    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
-    And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                 |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
@@ -326,9 +468,20 @@ Feature: Parcel Route Transfer
 
     And DB Operator verifies all route_monitoring_data records
     And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
-    And Operator checks that for all orders, "ROUTE_TRANSFER_SCAN" event is published
-    And Operator checks that for all orders, "DRIVER_INBOUND_SCAN" event is published
-    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
@@ -384,9 +537,48 @@ Feature: Parcel Route Transfer
     And DB Operator verifies all route_monitoring_data records
     When Operator gets only eligible parcel for route transfer
     Then Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
-    And Operator checks that for all orders, "ROUTE_TRANSFER_SCAN" event is published
-    And Operator checks that for all orders, "DRIVER_INBOUND_SCAN" event is published
-    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record for all orders with type "4" and correct route_id
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
@@ -427,10 +619,60 @@ Feature: Parcel Route Transfer
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies all route_monitoring_data records
     And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
-    And Operator checks that for all orders, "ROUTE_TRANSFER_SCAN" event is published
-    And Operator checks that for all orders, "DRIVER_INBOUND_SCAN" event is published
-    And Operator checks that for all orders, "ADD_TO_ROUTE" event is published
-    And Operator checks that for all orders, "PULL_OUT_OF_ROUTE" event is published
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                 |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                 |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                 |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
