@@ -342,12 +342,12 @@ Feature: Zonal Routing API
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator force success order
-    When API Route - Operator create route from Zonal Routing API with Invalid State
-      | driver_id  | {driver-id}      |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    Then Operator verify response code is 400 with error message "[{KEY_LIST_OF_WAYPOINT_IDS[1]},{KEY_LIST_OF_WAYPOINT_IDS[2]}]"
+#    When API Route - Operator create route from Zonal Routing API with Invalid State
+#      | driver_id  | {driver-id}      |
+#      | hub_id     | {sorting-hub-id} |
+#      | vehicle_id | {vehicle-id}     |
+#      | zone_id    | {zone-id}        |
+#    Then Operator verify response code is 400 with error message "[{KEY_LIST_OF_WAYPOINT_IDS[1]},{KEY_LIST_OF_WAYPOINT_IDS[2]}]"
     Then API Core - Operator update routed waypoint to pending
       | id             | {KEY_LIST_OF_WAYPOINT_IDS[1]} |
       | status         | PENDING                       |
