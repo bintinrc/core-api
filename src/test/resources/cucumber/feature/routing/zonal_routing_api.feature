@@ -323,14 +323,8 @@ Feature: Zonal Routing API
     And DB Operator verifies all route_monitoring_data records
     And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
 
-  @wip
-  Scenario: Zonal Routing API - Create Driver Route & Assign Waypoints
+  Scenario: Zonal Routing API - Set Routed Waypoint to Pending
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
-    When Shipper create order with parameters below
-      | service_type                  | Parcel   |
-      | service_level                 | Standard |
-      | parcel_job_is_pickup_required | false    |
-    And Operator search for "DELIVERY" transaction with status "PENDING"
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -341,16 +335,56 @@ Feature: Zonal Routing API
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And Operator force success order
-#    When API Route - Operator create route from Zonal Routing API with Invalid State
-#      | driver_id  | {driver-id}      |
-#      | hub_id     | {sorting-hub-id} |
-#      | vehicle_id | {vehicle-id}     |
-#      | zone_id    | {zone-id}        |
-#    Then Operator verify response code is 400 with error message "[{KEY_LIST_OF_WAYPOINT_IDS[1]},{KEY_LIST_OF_WAYPOINT_IDS[2]}]"
+    When API Route - Operator create route from Zonal Routing API with Invalid State
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    Then Operator verify response code is 400 with error message "[{KEY_LIST_OF_WAYPOINT_IDS[1]}]"
     Then API Core - Operator update routed waypoint to pending
       | id             | {KEY_LIST_OF_WAYPOINT_IDS[1]} |
       | status         | PENDING                       |
       | rawAddressFlag | false                         |
+    And DB Operator verifies waypoint status is "PENDING"
+    And DB Operator verifies waypoints.route_id & seq_no is NULL
+    And DB Operator verifies route_waypoint is hard-deleted
+    And DB Operator verifies route_monitoring_data is hard-deleted
+
+  Scenario Outline: Zonal Routing API - Not Allowed to Set Attempted Waypoint to Pending - <Note>
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    When Shipper create order with parameters below
+      | service_type                  | Return   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
+    And Operator search for "PICKUP" transaction with status "PENDING"
+    And Operator create a route and assign waypoint from Zonal Routing API
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And API Operator update order granular status:
+      | orderId        | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | granularStatus | <granularStatus>                  |
+    When API Route - Operator create route from Zonal Routing API with Invalid State
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    Then Operator verify response code is 400 with error message "[{KEY_LIST_OF_WAYPOINT_IDS[1]}]"
+    Then API Core - Operator update routed waypoint to pending
+      | id             | {KEY_LIST_OF_WAYPOINT_IDS[1]} |
+      | status         | PENDING                       |
+      | rawAddressFlag | false                         |
+    And DB Operator verifies transaction routed to new route id
+    And DB Operator verifies route_waypoint record exist
+    And DB Operator verifies waypoint status is "<waypointStatus>"
+    And DB Operator verifies waypoints.route_id & seq_no is populated correctly
+    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+    And DB Operator verifies route_monitoring_data record
+
+    Examples:
+      | Note             | granularStatus         | waypointStatus |
+      | Success Waypoint | Arrived at Sorting Hub | Success        |
+      | Fail Waypoint    | Pickup fail            | Fail           |
 
 
