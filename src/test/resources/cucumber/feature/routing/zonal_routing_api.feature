@@ -282,3 +282,70 @@ Feature: Zonal Routing API
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | routeId          | {KEY_CREATED_ROUTE_ID}            |
       | routeEventSource | ADD_BY_ORDER                      |
+
+  Scenario: Zonal Routing Edit Route API - Not Allowed to Move Success Waypoints to Another Route
+    Given Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    When Shipper create order with parameters below
+      | service_type                  | Return   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
+    And Operator search for "PICKUP" transaction with status "PENDING"
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for "DELIVERY" transaction with status "PENDING"
+    And Operator create a route and assign waypoint from Zonal Routing API
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator force success all orders
+    When API Route - Operator edit route from Zonal Routing API with Invalid State
+      | driverId  | {driver-id}                       |
+      | vehicleId | {vehicle-id}                      |
+      | id        | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+    Then Operator verify response code is 500 with error message details as follow
+      | code        | 103102                                                                                                                       |
+      | message     | Unexpected Exception [Exception:java.lang.RuntimeException: Attempted waypoints are not allowed to be removed! Waypoints:%s] |
+      | application | core                                                                                                                         |
+      | description | INTERNAL_SERVER_ERROR                                                                                                        |
+      | values      | {KEY_LIST_OF_WAYPOINT_IDS[1]},{KEY_LIST_OF_WAYPOINT_IDS[2]}                                                                  |
+    Then DB Operator verifies all transactions routed to new route id
+    And DB Operator verifies all route_waypoint records
+    And DB Operator verifies all waypoints status is "SUCCESS"
+    And DB Operator verifies waypoints.route_id & seq_no is populated correctly
+    And DB Operator verifies all route_monitoring_data records
+    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+
+  @wip
+  Scenario: Zonal Routing API - Create Driver Route & Assign Waypoints
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    When Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for "DELIVERY" transaction with status "PENDING"
+    When Shipper create order with parameters below
+      | service_type                  | Return   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | true     |
+    And Operator search for "PICKUP" transaction with status "PENDING"
+    And Operator create a route and assign waypoint from Zonal Routing API
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator force success order
+    When API Route - Operator create route from Zonal Routing API with Invalid State
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    Then Operator verify response code is 400 with error message "[{KEY_LIST_OF_WAYPOINT_IDS[1]},{KEY_LIST_OF_WAYPOINT_IDS[2]}]"
+
