@@ -40,7 +40,7 @@ dependencies {
     implementation "co.nvqa:commons:2.2.9"
     implementation "co.nvqa:common-auth:1.+"
     implementation "co.nvqa:common-sort:1.1.0"
-    implementation "co.nvqa:common-core:1.2.0-SNAPSHOT"
+    implementation "co.nvqa:common-core:1.2.0"
     testImplementation "ch.qos.logback:logback-classic:1.2.3"
     testImplementation "org.apache.poi:poi-ooxml:3.17"
 }
