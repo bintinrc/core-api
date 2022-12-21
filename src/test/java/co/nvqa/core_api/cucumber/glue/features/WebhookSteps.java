@@ -72,6 +72,7 @@ public class WebhookSteps extends BaseSteps {
   @Then("Shipper gets webhook request for event {string}")
   public void shipperPeekItsWebhook(String event) {
     Bin bin = get(Bin.KEY_CREATED_BIN + event);
+//    TODO move trackingId as step parameter
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     callWithRetry(() -> {
       List<BinRequest> requests = Arrays.asList(binClient.retrieveBinContent(bin.getKey()));
@@ -130,16 +131,17 @@ public class WebhookSteps extends BaseSteps {
 
   @Then("Shipper verifies webhook request payload has correct details for status {string}")
   public void shipperVerifiesWebhookPayload(String status) {
+    //    TODO move trackingId as step parameter
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     Map<String, WebhookRequest> webhookRequest = get(KEY_LIST_OF_WEBHOOK_REQUEST + status);
     WebhookRequest request = webhookRequest.get(trackingId);
     put(KEY_WEBHOOK_PAYLOAD, request);
     OrderRequestV4 order = get(KEY_ORDER_CREATE_REQUEST);
     callWithRetry(() -> {
-          Assertions.assertThat(request.getStatus().toLowerCase()).as(f("status is %s", status))
-              .isEqualTo(status.toLowerCase());
-          Assertions.assertThat(request.getTrackingId().toLowerCase()).as("tracking id is correct")
-              .isEqualTo(trackingId.toLowerCase());
+          Assertions.assertThat(request.getStatus()).as(f("status is %s", status))
+              .isEqualToIgnoringCase(status);
+          Assertions.assertThat(request.getTrackingId()).as("tracking id is correct")
+              .isEqualToIgnoringCase(trackingId);
           Webhook.WebhookStatus webhookStatus = Webhook.WebhookStatus.fromString(status);
           Pickup pickup = get(KEY_CREATED_RESERVATION);
           Map<String, ProofDetails> proofDetails = get(KEY_MAP_PROOF_WEBHOOK_DETAILS);
@@ -172,8 +174,7 @@ public class WebhookSteps extends BaseSteps {
             case ON_VEHICLE_DELIVERY: {
               Hub hub = get(KeysStorage.KEY_HUB_DETAILS, Hub.class);
               if (hub != null) {
-                String hubName = StringUtils.lowerCase(
-                    f("%s-%s", hub.getCountry(), hub.getCity()));
+                String hubName = f("%s-%s", hub.getCountry(), hub.getCity());
                 Assertions.assertThat(request.getComments()).as("comment contains hub name")
                     .containsIgnoringCase(
                         hubName);
@@ -183,8 +184,7 @@ public class WebhookSteps extends BaseSteps {
             case RTS_ON_VEHICLE_DELIVERY: {
               Hub hub = get(KeysStorage.KEY_HUB_DETAILS, Hub.class);
               if (hub != null) {
-                String hubName = StringUtils.lowerCase(
-                    f("%s-%s", hub.getCountry(), hub.getCity()));
+                String hubName = f("%s-%s", hub.getCountry(), hub.getCity());
                 Assertions.assertThat(request.getComments()).as("comment contains hub name")
                     .containsIgnoringCase(
                         hubName);
@@ -192,13 +192,13 @@ public class WebhookSteps extends BaseSteps {
             }
             break;
             case DELIVERY_FAIL_FIRST_ATTEMPT:
-              Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
-                  .isEqualTo(StringUtils.lowerCase(TestConstants.DELIVERY_FAILURE_REASON));
+              Assertions.assertThat(request.getComments()).as("comment equal")
+                  .isEqualToIgnoringCase(TestConstants.DELIVERY_FAILURE_REASON);
               break;
             case PENDING_RESCHEDULE:
               final Integer attemptCount = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT);
-              Assertions.assertThat(StringUtils.lowerCase(request.getComments())).as("comment equal")
-                  .isEqualTo(StringUtils.lowerCase(TestConstants.DELIVERY_FAILURE_REASON));
+              Assertions.assertThat(request.getComments()).as("comment equal")
+                  .isEqualToIgnoringCase(TestConstants.DELIVERY_FAILURE_REASON);
               if (attemptCount != null) {
                 Assertions.assertThat(request.getDeliveryAttempts()).as("delivery attempt count equal")
                     .isEqualTo(attemptCount);
@@ -208,8 +208,7 @@ public class WebhookSteps extends BaseSteps {
               Hub hub = get(KeysStorage.KEY_HUB_DETAILS, Hub.class);
               final int attemptCounts = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT);
               if (hub != null) {
-                String hubName = StringUtils.lowerCase(
-                    f("%s-%s-%s", hub.getCountry(), hub.getCity(), hub.getShortName()));
+                String hubName = f("%s-%s-%s", hub.getCountry(), hub.getCity(), hub.getShortName());
                 Assertions.assertThat(request.getComments()).as("comment contains hub name")
                     .isEqualToIgnoringCase(hubName);
                 Assertions.assertThat(request.getDeliveryAttempts()).as("delivery attempt count equal")
@@ -276,22 +275,22 @@ public class WebhookSteps extends BaseSteps {
     String podType = get(KEY_WEBHOOK_POD_TYPE, "RECIPIENT");
     ProofDetails podDetails = proofDetails.get(trackingId);
     if (podDetails != null) {
-      Assertions.assertThat(webhookRequest.getPod().getName().toLowerCase()).as("name equal")
-          .isEqualTo(podDetails.getName().toLowerCase());
-      Assertions.assertThat(webhookRequest.getPod().getContact().toLowerCase()).as("contact equal")
-          .isEqualTo(podDetails.getContact().toLowerCase());
+      Assertions.assertThat(webhookRequest.getPod().getName()).as("name equal")
+          .isEqualToIgnoringCase(podDetails.getName());
+      Assertions.assertThat(webhookRequest.getPod().getContact()).as("contact equal")
+          .isEqualToIgnoringCase(podDetails.getContact());
       Assertions.assertThat(Boolean.parseBoolean(webhookRequest.getPod().getLeftInSafePlace()))
           .as("left_in_safe_place = false").isFalse();
       if (podDetails.getSignatureImageUrl() != null) {
-        Assertions.assertThat(webhookRequest.getPod().getUri().toLowerCase()).as("url equal")
-            .isEqualTo(podDetails.getSignatureImageUrl().toLowerCase());
+        Assertions.assertThat(webhookRequest.getPod().getUri()).as("url equal")
+            .isEqualToIgnoringCase(podDetails.getSignatureImageUrl());
       } else {
         Assertions.assertThat(webhookRequest.getPod().getUri()).as("url not null")
             .isNotNull();
       }
-      Assertions.assertThat(webhookRequest.getPod().getType().toLowerCase())
+      Assertions.assertThat(webhookRequest.getPod().getType())
           .as(f("type is %s", podType))
-          .isEqualTo(podType.toLowerCase());
+          .isEqualToIgnoringCase(podType);
     }
   }
 }

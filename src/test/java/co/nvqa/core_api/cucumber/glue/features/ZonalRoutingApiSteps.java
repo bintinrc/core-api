@@ -20,6 +20,7 @@ public class ZonalRoutingApiSteps extends BaseSteps {
 
   }
 
+  //    TODO move all these steps to common-core
   @When("Operator create a route and assign waypoint from Zonal Routing API")
   public void operatorCreateRouteZr(Map<String, String> arg1) {
     final String json = toJsonCamelCase(arg1);
