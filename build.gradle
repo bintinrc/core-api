@@ -37,8 +37,8 @@ repositories {
 
 dependencies {
     implementation "co.nvqa:common-base:1.1.8"
-    implementation "co.nvqa:commons:2.4.2"
-    implementation "co.nvqa:common-auth:1.+"
+    implementation "co.nvqa:commons:2.4.4"
+    implementation "co.nvqa:common-auth:1.1.2"
     implementation "co.nvqa:common-sort:1.2.0"
     implementation "co.nvqa:common-core:1.2.0"
     testImplementation "ch.qos.logback:logback-classic:1.2.3"
