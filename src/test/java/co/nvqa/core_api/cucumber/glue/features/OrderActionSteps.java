@@ -403,12 +403,13 @@ public class OrderActionSteps extends BaseSteps {
 
   @When("Operator verify response code is {int} with error message details as follow")
   public void operatorVerifyResponseWithParams(int expectedHttpStatus, Map<String, String> params) {
+    Map<String, String> expectedData = resolveKeyValues(params);
     callWithRetry(() -> {
       Response response = get(KEY_API_RAW_RESPONSE);
       Assertions.assertThat(response.getStatusCode()).as("Http response code")
           .isEqualTo(expectedHttpStatus);
 
-      String json = toJsonSnakeCase(params);
+      String json = toJsonSnakeCase(expectedData);
       ExceptionResponse expectedError = fromJsonSnakeCase(json, ExceptionResponse.class);
       ExceptionResponse actualError;
       try {
@@ -419,13 +420,25 @@ public class OrderActionSteps extends BaseSteps {
       }
       Assertions.assertThat(actualError.getCode()).as("code").isEqualTo(expectedError.getCode());
       Assertions.assertThat(actualError.getMessages().get(0)).as("messages")
-          .isEqualTo(params.get("message"));
+          .isEqualTo(f(expectedData.get("message"), expectedData.get("values")));
       Assertions.assertThat(actualError.getApplication()).as("application")
           .isEqualTo(expectedError.getApplication());
       Assertions.assertThat(actualError.getDescription()).as("description")
           .isEqualTo(expectedError.getDescription());
       Assertions.assertThat(actualError.getData().getMessage()).as("data.message")
-          .isEqualTo(params.get("message"));
+          .isEqualTo(f(expectedData.get("message"), expectedData.get("values")));
+    }, "verify response");
+  }
+
+  @When("Operator verify response code is {int} with error message {string}")
+  public void operatorVerifyResponseWithParams(int expectedHttpStatus, String message) {
+    String errorMessage= resolveValue(message);
+    callWithRetry(() -> {
+      Response response = get(KEY_API_RAW_RESPONSE);
+      Assertions.assertThat(response.getStatusCode()).as("Http response code")
+          .isEqualTo(expectedHttpStatus);
+      Assertions.assertThat(response.getBody().asString()).as("messages")
+          .isEqualTo(f(errorMessage));
     }, "verify response");
   }
 

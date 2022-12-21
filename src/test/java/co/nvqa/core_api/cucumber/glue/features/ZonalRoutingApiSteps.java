@@ -5,6 +5,7 @@ import co.nvqa.commons.model.core.route.ZonalRoutingRouteRequest;
 import co.nvqa.commons.support.DateUtil;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import io.cucumber.java.en.When;
+import io.restassured.response.Response;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,6 +20,7 @@ public class ZonalRoutingApiSteps extends BaseSteps {
 
   }
 
+  //    TODO move all these steps to common-core
   @When("Operator create a route and assign waypoint from Zonal Routing API")
   public void operatorCreateRouteZr(Map<String, String> arg1) {
     final String json = toJsonCamelCase(arg1);
@@ -178,6 +180,35 @@ public class ZonalRoutingApiSteps extends BaseSteps {
     putAllInList(KEY_LIST_OF_WAYPOINT_IDS, waypointIds);
     putAllInList(KEY_LIST_OF_TRANSACTION_IDS, transactionIds);
     putAllInList(KEY_LIST_OF_CREATED_ORDER_ID, orderIds);
+  }
+
+  @When("API Route - Operator edit route from Zonal Routing API with Invalid State")
+  public void operatorEditRouteZrInvalidState(Map<String, String> mapOfData) {
+    mapOfData = resolveKeyValues(mapOfData);
+    String json = toJson(mapOfData);
+    ZonalRoutingRouteRequest route = fromJson(json, ZonalRoutingRouteRequest.class);
+    List<Long> waypointIds = get(KEY_LIST_OF_WAYPOINT_IDS);
+    route.setWaypoints(waypointIds);
+    callWithRetry(() -> {
+      Response response = getRouteClient()
+          .zonalRoutingEditRouteAndGetRawResponse(Collections.singletonList(route));
+      put(KEY_API_RAW_RESPONSE, response);
+    }, "zonal routing edit route");
+  }
+
+  @When("API Route - Operator create route from Zonal Routing API with Invalid State")
+  public void operatorCreateRouteZrInvalidState(Map<String, String> mapOfData) {
+    mapOfData = resolveKeyValues(mapOfData);
+    String json = toJson(mapOfData);
+    ZonalRoutingRouteRequest route = fromJson(json, ZonalRoutingRouteRequest.class);
+    List<Long> waypointIds = get(KEY_LIST_OF_WAYPOINT_IDS);
+    route.setWaypoints(waypointIds);
+    route.setDate(DateUtil.generateUTCTodayDate());
+    callWithRetry(() -> {
+      Response response = getRouteClient()
+          .zonalRoutingCreateRouteAndGetRawResponse(Collections.singletonList(route));
+      put(KEY_API_RAW_RESPONSE, response);
+    }, "zonal routing edit route");
   }
 
 }
