@@ -1,16 +1,15 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
+import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.commons.constants.HttpConstants;
 import co.nvqa.commons.model.core.Order;
 import co.nvqa.commons.model.core.Pickup;
 import co.nvqa.commons.model.core.route.AddParcelToRouteRequest;
-import co.nvqa.commons.model.core.route.ArchiveRouteResponse;
 import co.nvqa.commons.model.core.route.Route;
 import co.nvqa.commons.support.DateUtil;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import io.cucumber.guice.ScenarioScoped;
-import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
@@ -176,61 +175,12 @@ public class RoutingSteps extends BaseSteps {
     }
   }
 
-  @When("Operator archives driver route")
-  public void operatorArchiveRoute() {
-    long routeId = get(KEY_CREATED_ROUTE_ID);
-    callWithRetry(() -> {
-      getRouteClient().archiveRouteV2(routeId);
-    }, "archive driver route");
-
-    LOGGER.info("route {} is successfully archived", routeId);
-  }
-
-  @When("Operator unarchives driver route with status code {int}")
-  public void operatorUnArchiveRouteV2(int statusCode) {
-    long routeId = get(KEY_CREATED_ROUTE_ID, 89L);
-    callWithRetry(() -> {
-      Response r = getRouteClient().unarchiveRouteV2AndGetRawResponse(routeId);
-      Assertions.assertThat(r.getStatusCode()).as("status code").isEqualTo(statusCode);
-      put(KEY_UNARCHIVE_ROUTE_RESPONSE, r);
-    }, "unarchive driver route v2");
-  }
-
-  @When("Operator verify unarchive route response with proper error message : {string}")
-  public void verifyBadUnarchivedRoute(String message) {
-    long routeId = get(KEY_CREATED_ROUTE_ID, 89L);
-    Response r = get(KEY_UNARCHIVE_ROUTE_RESPONSE);
-    Assertions.assertThat(r.getBody().asString()).as("error Message").contains(f(message, routeId));
-  }
-
-  @When("Operator archives multiple driver routes")
-  public void operatorArchiveMultipleRoutes() {
-    List<Long> routes = get(KEY_LIST_OF_CREATED_ROUTE_ID);
-    long[] request = routes.stream().mapToLong(e -> e).toArray();
-    callWithRetry(() -> {
-      ArchiveRouteResponse response = getRouteClient().archiveRoutes(request);
-      boolean found = response.getArchivedRouteIds().containsAll(routes);
-      Assertions.assertThat(found).as("archived route is found").isTrue();
-    }, "archive driver route");
-
-    LOGGER.info("multiple route ids {} are archived", Arrays.toString(routes.toArray()));
-  }
-
-  @When("Operator archives invalid driver route")
-  public void operatorArchiveRouteInvalid() {
-    long routeId = get(KEY_CREATED_ROUTE_ID, 0L);
-    callWithRetry(() -> {
-      ArchiveRouteResponse response = getRouteClient().archiveRoute(routeId);
-      boolean found = response.getUnarchivedRouteIds().stream().anyMatch(e -> e.equals(routeId));
-      Assertions.assertThat(found).as("archived route is found").isTrue();
-    }, "archive driver route");
-
-    LOGGER.info("route {} is unarchived", routeId);
-  }
-
-  @When("Operator archives driver the same archived route")
-  public void operatorArchiveSameRoute() {
-    operatorArchiveRoute();
+  @When("Operator verify route response with proper error message below:")
+  public void verifyBadUnarchivedRoute(Map<String, String> mapOfData) {
+    Map<String, String> expectedData = resolveKeyValues(mapOfData);
+    Response r = get(CoreScenarioStorageKeys.KEY_ROUTE_RESPONSE);
+    Assertions.assertThat(r.getBody().asString()).as("error Message")
+        .contains(f(expectedData.get("message"), expectedData.get("routeId")));
   }
 
   @When("Operator merge transaction waypoints")
@@ -259,39 +209,5 @@ public class RoutingSteps extends BaseSteps {
       getRouteClient().pullOutDpOrderFromRoute(order.getId());
       put(KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_DP");
     }, "pull out of route");
-  }
-
-  @When("Operator archives driver route with status code {int}")
-  public void operatorArchiveRouteV2(int statusCode) {
-    long routeId = get(KEY_CREATED_ROUTE_ID, 1234L);
-    callWithRetry(() -> {
-      Response response = getRouteClient().archiveRouteV2AndGetRawResponse(routeId);
-      Assertions.assertThat(response.getStatusCode()).as("archive route response")
-          .isEqualTo(statusCode);
-      put(KEY_ARCHIVE_ROUTE_RESPONSE, response);
-    }, "archive driver route V2");
-  }
-
-  @When("Operator verify archive route response with proper error message : {string}")
-  public void operatorVerifyArchiveV2Route(String message) {
-    callWithRetry(() -> {
-      long routeId = get(KEY_CREATED_ROUTE_ID, 1234L);
-      Response response = get(KEY_ARCHIVE_ROUTE_RESPONSE);
-      Assertions.assertThat(response.getBody().asString()).as("error Message")
-          .contains(f(message, routeId));
-    }, "verify archive driver route v2");
-  }
-
-  @After("@ArchiveDriverRoutes")
-  public void cleanCreatedRoute() {
-    final List<Long> routeIds = get(KEY_LIST_OF_CREATED_ROUTE_ID);
-
-    try {
-      if (routeIds != null) {
-        routeIds.forEach(e -> getRouteClient().archiveRouteV2(e));
-      }
-    } catch (Throwable t) {
-      LOGGER.warn("Failed to archive route(s)");
-    }
   }
 }

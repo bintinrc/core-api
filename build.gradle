@@ -16,7 +16,7 @@ buildscript {
     }
     dependencies {
         classpath "gradle.plugin.com.github.viswaramamoorthy:gradle-util-plugins:0.1.0-RELEASE"
-        classpath "co.nvqa:common-build:1.0.2"
+        classpath "co.nvqa:common-build:1.0.5"
         //alure
         classpath "io.qameta.allure.gradle.report:allure-report-plugin:2.11.1"
         classpath "io.qameta.allure.gradle.adapter:allure-adapter-plugin:2.11.1"
@@ -40,7 +40,7 @@ dependencies {
     implementation "co.nvqa:commons:2.5.13"
     implementation "co.nvqa:common-auth:1.2.0"
     implementation "co.nvqa:common-sort:1.2.2"
-    implementation "co.nvqa:common-core:1.2.3"
+    implementation "co.nvqa:common-core:1.2.4"
     testImplementation "ch.qos.logback:logback-classic:1.2.3"
     testImplementation "org.apache.poi:poi-ooxml:3.17"
 }
