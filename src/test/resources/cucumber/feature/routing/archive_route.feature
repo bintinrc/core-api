@@ -8,7 +8,7 @@ Feature: Archive Route
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    When API Route - Operator archives routes below:
+    When API Core - Operator archives routes below:
       | {KEY_CREATED_ROUTE_ID} |
     Then DB Operator verifies route status is archived
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
@@ -29,7 +29,7 @@ Feature: Archive Route
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
-    When API Route - Operator archives routes below:
+    When API Core - Operator archives routes below:
       | {KEY_CREATED_ROUTE_ID} |
     Then DB Operator verifies route status is archived
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
@@ -51,7 +51,7 @@ Feature: Archive Route
     And Operator add order to driver "DD" route
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     And Driver Starts the route
-    When API Route - Operator archives routes below:
+    When API Core - Operator archives routes below:
       | {KEY_CREATED_ROUTE_ID} |
     Then DB Operator verifies route status is archived
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
@@ -71,12 +71,12 @@ Feature: Archive Route
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
-    When API Route - Operator archives routes below:
+    When API Core - Operator archives routes below:
       | {KEY_REATED_ROUTE_ID} |
     Then DB Operator verifies route status is archived
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Archived route is not shown on his list routes
-    When API Route - Operator archives routes below:
+    When API Core - Operator archives routes below:
       | {KEY_CREATED_ROUTE_ID} |
     Then DB Operator verifies route status is archived
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
@@ -91,7 +91,7 @@ Feature: Archive Route
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     When Operator delete driver route
-    When API Route - Operator archives invalid route with data below:
+    When API Core - Operator archives invalid route with data below:
       | routeId | {KEY_CREATED_ROUTE_ID} |
       | status  | 404                    |
     Then Operator verify route response with proper error message below:
@@ -100,7 +100,7 @@ Feature: Archive Route
 
   @route-archive
   Scenario: Operator not Allowed to Archive Driver Invalid Route Id - Route Not Found
-    When API Route - Operator archives invalid route with data below:
+    When API Core - Operator archives invalid route with data below:
       | routeId | 89  |
       | status  | 404 |
     Then Operator verify route response with proper error message below:
