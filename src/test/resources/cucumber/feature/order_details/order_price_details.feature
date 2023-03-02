@@ -78,7 +78,7 @@ Feature: Order Price Details
       | shipperV4ClientId     | {shipper-client-id}     |
       | shipperV4ClientSecret | {shipper-client-secret} |
     When API Shipper create V4 order using data below:
-      | v4OrderRequest | {"service_type":"Parcel","service_level":"Standard","from":{"name":"Elsa Customer","phone_number":"+6583014911","email":"elsa@ninja.com","address":{"address1":"233E ST. JOHN'S ROAD","address2":"","postcode":"757995","city":"Singapore","country":"Singapore","latitude":1.45694483734937,"longitude":103.825580873988}},"to":{"name":"Elsa Sender","phone_number":"+6583014912","email":"elsaf@ninja.com","address":{"address1":"9 TUA KONG GREEN","address2":"MANILA GARDENS","country":"Singapore","postcode":"455384","city":"Singapore","latitude":1.3184395712682,"longitude":103.925311276846}},"parcel_job":{ "is_pickup_required":false,"pickup_date":"{{next-1-day-yyyy-MM-dd}}","pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"},"delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
+      | v4OrderRequest | {"service_type":"Return","service_level":"Standard","from":{"name":"Elsa Customer","phone_number":"+6583014911","email":"elsa@ninja.com","address":{"address1":"233E ST. JOHN'S ROAD","address2":"","postcode":"757995","city":"Singapore","country":"Singapore","latitude":1.45694483734937,"longitude":103.825580873988}},"to":{"name":"Elsa Sender","phone_number":"+6583014912","email":"elsaf@ninja.com","address":{"address1":"9 TUA KONG GREEN","address2":"MANILA GARDENS","country":"Singapore","postcode":"455384","city":"Singapore","latitude":1.3184395712682,"longitude":103.925311276846}},"parcel_job":{ "is_pickup_required":true,"pickup_date":"{{next-1-day-yyyy-MM-dd}}","pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"},"delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
     And API Operator verify order pricing details:
       | orderId               | {KEY_CREATED_ORDER_ID}                     |
       | trackingId            | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1]} |
@@ -100,16 +100,16 @@ Feature: Order Price Details
       | fromLongitude         | 103.825580873988                           |
       | fromLatitude          | 1.45694483734937                           |
       | installationRequired  | null                                       |
-      | orderType             | NORMAL                                     |
+      | orderType             | RETURN                                     |
       | deliveryType          | STANDARD                                   |
-      | deliveryTypeValue     | DELIVERY_THREE_DAYS_ANYTIME                |
-      | deliveryTypeId        | 2                                          |
+      | deliveryTypeValue     | RETURN_THREE_DAYS_ANYTIME                  |
+      | deliveryTypeId        | 29                                         |
       | measuredHeight        | {KEY_CREATED_ORDER.dimensions.height}      |
       | measuredLength        | {KEY_CREATED_ORDER.dimensions.length}      |
       | measuredWidth         | {KEY_CREATED_ORDER.dimensions.width}       |
       | parcelSizeValue       | {KEY_CREATED_ORDER.parcelSize}             |
       | parcelSizeId          | {KEY_CREATED_ORDER.parcelSizeId}           |
-      | serviceType           | PARCEL                                     |
+      | serviceType           | RETURN                                     |
       | serviceLevel          | STANDARD                                   |
       | weight                | {KEY_CREATED_ORDER.weight}                 |
       | size                  | {KEY_CREATED_ORDER.dimensions.size}        |

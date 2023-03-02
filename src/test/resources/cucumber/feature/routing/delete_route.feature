@@ -34,11 +34,11 @@ Feature: Delete Route
   @route-delete @routing-refactor
   Scenario Outline: Operator Delete Driver Route Successfully - Single Pending Reservation
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
-    When Shipper create order with parameters below
-      | service_type                  | <service_type>                  |
-      | service_level                 | <service_level>                 |
-      | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
-    And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "Pending"
+    When API Operator create new shipper address V2 using data below:
+      | shipperId       | {shipper-2-id} |
+      | generateAddress | RANDOM         |
+    And API Operator create V2 reservation using data below:
+      | reservationRequest | { "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And API Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     And Operator Route the Reservation Pickup

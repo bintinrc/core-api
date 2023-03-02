@@ -2,6 +2,7 @@ package co.nvqa.core_api.cucumber.glue.features;
 
 import co.nvqa.commons.model.core.Address;
 import co.nvqa.commons.model.core.Pickup;
+import co.nvqa.commons.model.core.Reservation;
 import co.nvqa.commons.model.core.route.Route;
 import co.nvqa.commons.support.DateUtil;
 import co.nvqa.commons.util.NvLogger;
@@ -80,8 +81,8 @@ public class ReservationSteps extends BaseSteps {
 
   @And("Operator Route the Reservation Pickup")
   public void operatorRouteReservation() {
-    Pickup pickup = get(KEY_CREATED_RESERVATION);
-    Long reservationId = pickup.getReservationId();
+    Reservation pickup = get(KEY_CREATED_RESERVATION);
+    Long reservationId = pickup.getId();
     Route route = get(KEY_CREATED_ROUTE);
     Long routeId = route.getId();
     callWithRetry(() -> {
