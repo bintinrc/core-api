@@ -407,3 +407,29 @@ Feature: Zonal Routing API
     And Operator get "DELIVERY" transaction waypoint Ids for all orders
     Then DB Operator verifies all waypoints status is "PENDING"
     And DB Operator verifies all waypoints.route_id & seq_no is NULL
+
+  Scenario: Zonal Routing API - Create Driver Route & Assign Reservation Waypoints
+    When API Operator create new shipper address V2 using data below:
+      | shipperId       | {shipper-2-id} |
+      | generateAddress | RANDOM         |
+    And API Operator create V2 reservation using data below:
+      | reservationRequest | { "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    And API Core - Operator create new route from zonal routing using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_WAYPOINT_ID}]} |
+    And DB Core - verify waypoints record:
+      | id      | {KEY_WAYPOINT_ID}                  |
+      | seqNo   | not null                           |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | status  | Routed                             |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_WAYPOINT_ID}                  |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+    And DB Events - verify pickup_events record:
+      | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}        |
+      | userId     | 397                                             |
+      | userName   | AUTOMATION EDITED                               |
+      | userEmail  | qa@ninjavan.co                                  |
+      | type       | 1                                               |
+      | pickupType | 1                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
+
