@@ -40,7 +40,7 @@ dependencies {
     implementation "co.nvqa:commons:2.5.13"
     implementation "co.nvqa:common-auth:1.2.0"
     implementation "co.nvqa:common-sort:1.2.2"
-    implementation "co.nvqa:common-core:1.2.12"
+    implementation "co.nvqa:common-core:1.2.13"
     implementation "co.nvqa:common-corev2:1.2.9"
     implementation "co.nvqa:common-shipper:1.2.9"
     testImplementation "ch.qos.logback:logback-classic:1.2.3"
