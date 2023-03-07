@@ -16,6 +16,11 @@ Feature: Zonal Routing API
       | seqNo   | not null                           |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status  | Routed                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID}                  |
+      | seqNo    | not null                           |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | status   | Routed                             |
     And DB Core - verify route_monitoring_data record:
       | waypointId | {KEY_WAYPOINT_ID}                  |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
@@ -48,6 +53,11 @@ Feature: Zonal Routing API
       | seqNo   | not null                           |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
       | status  | Routed                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID}                  |
+      | seqNo    | not null                           |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+      | status   | Routed                             |
 #    And DB Core - verify route_monitoring_data record:
 #      | waypointId | {KEY_WAYPOINT_ID}                  |
 #      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
@@ -80,6 +90,11 @@ Feature: Zonal Routing API
       | seqNo   | not null                           |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status  | Routed                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID}                  |
+      | seqNo    | not null                           |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | status   | Routed                             |
     And DB Core - verify route_monitoring_data record:
       | waypointId | {KEY_WAYPOINT_ID}                  |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
@@ -106,6 +121,11 @@ Feature: Zonal Routing API
       | seqNo   | not null                           |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status  | Routed                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID}                  |
+      | seqNo    | not null                           |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | status   | Routed                             |
     And DB Core - verify route_monitoring_data record:
       | waypointId | {KEY_WAYPOINT_ID}                  |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
@@ -134,6 +154,11 @@ Feature: Zonal Routing API
       | seqNo   | not null                           |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
       | status  | Routed                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID}                  |
+      | seqNo    | not null                           |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+      | status   | Routed                             |
 #    And DB Core - verify route_monitoring_data record:
 #      | waypointId | {KEY_WAYPOINT_ID}                  |
 #      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
@@ -173,6 +198,11 @@ Feature: Zonal Routing API
       | seqNo   | not null          |
       | routeId | null              |
       | status  | Pending           |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID} |
+      | seqNo    | not null          |
+      | routeId  | null              |
+      | status   | Pending           |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
       | userId     | 397                                             |

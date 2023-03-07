@@ -103,7 +103,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And DB Operator verifies transaction route id is null
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
-    And DB Operator verifies route_waypoint is hard-deleted
+
     And DB Operator verifies route_monitoring_data is hard-deleted
     And API Event - Operator verify that event is published with the following details:
       | event            | PULL_OUT_OF_ROUTE      |
@@ -115,7 +115,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And DB Operator verifies transaction route id is null
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
-    And DB Operator verifies route_waypoint is hard-deleted
+
     And DB Operator verifies route_monitoring_data is hard-deleted
     And DB Operator verify Jaro Scores of the created order after cancel
     And Shipper gets webhook request for event "Cancelled"
@@ -158,7 +158,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And DB Operator verifies transaction routed to new route id
     And DB Operator verifies waypoint status is "FAIL"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
-    And DB Operator verifies route_waypoint record exist
+
     And DB Operator verifies route_monitoring_data record
     And API Operator verify Delivery transaction of the created order using data below:
       | status   | CANCELLED                                      |
@@ -166,7 +166,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And DB Operator verifies transaction route id is null
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
-    And DB Operator verifies route_waypoint is hard-deleted
+
     And DB Operator verifies route_monitoring_data is hard-deleted
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
