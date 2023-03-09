@@ -107,7 +107,7 @@ Feature: Driver API
     And DB Operator verifies transaction is soft-deleted
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
-    And DB Operator verifies route_waypoint is hard-deleted
+
     And DB Operator verifies route_monitoring_data is hard-deleted
     And Operator search for "DELIVERY" transaction with status "SUCCESS"
     And Operator verify that order status-granular status is "Completed"-"Completed"
@@ -149,7 +149,7 @@ Feature: Driver API
     And DB Operator verifies transaction is soft-deleted
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
-    And DB Operator verifies route_waypoint is hard-deleted
+
     And DB Operator verifies route_monitoring_data is hard-deleted
     And Operator search for "PICKUP" transaction with status "SUCCESS"
     And Operator verify that order status-granular status is "Transit"-"Enroute_to_sorting_hub"

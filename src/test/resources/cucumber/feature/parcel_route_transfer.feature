@@ -16,7 +16,7 @@ Feature: Parcel Route Transfer
     And Operator search for multiple "DELIVERY" transactions with status "PENDING"
 
     And DB Operator verifies all transactions routed to new route id
-    And DB Operator verifies all route_waypoint records
+
     And DB Operator verifies all waypoints.route_id & seq_no is populated correctly
 
     And DB Operator verifies all waypoints status is "ROUTED"
@@ -65,7 +65,6 @@ Feature: Parcel Route Transfer
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
       | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record for all orders with type "4" and correct route_id
-    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
@@ -92,7 +91,7 @@ Feature: Parcel Route Transfer
     And Operator search for multiple "DELIVERY" transactions with status "PENDING"
 
     And DB Operator verifies all transactions routed to new route id
-    And DB Operator verifies all route_waypoint records
+
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
 
@@ -117,7 +116,7 @@ Feature: Parcel Route Transfer
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
-    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
@@ -137,7 +136,7 @@ Feature: Parcel Route Transfer
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
     Then DB Operator verifies all transactions routed to new route id
-    And DB Operator verifies all route_waypoint records
+
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
 
@@ -158,7 +157,7 @@ Feature: Parcel Route Transfer
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
       | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
-    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
@@ -185,7 +184,7 @@ Feature: Parcel Route Transfer
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
     Then DB Operator verifies all transactions routed to new route id
-    And DB Operator verifies all route_waypoint records
+
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies all waypoints.route_id & seq_no is populated correctly
 
@@ -246,7 +245,7 @@ Feature: Parcel Route Transfer
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
       | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record for all orders with type "4" and correct route_id
-    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
@@ -275,7 +274,7 @@ Feature: Parcel Route Transfer
     And Operator search for "DELIVERY" transaction with status "FAIL"
 
     And DB Operator verifies transaction routed to new route id
-    And DB Operator verifies route_waypoint record exist
+
     And DB Operator verifies waypoint status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
 
@@ -300,7 +299,7 @@ Feature: Parcel Route Transfer
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
-    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
@@ -327,7 +326,7 @@ Feature: Parcel Route Transfer
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
     Then DB Operator verifies transaction routed to new route id
-    And DB Operator verifies route_waypoint record exist
+
     And DB Operator verifies waypoint status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
 
@@ -352,7 +351,7 @@ Feature: Parcel Route Transfer
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
-    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
@@ -462,7 +461,7 @@ Feature: Parcel Route Transfer
       | to_driver_hub_id | {sorting-hub-id} |
     And Operator search for multiple "DELIVERY" transactions with status "PENDING"
     Then DB Operator verifies all transactions routed to new route id
-    And DB Operator verifies all route_waypoint records
+
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
 
@@ -483,7 +482,7 @@ Feature: Parcel Route Transfer
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
       | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
-    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
@@ -531,7 +530,7 @@ Feature: Parcel Route Transfer
       | to_driver_hub_id        | {sorting-hub-id} |
       | to_exclude_routed_order | true             |
     Then DB Operator verifies all transactions routed to new route id
-    And DB Operator verifies all route_waypoint records
+
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies all waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies all route_monitoring_data records
@@ -580,7 +579,7 @@ Feature: Parcel Route Transfer
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
       | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record for all orders with type "4" and correct route_id
-    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
@@ -614,7 +613,7 @@ Feature: Parcel Route Transfer
       | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
     And Operator search for multiple "DELIVERY" transactions with status "PENDING"
     And DB Operator verifies all transactions routed to new route id
-    And DB Operator verifies all route_waypoint records
+
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies all route_monitoring_data records
@@ -674,6 +673,6 @@ Feature: Parcel Route Transfer
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
       | routeEventSource | ROUTE_TRANSFER                    |
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
-    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly

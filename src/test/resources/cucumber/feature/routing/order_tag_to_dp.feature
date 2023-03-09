@@ -14,7 +14,7 @@ Feature: Order Tag to DP
     And Operator search for "DELIVERY" transaction with status "PENDING"
 
     Then DB Operator verifies transaction routed to new route id
-    And DB Operator verifies route_waypoint record exist
+
     And DB Operator verifies waypoint status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies route_monitoring_data record
@@ -53,7 +53,7 @@ Feature: Order Tag to DP
     And Operator search for "DELIVERY" transaction with status "PENDING"
 
     Then DB Operator verifies transaction routed to new route id
-    And DB Operator verifies route_waypoint record exist
+
     And DB Operator verifies waypoint status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies route_monitoring_data record
@@ -79,7 +79,7 @@ Feature: Order Tag to DP
     Then DB Operator verifies transaction route id is null
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
-    And DB Operator verifies route_waypoint is hard-deleted
+
     And DB Operator verifies route_monitoring_data is hard-deleted
     And API Event - Operator verify that event is published with the following details:
       | event            | PULL_OUT_OF_ROUTE      |

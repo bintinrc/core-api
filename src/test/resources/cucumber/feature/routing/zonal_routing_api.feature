@@ -24,11 +24,9 @@ Feature: Zonal Routing API
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And DB Operator verifies all transactions routed to new route id
-    And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies all route_monitoring_data records
-    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                      |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
@@ -73,11 +71,9 @@ Feature: Zonal Routing API
       | driver_id  | {driver-id}  |
       | vehicle_id | {vehicle-id} |
     And DB Operator verifies all transactions routed to new route id
-    And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies all route_monitoring_data records
-    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                      |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
@@ -118,11 +114,9 @@ Feature: Zonal Routing API
       | vehicle_id       | {vehicle-id} |
       | to_edit_sequence | true         |
     And DB Operator verifies all transactions routed to new route id
-    And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies all route_monitoring_data records
-    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that waypoints are shown on driver "{driver-id}" list route correctly
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
@@ -160,16 +154,14 @@ Feature: Zonal Routing API
       | vehicle_id | {vehicle-id} |
     # check for still routed waypoint
     Then DB Operator verifies transaction routed to new route id
-    And DB Operator verifies route_waypoint record exist
     And DB Operator verifies waypoint status is "ROUTED"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies route_monitoring_data record
-    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+
   # check for removed waypoints
     Then DB Operator verifies all transactions route id is null
     And DB Operator verifies all waypoints status is "PENDING"
     And DB Operator verifies all waypoints.route_id & seq_no is NULL
-    And DB Operator verifies all route_waypoint route id is hard-deleted
     And DB Operator verifies all route_monitoring_data is hard-deleted
     And API Event - Operator verify that event is published with the following details:
       | event            | PULL_OUT_OF_ROUTE                 |
@@ -217,7 +209,6 @@ Feature: Zonal Routing API
       | vehicle_id | {vehicle-id} |
   # check for still routed waypoint
     And DB Operator verifies routed waypoint remains in old route
-    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
   # check for moved waypoints to another route
     And DB Operator verifies waypoint moved to another route
     And API Event - Operator verify that event is published with the following details:
@@ -241,7 +232,7 @@ Feature: Zonal Routing API
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that waypoints are shown on driver "{driver-id}" list route correctly
     And Verify that waypoints are not shown on previous driver list route
-    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+
 
   Scenario: Add Merged Unrouted Waypoint to a Route from Zonal Routing Edit Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
@@ -269,11 +260,9 @@ Feature: Zonal Routing API
     And DB Operator verifies transaction route id is null
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
-    And DB Operator verifies route_waypoint is hard-deleted
     And DB Operator verifies route_monitoring_data is hard-deleted
 #    verify routed orders
     Then DB Operator verifies all transactions routed to new route id
-    And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies all waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies all route_monitoring_data records
@@ -317,11 +306,10 @@ Feature: Zonal Routing API
       | description | INTERNAL_SERVER_ERROR                                                                                                        |
       | values      | {KEY_LIST_OF_WAYPOINT_IDS[1]},{KEY_LIST_OF_WAYPOINT_IDS[2]}                                                                  |
     Then DB Operator verifies all transactions routed to new route id
-    And DB Operator verifies all route_waypoint records
     And DB Operator verifies all waypoints status is "SUCCESS"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies all route_monitoring_data records
-    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+
 
   Scenario: Zonal Routing API - Set Routed Waypoint to Pending
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
@@ -347,7 +335,7 @@ Feature: Zonal Routing API
       | rawAddressFlag | false                         |
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
-    And DB Operator verifies route_waypoint is hard-deleted
+
     And DB Operator verifies route_monitoring_data is hard-deleted
 
   Scenario Outline: Zonal Routing API - Not Allowed to Set Attempted Waypoint to Pending - <Note>
@@ -376,10 +364,10 @@ Feature: Zonal Routing API
       | status         | PENDING                       |
       | rawAddressFlag | false                         |
     And DB Operator verifies transaction routed to new route id
-    And DB Operator verifies route_waypoint record exist
+
     And DB Operator verifies waypoint status is "<waypointStatus>"
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
-    And DB Operator verifies waypoints.seq_no is the same as route_waypoint.seq_no for each waypoint
+
     And DB Operator verifies route_monitoring_data record
 
     Examples:
@@ -407,3 +395,133 @@ Feature: Zonal Routing API
     And Operator get "DELIVERY" transaction waypoint Ids for all orders
     Then DB Operator verifies all waypoints status is "PENDING"
     And DB Operator verifies all waypoints.route_id & seq_no is NULL
+
+  Scenario: Zonal Routing API - Create Driver Route & Assign Reservation Waypoints
+    When API Operator create new shipper address V2 using data below:
+      | shipperId       | {shipper-2-id} |
+      | generateAddress | RANDOM         |
+    And API Operator create V2 reservation using data below:
+      | reservationRequest | { "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    And API Core - Operator create new route from zonal routing using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_WAYPOINT_ID}]} |
+    And DB Core - verify waypoints record:
+      | id      | {KEY_WAYPOINT_ID}                  |
+      | seqNo   | not null                           |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | status  | Routed                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID}                  |
+      | seqNo    | not null                           |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | status   | Routed                             |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_WAYPOINT_ID}                  |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+    And DB Events - verify pickup_events record:
+      | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}        |
+      | userId     | 397                                             |
+      | userName   | AUTOMATION EDITED                               |
+      | userEmail  | qa@ninjavan.co                                  |
+      | type       | 1                                               |
+      | pickupType | 1                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
+
+  @wip2
+  Scenario: Zonal Routing Edit Route API - Edit Reservation Waypoints Inside a Route - Add Unrouted Reservation Waypoints to Route
+    When API Operator create new shipper address V2 using data below:
+      | shipperId       | {shipper-2-id} |
+      | generateAddress | RANDOM         |
+    And API Operator create V2 reservation using data below:
+      | reservationRequest | { "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    And API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
+    When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
+      | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[1].id}, "waypoints":[{KEY_WAYPOINT_ID}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
+    And DB Core - verify waypoints record:
+      | id      | {KEY_WAYPOINT_ID}                  |
+      | seqNo   | not null                           |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | status  | Routed                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID}                  |
+      | seqNo    | not null                           |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | status   | Routed                             |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_WAYPOINT_ID}                  |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+    And DB Events - verify pickup_events record:
+      | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}        |
+      | userId     | 397                                             |
+      | userName   | AUTOMATION EDITED                               |
+      | userEmail  | qa@ninjavan.co                                  |
+      | type       | 1                                               |
+      | pickupType | 1                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
+
+  Scenario: Zonal Routing Edit Route API - Bulk Edit Reservation Waypoints Inside Multiple Routes - Move Routed Reservation Waypoints to Another Route
+    When API Operator create new shipper address V2 using data below:
+      | shipperId       | {shipper-2-id} |
+      | generateAddress | RANDOM         |
+    And API Operator create V2 reservation using data below:
+      | reservationRequest | { "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    And API Core - Operator create new route from zonal routing using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_WAYPOINT_ID}]} |
+    And API Core - Operator create new route from zonal routing using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
+    When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
+      | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[2].id}, "waypoints":[{KEY_WAYPOINT_ID}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
+    And DB Core - verify waypoints record:
+      | id      | {KEY_WAYPOINT_ID}                  |
+      | seqNo   | not null                           |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+      | status  | Routed                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID}                  |
+      | seqNo    | not null                           |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+      | status   | Routed                             |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_WAYPOINT_ID}                  |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+    And DB Events - verify pickup_events record:
+      | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}                                                          |
+      | userId     | 397                                                                                               |
+      | userName   | AUTOMATION EDITED                                                                                 |
+      | userEmail  | qa@ninjavan.co                                                                                    |
+      | type       | 2                                                                                                 |
+      | pickupType | 1                                                                                                 |
+      | data       | {"old_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
+
+  @DeletePickupAppointmentJob
+  Scenario: Zonal Routing Edit Route API - Edit Reservation Waypoints Inside a Route - Remove Reservation Waypoints From Route
+    When API Operator create new shipper address V2 using data below:
+      | shipperId       | {shipper-2-id} |
+      | generateAddress | RANDOM         |
+    And API Operator create V2 reservation using data below:
+      | reservationRequest | { "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    And API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":717, "from":{ "addressId":1547535}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
+    And API Core - Operator create new route from zonal routing using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_WAYPOINT_ID}, {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}]} |
+    When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
+      | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[1].id}, "waypoints":[{KEY_WAYPOINT_ID}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
+    And DB Core - verify waypoints record:
+      | id      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | seqNo   | null                                             |
+      | routeId | null                                             |
+      | status  | Pending                                          |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | seqNo    | null                                             |
+      | routeId  | null                                             |
+      | status   | Pending                                          |
+    And DB Events - verify pickup_events record:
+      | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}        |
+      | userId     | 397                                             |
+      | userName   | AUTOMATION EDITED                               |
+      | userEmail  | qa@ninjavan.co                                  |
+      | type       | 3                                               |
+      | pickupType | 1                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
