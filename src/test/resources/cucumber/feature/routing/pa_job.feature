@@ -212,7 +212,7 @@ Feature: Zonal Routing API
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
-  @DeletePickupAppointmentJob @wip
+  @DeletePickupAppointmentJob
   Scenario: PUT /pickup-appointment-jobs/:paJobId/unroute - Unroute PA Job Waypoint
     When API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":717, "from":{ "addressId":1547535}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
