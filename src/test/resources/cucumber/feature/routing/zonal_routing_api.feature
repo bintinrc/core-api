@@ -426,7 +426,6 @@ Feature: Zonal Routing API
       | pickupType | 1                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
-  @wip2
   Scenario: Zonal Routing Edit Route API - Edit Reservation Waypoints Inside a Route - Add Unrouted Reservation Waypoints to Route
     When API Operator create new shipper address V2 using data below:
       | shipperId       | {shipper-2-id} |
