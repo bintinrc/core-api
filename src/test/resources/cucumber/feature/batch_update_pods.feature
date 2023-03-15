@@ -1,6 +1,7 @@
 @ForceSuccessOrder @ArchiveDriverRoutes @batch-update-pods
 Feature: Batch Update PODs
 
+  @happy-path
   Scenario Outline: Driver picks up all X number of return parcels in one waypoint with POD type - <Note>
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -86,6 +87,7 @@ Feature: Batch Update PODs
       | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[4]} |
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
+  @happy-path
   Scenario: Driver fails all X number of return pickup parcels in one waypoint
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -120,6 +122,7 @@ Feature: Batch Update PODs
       | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
+  @happy-path
   Scenario Outline: Driver delivers all X number of normal parcels in one waypoint with POD type - <Note>
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery, Completed" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -249,6 +252,7 @@ Feature: Batch Update PODs
       | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[4]} |
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
+  @happy-path
   Scenario: Driver fails all X number of Deliveries in one waypoint
     Given Shipper id "{shipper-4-id}" subscribes to "Pending Reschedule, First Attempt Delivery Fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -286,6 +290,7 @@ Feature: Batch Update PODs
       | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
+  @happy-path
   Scenario: Driver picks up all X number of Normal parcels in one reservation
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -480,6 +485,7 @@ Feature: Batch Update PODs
       | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
+  @happy-path
   Scenario: Driver fails the reservation without failing any parcel
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
