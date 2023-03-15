@@ -1,6 +1,7 @@
 @ForceSuccessOrder @DeleteReservationAndAddress @routing @order-tag-to-dp @routing-refactor
 Feature: Order Tag to DP
 
+  @happy-path
   Scenario: Add to DP Holding Route upon Hub Inbound
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -63,6 +64,7 @@ Feature: Order Tag to DP
       | routeId          | {KEY_CREATED_ROUTE_ID} |
       | routeEventSource | ADD_BY_ORDER_DP        |
 
+  @happy-path
   Scenario: DELETE /2.0/orders/:orderId/routes-dp - Remove DP Order From Holding Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below

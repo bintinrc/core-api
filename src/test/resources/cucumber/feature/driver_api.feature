@@ -1,7 +1,7 @@
 @ArchiveDriverRoutes @driver-api
 Feature: Driver API
 
-  @ForceSuccessOrder
+  @ForceSuccessOrder @happy-path
   Scenario: Driver Van Inbound an Order Delivery
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below

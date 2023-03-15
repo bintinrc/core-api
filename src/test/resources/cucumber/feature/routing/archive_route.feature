@@ -14,7 +14,7 @@ Feature: Archive Route
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Archived route is not shown on his list routes
 
-  @route-archive
+  @route-archive @happy-path
   Scenario: Operator Archive Driver Route Successfully - Status = PENDING
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
