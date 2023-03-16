@@ -7,8 +7,10 @@ import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import org.assertj.core.api.Assertions;
 
 /**
@@ -30,14 +32,20 @@ public class InboundSteps extends BaseSteps {
     callWithRetry(() -> {
       GlobalInboundResponse response = getInboundClient().globalInbound(
           new GlobalInboundRequest(trackingId, GlobalInboundRequest.TYPE_SORTING_HUB, hubId));
-      Assertions.assertThat(response.getStatus()).as("status is SUCCESSFUL_INBOUND").isEqualTo("SUCCESSFUL_INBOUND");
+      Assertions.assertThat(response.getStatus()).as("status is SUCCESSFUL_INBOUND")
+          .isEqualTo("SUCCESSFUL_INBOUND");
     }, "operator global inbound");
   }
 
   @Then("Operator inbounds all orders at hub {string}")
   public void globalInboundMultipleOrders(String hubId) {
-    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-    trackingIds.forEach(e -> {
+    List<String> trackingIds1 = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, new ArrayList<>());
+    List<String> trackingIds2 = get(KEY_LIST_OF_CREATED_TRACKING_IDS, new ArrayList<>());
+    List<String> combiTrackingIds = new ArrayList<>();
+    combiTrackingIds.addAll(trackingIds1);
+    combiTrackingIds.addAll(trackingIds2);
+
+    combiTrackingIds.forEach(e -> {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
       globalInbound(hubId);
     });
@@ -55,7 +63,8 @@ public class InboundSteps extends BaseSteps {
       put(KEY_EXPECTED_NEW_WEIGHT, dimension.getWeight());
       put(KEY_INBOUND_DIMENSION_REQUEST, dimension);
       GlobalInboundResponse response = getInboundClient().globalInbound(request);
-      Assertions.assertThat(response.getStatus()).as("status is SUCCESSFUL_INBOUND").isEqualTo("SUCCESSFUL_INBOUND");
+      Assertions.assertThat(response.getStatus()).as("status is SUCCESSFUL_INBOUND")
+          .isEqualTo("SUCCESSFUL_INBOUND");
     }, "operator global inbound with changes in dimensions");
   }
 }
