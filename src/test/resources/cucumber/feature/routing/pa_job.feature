@@ -1,7 +1,7 @@
 @ArchiveDriverRoutes @routing @pa-job
 Feature: Zonal Routing API
 
-  @DeletePickupAppointmentJob
+  @DeletePickupAppointmentJob @happy-path
   Scenario: PUT /pickup-appointment-jobs/:paJobId/route - Route Unrouted PA Job Waypoint
     Given API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":717, "from":{ "addressId":1547535}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
@@ -58,9 +58,9 @@ Feature: Zonal Routing API
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
       | status   | Routed                             |
-#    And DB Core - verify route_monitoring_data record:
-#      | waypointId | {KEY_WAYPOINT_ID}                  |
-#      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+    #    And DB Core - verify route_monitoring_data record:
+    #      | waypointId | {KEY_WAYPOINT_ID}                  |
+    #      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
       | userId     | 397                                             |
@@ -159,9 +159,9 @@ Feature: Zonal Routing API
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
       | status   | Routed                             |
-#    And DB Core - verify route_monitoring_data record:
-#      | waypointId | {KEY_WAYPOINT_ID}                  |
-#      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+    #    And DB Core - verify route_monitoring_data record:
+    #      | waypointId | {KEY_WAYPOINT_ID}                  |
+    #      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
       | userId     | 397                                             |
@@ -211,3 +211,41 @@ Feature: Zonal Routing API
       | type       | 3                                               |
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
+
+  @DeletePickupAppointmentJob @happy-path
+  Scenario: PUT /pickup-appointment-jobs/:paJobId/unroute - Unroute PA Job Waypoint
+    When API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":717, "from":{ "addressId":1547535}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
+    And API Core - Operator create new route from zonal routing using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_WAYPOINT_ID}]} |
+    And DB Core - verify waypoints record:
+      | id      | {KEY_WAYPOINT_ID}                  |
+      | seqNo   | not null                           |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | status  | Routed                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID}                  |
+      | seqNo    | not null                           |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | status   | Routed                             |
+    When API Core - Operator remove pickup job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}" from route
+    And DB Core - verify waypoints record:
+      | id      | {KEY_WAYPOINT_ID} |
+      | seqNo   | not null          |
+      | routeId | null              |
+      | status  | Pending           |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID} |
+      | seqNo    | not null          |
+      | routeId  | null              |
+      | status   | Pending           |
+    And DB Events - verify pickup_events record:
+      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
+      | userId     | 397                                             |
+      | userName   | AUTOMATION EDITED                               |
+      | userEmail  | qa@ninjavan.co                                  |
+      | type       | 3                                               |
+      | pickupType | 2                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
+

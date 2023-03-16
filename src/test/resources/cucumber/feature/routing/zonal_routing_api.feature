@@ -1,6 +1,7 @@
 @ForceSuccessOrder @ArchiveDriverRoutes @DeleteReservationAndAddress @routing @zonal-routing-api @routing-refactor
 Feature: Zonal Routing API
 
+  @happy-path
   Scenario: Zonal Routing API - Create Driver Route & Assign Waypoints
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When API Operator create new shipper address V2 using data below:
@@ -87,6 +88,7 @@ Feature: Zonal Routing API
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that waypoints are shown on driver "{driver-id}" list route correctly
 
+  @happy-path
   Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Edit Waypoint Sequence
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When API Operator create new shipper address V2 using data below:
@@ -158,7 +160,7 @@ Feature: Zonal Routing API
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies route_monitoring_data record
 
-  # check for removed waypoints
+    # check for removed waypoints
     Then DB Operator verifies all transactions route id is null
     And DB Operator verifies all waypoints status is "PENDING"
     And DB Operator verifies all waypoints.route_id & seq_no is NULL
@@ -174,6 +176,7 @@ Feature: Zonal Routing API
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that driver "{driver-id}" list route showing only routed waypoints
 
+  @happy-path
   Scenario: Zonal Routing Edit Route API - Bulk Edit Waypoints Inside Multiple Routes - Move Routed Waypoints to Another Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When API Operator create new shipper address V2 using data below:
@@ -207,9 +210,9 @@ Feature: Zonal Routing API
     And Operator edit route by moving to another route from Zonal Routing API
       | driver_id  | {driver-id}  |
       | vehicle_id | {vehicle-id} |
-  # check for still routed waypoint
+    # check for still routed waypoint
     And DB Operator verifies routed waypoint remains in old route
-  # check for moved waypoints to another route
+    # check for moved waypoints to another route
     And DB Operator verifies waypoint moved to another route
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                      |
@@ -256,12 +259,12 @@ Feature: Zonal Routing API
       | vehicle_id | {vehicle-id} |
     And Operator add order to driver "DELIVERY" route
     And Operator gets only eligible routed orders
-#    verify remaining unrouted order
+    #    verify remaining unrouted order
     And DB Operator verifies transaction route id is null
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
     And DB Operator verifies route_monitoring_data is hard-deleted
-#    verify routed orders
+    #    verify routed orders
     Then DB Operator verifies all transactions routed to new route id
     And DB Operator verifies all waypoints status is "ROUTED"
     And DB Operator verifies all waypoints.route_id & seq_no is populated correctly
@@ -375,6 +378,7 @@ Feature: Zonal Routing API
       | Success Waypoint | Arrived at Sorting Hub | Success        |
       | Fail Waypoint    | Pickup fail            | Fail           |
 
+  @happy-path
   Scenario: Zonal Routing API - Unmerge Waypoint with Multiple Transactions
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper creates multiple orders : 3 orders with the same params
@@ -426,7 +430,6 @@ Feature: Zonal Routing API
       | pickupType | 1                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
-  @wip2
   Scenario: Zonal Routing Edit Route API - Edit Reservation Waypoints Inside a Route - Add Unrouted Reservation Waypoints to Route
     When API Operator create new shipper address V2 using data below:
       | shipperId       | {shipper-2-id} |

@@ -161,7 +161,7 @@ Feature: Route Monitoring V2
       | Pickup   | uid:c0c80479-c1a0-4354-beac-2f7027dd68c3 | PP         | PICKUP           | Return       | Standard      | true                          |
       | Delivery | uid:a0d8285a-b8f9-44c7-8fa5-a8ec42f71e43 | DD         | DELIVERY         | Parcel       | Standard      | false                         |
 
-  @rmv2-add-to-route @rmv2-pull-out-of-route
+  @rmv2-add-to-route @rmv2-pull-out-of-route @happy-path
   Scenario Outline: Operator Add to Route & Pull Out Of Route And Verifies Route Monitoring Data - Multiple Waypoints - Mix of PP, DD, & Reservation
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
