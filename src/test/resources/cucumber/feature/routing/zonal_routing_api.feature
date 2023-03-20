@@ -176,7 +176,7 @@ Feature: Zonal Routing API
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that driver "{driver-id}" list route showing only routed waypoints
 
-  @happy-path
+  @happy-path @wip
   Scenario: Zonal Routing Edit Route API - Bulk Edit Waypoints Inside Multiple Routes - Move Routed Waypoints to Another Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When API Operator create new shipper address V2 using data below:
@@ -210,10 +210,59 @@ Feature: Zonal Routing API
     And Operator edit route by moving to another route from Zonal Routing API
       | driver_id  | {driver-id}  |
       | vehicle_id | {vehicle-id} |
-    # check for still routed waypoint
-    And DB Operator verifies routed waypoint remains in old route
-    # check for moved waypoints to another route
-    And DB Operator verifies waypoint moved to another route
+    #  TRANSACTION - DELIVERY
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_TRANSACTION_IDS[1]} |
+      | routeId | {KEY_CREATED_ROUTE_ID}           |
+    #  TRANSACTION - PICKUP
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_TRANSACTION_IDS[2]} |
+      | routeId | {KEY_CREATED_ROUTE_ID}           |
+    #  WAYPOINT - RESERVATION
+    And DB Core - verify waypoints record:
+      | id      | {KEY_LIST_OF_WAYPOINT_IDS[1]}      |
+      | seqNo   | not null                           |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+      | status  | Routed                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_WAYPOINT_IDS[1]}      |
+      | seqNo    | not null                           |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+      | status   | Routed                             |
+    #  WAYPOINT - DELIVERY
+    And DB Core - verify waypoints record:
+      | id      | {KEY_LIST_OF_WAYPOINT_IDS[2]}      |
+      | seqNo   | not null                           |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+      | status  | Routed                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_WAYPOINT_IDS[2]}      |
+      | seqNo    | not null                           |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+      | status   | Routed                             |
+    #  WAYPOINT - PICKUP
+    And DB Core - verify waypoints record:
+      | id      | {KEY_LIST_OF_WAYPOINT_IDS[3]}      |
+      | seqNo   | not null                           |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+      | status  | Routed                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_WAYPOINT_IDS[3]}      |
+      | seqNo    | not null                           |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+      | status   | Routed                             |
+    # RMD - RESERVATION
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_WAYPOINT_IDS[1]}      |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+    # RMD - DELIVERY
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_WAYPOINT_IDS[2]}      |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+    # RMD - PICKUP
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_WAYPOINT_IDS[3]}      |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                      |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
