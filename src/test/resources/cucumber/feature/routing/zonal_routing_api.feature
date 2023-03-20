@@ -176,7 +176,7 @@ Feature: Zonal Routing API
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that driver "{driver-id}" list route showing only routed waypoints
 
-  @happy-path @wip
+  @happy-path
   Scenario: Zonal Routing Edit Route API - Bulk Edit Waypoints Inside Multiple Routes - Move Routed Waypoints to Another Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When API Operator create new shipper address V2 using data below:
