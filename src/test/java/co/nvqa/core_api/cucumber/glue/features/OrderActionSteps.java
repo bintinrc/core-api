@@ -70,6 +70,12 @@ public class OrderActionSteps extends BaseSteps {
   @Then("Operator search for {string} transaction with status {string}")
   public void operatorSearchTransaction(String type, String status) {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+    operatorSearchTransaction(type, status, trackingId);
+  }
+
+  @Then("Operator search for {string} transaction with status {string} and tracking id {string}")
+  public void operatorSearchTransaction(String type, String status, String tid) {
+    String trackingId = resolveValue(tid);
     callWithRetry(() -> {
       Order order = getOrderDetails(trackingId);
       put(KEY_CREATED_ORDER, order);
@@ -255,8 +261,18 @@ public class OrderActionSteps extends BaseSteps {
 
   @Then("Operator verify that all orders status-granular status is {string}-{string}")
   public void operatorVerifiesAllOrderStatus(String status, String granularStatus) {
-    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-    trackingIds.forEach(e -> {
+//    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+//    trackingIds.forEach(e -> {
+//      put(KEY_CREATED_ORDER_TRACKING_ID, e);
+//      operatorVerifiesOrderStatus(status, granularStatus);
+//    });
+    List<String> trackingIds1 = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, new ArrayList<>());
+    List<String> trackingIds2 = get(KEY_LIST_OF_CREATED_TRACKING_IDS, new ArrayList<>());
+    List<String> combiTrackingIds = new ArrayList<>();
+    combiTrackingIds.addAll(trackingIds1);
+    combiTrackingIds.addAll(trackingIds2);
+
+    combiTrackingIds.forEach(e -> {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
       operatorVerifiesOrderStatus(status, granularStatus);
     });

@@ -19,7 +19,7 @@ import co.nvqa.commons.model.shipper.v2.WebhookRequest;
 import co.nvqa.commons.util.JsonUtils;
 import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.commonsort.cucumber.KeysStorage;
-import co.nvqa.commonsort.model.sort.Hub;
+import co.nvqa.commonsort.model.Hub;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
