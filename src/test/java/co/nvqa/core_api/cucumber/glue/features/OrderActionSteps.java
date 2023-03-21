@@ -261,23 +261,20 @@ public class OrderActionSteps extends BaseSteps {
 
   @Then("Operator verify that all orders status-granular status is {string}-{string}")
   public void operatorVerifiesAllOrderStatus(String status, String granularStatus) {
-//    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-//    trackingIds.forEach(e -> {
-//      put(KEY_CREATED_ORDER_TRACKING_ID, e);
-//      operatorVerifiesOrderStatus(status, granularStatus);
-//    });
-    List<String> trackingIds1 = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, new ArrayList<>());
-    List<String> trackingIds2 = get(KEY_LIST_OF_CREATED_TRACKING_IDS, new ArrayList<>());
-    List<String> combiTrackingIds = new ArrayList<>();
-    combiTrackingIds.addAll(trackingIds1);
-    combiTrackingIds.addAll(trackingIds2);
-
-    combiTrackingIds.forEach(e -> {
+    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    trackingIds.forEach(e -> {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
       operatorVerifiesOrderStatus(status, granularStatus);
     });
   }
 
+  @Then("Operator verify that order with status-granular status is {string}-{string} and tracking id {string}")
+  public void operatorVerifiesAllOrderStatusWithTrackingIds(String status, String granularStatus, String tid) {
+    String trackingId = resolveValue(tid);
+
+      put(KEY_CREATED_ORDER_TRACKING_ID, trackingId);
+      operatorVerifiesOrderStatus(status, granularStatus);
+  }
   //to remove not transferred parcel from being asserted
   @Then("Operator gets only eligible parcel for route transfer")
   public void getEligibleRouteTransfer() {

@@ -109,7 +109,7 @@ Feature: Order Tag to DP
     And DB Operator verifies all waypoints status is "SUCCESS"
     And Shipper gets webhook request for event "Arrived at Distribution Point" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper verifies webhook request payload has correct details for status "Arrived at Distribution Point" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-    And Operator verify that all orders status-granular status is "Transit"-"ARRIVED_AT_DISTRIBUTION_POINT"
+    And Operator verify that order with status-granular status is "Transit"-"ARRIVED_AT_DISTRIBUTION_POINT" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And API Event - Operator verify that event is published with the following details:
       | event              | UPDATE_STATUS                      |
       | orderId            | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
