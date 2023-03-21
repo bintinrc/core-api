@@ -39,13 +39,8 @@ public class InboundSteps extends BaseSteps {
 
   @Then("Operator inbounds all orders at hub {string}")
   public void globalInboundMultipleOrders(String hubId) {
-    List<String> trackingIds1 = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, new ArrayList<>());
-    List<String> trackingIds2 = get(KEY_LIST_OF_CREATED_TRACKING_IDS, new ArrayList<>());
-    List<String> combiTrackingIds = new ArrayList<>();
-    combiTrackingIds.addAll(trackingIds1);
-    combiTrackingIds.addAll(trackingIds2);
-
-    combiTrackingIds.forEach(e -> {
+    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+    trackingIds.forEach(e -> {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
       globalInbound(hubId);
     });
