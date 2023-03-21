@@ -15,7 +15,7 @@ Feature: Unarchive Route
       | {KEY_CREATED_ROUTE_ID} |
     Then DB Operator verifies route status = IN_PROGRESS & archived = 0
 
-  @route-unarchive
+  @route-unarchive @happy-path
   Scenario: Operator Unarchive Driver Route Successfully - Route has Waypoints
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper creates multiple orders : 1 orders

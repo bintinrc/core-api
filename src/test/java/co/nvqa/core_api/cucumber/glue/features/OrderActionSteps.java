@@ -70,6 +70,12 @@ public class OrderActionSteps extends BaseSteps {
   @Then("Operator search for {string} transaction with status {string}")
   public void operatorSearchTransaction(String type, String status) {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
+    operatorSearchTransaction(type, status, trackingId);
+  }
+
+  @Then("Operator search for {string} transaction with status {string} and tracking id {string}")
+  public void operatorSearchTransaction(String type, String status, String tid) {
+    String trackingId = resolveValue(tid);
     callWithRetry(() -> {
       Order order = getOrderDetails(trackingId);
       put(KEY_CREATED_ORDER, order);
@@ -269,6 +275,13 @@ public class OrderActionSteps extends BaseSteps {
     });
   }
 
+  @Then("Operator verify that order with status-granular status is {string}-{string} and tracking id {string}")
+  public void operatorVerifiesAllOrderStatusWithTrackingIds(String status, String granularStatus, String tid) {
+    String trackingId = resolveValue(tid);
+
+      put(KEY_CREATED_ORDER_TRACKING_ID, trackingId);
+      operatorVerifiesOrderStatus(status, granularStatus);
+  }
   //to remove not transferred parcel from being asserted
   @Then("Operator gets only eligible parcel for route transfer")
   public void getEligibleRouteTransfer() {
