@@ -75,7 +75,8 @@ Feature: Delete Route
     When Shipper create another order with the same parameters as before
     And Operator add order by tracking id to driver "<route_type>" route
     And Operator search for all created orders
-    And Operator merge transaction waypoints
+    And API Core - Operator merge routed waypoints:
+      | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     When Operator delete driver route with status code 200
     Then DB Operator verifies soft-deleted route
     And Operator search for multiple "<transaction_type>" transactions with status "PENDING"

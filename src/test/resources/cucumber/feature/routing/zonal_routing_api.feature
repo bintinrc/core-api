@@ -516,6 +516,8 @@ Feature: Zonal Routing API
       | seqNo    | null                                             |
       | routeId  | null                                             |
       | status   | Pending                                          |
+    And DB Core - verify route_monitoring_data is hard-deleted:
+      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}        |
       | userId     | 397                                             |

@@ -195,14 +195,16 @@ Feature: Zonal Routing API
       | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[1].id}, "waypoints":[{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
     And DB Core - verify waypoints record:
       | id      | {KEY_WAYPOINT_ID} |
-      | seqNo   | not null          |
+      | seqNo   | null              |
       | routeId | null              |
       | status  | Pending           |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID} |
-      | seqNo    | not null          |
+      | seqNo    | null              |
       | routeId  | null              |
       | status   | Pending           |
+    And DB Core - verify route_monitoring_data is hard-deleted:
+      | {KEY_WAYPOINT_ID} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
       | userId     | 397                                             |
@@ -232,14 +234,16 @@ Feature: Zonal Routing API
     When API Core - Operator remove pickup job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}" from route
     And DB Core - verify waypoints record:
       | id      | {KEY_WAYPOINT_ID} |
-      | seqNo   | not null          |
+      | seqNo   | null              |
       | routeId | null              |
       | status  | Pending           |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID} |
-      | seqNo    | not null          |
+      | seqNo    | null              |
       | routeId  | null              |
       | status   | Pending           |
+    And DB Core - verify route_monitoring_data is hard-deleted:
+      | {KEY_WAYPOINT_ID} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
       | userId     | 397                                             |

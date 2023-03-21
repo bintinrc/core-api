@@ -100,14 +100,6 @@ public class RoutingSteps extends BaseSteps {
     }, "add parcel to route");
   }
 
-  @Given("Operator new add parcel to DP holding route")
-  public void operatorAddToDpHoldingRoute() {
-    Long orderId = get(KEY_CREATED_ORDER_ID);
-    Long routeId = get(KEY_CREATED_ROUTE_ID);
-    getRouteClient().addToRouteDp(orderId, routeId);
-    put(KEY_ROUTE_EVENT_SOURCE, "ADD_BY_ORDER_DP");
-  }
-
   @When("Operator add all orders to driver {string} route")
   public void operatorAddMultipleOrdersToRoute(String type) {
     final List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
@@ -198,16 +190,6 @@ public class RoutingSteps extends BaseSteps {
       final Order order = OrderDetailHelper.getOrderDetails(trackingId);
       getRouteClient().pullOutWaypointFromRoute(order.getId(), type.toUpperCase());
       putInList(KEY_LIST_OF_PULL_OUT_OF_ROUTE_TRACKING_ID, trackingId);
-    }, "pull out of route");
-  }
-
-  @When("Operator pull DP order out of route")
-  public void operatorPullOutDpOrderOfRoute() {
-    callWithRetry(() -> {
-      final String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-      final Order order = OrderDetailHelper.getOrderDetails(trackingId);
-      getRouteClient().pullOutDpOrderFromRoute(order.getId());
-      put(KEY_ROUTE_EVENT_SOURCE, "REMOVE_BY_ORDER_DP");
     }, "pull out of route");
   }
 }
