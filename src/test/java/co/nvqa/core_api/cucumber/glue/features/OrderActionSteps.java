@@ -213,7 +213,13 @@ public class OrderActionSteps extends BaseSteps {
         }
         break;
       case Event.PULL_OUT_OF_ROUTE_EVENT:
-        Assertions.assertThat(data.getRouteId()).as("data.route_id").isEqualTo(routeIds.get(0));
+        Long expectedOldRouteId;
+        if (routeIds == null) {
+          expectedOldRouteId = Long.parseLong(resolveValue(mapOfData.get("oldRouteId")));
+        } else {
+          expectedOldRouteId = routeIds.get(0);
+        }
+        Assertions.assertThat(data.getRouteId()).as("data.route_id").isEqualTo(expectedOldRouteId);
         break;
       case Event.CANCEL:
         break;
@@ -229,6 +235,7 @@ public class OrderActionSteps extends BaseSteps {
         }
       }
     }
+
   }
 
   @Then("Operator verify that order status-granular status is {string}-{string}")
@@ -445,7 +452,7 @@ public class OrderActionSteps extends BaseSteps {
 
   @When("Operator verify response code is {int} with error message {string}")
   public void operatorVerifyResponseWithParams(int expectedHttpStatus, String message) {
-    String errorMessage= resolveValue(message);
+    String errorMessage = resolveValue(message);
     callWithRetry(() -> {
       Response response = get(KEY_API_RAW_RESPONSE);
       Assertions.assertThat(response.getStatusCode()).as("Http response code")
