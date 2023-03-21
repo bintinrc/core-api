@@ -88,7 +88,6 @@ Feature: Order Tag to DP
       | orderId          | {KEY_CREATED_ORDER_ID} |
       | routeEventSource | REMOVE_BY_ORDER_DP     |
 
-  @wip
   Scenario: POST /2.0/orders/:orderId/dropoff - Drop Off DP Order
     Given Shipper id "{shipper-id}" subscribes to "Arrived at Distribution Point" webhook
     When Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
