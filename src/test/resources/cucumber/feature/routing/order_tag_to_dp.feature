@@ -82,6 +82,95 @@ Feature: Order Tag to DP
       | event   | UPDATE_AV                          |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
+  Scenario: Add to DP Holding Route upon Hub Inbound - Routed Order
+    Given API Order - Shipper create multiple V4 orders using data below:
+      | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+      | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+      | generateFrom        | RANDOM                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+      | v4OrderRequest      | { "service_type":"Parcel","service_level":"Standard","to":{"name": "QA core api automation","phone_number": "+65189681","email": "qa@test.co", "address": {"address1": "80 MANDAI LAKE ROAD {dp-address-unit-number}","address2": "Singapore Zoological","country": "SG","postcode": "{dp-address-postcode}","latitude": 1.3248209,"longitude": 103.6983167}},"parcel_job":{ "dimensions": {"weight": 1}, "is_pickup_required":false, "pickup_date":"{{next-1-day-yyyy-MM-dd}}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
+    And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[1]"
+    And API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+    And API Core - Operator add parcel to the route using data below:
+      | addParcelToRouteRequest | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"type":"DELIVERY"} |
+      | orderId                 | {KEY_LIST_OF_CREATED_ORDERS[1].id}                                |
+    And API Sort - Operator global inbound
+      | globalInboundRequest | {"inbound_type":"SORTING_HUB","dimensions":null,"to_reschedule":false,"to_show_shipper_info":false,"tags":[]} |
+      | trackingId           | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}                                                                         |
+      | hubId                | {sorting-hub-id}                                                                                              |
+    And DB Core - verify transactions record:
+      | id                  | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId          | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | status              | Pending                                                    |
+      | distributionPointId | {dpms-id}                                                  |
+      | routeId             | {dp-holding-route-id}                                      |
+      | address1            | 119, CLEMENTI ROAD, SG, 129801                             |
+      | address2            | Add 4-5                                                    |
+      | postcode            | 238900                                                     |
+      | city                | SG                                                         |
+    Then DB Core - verify waypoints record:
+      | id       | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | seqNo    | not null                                                   |
+      | routeId  | {dp-holding-route-id}                                      |
+      | status   | Routed                                                     |
+      | address1 | 119, CLEMENTI ROAD, SG, 129801                             |
+      | address2 | Add 4-5                                                    |
+      | postcode | 238900                                                     |
+      | city     | SG                                                         |
+      | country  | SG                                                         |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | routeId    | {dp-holding-route-id}                                      |
+    And DB Core - verify orders record:
+      | id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | toAddress1 | 119, CLEMENTI ROAD, SG, 129801     |
+      | toAddress2 | Add 4-5                            |
+      | toPostcode | 238900                             |
+      | toCity     | SG                                 |
+      | toCountry  | SG                                 |
+    And DB Core - operator verify orders.data.previousDeliveryDetails is updated correctly:
+      | orderId  | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
+      | address1 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress1} |
+      | address2 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress2} |
+      | postcode | {KEY_LIST_OF_CREATED_ORDERS[1].toPostcode} |
+      | country  | {KEY_LIST_OF_CREATED_ORDERS[1].toCountry}  |
+      | name     | {KEY_LIST_OF_CREATED_ORDERS[1].toName}     |
+      | email    | {KEY_LIST_OF_CREATED_ORDERS[1].toEmail}    |
+      | contact  | {KEY_LIST_OF_CREATED_ORDERS[1].toContact}  |
+      | comments | OrdersManagerImpl::generateOrderDataBean   |
+      | seq_no   | 1                                          |
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | seqNo    | not null                                                   |
+      | routeId  | {dp-holding-route-id}                                      |
+      | status   | Routed                                                     |
+      | address1 | 119, CLEMENTI ROAD, SG, 129801                             |
+      | address2 | Add 4-5                                                    |
+      | postcode | 238900                                                     |
+      | city     | SG                                                         |
+      | country  | SG                                                         |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                       |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | routeId          | {dp-holding-route-id}              |
+      | routeEventSource | ADD_BY_ORDER_DP                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                  |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | routeEventSource | REMOVE_BY_ORDER_DP                 |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | HUB_INBOUND_SCAN                   |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | ASSIGNED_TO_DP                     |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | UPDATE_ADDRESS                     |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | UPDATE_AV                          |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+
   @ArchiveDriverRoutes
   Scenario: PUT /2.0/orders/:orderId/routes-dp - Add Order to DP Holding Route
     Given API Order - Shipper create multiple V4 orders using data below:
@@ -754,10 +843,146 @@ Feature: Order Tag to DP
       | oldRouteId       | {dp-holding-route-id}              |
       | routeEventSource | REMOVE_BY_ORDER_DP                 |
 
+  Scenario: DELETE /2.0/orders/:orderId/dps - Remove DP Order From Holding Route
+    Given API Order - Shipper create multiple V4 orders using data below:
+      | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+      | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+      | generateFrom        | RANDOM                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+      | v4OrderRequest      | { "service_type":"Parcel","service_level":"Standard","to":{"name": "QA core api automation","phone_number": "+65189681","email": "qa@test.co", "address": {"address1": "80 MANDAI LAKE ROAD {dp-address-unit-number}","address2": "Singapore Zoological","country": "SG","postcode": "{dp-address-postcode}","latitude": 1.3248209,"longitude": 103.6983167}},"parcel_job":{ "dimensions": {"weight": 1}, "is_pickup_required":false, "pickup_date":"{{next-1-day-yyyy-MM-dd}}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
+    And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[1]"
+    And API Sort - Operator global inbound
+      | globalInboundRequest | {"inbound_type":"SORTING_HUB","dimensions":null,"to_reschedule":false,"to_show_shipper_info":false,"tags":[]} |
+      | trackingId           | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}                                                                         |
+      | hubId                | {sorting-hub-id}                                                                                              |
+    And DB Core - verify transactions record:
+      | id                  | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId          | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | status              | Pending                                                    |
+      | distributionPointId | {dpms-id}                                                  |
+      | routeId             | {dp-holding-route-id}                                      |
+      | address1            | 119, CLEMENTI ROAD, SG, 129801                             |
+      | address2            | Add 4-5                                                    |
+      | postcode            | 238900                                                     |
+      | city                | SG                                                         |
+    When API Core - Operator untag from dp:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | version | 2.0                                |
+    Then DB Core - verify waypoints record:
+      | id       | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | seqNo    | not null                                                   |
+      | routeId  | {dp-holding-route-id}                                      |
+      | status   | Routed                                                     |
+      | address1 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress1}                 |
+      | address2 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress2}                 |
+      | postcode | {KEY_LIST_OF_CREATED_ORDERS[1].toPostcode}                 |
+      | country  | {KEY_LIST_OF_CREATED_ORDERS[1].toCountry}                  |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | routeId    | {dp-holding-route-id}                                      |
+    And DB Core - verify orders record:
+      | id         | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
+      | toAddress1 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress1} |
+      | toAddress2 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress2} |
+      | toPostcode | {KEY_LIST_OF_CREATED_ORDERS[1].toPostcode} |
+      | toCountry  | {KEY_LIST_OF_CREATED_ORDERS[1].toCountry}  |
+    And DB Core - verify transactions record:
+      | id                  | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId          | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | status              | Pending                                                    |
+      | distributionPointId | null                                                       |
+      | routeId             | {dp-holding-route-id}                                      |
+      | address1            | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress1}                 |
+      | address2            | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress2}                 |
+      | postcode            | {KEY_LIST_OF_CREATED_ORDERS[1].toPostcode}                 |
+      | country             | {KEY_LIST_OF_CREATED_ORDERS[1].toCountry}                  |
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | seqNo    | not null                                                   |
+      | routeId  | {dp-holding-route-id}                                      |
+      | status   | Routed                                                     |
+      | address1 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress1}                 |
+      | address2 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress2}                 |
+      | postcode | {KEY_LIST_OF_CREATED_ORDERS[1].toPostcode}                 |
+      | country  | {KEY_LIST_OF_CREATED_ORDERS[1].toCountry}                  |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | UPDATE_ADDRESS                     |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | UNASSIGNED_FROM_DP                 |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+
+  Scenario: DELETE /2.1/orders/:orderId/dps - Remove DP Order From Holding Route
+    Given API Order - Shipper create multiple V4 orders using data below:
+      | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+      | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+      | generateFrom        | RANDOM                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+      | v4OrderRequest      | { "service_type":"Parcel","service_level":"Standard","to":{"name": "QA core api automation","phone_number": "+65189681","email": "qa@test.co", "address": {"address1": "80 MANDAI LAKE ROAD {dp-address-unit-number}","address2": "Singapore Zoological","country": "SG","postcode": "{dp-address-postcode}","latitude": 1.3248209,"longitude": 103.6983167}},"parcel_job":{ "dimensions": {"weight": 1}, "is_pickup_required":false, "pickup_date":"{{next-1-day-yyyy-MM-dd}}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
+    And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[1]"
+    And API Sort - Operator global inbound
+      | globalInboundRequest | {"inbound_type":"SORTING_HUB","dimensions":null,"to_reschedule":false,"to_show_shipper_info":false,"tags":[]} |
+      | trackingId           | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}                                                                         |
+      | hubId                | {sorting-hub-id}                                                                                              |
+    And DB Core - verify transactions record:
+      | id                  | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId          | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | status              | Pending                                                    |
+      | distributionPointId | {dpms-id}                                                  |
+      | routeId             | {dp-holding-route-id}                                      |
+      | address1            | 119, CLEMENTI ROAD, SG, 129801                             |
+      | address2            | Add 4-5                                                    |
+      | postcode            | 238900                                                     |
+      | city                | SG                                                         |
+    When API Core - Operator untag from dp:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | version | 2.0                                |
+    Then DB Core - verify waypoints record:
+      | id       | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | seqNo    | not null                                                   |
+      | routeId  | {dp-holding-route-id}                                      |
+      | status   | Routed                                                     |
+      | address1 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress1}                 |
+      | address2 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress2}                 |
+      | postcode | {KEY_LIST_OF_CREATED_ORDERS[1].toPostcode}                 |
+      | country  | {KEY_LIST_OF_CREATED_ORDERS[1].toCountry}                  |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | routeId    | {dp-holding-route-id}                                      |
+    And DB Core - verify orders record:
+      | id         | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
+      | toAddress1 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress1} |
+      | toAddress2 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress2} |
+      | toPostcode | {KEY_LIST_OF_CREATED_ORDERS[1].toPostcode} |
+      | toCountry  | {KEY_LIST_OF_CREATED_ORDERS[1].toCountry}  |
+    And DB Core - verify transactions record:
+      | id                  | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId          | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | status              | Pending                                                    |
+      | distributionPointId | null                                                       |
+      | routeId             | {dp-holding-route-id}                                      |
+      | address1            | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress1}                 |
+      | address2            | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress2}                 |
+      | postcode            | {KEY_LIST_OF_CREATED_ORDERS[1].toPostcode}                 |
+      | country             | {KEY_LIST_OF_CREATED_ORDERS[1].toCountry}                  |
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | seqNo    | not null                                                   |
+      | routeId  | {dp-holding-route-id}                                      |
+      | status   | Routed                                                     |
+      | address1 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress1}                 |
+      | address2 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress2}                 |
+      | postcode | {KEY_LIST_OF_CREATED_ORDERS[1].toPostcode}                 |
+      | country  | {KEY_LIST_OF_CREATED_ORDERS[1].toCountry}                  |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | UPDATE_ADDRESS                     |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | UNASSIGNED_FROM_DP                 |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+
+
   Scenario: POST /2.0/orders/:orderId/dropoff - Drop Off DP Order
     Given Shipper id "{shipper-id}" subscribes to "Arrived at Distribution Point" webhook
-    When Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
-    And API Order - Shipper create multiple V4 orders using data below:
+    When API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
       | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
       | numberOfOrder       | 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
