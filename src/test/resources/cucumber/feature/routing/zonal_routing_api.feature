@@ -435,7 +435,9 @@ Feature: Zonal Routing API
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for multiple "DELIVERY" transactions with status "PENDING"
-    And Operator merge transactions on Zonal Routing
+    And API Core - Operator merge waypoints on Zonal Routing:
+      | {KEY_LIST_OF_WAYPOINT_IDS[1]} |
+      | {KEY_LIST_OF_WAYPOINT_IDS[2]} |
     And API Operator verifies Delivery transactions of following orders have same waypoint id:
       | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |

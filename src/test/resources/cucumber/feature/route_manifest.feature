@@ -68,7 +68,8 @@ Feature: Route Manifest
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "DD" route
-    And Operator merge transaction waypoints
+    And API Core - Operator merge routed waypoints:
+      | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     And Operator get "DELIVERY" transaction waypoint Ids for all orders
     When Operator force "SUCCESS" "DELIVERY" waypoint
     Then Operator verify that all orders status-granular status is "Transit"-"Arrived_At_Distribution_Point"

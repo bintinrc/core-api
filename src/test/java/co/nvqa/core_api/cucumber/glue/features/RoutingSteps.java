@@ -175,14 +175,6 @@ public class RoutingSteps extends BaseSteps {
         .contains(f(expectedData.get("message"), expectedData.get("routeId")));
   }
 
-  @When("Operator merge transaction waypoints")
-  public void operatorMergeRoute() {
-    long routeId = get(KEY_CREATED_ROUTE_ID);
-    callWithRetry(() -> {
-      getRouteClient().mergeTransactions(routeId);
-    }, "merge transaction waypoints");
-  }
-
   @When("Operator pull order out of {string} route")
   public void operatorPullOutOfRoute(String type) {
     callWithRetry(() -> {
