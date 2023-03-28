@@ -438,6 +438,7 @@ Feature: Zonal Routing API
     And API Core - Operator merge waypoints on Zonal Routing:
       | {KEY_LIST_OF_WAYPOINT_IDS[1]} |
       | {KEY_LIST_OF_WAYPOINT_IDS[2]} |
+      | {KEY_LIST_OF_WAYPOINT_IDS[3]} |
     And API Operator verifies Delivery transactions of following orders have same waypoint id:
       | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |

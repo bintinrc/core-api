@@ -25,15 +25,16 @@ Feature: Route Manifest
       | Note    | hiptest-uid                              | service_level | action  | txn_status |
       | Fail    | uid:ec3d61a9-eb96-4f30-b027-7549f94a6c5d | Standard      | FAIL    | PENDING    |
       | Success | uid:0b39277e-63a2-48fd-bee3-b57ab71780d6 | Standard      | SUCCESS | PENDING    |
-
+    
   Scenario Outline: Admin Manifest Force Finish a DP Reservation - <Note>
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates multiple "Parcel" orders
       | service_type                  | Parcel          |
       | service_level                 | <service_level> |
       | parcel_job_is_pickup_required | false           |
-    And DP user authenticated to login with username "{dp-user-username}" and password "{dp-user-password}"
-    And DP user lodge in as SEND order to dp id "{dp-id}"
+    And API DP - DP user authenticate with username "{dp-user-username}" password "{dp-user-password}" and dp id "{dp-id}"
+    And API DP - DP lodge in order:
+      | lodgeInRequest | {"dp_id":{dp-id},"reservations":[{"shipper_id":{shipper-2-legacy-id},"tracking_id":"{KEY_CREATED_ORDER_TRACKING_ID}"}]} |
     And Operator search for created DP reservation with status "Pending"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
