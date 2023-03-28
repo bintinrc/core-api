@@ -16,7 +16,8 @@ Feature: Batch Update PODs
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "PP" route
-    And Operator merge transaction waypoints
+    And API Core - Operator merge routed waypoints:
+      | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Success All Created Orders "Pickup" with pod type "<type>"
     Then DB Operator verifies waypoint status is "SUCCESS"
     And Operator verify that all orders status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
@@ -56,7 +57,8 @@ Feature: Batch Update PODs
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "PP" route
-    And Operator merge transaction waypoints
+    And API Core - Operator merge routed waypoints:
+      | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Partial Success Orders "Pickup"
     Then DB Operator verifies waypoint status is "ROUTED"
     And Operator verify that "Success" orders status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
@@ -102,7 +104,8 @@ Feature: Batch Update PODs
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "PP" route
-    And Operator merge transaction waypoints
+    And API Core - Operator merge routed waypoints:
+      | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Fail All Created Orders "Pickup"
     Then DB Operator verifies waypoint status is "FAIL"
     And Operator verify that all orders status-granular status is "Pickup_fail"-"Pickup_fail"
@@ -138,7 +141,8 @@ Feature: Batch Update PODs
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "DD" route
-    And Operator merge transaction waypoints
+    And API Core - Operator merge routed waypoints:
+      | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Success All Created Orders "Delivery" with pod type "<type>"
     Then DB Operator verifies waypoint status is "SUCCESS"
     And Operator verify that all orders status-granular status is "Completed"-"Completed"
@@ -179,7 +183,8 @@ Feature: Batch Update PODs
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "DD" route
-    And Operator merge transaction waypoints
+    And API Core - Operator merge routed waypoints:
+      | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Success All Created Orders "Delivery" with pod type "<type>"
     Then DB Operator verifies waypoint status is "SUCCESS"
     And Operator verify that all orders status-granular status is "Completed"-"Completed"
@@ -220,7 +225,8 @@ Feature: Batch Update PODs
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "DD" route
-    And Operator merge transaction waypoints
+    And API Core - Operator merge routed waypoints:
+      | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Partial Success Orders "Delivery"
     Then DB Operator verifies waypoint status is "ROUTED"
     And Operator verify that "Success" orders status-granular status is "Completed"-"Completed"
@@ -268,7 +274,8 @@ Feature: Batch Update PODs
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "DD" route
-    And Operator merge transaction waypoints
+    And API Core - Operator merge routed waypoints:
+      | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Fail All Created Orders "Delivery"
     Then DB Operator verifies waypoint status is "FAIL"
     And Operator verify that all orders status-granular status is "Delivery_Fail"-"Pending_Reschedule"
@@ -524,7 +531,8 @@ Feature: Batch Update PODs
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "PP" route
-    And Operator merge transaction waypoints
+    And API Core - Operator merge routed waypoints:
+      | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Success All Created Orders "Pickup" with NO Proof Details
     Then DB Operator verifies waypoint status is "SUCCESS"
     And Operator verify that all orders status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
@@ -547,7 +555,8 @@ Feature: Batch Update PODs
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "DD" route
-    And Operator merge transaction waypoints
+    And API Core - Operator merge routed waypoints:
+      | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Success All Created Orders "Delivery" with NO Proof Details
     Then DB Operator verifies waypoint status is "SUCCESS"
     And Operator verify that all orders status-granular status is "Completed"-"Completed"

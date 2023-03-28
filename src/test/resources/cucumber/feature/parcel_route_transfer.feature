@@ -598,7 +598,8 @@ Feature: Parcel Route Transfer
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "DD" route
-    And Operator merge transaction waypoints
+    And API Core - Operator merge routed waypoints:
+      | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     Then API Operator verifies Delivery transactions of following orders have same waypoint id:
       | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |

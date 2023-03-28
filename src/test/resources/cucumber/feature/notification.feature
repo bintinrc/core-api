@@ -161,7 +161,7 @@ Feature: Notification
     And Operator get "DELIVERY" transaction waypoint Ids for all orders
     When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
-    And API Sort - Operator get hub  details of hub id "{sorting-hub-id}"
+    And API Sort - Operator get hub details of hub id "{sorting-hub-id}"
     And Driver Starts the route
     Then Operator verify that order status-granular status is "Transit"-"On_Vehicle_for_Delivery"
     And Shipper gets webhook request for event "On Vehicle for Delivery" for all orders
@@ -188,7 +188,7 @@ Feature: Notification
     And Operator get "DELIVERY" transaction waypoint Ids for all orders
     When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
-    And API Sort - Operator get hub  details of hub id "{sorting-hub-id}"
+    And API Sort - Operator get hub details of hub id "{sorting-hub-id}"
     And Driver Starts the route
     Then Operator verify that order status-granular status is "Transit"-"On_Vehicle_for_Delivery"
     And Shipper gets webhook request for event "On Vehicle for Delivery (RTS)" for all orders
@@ -286,7 +286,7 @@ Feature: Notification
     Then Operator verify that order status-granular status is "Transit"-"Enroute_to_sorting_hub"
     Given Shipper id "{shipper-4-id}" subscribes to "Arrived at Sorting Hub" webhook
     And Operator perform global inbound at hub "{sorting-hub-id}"
-    And API Sort - Operator get hub  details of hub id "{sorting-hub-id}"
+    And API Sort - Operator get hub details of hub id "{sorting-hub-id}"
     And Shipper gets webhook request for event "First Attempt Delivery Fail" for all orders
     And Shipper verifies webhook request payload has correct details for status "First Attempt Delivery Fail"
     And Shipper gets webhook request for event "Pending Reschedule" for all orders

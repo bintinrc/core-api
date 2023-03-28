@@ -60,7 +60,8 @@ Feature: Route Monitoring V2
     When Shipper create another order with the same parameters as before
     And Operator search for all created orders
     And Operator add all orders to driver "<route_type>" route
-    And Operator merge transaction waypoints
+    And API Core - Operator merge routed waypoints:
+      | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for "Pending" Case
       | KEY_TOTAL_EXPECTED_WAYPOINT | 1 |
@@ -182,7 +183,8 @@ Feature: Route Monitoring V2
     And Operator add order by tracking id to driver "DD" route
     When Shipper create another order with the same parameters as before
     And Operator add order by tracking id to driver "DD" route
-    And Operator merge transaction waypoints
+    And API Core - Operator merge routed waypoints:
+      | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When Shipper create order with parameters below
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -190,7 +192,8 @@ Feature: Route Monitoring V2
     And Operator add order by tracking id to driver "PP" route
     When Shipper create another order with the same parameters as before
     And Operator add order by tracking id to driver "PP" route
-    And Operator merge transaction waypoints
+    And API Core - Operator merge routed waypoints:
+      | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
