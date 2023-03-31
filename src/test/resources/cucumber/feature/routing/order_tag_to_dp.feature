@@ -1073,7 +1073,7 @@ Feature: Order Tag to DP
     And API Event - Operator verify that event is published with the following details:
       | event   | RTS                                |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-    
+
   Scenario: POST /2.0/orders/:orderId/lodgein - Lodgein Parcel to DP with toReverify = false
     Given Shipper id "{shipper-id}" subscribes to "Pending Pickup at Distribution Point" webhook
     When API Order - Shipper create multiple V4 orders using data below:
@@ -1223,9 +1223,13 @@ Feature: Order Tag to DP
       | seq_no   | 1                                            |
     And Shipper gets webhook request for event "Pending Pickup at Distribution Point" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper verifies webhook request payload has correct details for status "Pending Pickup at Distribution Point" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-#    Then DB Operator verify Jaro Scores:
-#      | waypointId                                                 | archived |
-#      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[3].waypointId} | 1        |
+#    TODO revisit and enable this ojs checking once fixed
+#    And DB Core - verify order_jaro_scores_v2 record:
+#      | waypointId                                                 | archived | sourceId | score |
+##      old ojs
+#      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId} | 1        | 0        | 1     |
+##      new ojs
+#      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId} | 0        | 2        | 0.01  |
 
   Scenario: POST /2.0/orders/:orderId/dropoff - Drop Off DP Order
     Given Shipper id "{shipper-id}" subscribes to "Arrived at Distribution Point" webhook
