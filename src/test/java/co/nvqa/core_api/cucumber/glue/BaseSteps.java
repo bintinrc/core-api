@@ -33,6 +33,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
   private ReservationV2Client reservationV2Client;
   private InboundClient inboundClient;
   private ShipperClient shipperClient;
+  private co.nvqa.common.webhook.client.ShipperClient shipperWebhookClient;
   private RouteMonitoringClient routeMonitoringClient;
   private BatchUpdatePodClient batchUpdatePodClient;
 
@@ -123,6 +124,15 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
           TokenUtils.getOperatorAuthToken());
     }
     return shipperClient;
+  }
+
+  protected synchronized co.nvqa.common.webhook.client.ShipperClient getShipperWebhookClient() {
+    if (shipperWebhookClient == null) {
+      shipperWebhookClient = new co.nvqa.common.webhook.client.ShipperClient(
+          TestConstants.API_BASE_URL,
+          TokenUtils.getOperatorAuthToken(), null);
+    }
+    return shipperWebhookClient;
   }
 
   protected synchronized BatchUpdatePodClient getBatchUpdatePodClient() {

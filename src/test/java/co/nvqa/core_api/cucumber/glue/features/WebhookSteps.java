@@ -1,13 +1,13 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
-import co.nvqa.commons.client.others.RequestBinClient;
+import co.nvqa.common.webhook.client.RequestBinClient;
+import co.nvqa.common.webhook.model.requestbin.Bin;
+import co.nvqa.common.webhook.model.requestbin.BinRequest;
+import co.nvqa.common.webhook.model.webhook.Webhook;
+import co.nvqa.common.webhook.model.webhook.WebhookRequest;
 import co.nvqa.commons.model.core.Pickup;
 import co.nvqa.commons.model.core.batch_update_pod.ProofDetails;
 import co.nvqa.commons.model.order_create.v4.OrderRequestV4;
-import co.nvqa.commons.model.requestbin.Bin;
-import co.nvqa.commons.model.requestbin.BinRequest;
-import co.nvqa.commons.model.shipper.v2.Webhook;
-import co.nvqa.commons.model.shipper.v2.WebhookRequest;
 import co.nvqa.commons.util.JsonUtils;
 import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.commonsort.cucumber.KeysStorage;
@@ -42,7 +42,7 @@ public class WebhookSteps extends BaseSteps {
   public void shipperSubscribeWebhook(String shipperGlobalId, String eventName) {
     callWithRetry(() -> {
       List<Webhook> webhooks = Arrays
-          .asList(getShipperClient().getWebhookSubscription(Long.parseLong(shipperGlobalId)));
+          .asList(getShipperWebhookClient().getWebhookSubscription(Long.parseLong(shipperGlobalId)));
       List<String> events = Arrays.asList(eventName.split(", "));
       events.forEach(e -> {
         String eventTemp = StringUtils.join(e.split(" "), "-").trim();
@@ -61,7 +61,7 @@ public class WebhookSteps extends BaseSteps {
                 bin.getEndpoint(TestConstants.NV_SYSTEM_ID),
                 Webhook.VERSION_1_1);
           }
-          getShipperClient().createWebhookSubscription(Long.parseLong(shipperGlobalId), webhook);
+          getShipperWebhookClient().createWebhookSubscription(Long.parseLong(shipperGlobalId), webhook);
           LOGGER.info("webhook event {} subscribed to {}", e,
               bin.getEndpoint(TestConstants.NV_SYSTEM_ID));
         }
@@ -100,8 +100,7 @@ public class WebhookSteps extends BaseSteps {
       String json = jsonLists.stream().filter(e -> e.contains(event) && e.contains(trackingId))
           .findAny().orElseThrow(() -> new NvTestRuntimeException(
               f("cant find webhook %s for %s", event, trackingId)));
-      WebhookRequest webhookRequest = JsonUtils
-          .fromJsonSnakeCase(json, WebhookRequest.class);
+      WebhookRequest webhookRequest = fromJsonSnakeCase(json, WebhookRequest.class);
       LOGGER.info(f("webhook event = %s found for %s", event, webhookRequest.getTrackingId()));
       putInMap(KEY_LIST_OF_WEBHOOK_REQUEST + event, webhookRequest.getTrackingId(), webhookRequest);
     }, "get webhooks requests", 30);
@@ -391,7 +390,7 @@ public class WebhookSteps extends BaseSteps {
 
   private void cleanWebhookSubs(Long shipperId) {
     try {
-      Webhook[] webhooks = getShipperClient().getWebhookSubscription(shipperId);
+      Webhook[] webhooks = getShipperWebhookClient().getWebhookSubscription(shipperId);
       Arrays.asList(webhooks)
           .forEach(e -> getShipperClient().removeWebhookSubscription(shipperId, e.getId()));
       LOGGER.info("webhook subscription cleared");
