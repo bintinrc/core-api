@@ -1,7 +1,7 @@
 @ForceSuccessOrder @DeleteReservationAndAddress @routing @order-tag-to-dp @routing-refactor
 Feature: Order Tag to DP
 
-  @happy-path @wip
+  @happy-path
   Scenario: Add to DP Holding Route upon Hub Inbound
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |

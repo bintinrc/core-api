@@ -1,7 +1,7 @@
 @ForceSuccessOrder @ArchiveDriverRoutes @DeleteReservationAndAddress @routing @zonal-routing-api @routing-refactor
 Feature: Zonal Routing API
 
-  @happy-path @wip
+  @happy-path
   Scenario: Zonal Routing API - Create Driver Route & Assign Waypoints
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When API Operator create new shipper address V2 using data below:

@@ -1,16 +1,15 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
-import co.nvqa.commons.model.core.Dimension;
-import co.nvqa.commons.model.core.GlobalInboundRequest;
-import co.nvqa.commons.model.core.GlobalInboundResponse;
+import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
+import co.nvqa.commonsort.model.GlobalInboundRequest;
+import co.nvqa.commonsort.model.GlobalInboundRequest.Dimension;
+import co.nvqa.commonsort.model.GlobalInboundResponse;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import org.assertj.core.api.Assertions;
 
 /**
@@ -18,8 +17,6 @@ import org.assertj.core.api.Assertions;
  */
 @ScenarioScoped
 public class InboundSteps extends BaseSteps {
-
-  private static final String KEY_INBOUND_DIMENSION_REQUEST = "KEY_INBOUND_DIMENSION_REQUEST";
 
   @Override
   public void init() {
@@ -30,8 +27,11 @@ public class InboundSteps extends BaseSteps {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     Long hubId = Long.valueOf(hubInboundId);
     callWithRetry(() -> {
-      GlobalInboundResponse response = getInboundClient().globalInbound(
-          new GlobalInboundRequest(trackingId, GlobalInboundRequest.TYPE_SORTING_HUB, hubId));
+      GlobalInboundRequest request = new GlobalInboundRequest();
+      request.setInboundType("SORTING_HUB");
+      request.setScan(trackingId);
+      request.setHubId(hubId);
+      GlobalInboundResponse response = getInboundClient().doGlobalInbound(request);
       Assertions.assertThat(response.getStatus()).as("status is SUCCESSFUL_INBOUND")
           .isEqualTo("SUCCESSFUL_INBOUND");
     }, "operator global inbound");
@@ -46,18 +46,20 @@ public class InboundSteps extends BaseSteps {
     });
   }
 
-  @Given("Operator global inbound at hub {string} with changes in dimensions")
-  public void globalInbound(String hubId, Map<String, Double> dimensions) {
+  @Given("Operator global inbound at hub {string} for tid {string} with changes in dimensions")
+  public void globalInbound(String hubId, String trackingId, Map<String, Double> dimensions) {
     callWithRetry(() -> {
-      String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-      GlobalInboundRequest request = new GlobalInboundRequest(trackingId,
-          GlobalInboundRequest.TYPE_SORTING_HUB, Long.valueOf(hubId));
+      GlobalInboundRequest request = new GlobalInboundRequest();
+      request.setInboundType("SORTING_HUB");
+      request.setScan(resolveValue(trackingId));
+      request.setHubId(Long.valueOf(hubId));
+
       final String json = toJsonSnakeCase(dimensions);
-      final Dimension dimension = fromJsonSnakeCase(json, Dimension.class);
+      final GlobalInboundRequest.Dimension dimension = fromJsonSnakeCase(json, Dimension.class);
       request.setDimensions(dimension);
-      put(KEY_EXPECTED_NEW_WEIGHT, dimension.getWeight());
-      put(KEY_INBOUND_DIMENSION_REQUEST, dimension);
-      GlobalInboundResponse response = getInboundClient().globalInbound(request);
+      put(CoreScenarioStorageKeys.KEY_SAVED_ORDER_WEIGHT, dimension.getWeight());
+      put(KEY_DIMENSION_CHANGES_REQUEST, dimension);
+      GlobalInboundResponse response = getInboundClient().doGlobalInbound(request);
       Assertions.assertThat(response.getStatus()).as("status is SUCCESSFUL_INBOUND")
           .isEqualTo("SUCCESSFUL_INBOUND");
     }, "operator global inbound with changes in dimensions");
