@@ -1223,12 +1223,21 @@ Feature: Order Tag to DP
       | seq_no   | 1                                            |
     And Shipper gets webhook request for event "Pending Pickup at Distribution Point" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper verifies webhook request payload has correct details for status "Pending Pickup at Distribution Point" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
+    And DB Core - verify number of records in order_jaro_scores_v2:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | number     | 2                                                          |
+#    old ojs
     And DB Core - verify order_jaro_scores_v2 record:
-      | waypointId                                                 | archived | sourceId | score |
-#      old ojs
-      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId} | 1        | 0        | 1     |
-#      new ojs
-      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId} | 0        | 2        | 0.01  |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | archived   | 1                                                          |
+      | sourceId   | 0                                                          |
+      | score      | 1                                                          |
+#    new ojs
+    And DB Core - verify order_jaro_scores_v2 record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | archived   | 0                                                          |
+      | sourceId   | 2                                                          |
+      | score      | 0.01                                                       |
 
   Scenario: POST /2.0/orders/:orderId/dropoff - Drop Off DP Order
     Given Shipper id "{shipper-id}" subscribes to "Arrived at Distribution Point" webhook
