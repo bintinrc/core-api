@@ -47,7 +47,7 @@ public class InboundSteps extends BaseSteps {
   }
 
   @Given("Operator global inbound at hub {string} for tid {string} with changes in dimensions")
-  public void globalInbound(String hubId, String trackingId, Map<String, Double> dimensions) {
+  public void globalInbound(String hubId, String trackingId, Map<String, String> dimensions) {
     callWithRetry(() -> {
       GlobalInboundRequest request = new GlobalInboundRequest();
       request.setInboundType("SORTING_HUB");
