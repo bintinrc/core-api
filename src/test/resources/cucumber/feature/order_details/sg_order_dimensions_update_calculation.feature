@@ -169,19 +169,20 @@ Feature: SG - Order Dimensions Update Calculation
       | New Weight > Current Weight | 3.5        |
       | New Weight < Current Weight | 1.1        |
 
-  @happy-path @wiptodo
+  @happy-path
   Scenario Outline: SG - Update Order Weight on Upload CSV Order Weight Update Page - <Note>
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
-    And Shipper create order with parameters below
-      | service_type                  | Parcel   |
-      | service_level                 | Standard |
-      | parcel_job_is_pickup_required | false    |
-      | weight                        | 1.5      |
-    And Operator search for created order
-    When API Operator update order pricing_weight to <new_weight> using order-weight-update
-    Then DB Operator verifies orders.weight and dimensions updated correctly
+    Given API Order - Shipper create multiple V4 orders using data below:
+      | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+      | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+      | generateFromAndTo   | RANDOM                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+      | v4OrderRequest      | { "service_type":"Parcel","service_level":"Standard","to":{"name": "QA core api automation","phone_number": "+65189681","email": "qa@test.co", "address": {"address1": "80 MANDAI LAKE ROAD","address2": "Singapore Zoological","country": "SG","postcode": "{dp-address-postcode}","latitude": 1.3248209,"longitude": 103.6983167}},"parcel_job":{ "dimensions": {"weight": 1.5}, "is_pickup_required":false, "pickup_date":"{{next-1-day-yyyy-MM-dd}}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
+    And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
+    When API Core - Operator update order pricing_weight using order-weight-update with data below:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | weight  | <new_weight>                       |
+    Then DB Core - verify orders.weight and dimensions updated correctly for order id "{KEY_LIST_OF_CREATED_ORDERS[1].id}"
       | orders.weight                         | <new_weight> |
       | orders.dimensions.weight              | <new_weight> |
       | orders.data.originalWeight            | 1.5          |
