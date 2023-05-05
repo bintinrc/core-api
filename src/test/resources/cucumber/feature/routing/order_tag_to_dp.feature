@@ -1073,7 +1073,7 @@ Feature: Order Tag to DP
     And API Event - Operator verify that event is published with the following details:
       | event   | RTS                                |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-
+    
   Scenario: POST /2.0/orders/:orderId/lodgein - Lodgein Parcel to DP with toReverify = false
     Given Shipper id "{shipper-id}" subscribes to "Pending Pickup at Distribution Point" webhook
     When API Order - Shipper create multiple V4 orders using data below:
@@ -1094,7 +1094,7 @@ Feature: Order Tag to DP
       | updateStatusReason | LODGE_IN_AT_DP                     |
     Then DB Core - verify orders record:
       | id             | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
-      | rts            | 1                                          |
+      | rts            | 0                                          |
       | status         | Pending                                    |
       | granularStatus | Pending Pickup at Distribution Point       |
       | toAddress1     | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress1} |
