@@ -63,7 +63,6 @@ public class OrderCreateSteps extends BaseSteps {
       if (weight == null || weight <= 0) {
         weight = 0.1;
       }
-      put(KEY_EXPECTED_OLD_WEIGHT, weight);
       putInList(KEY_LIST_OF_PICKUP_ADDRESS_STRING, pickupAddress);
     }, "shipper create order");
   }

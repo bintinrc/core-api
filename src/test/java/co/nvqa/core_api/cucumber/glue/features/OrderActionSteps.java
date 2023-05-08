@@ -1,5 +1,6 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
+import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.commons.constants.HttpConstants;
 import co.nvqa.commons.model.core.Dimension;
 import co.nvqa.commons.model.core.Order;
@@ -276,12 +277,14 @@ public class OrderActionSteps extends BaseSteps {
   }
 
   @Then("Operator verify that order with status-granular status is {string}-{string} and tracking id {string}")
-  public void operatorVerifiesAllOrderStatusWithTrackingIds(String status, String granularStatus, String tid) {
+  public void operatorVerifiesAllOrderStatusWithTrackingIds(String status, String granularStatus,
+      String tid) {
     String trackingId = resolveValue(tid);
 
-      put(KEY_CREATED_ORDER_TRACKING_ID, trackingId);
-      operatorVerifiesOrderStatus(status, granularStatus);
+    put(KEY_CREATED_ORDER_TRACKING_ID, trackingId);
+    operatorVerifiesOrderStatus(status, granularStatus);
   }
+
   //to remove not transferred parcel from being asserted
   @Then("Operator gets only eligible parcel for route transfer")
   public void getEligibleRouteTransfer() {
@@ -483,16 +486,16 @@ public class OrderActionSteps extends BaseSteps {
     });
   }
 
-  @When("Operator updates order dimensions with following details")
-  public void updateOrderDimensions(Map<String, Double> source) {
-    final Long orderId = get(KEY_CREATED_ORDER_ID);
+  @When("Operator updates order dimensions with following details for order id {string}")
+  public void updateOrderDimensions(String id, Map<String, Double> source) {
+    final Long orderId = Long.parseLong(resolveValue(id));
     final String json = toJsonSnakeCase(source);
     final Dimension dimension = fromJsonSnakeCase(json, Dimension.class);
     if (dimension.getWeight() == 0) {
       dimension.setWeight(null);
     }
-    put(KEY_EXPECTED_NEW_WEIGHT, dimension.getWeight());
-    put(KEY_INBOUND_DIMENSION_REQUEST, dimension);
+    put(CoreScenarioStorageKeys.KEY_SAVED_ORDER_WEIGHT, dimension.getWeight());
+    put(KEY_DIMENSION_CHANGES_REQUEST, dimension);
     callWithRetry(() -> getOrderClient().updateParcelDimensions(orderId, dimension),
         "update order dimension");
   }

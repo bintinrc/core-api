@@ -1073,7 +1073,7 @@ Feature: Order Tag to DP
     And API Event - Operator verify that event is published with the following details:
       | event   | RTS                                |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-
+    
   Scenario: POST /2.0/orders/:orderId/lodgein - Lodgein Parcel to DP with toReverify = false
     Given Shipper id "{shipper-id}" subscribes to "Pending Pickup at Distribution Point" webhook
     When API Order - Shipper create multiple V4 orders using data below:
@@ -1094,7 +1094,7 @@ Feature: Order Tag to DP
       | updateStatusReason | LODGE_IN_AT_DP                     |
     Then DB Core - verify orders record:
       | id             | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
-      | rts            | 1                                          |
+      | rts            | 0                                          |
       | status         | Pending                                    |
       | granularStatus | Pending Pickup at Distribution Point       |
       | toAddress1     | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress1} |
@@ -1159,7 +1159,7 @@ Feature: Order Tag to DP
       | updateStatusReason | LODGE_IN_AT_DP                     |
     Then DB Core - verify orders record:
       | id             | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
-      | rts            | 1                                          |
+      | rts            | 0                                          |
       | status         | Pending                                    |
       | granularStatus | Pending Pickup at Distribution Point       |
       | toAddress1     | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress1} |
@@ -1223,13 +1223,21 @@ Feature: Order Tag to DP
       | seq_no   | 1                                            |
     And Shipper gets webhook request for event "Pending Pickup at Distribution Point" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper verifies webhook request payload has correct details for status "Pending Pickup at Distribution Point" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-#    TODO revisit and enable this ojs checking once fixed
-#    And DB Core - verify order_jaro_scores_v2 record:
-#      | waypointId                                                 | archived | sourceId | score |
-##      old ojs
-#      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId} | 1        | 0        | 1     |
-##      new ojs
-#      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId} | 0        | 2        | 0.01  |
+    And DB Core - verify number of records in order_jaro_scores_v2:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | number     | 2                                                          |
+#    old ojs
+    And DB Core - verify order_jaro_scores_v2 record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | archived   | 1                                                          |
+      | sourceId   | 0                                                          |
+      | score      | 1                                                          |
+#    new ojs
+    And DB Core - verify order_jaro_scores_v2 record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | archived   | 0                                                          |
+      | sourceId   | 2                                                          |
+      | score      | 0.01                                                       |
 
   Scenario: POST /2.0/orders/:orderId/dropoff - Drop Off DP Order
     Given Shipper id "{shipper-id}" subscribes to "Arrived at Distribution Point" webhook
@@ -1248,7 +1256,12 @@ Feature: Order Tag to DP
       | request | { "order_id": {KEY_LIST_OF_CREATED_ORDERS[1].id},"dp_id": {dp-id},"drop_off_date": "{date: 0 days next, yyyy-MM-dd}"} |
     And API Core - Operator perform dp drop off with order id "{KEY_LIST_OF_CREATED_ORDERS[1].id}"
     And Operator search for "DELIVERY" transaction with status "SUCCESS" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-    And DB Operator verifies all waypoints status is "SUCCESS"
+    Then DB Core - verify waypoints record:
+      | id     | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | status | Success                                                    |
+    Then DB Core - verify waypoints record:
+      | id     | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | status | Success                                                    |
     And Shipper gets webhook request for event "Arrived at Distribution Point" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper verifies webhook request payload has correct details for status "Arrived at Distribution Point" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Operator verify that order with status-granular status is "Transit"-"ARRIVED_AT_DISTRIBUTION_POINT" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"

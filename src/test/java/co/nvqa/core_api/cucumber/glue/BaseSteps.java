@@ -13,6 +13,7 @@ import co.nvqa.commons.client.order_search.OrderSearchClient;
 import co.nvqa.commons.client.reservation.ReservationV2Client;
 import co.nvqa.commons.client.shipper.ShipperClient;
 import co.nvqa.commons.util.StandardTestUtils;
+import co.nvqa.commonsort.client.SortClient;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import co.nvqa.core_api.cucumber.glue.util.CoreApiScenarioStorageKeys;
 
@@ -31,8 +32,9 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
   private EventClient eventClient;
   private ShipperPickupClient shipperPickupClient;
   private ReservationV2Client reservationV2Client;
-  private InboundClient inboundClient;
+  private SortClient inboundClient;
   private ShipperClient shipperClient;
+  private co.nvqa.common.webhook.client.ShipperClient shipperWebhookClient;
   private RouteMonitoringClient routeMonitoringClient;
   private BatchUpdatePodClient batchUpdatePodClient;
 
@@ -109,10 +111,9 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
     return reservationV2Client;
   }
 
-  protected synchronized InboundClient getInboundClient() {
+  protected synchronized SortClient getInboundClient() {
     if (inboundClient == null) {
-      inboundClient = new InboundClient(TestConstants.API_BASE_URL,
-          TokenUtils.getOperatorAuthToken());
+      inboundClient = new SortClient();
     }
     return inboundClient;
   }
@@ -123,6 +124,15 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
           TokenUtils.getOperatorAuthToken());
     }
     return shipperClient;
+  }
+
+  protected synchronized co.nvqa.common.webhook.client.ShipperClient getShipperWebhookClient() {
+    if (shipperWebhookClient == null) {
+      shipperWebhookClient = new co.nvqa.common.webhook.client.ShipperClient(
+          TestConstants.API_BASE_URL,
+          TokenUtils.getOperatorAuthToken(), null);
+    }
+    return shipperWebhookClient;
   }
 
   protected synchronized BatchUpdatePodClient getBatchUpdatePodClient() {
