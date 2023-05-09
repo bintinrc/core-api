@@ -12,7 +12,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator verify that order status-granular status is "Staging"-"Staging"
     And Operator search for created order
     When API Operator cancel order with PUT /orders/:orderId/cancel
-      | reason | Cancelled by automated test {gradle-current-date-yyyy-MM-dd} |
+      | reason | Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
     And API Operator get order details
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And API Event - Operator verify that event is published with the following details:
@@ -22,15 +22,15 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | event              | UPDATE_STATUS          |
       | orderId            | {KEY_CREATED_ORDER_ID} |
       | updateStatusReason | CANCEL                 |
-    And Operator verify that order comment is appended with cancel reason = "cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd}"
+    And Operator verify that order comment is appended with cancel reason = "cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd}"
     When API Operator get order details
     And API Operator verify Pickup transaction of the created order using data below:
       | status   | CANCELLED                                                                          |
-      | comments | Cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd} |
+      | comments | Cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
     And DB Operator verifies waypoint status is "PENDING"
     And API Operator verify Delivery transaction of the created order using data below:
       | status   | CANCELLED                                                                          |
-      | comments | Cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd} |
+      | comments | Cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verify Jaro Scores of the created order after cancel
     And Shipper gets webhook request for event "Cancelled"
@@ -46,7 +46,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator verify that order status-granular status is "Pending"-"Pending_Pickup"
     And Operator search for created order
     When API Operator cancel order with PUT /orders/:orderId/cancel
-      | reason | Cancelled by automated test {gradle-current-date-yyyy-MM-dd} |
+      | reason | Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And API Event - Operator verify that event is published with the following details:
       | event   | CANCEL                 |
@@ -55,15 +55,15 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | event              | UPDATE_STATUS          |
       | orderId            | {KEY_CREATED_ORDER_ID} |
       | updateStatusReason | CANCEL                 |
-    And Operator verify that order comment is appended with cancel reason = "cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd}"
+    And Operator verify that order comment is appended with cancel reason = "cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd}"
     When API Operator get order details
     And API Operator verify Pickup transaction of the created order using data below:
       | status   | CANCELLED                                                                          |
-      | comments | Cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd} |
+      | comments | Cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
     And DB Operator verifies waypoint status is "PENDING"
     And API Operator verify Delivery transaction of the created order using data below:
       | status   | CANCELLED                                                                          |
-      | comments | Cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd} |
+      | comments | Cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verify Jaro Scores of the created order after cancel
     And Shipper gets webhook request for event "Cancelled"
@@ -87,7 +87,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And API Operator start the route
     Then Operator verify that order status-granular status is "Transit"-"Van_Enroute_To_Pickup"
     When API Operator cancel order with PUT /orders/:orderId/cancel
-      | reason | Cancelled by automated test {gradle-current-date-yyyy-MM-dd} |
+      | reason | Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
     And API Operator get order details
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And API Event - Operator verify that event is published with the following details:
@@ -97,11 +97,11 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | event              | UPDATE_STATUS          |
       | orderId            | {KEY_CREATED_ORDER_ID} |
       | updateStatusReason | CANCEL                 |
-    And Operator verify that order comment is appended with cancel reason = "cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd}"
+    And Operator verify that order comment is appended with cancel reason = "cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd}"
     When API Operator get order details
     And API Operator verify Pickup transaction of the created order using data below:
       | status   | CANCELLED                                                                          |
-      | comments | Cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd} |
+      | comments | Cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
     And DB Operator verifies transaction route id is null
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
@@ -113,7 +113,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | routeEventSource | REMOVE_BY_ORDER_CANCEL |
     And API Operator verify Delivery transaction of the created order using data below:
       | status   | CANCELLED                                                                          |
-      | comments | Cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd} |
+      | comments | Cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
     And DB Operator verifies transaction route id is null
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
@@ -143,7 +143,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | addParcelToRouteRequest | { "type":"DD" } |
     Then Operator verify that order status-granular status is "Pickup_Fail"-"Pickup_Fail"
     When API Operator cancel order with PUT /orders/:orderId/cancel
-      | reason | Cancelled by automated test {gradle-current-date-yyyy-MM-dd} |
+      | reason | Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
     And API Operator get order details
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And API Event - Operator verify that event is published with the following details:
@@ -153,7 +153,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | event              | UPDATE_STATUS          |
       | orderId            | {KEY_CREATED_ORDER_ID} |
       | updateStatusReason | CANCEL                 |
-    And Operator verify that order comment is appended with cancel reason = "cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd}"
+    And Operator verify that order comment is appended with cancel reason = "cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd}"
     When API Operator get order details
     And API Operator verify Pickup transaction of the created order using data below:
       | status | FAIL |
@@ -164,7 +164,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And DB Operator verifies route_monitoring_data record
     And API Operator verify Delivery transaction of the created order using data below:
       | status   | CANCELLED                                                                          |
-      | comments | Cancellation reason : Cancelled by automated test {gradle-current-date-yyyy-MM-dd} |
+      | comments | Cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
     And DB Operator verifies transaction route id is null
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
