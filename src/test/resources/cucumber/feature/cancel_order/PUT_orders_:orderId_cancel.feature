@@ -1,4 +1,4 @@
-@ForceSuccessOrder @ArchiveDriverRoutes @DeleteReservationAndAddress @cancel-order @/orders/:orderId/cancel
+@ForceSuccessOrder @ArchiveDriverRoutes  @cancel-order @/orders/:orderId/cancel
 Feature: Cancel PUT /orders/:orderId/cancel
 
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Staging

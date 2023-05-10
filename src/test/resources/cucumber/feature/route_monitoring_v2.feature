@@ -1,4 +1,4 @@
-@ForceSuccessOrder @DeleteReservationAndAddress @ArchiveDriverRoutes @route-monitoring-v2
+@ForceSuccessOrder  @ArchiveDriverRoutes @route-monitoring-v2
 Feature: Route Monitoring V2
 
   @rmv2-empty-route

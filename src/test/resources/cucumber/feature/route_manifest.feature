@@ -1,4 +1,4 @@
-@ForceSuccessOrder @DeleteReservationAndAddress @ArchiveDriverRoutes @route-manifest
+@ForceSuccessOrder  @ArchiveDriverRoutes @route-manifest
 Feature: Route Manifest
 
   @happy-path

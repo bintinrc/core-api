@@ -1,4 +1,4 @@
-@ForceSuccessOrder @DeleteReservationAndAddress @routing @route-delete
+@ForceSuccessOrder  @routing @route-delete
 Feature: Delete Route
 
   @route-delete @routing-refactor @happy-path
