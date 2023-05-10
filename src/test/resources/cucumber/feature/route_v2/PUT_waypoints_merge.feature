@@ -228,9 +228,9 @@ Feature:PUT /waypoints/merge
       | KEY_LIST_OF_CREATED_TRACKING_IDS[1] |
       | KEY_LIST_OF_CREATED_TRACKING_IDS[2] |
     And API DP - Operator tag order to DP:
-      | request | {"order_id":{KEY_LIST_OF_CREATED_ORDERS[1].id},"dp_id":{dp-id},"drop_off_date":"{gradle-current-date-yyyy-MM-dd}"} |
+      | request | {"order_id":{KEY_LIST_OF_CREATED_ORDERS[1].id},"dp_id":{dp-id},"drop_off_date":"{date: 0 days next, yyyy-MM-dd}"} |
     And API DP - Operator tag order to DP:
-      | request | {"order_id":{KEY_LIST_OF_CREATED_ORDERS[2].id},"dp_id":{dp-id},"drop_off_date":"{gradle-current-date-yyyy-MM-dd}"} |
+      | request | {"order_id":{KEY_LIST_OF_CREATED_ORDERS[2].id},"dp_id":{dp-id},"drop_off_date":"{date: 0 days next, yyyy-MM-dd}"} |
     When API Core - Operator merge waypoints on Zonal Routing:
       | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
@@ -374,9 +374,9 @@ Feature:PUT /waypoints/merge
       | KEY_LIST_OF_CREATED_TRACKING_IDS[1] |
       | KEY_LIST_OF_CREATED_TRACKING_IDS[2] |
     And API DP - Operator tag order to DP:
-      | request | {"order_id":{KEY_LIST_OF_CREATED_ORDERS[1].id},"dp_id":{dp-id},"drop_off_date":"{gradle-current-date-yyyy-MM-dd}"} |
+      | request | {"order_id":{KEY_LIST_OF_CREATED_ORDERS[1].id},"dp_id":{dp-id},"drop_off_date":"{date: 0 days next, yyyy-MM-dd}"} |
     And API DP - Operator tag order to DP:
-      | request | {"order_id":{KEY_LIST_OF_CREATED_ORDERS[2].id},"dp_id":{alternate-dp-id},"drop_off_date":"{gradle-current-date-yyyy-MM-dd}"} |
+      | request | {"order_id":{KEY_LIST_OF_CREATED_ORDERS[2].id},"dp_id":{alternate-dp-id},"drop_off_date":"{date: 0 days next, yyyy-MM-dd}"} |
     When API Core - Operator merge waypoints on Zonal Routing:
       | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |

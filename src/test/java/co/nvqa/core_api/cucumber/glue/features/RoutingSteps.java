@@ -1,6 +1,9 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
+import co.nvqa.common.core.model.other.CoreExceptionResponse;
+import co.nvqa.common.core.model.reservation.BulkRouteReservationResponse;
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
+import co.nvqa.common.model.DataEntity;
 import co.nvqa.commons.constants.HttpConstants;
 import co.nvqa.commons.model.core.Order;
 import co.nvqa.commons.model.core.Pickup;
@@ -10,7 +13,6 @@ import co.nvqa.commons.support.DateUtil;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import io.cucumber.guice.ScenarioScoped;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
 import java.util.Arrays;
@@ -183,5 +185,33 @@ public class RoutingSteps extends BaseSteps {
       getRouteClient().pullOutWaypointFromRoute(order.getId(), type.toUpperCase());
       putInList(KEY_LIST_OF_PULL_OUT_OF_ROUTE_TRACKING_ID, trackingId);
     }, "pull out of route");
+  }
+
+  @When("API Core - Operator verifies response of bulk add reservation to route")
+  public void verifyBulkRouteRsvnResponse(Map<String, String> data) {
+    Map<String, String> resolvedDataTable = resolveKeyValues(data);
+    BulkRouteReservationResponse actualResponse = get(CoreScenarioStorageKeys.KEY_ROUTE_RESPONSE);
+
+    List<CoreExceptionResponse> actualSuccessfulJobs = actualResponse.getSuccessfulJobs();
+    List<CoreExceptionResponse> expectedSuccessfulJobs = fromJsonToList(
+        resolvedDataTable.get("successfulJobs"), CoreExceptionResponse.class);
+    Assertions.assertThat(actualSuccessfulJobs.size())
+        .withFailMessage("successful_jobs response size doesnt match")
+        .isEqualTo(expectedSuccessfulJobs.size());
+    if (!expectedSuccessfulJobs.isEmpty()) {
+      expectedSuccessfulJobs.forEach(
+          o -> DataEntity.assertListContains(actualSuccessfulJobs, o, "successful_jobs list"));
+    }
+
+    List<CoreExceptionResponse> actualFailedJobs = actualResponse.getFailedJobs();
+    List<CoreExceptionResponse> expectedFailedJobs = fromJsonToList(
+        resolvedDataTable.get("failedJobs"), CoreExceptionResponse.class);
+    Assertions.assertThat(actualFailedJobs.size())
+        .withFailMessage("failed_jobs response size doesnt match")
+        .isEqualTo(expectedFailedJobs.size());
+    if (!expectedFailedJobs.isEmpty()) {
+      expectedFailedJobs.forEach(
+          o -> DataEntity.assertListContains(actualFailedJobs, o, "failed_jobs list"));
+    }
   }
 }

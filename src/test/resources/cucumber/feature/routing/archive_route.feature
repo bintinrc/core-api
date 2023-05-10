@@ -1,4 +1,4 @@
-@ForceSuccessOrder @DeleteReservationAndAddress @routing @route-archive
+@ForceSuccessOrder  @routing @route-archive
 Feature: Archive Route
 
   @route-archive

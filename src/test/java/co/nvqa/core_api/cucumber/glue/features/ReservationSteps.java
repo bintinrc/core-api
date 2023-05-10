@@ -160,38 +160,6 @@ public class ReservationSteps extends BaseSteps {
     });
   }
 
-  @After("@DeleteReservationAndAddress")
-  public void deleteReservationAndAddressIfAny() {
-    try {
-      List<Pickup> pickups = get(KEY_LIST_OF_CREATED_RESERVATIONS);
-      if (pickups == null) {
-        NvLogger.warn("No Reservations to clear");
-        return;
-      }
-      //clear reservations
-      pickups.forEach(e -> {
-        getReservationV2Client().deleteReservation(e.getReservationId(), e.getShipperId());
-        put(KEY_SHIPPER_OWNER_LEGACY_ID, e.getShipperId());
-      });
-      // clear addresses
-      long shipperLegacyId = get(KEY_SHIPPER_OWNER_LEGACY_ID);
-      long shipperGlobalId = getShipperClient().getNewShipperIdByLegacyId(shipperLegacyId).getId();
-      long defaultDpAddressId = TestConstants.DEFAULT_DP_ADDRESS_ID;
-      List<Address> addresses = getShipperClient().readAllAddresses(shipperGlobalId);
-      addresses.stream().filter(e -> e.getId() != defaultDpAddressId).forEach(address -> {
-        try {
-          LOGGER.info("try to delete address: {}", address.getId());
-          getShipperClient().deleteAddress(shipperGlobalId, address.getId());
-          LOGGER.info("address deleted successfully: {}", address.getId());
-        } catch (Exception | AssertionError e) {
-          LOGGER.warn("failed to delete address: {} caused of {}", address.getId(), e.getMessage());
-        }
-      });
-    } catch (Throwable t) {
-      LOGGER.warn("Failed to clear any reservation and/or address due to: {}", t.getMessage());
-    }
-  }
-
   private void searchPickup(Long legacyId, String status) {
     String pickupAddress = get(KEY_PICKUP_ADDRESS_STRING);
     put(KEY_INITIAL_RESERVATION_ADDRESS, pickupAddress);

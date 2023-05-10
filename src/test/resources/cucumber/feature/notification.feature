@@ -1,4 +1,4 @@
-@DeleteReservationAndAddress @ArchiveDriverRoutes @notification
+ @ArchiveDriverRoutes @notification
 Feature: Notification
 
   @happy-path
