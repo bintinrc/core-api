@@ -84,8 +84,7 @@ Feature: Archive Route
 
   @route-archive
   Scenario: Operator not Allowed to Archive Driver Invalid Route Id - Deleted Route
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
-    And Operator create an empty route
+    Given Operator create an empty route
       | driver_id  | {driver-id}      |
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
