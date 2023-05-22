@@ -1,4 +1,4 @@
-@ForceSuccessOrder  @routing @order-tag-to-dp @routing-refactor @dprun
+@ForceSuccessOrder  @routing @order-tag-to-dp @routing-refactor @rundp
 Feature: Order Tag to DP
 
   @happy-path
