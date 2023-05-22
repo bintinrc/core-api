@@ -1231,7 +1231,7 @@ Feature: Order Tag to DP
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
       | archived   | 1                                                          |
       | sourceId   | 0                                                          |
-      | score      | 1                                                          |
+      | score      | 0.0                                                        |
 #    new ojs
     And DB Core - verify order_jaro_scores_v2 record:
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
