@@ -1,4 +1,4 @@
-@ArchiveDriverRoutes @CancelCreatedReservations @DeletePickupAppointmentJob @routing @pa-job @wip
+@ArchiveDriverRoutes @CancelCreatedReservations @DeletePickupAppointmentJob @routing @pa-job
 Feature: Pickup Appointment Job Bulk Routing
 
   @DeletePickupAppointmentJob
@@ -190,7 +190,7 @@ Feature: Pickup Appointment Job Bulk Routing
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
 
 
-  @DeletePickupAppointmentJob
+  @DeletePickupAppointmentJob @wip
   Scenario: PUT /pickup-appointment-jobs/route-bulk - Partial Success Route PA Jobs
     Given API Shipper - Operator create new shipper address using data below:
       | shipperId       | {shipper-5-id} |
@@ -228,6 +228,9 @@ Feature: Pickup Appointment Job Bulk Routing
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     And API Core - Operator bulk add pickup jobs to the route using data below:
       | bulkAddPickupJobToTheRouteRequest | { "ids": [{KEY_CONTROL_CREATED_PA_JOBS[1].id},{KEY_CONTROL_CREATED_PA_JOBS[2].id},{KEY_CONTROL_CREATED_PA_JOBS[3].id}], "new_route_id": {KEY_LIST_OF_CREATED_ROUTES[3].id}, "overwrite": false} |
+    And API Core - Operator verifies response of bulk add pickup jobs to route
+      | expectedSuccessfulPaJobs | [{"id": {KEY_CONTROL_CREATED_PA_JOBS[3].id},"status": "Ready for Routing"}]                                                                                                                                                                        |
+      | expectedFailedPaJobs     | [{"id": {KEY_CONTROL_CREATED_PA_JOBS[1].id},"message": "PA Job is already routed to {KEY_LIST_OF_CREATED_ROUTES[1].id}" },{"id": {KEY_CONTROL_CREATED_PA_JOBS[2].id},"message": "PA Job is already routed to {KEY_LIST_OF_CREATED_ROUTES[2].id}"}] |
     #  Verification for Job 1 (should be still routed to Route 1)
     And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - verify waypoints record:
