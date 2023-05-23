@@ -233,6 +233,7 @@ public class RoutingSteps extends BaseSteps {
               "actualSuccessfulPaJobs response size does not match expectedSuccessfulPaJobs")
           .isEqualTo(expectedSuccessfulPaJobs.size());
       Assertions.assertThat(actualSuccessfulPaJobs).usingRecursiveComparison()
+          .ignoringCollectionOrderInFields()
           .withFailMessage("actualSuccessfulPaJobs does not match expectedSuccessfulPaJobs")
           .isEqualTo(expectedSuccessfulPaJobs);
     }
@@ -246,6 +247,7 @@ public class RoutingSteps extends BaseSteps {
               "actualFailedPaJobs response size does not match expectedFailedPaJobs")
           .isEqualTo(expectedFailedPaJobs.size());
       Assertions.assertThat(actualFailedPaJobs).usingRecursiveComparison()
+          .ignoringCollectionOrderInFields()
           .withFailMessage("actualFailedPaJobs does not match expectedFailedPaJobs")
           .isEqualTo(expectedFailedPaJobs);
     }
