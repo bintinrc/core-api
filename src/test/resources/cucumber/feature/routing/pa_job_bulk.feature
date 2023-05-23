@@ -96,7 +96,7 @@ Feature: Pickup Appointment Job Bulk Routing
     # Create new route
     And API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
-    And API Core - Operator bulk update routed pickup jobs to another route using data below:
+    And API Core - Operator bulk add pickup jobs to the route using data below:
       | bulkAddPickupJobToTheRouteRequest | { "ids": [{KEY_CONTROL_CREATED_PA_JOBS[1].id},{KEY_CONTROL_CREATED_PA_JOBS[2].id},{KEY_CONTROL_CREATED_PA_JOBS[3].id}], "new_route_id": {KEY_LIST_OF_CREATED_ROUTES[2].id}, "overwrite": true} |
     #  Verification for Job 1
     And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
