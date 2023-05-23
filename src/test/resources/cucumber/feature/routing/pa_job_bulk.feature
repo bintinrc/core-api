@@ -33,11 +33,13 @@ Feature: Pickup Appointment Job Bulk Routing
       | waypointId | {KEY_WAYPOINT_ID}                  |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
-      | pickupId  | {KEY_CONTROL_CREATED_PA_JOBS[1].id} |
-      | userId    | 397                                 |
-      | userName  | AUTOMATION EDITED                   |
-      | userEmail | qa@ninjavan.co                      |
-      | type      | 1                                   |
+      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
+      | userId     | 397                                             |
+      | userName   | AUTOMATION EDITED                               |
+      | userEmail  | qa@ninjavan.co                                  |
+      | type       | 1                                               |
+      | pickupType | 2                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
    # Verification for Job 2
     And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[2].id}"
     And DB Route - verify waypoints record:
@@ -49,11 +51,13 @@ Feature: Pickup Appointment Job Bulk Routing
       | waypointId | {KEY_WAYPOINT_ID}                  |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
-      | pickupId  | {KEY_CONTROL_CREATED_PA_JOBS[2].id} |
-      | userId    | 397                                 |
-      | userName  | AUTOMATION EDITED                   |
-      | userEmail | qa@ninjavan.co                      |
-      | type      | 1                                   |
+      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[2].id}             |
+      | userId     | 397                                             |
+      | userName   | AUTOMATION EDITED                               |
+      | userEmail  | qa@ninjavan.co                                  |
+      | type       | 1                                               |
+      | pickupType | 2                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
     #  Verification for Job 3
     And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[3].id}"
     And DB Route - verify waypoints record:
@@ -65,11 +69,13 @@ Feature: Pickup Appointment Job Bulk Routing
       | waypointId | {KEY_WAYPOINT_ID}                  |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
-      | pickupId  | {KEY_CONTROL_CREATED_PA_JOBS[3].id} |
-      | userId    | 397                                 |
-      | userName  | AUTOMATION EDITED                   |
-      | userEmail | qa@ninjavan.co                      |
-      | type      | 1                                   |
+      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[3].id}             |
+      | userId     | 397                                             |
+      | userName   | AUTOMATION EDITED                               |
+      | userEmail  | qa@ninjavan.co                                  |
+      | type       | 1                                               |
+      | pickupType | 2                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
 
   @DeletePickupAppointmentJob
@@ -109,11 +115,13 @@ Feature: Pickup Appointment Job Bulk Routing
       | waypointId | {KEY_WAYPOINT_ID}                  |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
     And DB Events - verify pickup_events record:
-      | pickupId  | {KEY_CONTROL_CREATED_PA_JOBS[1].id} |
-      | userId    | 397                                 |
-      | userName  | AUTOMATION EDITED                   |
-      | userEmail | qa@ninjavan.co                      |
-      | type      | 1                                   |
+      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
+      | userId     | 397                                             |
+      | userName   | AUTOMATION EDITED                               |
+      | userEmail  | qa@ninjavan.co                                  |
+      | type       | 1                                               |
+      | pickupType | 2                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
    # Verification for Job 2
     And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[2].id}"
     And DB Route - verify waypoints record:
@@ -125,11 +133,13 @@ Feature: Pickup Appointment Job Bulk Routing
       | waypointId | {KEY_WAYPOINT_ID}                  |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
     And DB Events - verify pickup_events record:
-      | pickupId  | {KEY_CONTROL_CREATED_PA_JOBS[2].id} |
-      | userId    | 397                                 |
-      | userName  | AUTOMATION EDITED                   |
-      | userEmail | qa@ninjavan.co                      |
-      | type      | 1                                   |
+      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[2].id}             |
+      | userId     | 397                                             |
+      | userName   | AUTOMATION EDITED                               |
+      | userEmail  | qa@ninjavan.co                                  |
+      | type       | 1                                               |
+      | pickupType | 2                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
     #  Verification for Job 3
     And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[3].id}"
     And DB Route - verify waypoints record:
@@ -141,11 +151,14 @@ Feature: Pickup Appointment Job Bulk Routing
       | waypointId | {KEY_WAYPOINT_ID}                  |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
     And DB Events - verify pickup_events record:
-      | pickupId  | {KEY_CONTROL_CREATED_PA_JOBS[3].id} |
-      | userId    | 397                                 |
-      | userName  | AUTOMATION EDITED                   |
-      | userEmail | qa@ninjavan.co                      |
-      | type      | 1                                   |
+      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[3].id}             |
+      | userId     | 397                                             |
+      | userName   | AUTOMATION EDITED                               |
+      | userEmail  | qa@ninjavan.co                                  |
+      | type       | 1                                               |
+      | pickupType | 2                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
+
 
   @DeletePickupAppointmentJob
   Scenario: PUT /pickup-appointment-jobs/route-bulk - Partial Success Route PA Jobs
@@ -196,18 +209,20 @@ Feature: Pickup Appointment Job Bulk Routing
       | waypointId | {KEY_WAYPOINT_ID}                  |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
-      | pickupId  | {KEY_CONTROL_CREATED_PA_JOBS[1].id} |
-      | userId    | 397                                 |
-      | userName  | AUTOMATION EDITED                   |
-      | userEmail | qa@ninjavan.co                      |
-      | type      | 1                                   |
+      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
+      | userId     | 397                                             |
+      | userName   | AUTOMATION EDITED                               |
+      | userEmail  | qa@ninjavan.co                                  |
+      | type       | 1                                               |
+      | pickupType | 2                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
    # Verification for Job 2 (should still be routed to Route 2 and Success)
     And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[2].id}"
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
-      | status   | Success                             |
+      | status   | Success                            |
     And DB Core - verify route_monitoring_data record:
       | waypointId | {KEY_WAYPOINT_ID}                  |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
@@ -222,8 +237,10 @@ Feature: Pickup Appointment Job Bulk Routing
       | waypointId | {KEY_WAYPOINT_ID}                  |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[3].id} |
     And DB Events - verify pickup_events record:
-      | pickupId  | {KEY_CONTROL_CREATED_PA_JOBS[3].id} |
-      | userId    | 397                                 |
-      | userName  | AUTOMATION EDITED                   |
-      | userEmail | qa@ninjavan.co                      |
-      | type      | 1                                   |
+      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[3].id}             |
+      | userId     | 397                                             |
+      | userName   | AUTOMATION EDITED                               |
+      | userEmail  | qa@ninjavan.co                                  |
+      | type       | 1                                               |
+      | pickupType | 2                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[3].id}} |
