@@ -37,7 +37,7 @@ dependencies {
     implementation "co.nvqa:commons:2.5.22"
     implementation "co.nvqa:common-auth:1.2.0"
     implementation "co.nvqa:common-sort:1.2.2"
-    implementation "co.nvqa:common-core:1.2.40"
+    implementation "co.nvqa:common-core:1.2.42"
     implementation "co.nvqa:common-corev2:1.2.9"
     implementation "co.nvqa:common-recovery:1.2.7"
     implementation "co.nvqa:common-webhook:1.2.7"
