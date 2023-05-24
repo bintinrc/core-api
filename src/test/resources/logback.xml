@@ -44,7 +44,7 @@
   <logger name="com.zaxxer.hikari" level="WARN" />
 
   <!-- By default, the level of the root level is set to DEBUG -->
-  <root level="ALL">
+  <root level="DEBUG">
     <appender-ref ref="RP"/>
     <appender-ref ref="STDOUT"/>
   </root>
