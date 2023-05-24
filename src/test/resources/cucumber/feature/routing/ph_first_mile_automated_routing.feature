@@ -1,4 +1,4 @@
-@routing @CancelCreatedReservations @fm-routing-ph
+@routing-ph @CancelCreatedReservations @fm-routing-ph
 Feature: Bulk Add Reservation to Route
 
   @CancelCreatedReservations
