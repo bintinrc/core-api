@@ -3,8 +3,7 @@ package co.nvqa.core_api.cucumber.glue.features;
 import co.nvqa.common.core.model.other.CoreExceptionResponse;
 import co.nvqa.common.core.model.reservation.BulkRouteReservationResponse;
 import co.nvqa.common.core.model.route.BulkAddPickupJobToRouteResponse;
-import co.nvqa.common.core.model.route.BulkAddPickupJobToRouteResponse.FailedStatusJobs;
-import co.nvqa.common.core.model.route.BulkAddPickupJobToRouteResponse.SuccessfulStatusJobs;
+import co.nvqa.common.core.model.route.BulkAddPickupJobToRouteResponse.ResponseStatusJobs;
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.common.model.DataEntity;
 import co.nvqa.commons.constants.HttpConstants;
@@ -224,30 +223,30 @@ public class RoutingSteps extends BaseSteps {
     BulkAddPickupJobToRouteResponse actualResponse = get(
         CoreScenarioStorageKeys.KEY_CORE_BULK_ROUTE_PA_JOB_RESPONSE);
 
-    List<SuccessfulStatusJobs> actualSuccessfulPaJobs = actualResponse.getSuccessfulPaJobs();
-    List<SuccessfulStatusJobs> expectedSuccessfulPaJobs = fromJsonToList(
-        resolvedDataTable.get("expectedSuccessfulPaJobs"), SuccessfulStatusJobs.class);
+    List<ResponseStatusJobs> actualSuccessfulPaJobs = actualResponse.getSuccessfulPaJobs();
+    List<ResponseStatusJobs> expectedSuccessfulPaJobs = fromJsonToList(
+        resolvedDataTable.get("expectedSuccessfulPaJobs"), ResponseStatusJobs.class);
     if (!expectedSuccessfulPaJobs.isEmpty()) {
       Assertions.assertThat(actualSuccessfulPaJobs.size())
           .withFailMessage(
               "actualSuccessfulPaJobs response size does not match expectedSuccessfulPaJobs")
           .isEqualTo(expectedSuccessfulPaJobs.size());
       Assertions.assertThat(actualSuccessfulPaJobs).usingRecursiveComparison()
-          .ignoringCollectionOrderInFields()
+          .ignoringCollectionOrder()
           .withFailMessage("actualSuccessfulPaJobs does not match expectedSuccessfulPaJobs")
           .isEqualTo(expectedSuccessfulPaJobs);
     }
 
-    List<FailedStatusJobs> actualFailedPaJobs = actualResponse.getFailedPaJobs();
-    List<FailedStatusJobs> expectedFailedPaJobs = fromJsonToList(
-        resolvedDataTable.get("expectedFailedPaJobs"), FailedStatusJobs.class);
+    List<ResponseStatusJobs> actualFailedPaJobs = actualResponse.getFailedPaJobs();
+    List<ResponseStatusJobs> expectedFailedPaJobs = fromJsonToList(
+        resolvedDataTable.get("expectedFailedPaJobs"), ResponseStatusJobs.class);
     if (!expectedFailedPaJobs.isEmpty()) {
       Assertions.assertThat(actualFailedPaJobs.size())
           .withFailMessage(
               "actualFailedPaJobs response size does not match expectedFailedPaJobs")
           .isEqualTo(expectedFailedPaJobs.size());
       Assertions.assertThat(actualFailedPaJobs).usingRecursiveComparison()
-          .ignoringCollectionOrderInFields()
+          .ignoringCollectionOrder()
           .withFailMessage("actualFailedPaJobs does not match expectedFailedPaJobs")
           .isEqualTo(expectedFailedPaJobs);
     }
