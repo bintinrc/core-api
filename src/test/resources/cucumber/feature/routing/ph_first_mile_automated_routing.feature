@@ -229,6 +229,29 @@ Feature: Bulk Add Reservation to Route
       | Pickup Type: FM Dedicated | {fm-zone-id-1} | {fm-hub-id-1-fm-dedicated} | {fm-shipper-id-1-fm-dedicated} | {fm-shipper-legacy-id-1-fm-dedicated} | {fm-driver-1} | {fm-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-zone-id-1} | {fm-hub-id-1-truck}        | {fm-shipper-id-1-truck}        | {fm-shipper-legacy-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
 
+  @wip2
+  Scenario Outline: Auto Route Reservation - Date = Today, Creation = After  End Clock Time - <Note>
+    Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
+    Given API Core - Operator create reservation using data below:
+      | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    And DB Core - verify waypoints record:
+      | id            | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | seqNo         | null                                             |
+      | routeId       | null                                             |
+      | status        | Pending                                          |
+      | routingZoneId | <zone_id>                                        |
+    And DB Route - verify waypoints record:
+      | legacyId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | seqNo         | null                                             |
+      | routeId       | null                                             |
+      | status        | Pending                                          |
+      | routingZoneId | <zone_id>                                        |
+    Examples:
+      | Note                      | zone_id        | hub_id                     | shipper_id                     | shipper_legacy_id                     | driver_id     | address_id                     |
+      | Pickup Type: FM Dedicated | {fm-zone-id-1} | {fm-hub-id-1-fm-dedicated} | {fm-shipper-id-1-fm-dedicated} | {fm-shipper-legacy-id-1-fm-dedicated} | {fm-driver-1} | {fm-address-id-1-fm-dedicated} |
+      | Pickup Type: Truck        | {fm-zone-id-1} | {fm-hub-id-1-truck}        | {fm-shipper-id-1-truck}        | {fm-shipper-legacy-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
+
+
   @CancelCreatedReservations
   Scenario: PUT /2.0/reservations/route-bulk - Bulk Add Reservation to Route - Route Id Doesn't Exist
     Given API Core - Operator create reservation using data below:

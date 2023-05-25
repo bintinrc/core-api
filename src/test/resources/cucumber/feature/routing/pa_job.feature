@@ -4,7 +4,7 @@ Feature: Zonal Routing API
   @DeletePickupAppointmentJob @happy-path
   Scenario: PUT /pickup-appointment-jobs/:paJobId/route - Route Unrouted PA Job Waypoint
     Given API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":717, "from":{ "addressId":1547535}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     When API Core - Operator add pickup job to the route using data below:
@@ -26,9 +26,9 @@ Feature: Zonal Routing API
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
-      | userId     | 397                                             |
-      | userName   | AUTOMATION EDITED                               |
-      | userEmail  | qa@ninjavan.co                                  |
+      | userId     | {pickup-user-id}                                |
+      | userName   | {pickup-user-name}                              |
+      | userEmail  | {pickup-user-email}                             |
       | type       | 1                                               |
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
@@ -36,7 +36,7 @@ Feature: Zonal Routing API
   @DeletePickupAppointmentJob
   Scenario: PUT /pickup-appointment-jobs/:paJobId/route - Update Routed PA Job to a New Route
     Given API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":717, "from":{ "addressId":1547535}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     When API Core - Operator add pickup job to the route using data below:
@@ -58,22 +58,22 @@ Feature: Zonal Routing API
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
       | status   | Routed                             |
-    #    And DB Core - verify route_monitoring_data record:
-    #      | waypointId | {KEY_WAYPOINT_ID}                  |
-    #      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_WAYPOINT_ID}                  |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
-      | userId     | 397                                             |
-      | userName   | AUTOMATION EDITED                               |
-      | userEmail  | qa@ninjavan.co                                  |
+      | userId     | {pickup-user-id}                                |
+      | userName   | {pickup-user-name}                              |
+      | userEmail  | {pickup-user-email}                             |
       | type       | 1                                               |
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}                                                               |
-      | userId     | 397                                                                                               |
-      | userName   | AUTOMATION EDITED                                                                                 |
-      | userEmail  | qa@ninjavan.co                                                                                    |
+      | userId     | {pickup-user-id}                                                                                  |
+      | userName   | {pickup-user-name}                                                                                |
+      | userEmail  | {pickup-user-email}                                                                               |
       | type       | 2                                                                                                 |
       | pickupType | 2                                                                                                 |
       | data       | {"old_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
@@ -81,7 +81,7 @@ Feature: Zonal Routing API
   @DeletePickupAppointmentJob
   Scenario: POST /routes - Zonal Routing API - Create Driver Route & Assign PA Job Waypoint
     Given API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":717, "from":{ "addressId":1547535}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And API Core - Operator create new route from zonal routing using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_WAYPOINT_ID}]} |
@@ -100,9 +100,9 @@ Feature: Zonal Routing API
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
-      | userId     | 397                                             |
-      | userName   | AUTOMATION EDITED                               |
-      | userEmail  | qa@ninjavan.co                                  |
+      | userId     | {pickup-user-id}                                |
+      | userName   | {pickup-user-name}                              |
+      | userEmail  | {pickup-user-email}                             |
       | type       | 1                                               |
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
@@ -110,7 +110,7 @@ Feature: Zonal Routing API
   @DeletePickupAppointmentJob
   Scenario: PUT /routes - Zonal Routing Edit Route API - Add Unrouted PA Job Waypoints to Route
     Given API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":717, "from":{ "addressId":1547535}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
@@ -131,17 +131,17 @@ Feature: Zonal Routing API
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
-      | userId     | 397                                             |
-      | userName   | AUTOMATION EDITED                               |
-      | userEmail  | qa@ninjavan.co                                  |
+      | userId     | {pickup-user-id}                                |
+      | userName   | {pickup-user-name}                              |
+      | userEmail  | {pickup-user-email}                             |
       | type       | 1                                               |
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
-  @DeletePickupAppointmentJob
+  @DeletePickupAppointmentJob @wip
   Scenario: PUT /routes - Zonal Routing Edit Route API - Move Routed PA Job Waypoints to Another Route
     Given API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":717, "from":{ "addressId":1547535}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And API Core - Operator create new route from zonal routing using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_WAYPOINT_ID}]} |
@@ -159,32 +159,32 @@ Feature: Zonal Routing API
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
       | status   | Routed                             |
-    #    And DB Core - verify route_monitoring_data record:
-    #      | waypointId | {KEY_WAYPOINT_ID}                  |
-    #      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_WAYPOINT_ID}                  |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
-      | userId     | 397                                             |
-      | userName   | AUTOMATION EDITED                               |
-      | userEmail  | qa@ninjavan.co                                  |
+      | userId     | {pickup-user-id}                                |
+      | userName   | {pickup-user-name}                              |
+      | userEmail  | {pickup-user-email}                             |
       | type       | 1                                               |
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}                                                               |
-      | userId     | 397                                                                                               |
-      | userName   | AUTOMATION EDITED                                                                                 |
-      | userEmail  | qa@ninjavan.co                                                                                    |
+      | userId     | {pickup-user-id}                                                                                  |
+      | userName   | {pickup-user-name}                                                                                |
+      | userEmail  | {pickup-user-email}                                                                               |
       | type       | 2                                                                                                 |
       | pickupType | 2                                                                                                 |
       | data       | {"old_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
 
-  @DeletePickupAppointmentJob @CancelCreatedReservations
+  @DeletePickupAppointmentJob @CancelCreatedReservations @wip
   Scenario: PUT /routes - Zonal Routing Edit Route API - Remove PA Job Waypoints From Route
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":717, "from":{ "addressId":1547535}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And API Core - Operator create new route from zonal routing using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_WAYPOINT_ID}, {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}]} |
@@ -204,17 +204,17 @@ Feature: Zonal Routing API
       | {KEY_WAYPOINT_ID} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
-      | userId     | 397                                             |
-      | userName   | AUTOMATION EDITED                               |
-      | userEmail  | qa@ninjavan.co                                  |
+      | userId     | {pickup-user-id}                                |
+      | userName   | {pickup-user-name}                              |
+      | userEmail  | {pickup-user-email}                             |
       | type       | 3                                               |
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
-  @DeletePickupAppointmentJob @happy-path
+  @DeletePickupAppointmentJob @happy-path @wip
   Scenario: PUT /pickup-appointment-jobs/:paJobId/unroute - Unroute PA Job Waypoint
     When API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":717, "from":{ "addressId":1547535}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And API Core - Operator create new route from zonal routing using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_WAYPOINT_ID}]} |
@@ -243,9 +243,9 @@ Feature: Zonal Routing API
       | {KEY_WAYPOINT_ID} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
-      | userId     | 397                                             |
-      | userName   | AUTOMATION EDITED                               |
-      | userEmail  | qa@ninjavan.co                                  |
+      | userId     | {pickup-user-id}                                |
+      | userName   | {pickup-user-name}                              |
+      | userEmail  | {pickup-user-email}                             |
       | type       | 3                                               |
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
