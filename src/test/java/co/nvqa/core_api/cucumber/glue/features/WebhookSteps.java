@@ -173,7 +173,7 @@ public class WebhookSteps extends BaseSteps {
               } else {
                 checkDeliverySuccessPod(request, trackingId);
               }
-              if (order.getParcelJob().getCashOnDelivery() != null) {
+              if (order != null && order.getParcelJob().getCashOnDelivery() != null) {
                 Double cod = order.getParcelJob().getCashOnDelivery();
                 Assertions.assertThat(request.getCodCollected()).as("cod_collected field equal")
                     .isEqualTo(cod);

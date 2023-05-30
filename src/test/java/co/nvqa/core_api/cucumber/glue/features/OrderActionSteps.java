@@ -246,9 +246,9 @@ public class OrderActionSteps extends BaseSteps {
     callWithRetry(() -> {
       operatorSearchOrderByTrackingId();
       Order order = get(KEY_CREATED_ORDER);
-      Assertions.assertThat(StringUtils.lowerCase(order.getStatus()))
+      Assertions.assertThat(order.getStatus())
           .as(String.format("order %s status = %s", order.getTrackingId(), status))
-          .isEqualTo(StringUtils.lowerCase(status));
+          .isEqualToIgnoringCase(status);
       Assertions.assertThat(order.getGranularStatus())
           .as(f("order %s granular status = %s", order.getTrackingId(), granularStatus))
           .isEqualToIgnoringCase(granularStatus);
