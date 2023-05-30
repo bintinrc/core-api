@@ -30,9 +30,9 @@ Feature: Bulk Add Reservation to Route
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}        |
-      | userId     | 397                                             |
-      | userName   | AUTOMATION EDITED                               |
-      | userEmail  | qa@ninjavan.co                                  |
+      | userId     | {pickup-user-id}                                |
+      | userName   | {pickup-user-name}                              |
+      | userEmail  | {pickup-user-email}                             |
       | type       | 1                                               |
       | pickupType | 1                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
@@ -51,11 +51,12 @@ Feature: Bulk Add Reservation to Route
       | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[2].waypointId} |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
     And DB Events - verify pickup_events record:
-      | pickupId  | {KEY_LIST_OF_CREATED_RESERVATIONS[2].id} |
-      | userId    | 397                                      |
-      | userName  | AUTOMATION EDITED                        |
-      | userEmail | qa@ninjavan.co                           |
-      | type      | 1                                        |
+      | pickupId  | {KEY_LIST_OF_CREATED_RESERVATIONS[2].id}        |
+      | userId    | {pickup-user-id}                                |
+      | userName  | {pickup-user-name}                              |
+      | userEmail | {pickup-user-email}                             |
+      | type      | 1                                               |
+      | data      | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
   @CancelCreatedReservations
   Scenario: PUT /2.0/reservations/route-bulk - Bulk Add Reservation to Route - Multiple Routed Reservations Added to New Route
@@ -90,9 +91,9 @@ Feature: Bulk Add Reservation to Route
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id}               |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}                                                          |
-      | userId     | 397                                                                                               |
-      | userName   | AUTOMATION EDITED                                                                                 |
-      | userEmail  | qa@ninjavan.co                                                                                    |
+      | userId     | {pickup-user-id}                                                                                  |
+      | userName   | {pickup-user-name}                                                                                |
+      | userEmail  | {pickup-user-email}                                                                               |
       | type       | 2                                                                                                 |
       | pickupType | 1                                                                                                 |
       | data       | {"old_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
@@ -112,9 +113,9 @@ Feature: Bulk Add Reservation to Route
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id}               |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[2].id}                                                          |
-      | userId     | 397                                                                                               |
-      | userName   | AUTOMATION EDITED                                                                                 |
-      | userEmail  | qa@ninjavan.co                                                                                    |
+      | userId     | {pickup-user-id}                                                                                  |
+      | userName   | {pickup-user-name}                                                                                |
+      | userEmail  | {pickup-user-email}                                                                               |
       | type       | 2                                                                                                 |
       | pickupType | 1                                                                                                 |
       | data       | {"old_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
@@ -150,9 +151,9 @@ Feature: Bulk Add Reservation to Route
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}        |
-      | userId     | 397                                             |
-      | userName   | AUTOMATION EDITED                               |
-      | userEmail  | qa@ninjavan.co                                  |
+      | userId     | {pickup-user-id}                                |
+      | userName   | {pickup-user-name}                              |
+      | userEmail  | {pickup-user-email}                             |
       | type       | 1                                               |
       | pickupType | 1                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
