@@ -226,8 +226,8 @@ public class WebhookSteps extends BaseSteps {
               break;
             case ARRIVED_AT_SORTING_HUB: {
               Hub hub = get(KeysStorage.KEY_HUB_DETAILS, Hub.class);
-              final int attemptCounts = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT);
               if (hub != null) {
+                final int attemptCounts = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT);
                 String hubName = f("%s-%s-%s", hub.getCountry(), hub.getCity(), hub.getShortName());
                 Assertions.assertThat(request.getComments()).as("comment contains hub name")
                     .isEqualToIgnoringCase(hubName);
@@ -242,9 +242,15 @@ public class WebhookSteps extends BaseSteps {
               Assertions.assertThat(request.getPreviousMeasurements().getMeasuredWeight())
                   .as("old weigh equal")
                   .isEqualTo(oldWeight);
-              Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight())
-                  .as("new weigh equal")
-                  .isEqualTo(newWeight);
+              if (newWeight != 0) {
+                Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight())
+                    .as("new weigh equal")
+                    .isEqualTo(newWeight);
+              } else {
+                Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight())
+                    .as("new weigh equal")
+                    .isEqualTo(oldWeight);
+              }
             }
             break;
             case PARCEL_WEIGHT: {
