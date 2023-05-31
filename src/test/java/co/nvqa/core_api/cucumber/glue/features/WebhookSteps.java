@@ -41,7 +41,7 @@ public class WebhookSteps extends BaseSteps {
 
   @Given("Shipper id {string} subscribes to {string} webhook")
   public void shipperSubscribeWebhook(String shipperGlobalId, String eventName) {
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       List<Webhook> webhooks = Arrays
           .asList(
               getShipperWebhookClient().getWebhookSubscription(Long.parseLong(shipperGlobalId)));
@@ -69,7 +69,7 @@ public class WebhookSteps extends BaseSteps {
               bin.getEndpoint(TestConstants.NV_SYSTEM_ID));
         }
       });
-    }, "subscribe webhook event: " + eventName, 30);
+    }, "subscribe webhook event: " + eventName);
   }
 
   @Then("Shipper gets webhook request for event {string}")
@@ -83,7 +83,7 @@ public class WebhookSteps extends BaseSteps {
   public void shipperPeekItsWebhook(String event, String tid) {
     Bin bin = get(Bin.KEY_CREATED_BIN + event);
     String trackingId = resolveValue(tid);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       List<BinRequest> requests = Arrays.asList(binClient.retrieveBinContent(bin.getKey()));
       List<String> jsonLists = new ArrayList<>();
       requests.forEach(e -> jsonLists.add(e.getBody()));
@@ -93,7 +93,7 @@ public class WebhookSteps extends BaseSteps {
       WebhookRequest webhookRequest = fromJsonSnakeCase(json, WebhookRequest.class);
       LOGGER.info(f("webhook event = %s found for %s", event, webhookRequest.getTrackingId()));
       putInMap(KEY_LIST_OF_WEBHOOK_REQUEST + event, webhookRequest.getTrackingId(), webhookRequest);
-    }, "get webhooks requests", 30);
+    }, "get webhooks requests");
   }
 
   @Then("Verify for {string} Orders, Shipper gets webhook event {string}")
@@ -130,7 +130,7 @@ public class WebhookSteps extends BaseSteps {
   public void verifyNoWebhookSentForOrder(String event, String tid) {
     String trackingId = resolveValue(tid);
     Bin bin = get(Bin.KEY_CREATED_BIN + event);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       List<BinRequest> requests = Arrays.asList(binClient.retrieveBinContent(bin.getKey()));
       boolean found = requests.stream().anyMatch(e ->
           JsonUtils.fromJsonSnakeCase(e.getBody(), WebhookRequest.class).getStatus()
@@ -140,7 +140,7 @@ public class WebhookSteps extends BaseSteps {
       Assertions.assertThat(!found)
           .as(String.format("no %s webhook sent for %s", event, trackingId))
           .isTrue();
-    }, "get webhooks requests", 30);
+    }, "get webhooks requests");
   }
 
   @Then("Shipper verifies webhook request payload has correct details for status {string}")
@@ -157,7 +157,7 @@ public class WebhookSteps extends BaseSteps {
     WebhookRequest request = webhookRequest.get(trackingId);
     put(KEY_WEBHOOK_PAYLOAD, request);
     OrderRequestV4 order = get(KEY_ORDER_CREATE_REQUEST);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
           Assertions.assertThat(request.getStatus()).as(f("status is %s", status))
               .isEqualToIgnoringCase(status);
           Assertions.assertThat(request.getTrackingId()).as("tracking id is correct")
@@ -173,7 +173,7 @@ public class WebhookSteps extends BaseSteps {
               } else {
                 checkDeliverySuccessPod(request, trackingId);
               }
-              if (order.getParcelJob().getCashOnDelivery() != null) {
+              if (order != null && order.getParcelJob().getCashOnDelivery() != null) {
                 Double cod = order.getParcelJob().getCashOnDelivery();
                 Assertions.assertThat(request.getCodCollected()).as("cod_collected field equal")
                     .isEqualTo(cod);
@@ -226,8 +226,8 @@ public class WebhookSteps extends BaseSteps {
               break;
             case ARRIVED_AT_SORTING_HUB: {
               Hub hub = get(KeysStorage.KEY_HUB_DETAILS, Hub.class);
-              final int attemptCounts = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT);
               if (hub != null) {
+                final int attemptCounts = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT);
                 String hubName = f("%s-%s-%s", hub.getCountry(), hub.getCity(), hub.getShortName());
                 Assertions.assertThat(request.getComments()).as("comment contains hub name")
                     .isEqualToIgnoringCase(hubName);
@@ -242,9 +242,15 @@ public class WebhookSteps extends BaseSteps {
               Assertions.assertThat(request.getPreviousMeasurements().getMeasuredWeight())
                   .as("old weigh equal")
                   .isEqualTo(oldWeight);
-              Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight())
-                  .as("new weigh equal")
-                  .isEqualTo(newWeight);
+              if (newWeight != 0) {
+                Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight())
+                    .as("new weigh equal")
+                    .isEqualTo(newWeight);
+              } else {
+                Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight())
+                    .as("new weigh equal")
+                    .isEqualTo(oldWeight);
+              }
             }
             break;
             case PARCEL_WEIGHT: {
@@ -257,7 +263,7 @@ public class WebhookSteps extends BaseSteps {
             }
           }
         },
-        f("verify webhook payload %s", trackingId), 30);
+        f("verify webhook payload %s", trackingId));
   }
 
   @Then("Verify webhook request payload has correct details")
@@ -278,7 +284,7 @@ public class WebhookSteps extends BaseSteps {
 
   @Given("Shipper id {string} removes webhook subscriptions")
   public void shipperRemoveWebhookSubs(String shipperGlobalId) {
-    callWithRetry(() -> cleanWebhookSubs(Long.parseLong(shipperGlobalId)), "remove webhook subs");
+    doWithRetry(() -> cleanWebhookSubs(Long.parseLong(shipperGlobalId)), "remove webhook subs");
   }
 
   private void cleanWebhookSubs(Long shipperId) {
