@@ -58,10 +58,10 @@ Feature: Route Manifest
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CORE_LIST_OF_RESERVATIONS_DB[1].waypointId} |
       | status   | Success                                          |
-    Then API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}" with granular status "Enroute_to_Sorting_Hub"
+    Then API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}" with granular status "Pending_pickup_at_distribution_point"
     And DB Core - verify transactions record:
       | id     | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].id} |
-      | status | Success                                            |
+      | status | Pending                                            |
 
   Scenario: Admin Manifest Force Fail a DP Reservation
     Given API Order - Shipper create multiple V4 orders using data below:

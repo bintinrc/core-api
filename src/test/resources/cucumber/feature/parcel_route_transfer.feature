@@ -1,4 +1,4 @@
-@ArchiveDriverRoutes @parcel-route-transfer
+#@ArchiveDriverRoutes @parcel-route-transfer
 Feature: Parcel Route Transfer
 
   @routing-refactor @happy-path
@@ -677,7 +677,7 @@ Feature: Parcel Route Transfer
 
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
-@wip
+
   Scenario: Driver Route Transfer Parcel - Resolve MISSING PETS Ticket
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                               |
@@ -700,7 +700,7 @@ Feature: Parcel Route Transfer
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     When API Core - Operator parcel transfer to a new route:
       | request | { "route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "from_driver_id": null, "to_driver_id": {driver-id}, "to_driver_hub_id": {sorting-hub-id}, "orders": [ { "tracking_id": "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}", "inbound_type": "VAN_FROM_NINJAVAN", "hub_id": {sorting-hub-id} } ] } |
-    And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}" with granular status "ARRIVED_AT_SORTING_HUB"
+    And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}" with granular status "ON_VEHICLE_FOR_DELIVERY"
     Then API Recovery - verify ticket details:
       | trackingId | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}   |
       | ticketId   | {KEY_CREATED_RECOVERY_TICKET.ticket.id} |

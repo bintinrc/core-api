@@ -40,6 +40,7 @@ dependencies {
     implementation "co.nvqa:common-core:1.3.7"
     implementation "co.nvqa:common-corev2:1.2.9"
     implementation "co.nvqa:common-recovery:1.3.1"
+    implementation "co.nvqa:common-driver:1.3.1"
     implementation "co.nvqa:common-webhook:1.2.7"
     implementation "co.nvqa:common-shipper:1.2.9"
     implementation "co.nvqa:common-dp:1.2.17"
@@ -60,6 +61,7 @@ project.ext {
             "classpath:co.nvqa.common.core.cucumber.glue",
             "classpath:co.nvqa.common.webhook.cucumber.glue",
             "classpath:co.nvqa.common.corev2.cucumber.glue",
+            "classpath:co.nvqa.common.driver.cucumber.glue",
             "classpath:co.nvqa.common.shipper.cucumber.glue",
             "classpath:co.nvqa.common.dp.cucumber.glue",
             "classpath:co.nvqa.common.sort.cucumber.glue",
