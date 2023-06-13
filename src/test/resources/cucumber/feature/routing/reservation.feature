@@ -51,7 +51,7 @@ Feature: Assign and Remove Single Reservation To Route
       | routeId       | 124                                      |
       | overwrite     | false                                    |
 
-  @wip
+
   Scenario: PUT /2.0/reservations/:routeid/route - Update a Single Routed Reservation to a New Route
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
@@ -88,7 +88,7 @@ Feature: Assign and Remove Single Reservation To Route
       | pickup_type | 1                                                                                                 |
       | data        | {"old_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
 
-  @wip
+
   Scenario: PUT /2.0/reservations/:routeid/route - Assign a Single Reservation to a Route - Reservation Status Success
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
@@ -121,7 +121,7 @@ Feature: Assign and Remove Single Reservation To Route
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | overwrite     | false                              |
 
-  @wip
+
   Scenario: PUT /2.0/reservations/:routeid/route - Assign a Single Reservation to a Route - Reservation Status Fail
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
