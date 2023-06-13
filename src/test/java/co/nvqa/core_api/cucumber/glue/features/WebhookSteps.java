@@ -12,6 +12,7 @@ import co.nvqa.commons.model.order_create.v4.OrderRequestV4;
 import co.nvqa.commons.util.JsonUtils;
 import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.commonsort.cucumber.KeysStorage;
+import co.nvqa.commonsort.model.DwsInboundResponse;
 import co.nvqa.commonsort.model.Hub;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
@@ -237,29 +238,62 @@ public class WebhookSteps extends BaseSteps {
             }
             break;
             case PARCEL_MEASUREMENTS_UPDATE: {
-              final Double oldWeight = get(CoreScenarioStorageKeys.KEY_EXPECTED_OLD_WEIGHT, 0.1);
-              final Double newWeight = get(CoreScenarioStorageKeys.KEY_SAVED_ORDER_WEIGHT);
-              Assertions.assertThat(request.getPreviousMeasurements().getMeasuredWeight())
-                  .as("old weigh equal")
-                  .isEqualTo(oldWeight);
-              if (newWeight != 0) {
-                Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight())
-                    .as("new weigh equal")
-                    .isEqualTo(newWeight);
-              } else {
-                Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight())
-                    .as("new weigh equal")
+              DwsInboundResponse dwsInboundResponse = get(KeysStorage.KEY_DWS_INBOUND_DATA,
+                  DwsInboundResponse.class);
+              if (dwsInboundResponse == null) { // VERIFICATIONS WHEN TRIGGERED BY GLOBAL INBOUND
+                final Double oldWeight = get(CoreScenarioStorageKeys.KEY_EXPECTED_OLD_WEIGHT, 0.1);
+                final Double newWeight = get(CoreScenarioStorageKeys.KEY_SAVED_ORDER_WEIGHT);
+                Assertions.assertThat(request.getPreviousMeasurements().getMeasuredWeight())
+                    .as("old weight equal")
                     .isEqualTo(oldWeight);
+                if (newWeight != 0) {
+                  Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight())
+                      .as("new weight equal")
+                      .isEqualTo(newWeight);
+                } else {
+                  Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight())
+                      .as("new weight equal")
+                      .isEqualTo(oldWeight);
+                }
+              } else { // VERIFICATIONS WHEN TRIGGERED BY DWS INBOUND
+                final Double newWeightFromDwsScan = dwsInboundResponse.getWeight().getValue();
+                if (newWeightFromDwsScan == 0) {
+                  final Double oldWeight = get(CoreScenarioStorageKeys.KEY_EXPECTED_OLD_WEIGHT);
+                  Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight())
+                      .as("new weight equal")
+                      .isEqualTo(oldWeight);
+                } else {
+                  Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight())
+                      .as("new weight equal")
+                      .isEqualTo(newWeightFromDwsScan);
+                }
               }
             }
             break;
             case PARCEL_WEIGHT: {
-              final Double oldWeight = get(CoreScenarioStorageKeys.KEY_EXPECTED_OLD_WEIGHT, 0.1);
-              final Double newWeight = get(CoreScenarioStorageKeys.KEY_SAVED_ORDER_WEIGHT);
-              Assertions.assertThat(Double.valueOf(request.getPreviousWeight())).as("old weigh equal")
-                  .isEqualTo(oldWeight);
-              Assertions.assertThat(Double.valueOf(request.getNewWeight())).as("new weigh equal")
-                  .isEqualTo(newWeight);
+              DwsInboundResponse dwsInboundResponse = get(KeysStorage.KEY_DWS_INBOUND_DATA,
+                  DwsInboundResponse.class);
+              if (dwsInboundResponse == null) { // VERIFICATIONS WHEN TRIGGERED BY GLOBAL INBOUND
+                final Double oldWeight = get(CoreScenarioStorageKeys.KEY_EXPECTED_OLD_WEIGHT, 0.1);
+                final Double newWeight = get(CoreScenarioStorageKeys.KEY_SAVED_ORDER_WEIGHT);
+                Assertions.assertThat(Double.valueOf(request.getPreviousWeight()))
+                    .as("old weight equal")
+                    .isEqualTo(oldWeight);
+                Assertions.assertThat(Double.valueOf(request.getNewWeight())).as("new weight equal")
+                    .isEqualTo(newWeight);
+              } else { // VERIFICATIONS WHEN TRIGGERED BY DWS INBOUND
+                final Double newWeightFromDwsScan = dwsInboundResponse.getWeight().getValue();
+                if (newWeightFromDwsScan == 0) {
+                  final Double oldWeight = get(CoreScenarioStorageKeys.KEY_EXPECTED_OLD_WEIGHT);
+                  Assertions.assertThat(request.getNewMeasurements().getMeasuredWeight())
+                      .as("new weight equal")
+                      .isEqualTo(oldWeight);
+                } else {
+                  Assertions.assertThat(Double.valueOf(request.getNewWeight()))
+                      .as("new weight equal")
+                      .isEqualTo(newWeightFromDwsScan);
+                }
+              }
             }
           }
         },
