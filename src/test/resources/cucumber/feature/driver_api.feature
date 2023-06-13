@@ -157,3 +157,97 @@ Feature: Driver API
       | old_pickup_status | Success |
       | new_pickup_status | Pending |
       | new_pickup_type   | PP      |
+
+  Scenario: Success Delivery Order - Create PETS Ticket - Resolve PETS ticket - Success New Delivery Transaction from Driver App
+    Given Shipper id "{shipper-id}" subscribes to "Successful Delivery" webhook
+    Given Shipper id "{shipper-id}" subscribes to "Completed" webhook
+    Given API Order - Shipper create multiple V4 orders using data below:
+      | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+      | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+      | generateFrom        | RANDOM                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+      | v4OrderRequest      | { "service_type":"Parcel","service_level":"Standard","to":{"name": "QA core api automation","phone_number": "+65189681","email": "qa@test.co", "address": {"address1": "80 MANDAI LAKE ROAD","address2": "Singapore Zoological","country": "SG","postcode": "238900","latitude": 1.3248209,"longitude": 103.6983167}},"parcel_job":{ "dimensions": {"weight": 1}, "is_pickup_required":false, "pickup_date":"{{next-1-day-yyyy-MM-dd}}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
+    And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[1]"
+    And API Sort - Operator global inbound
+      | globalInboundRequest | {"inbound_type":"SORTING_HUB","dimensions":null,"to_reschedule":false,"to_show_shipper_info":false,"tags":[]} |
+      | trackingId           | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}                                                                         |
+      | hubId                | {sorting-hub-id}                                                                                              |
+    Given API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+    And API Core - Operator add parcel to the route using data below:
+      | addParcelToRouteRequest | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"type":"DELIVERY"} |
+      | orderId                 | {KEY_LIST_OF_CREATED_ORDERS[1].id}                                |
+    And API Core - Operator force success waypoint via route manifest:
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+    When API Recovery - Operator create recovery ticket:
+      | trackingId         | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]} |
+      | ticketType         | PARCEL EXCEPTION                      |
+      | subTicketType      | COMPLETED ORDER                       |
+      | entrySource        | RECOVERY SCANNING                     |
+      | orderOutcomeName   | ORDER OUTCOME (COMPLETED ORDER)       |
+      | investigatingParty | {DEFAULT-INVESTIGATING-PARTY}         |
+      | investigatingHubId | {DEFAULT-INVESTIGATING-HUB}           |
+      | creatorUserId      | {DEFAULT-CREATOR-USER-ID}             |
+      | creatorUserName    | {DEFAULT-CREATOR-USERNAME}            |
+      | creatorUserEmail   | {DEFAULT-CREATOR-EMAIL}               |
+    And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}" with granular status "COMPLETED"
+    And DB Recovery - get id from ticket_custom_fields table Hibernate
+      | ticketId      | {KEY_CREATED_RECOVERY_TICKET.ticket.id} |
+      | customFieldId | {KEY_CREATED_ORDER_OUTCOME_ID}          |
+    And DB Recovery - get id from ticket_custom_fields table Hibernate
+      | ticketId      | {KEY_CREATED_RECOVERY_TICKET.ticket.id} |
+      | customFieldId | 90                                      |
+    And API Recovery - Operator update recovery ticket:
+      | ticketId         | {KEY_CREATED_RECOVERY_TICKET.ticket.id}  |
+      | customFieldId    | {KEY_LIST_OF_TICKET_CUSTOM_FIELD_IDS[1]} |
+      | orderOutcomeName | {KEY_CREATED_ORDER_OUTCOME}              |
+      | status           | RESOLVED                                 |
+      | outcome          | RTS                                      |
+      | reporterId       | {DEFAULT-CREATOR-USER-ID}                |
+      | reporterName     | {DEFAULT-CREATOR-USERNAME}               |
+      | reporterEmail    | {DEFAULT-CREATOR-EMAIL}                  |
+      | rtsCustomFieldId | {KEY_LIST_OF_TICKET_CUSTOM_FIELD_IDS[2]} |
+    And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}" with granular status "ARRIVED_AT_SORTING_HUB"
+    Then API Recovery - verify ticket details:
+      | trackingId | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}   |
+      | ticketId   | {KEY_CREATED_RECOVERY_TICKET.ticket.id} |
+      | status     | RESOLVED                                |
+      | outcome    | RTS                                     |
+    And API Core - Operator add parcel to the route using data below:
+      | addParcelToRouteRequest | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"type":"DELIVERY"} |
+      | orderId                 | {KEY_LIST_OF_CREATED_ORDERS[1].id}                                |
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
+    And API Driver - Driver start route "{KEY_LIST_OF_CREATED_ROUTES[1].id}"
+    And API Driver - Driver read routes:
+      | driverId        | {driver-id}                        |
+      | expectedRouteId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+    And API Driver - Driver submit POD:
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                              |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].waypointId}                      |
+      | routes     | KEY_DRIVER_ROUTES                                                               |
+      | jobType    | TRANSACTION                                                                     |
+      | parcels    | [{ "tracking_id": "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}", "action":"SUCCESS"}] |
+      | jobAction  | SUCCESS                                                                         |
+      | jobMode    | DELIVERY                                                                        |
+    And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}" with granular status "RETURNED_TO_SENDER"
+    And DB Core - verify orders record:
+      | id             | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | status         | Completed                          |
+      | granularStatus | Returned to Sender                 |
+      | rts            | 1                                  |
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].id} |
+      | status  | Success                                            |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Core - verify waypoints record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].waypointId} |
+      | seqNo   | not null                                                   |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
+      | status  | Success                                                    |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].waypointId} |
+      | seqNo    | not null                                                   |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
+      | status   | Success                                                    |
+    And Shipper gets webhook request for event "Successful Delivery" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
+    And Shipper gets webhook request for event "Completed" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
