@@ -3,7 +3,6 @@ package co.nvqa.core_api.cucumber.glue.features;
 import co.nvqa.common.core.model.other.CoreExceptionResponse;
 import co.nvqa.common.core.model.reservation.BulkRouteReservationResponse;
 import co.nvqa.common.core.model.route.BulkAddPickupJobToRouteResponse;
-import co.nvqa.common.core.model.route.BulkAddPickupJobToRouteResponse.ResponseStatusJobs;
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.common.model.DataEntity;
 import co.nvqa.commons.constants.HttpConstants;
@@ -223,31 +222,33 @@ public class RoutingSteps extends BaseSteps {
     BulkAddPickupJobToRouteResponse actualResponse = get(
         CoreScenarioStorageKeys.KEY_CORE_BULK_ROUTE_PA_JOB_RESPONSE);
 
-    List<ResponseStatusJobs> actualSuccessfulPaJobs = actualResponse.getSuccessfulPaJobs();
-    List<ResponseStatusJobs> expectedSuccessfulPaJobs = fromJsonToList(
-        resolvedDataTable.get("expectedSuccessfulPaJobs"), ResponseStatusJobs.class);
+    List<CoreExceptionResponse> actualSuccessfulPaJobs = actualResponse.getSuccessfulJobs();
+    List<CoreExceptionResponse> expectedSuccessfulPaJobs = fromJsonToList(
+        resolvedDataTable.get("expectedSuccessfulJobs"), CoreExceptionResponse.class);
     if (!expectedSuccessfulPaJobs.isEmpty()) {
       Assertions.assertThat(actualSuccessfulPaJobs.size())
           .withFailMessage(
-              "actualSuccessfulPaJobs response size does not match expectedSuccessfulPaJobs")
+              "actualSuccessfulJobs response size does not match expectedSuccessfulJobs")
           .isEqualTo(expectedSuccessfulPaJobs.size());
       Assertions.assertThat(actualSuccessfulPaJobs).usingRecursiveComparison()
           .ignoringCollectionOrder()
-          .withFailMessage("actualSuccessfulPaJobs does not match expectedSuccessfulPaJobs")
+          .withFailMessage("actualSuccessfulJobs does not match expectedSuccessfulJobs")
           .isEqualTo(expectedSuccessfulPaJobs);
     }
 
-    List<ResponseStatusJobs> actualFailedPaJobs = actualResponse.getFailedPaJobs();
-    List<ResponseStatusJobs> expectedFailedPaJobs = fromJsonToList(
-        resolvedDataTable.get("expectedFailedPaJobs"), ResponseStatusJobs.class);
+    List<CoreExceptionResponse> actualFailedPaJobs = actualResponse.getFailedJobs();
+    List<CoreExceptionResponse> expectedFailedPaJobs = fromJsonToList(
+        resolvedDataTable.get("expectedFailedJobs"), CoreExceptionResponse.class);
+    System.out.println(actualFailedPaJobs.toString());
+    System.out.println(expectedFailedPaJobs.toString());
     if (!expectedFailedPaJobs.isEmpty()) {
       Assertions.assertThat(actualFailedPaJobs.size())
           .withFailMessage(
-              "actualFailedPaJobs response size does not match expectedFailedPaJobs")
+              "actualFailedJobs response size does not match expectedFailedJobs")
           .isEqualTo(expectedFailedPaJobs.size());
       Assertions.assertThat(actualFailedPaJobs).usingRecursiveComparison()
           .ignoringCollectionOrder()
-          .withFailMessage("actualFailedPaJobs does not match expectedFailedPaJobs")
+          .withFailMessage("actualFailedJobs does not match expectedFailedJobs")
           .isEqualTo(expectedFailedPaJobs);
     }
   }
