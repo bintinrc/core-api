@@ -14,6 +14,7 @@ import co.nvqa.commons.support.DateUtil;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import io.cucumber.guice.ScenarioScoped;
+import io.cucumber.java.After;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
 import java.util.Arrays;
@@ -252,4 +253,17 @@ public class RoutingSteps extends BaseSteps {
           .isEqualTo(expectedFailedPaJobs);
     }
   }
+
+  @After("@ArchiveDriverRoutes")
+  public void cleanCreatedRoute() {
+    final List<Long> routeIds = get(KEY_LIST_OF_CREATED_ROUTE_ID);
+    try {
+      if (routeIds != null) {
+        routeIds.forEach(e -> getRouteClient().archiveRouteV2(e));
+      }
+    } catch (Throwable t) {
+      LOGGER.warn("Failed to archive route(s)");
+    }
+  }
+
 }
