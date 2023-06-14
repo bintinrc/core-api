@@ -240,8 +240,7 @@ public class RoutingSteps extends BaseSteps {
     List<CoreExceptionResponse> actualFailedPaJobs = actualResponse.getFailedJobs();
     List<CoreExceptionResponse> expectedFailedPaJobs = fromJsonToList(
         resolvedDataTable.get("expectedFailedJobs"), CoreExceptionResponse.class);
-    System.out.println(actualFailedPaJobs.toString());
-    System.out.println(expectedFailedPaJobs.toString());
+
     if (!expectedFailedPaJobs.isEmpty()) {
       Assertions.assertThat(actualFailedPaJobs.size())
           .withFailMessage(
