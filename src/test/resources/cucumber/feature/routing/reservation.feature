@@ -230,7 +230,7 @@ Feature: Assign and Remove Single Reservation To Route
       | expectedStatusCode   | 400                                                                                                                                                                                                                                                                                                               |
       | expectedErrorMessage | {"code":103088,"nvErrorCode":"SERVER_ERROR_EXCEPTION","messages":["Cannot unroute Reservation {KEY_LIST_OF_RESERVATIONS[1].id} with SUCCESS status"],"application":"core","description":"INVALID_OPERATION","data":{"message":"Cannot unroute Reservation {KEY_LIST_OF_RESERVATIONS[1].id} with SUCCESS status"}} |
 
-  
+
   Scenario: PUT /2.0/reservations/:routeid/unroute - Remove a Single Reservation to a Route - Reservation Status Fail
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
