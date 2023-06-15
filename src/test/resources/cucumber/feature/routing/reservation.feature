@@ -1,4 +1,4 @@
-@ArchiveDriverRoutes @CancelCreatedReservations @routing @reservation
+@ArchiveRouteCommonV2 @CancelCreatedReservations @routing @reservation @wip
 Feature: Assign and Remove Single Reservation To Route
 
 
@@ -15,6 +15,11 @@ Feature: Assign and Remove Single Reservation To Route
       | seqNo   | 100                                              |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
       | status  | Routed                                           |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | seqNo    | 100                                              |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+      | status   | Routed                                           |
     And DB Core - verify route_monitoring_data record:
       | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
@@ -73,6 +78,11 @@ Feature: Assign and Remove Single Reservation To Route
       | seqNo   | 100                                              |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id}               |
       | status  | Routed                                           |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | seqNo    | 100                                              |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id}               |
+      | status   | Routed                                           |
     And DB Core - verify route_monitoring_data record:
       | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id}               |
@@ -163,7 +173,7 @@ Feature: Assign and Remove Single Reservation To Route
       | expectedErrorMessage | {"code":103088,"nvErrorCode":"SERVER_ERROR_EXCEPTION","messages":["Reservation is in final state [status: FAIL]"],"application":"core","description":"INVALID_OPERATION","data":{"message":"Reservation is in final state [status: FAIL]"}} |
 
 
-  Scenario: PUT /2.0/reservations/:routeid/unroute - Remove a Single Reservation to a Route
+  Scenario: PUT /2.0/reservations/:routeid/unroute - Remove a Single Reservation from Route
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And API Core - Operator create new route using data below:
@@ -181,6 +191,11 @@ Feature: Assign and Remove Single Reservation To Route
       | seqNo   | null                                             |
       | routeId | null                                             |
       | status  | Pending                                          |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | seqNo    | null                                             |
+      | routeId  | null                                             |
+      | status   | Pending                                          |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}        |
       | userId     | {pickup-user-id}                                |
@@ -191,7 +206,7 @@ Feature: Assign and Remove Single Reservation To Route
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
 
-  Scenario: PUT /2.0/reservations/:routeid/unroute - Remove a Single Reservation to a Route - Reservation Has No Route
+  Scenario: PUT /2.0/reservations/:routeid/unroute - Remove a Single Reservation from Route - Reservation Has No Route
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     Then API Core - Operator failed to remove reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" from route
@@ -199,7 +214,7 @@ Feature: Assign and Remove Single Reservation To Route
       | expectedErrorMessage | {"code":103088,"nvErrorCode":"SERVER_ERROR_EXCEPTION","messages":["Reservation {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} has no route"],"application":"core","description":"INVALID_OPERATION","data":{"message":"Reservation {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} has no route"}} |
 
 
-  Scenario: PUT /2.0/reservations/:routeid/unroute - Remove a Single Reservation to a Route - Reservation Status Success
+  Scenario: PUT /2.0/reservations/:routeid/unroute - Remove a Single Reservation from Route - Reservation Status Success
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
       | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
@@ -231,7 +246,7 @@ Feature: Assign and Remove Single Reservation To Route
       | expectedErrorMessage | {"code":103088,"nvErrorCode":"SERVER_ERROR_EXCEPTION","messages":["Cannot unroute Reservation {KEY_LIST_OF_RESERVATIONS[1].id} with SUCCESS status"],"application":"core","description":"INVALID_OPERATION","data":{"message":"Cannot unroute Reservation {KEY_LIST_OF_RESERVATIONS[1].id} with SUCCESS status"}} |
 
 
-  Scenario: PUT /2.0/reservations/:routeid/unroute - Remove a Single Reservation to a Route - Reservation Status Fail
+  Scenario: PUT /2.0/reservations/:routeid/unroute - Remove a Single Reservation from Route - Reservation Status Fail
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
       | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
