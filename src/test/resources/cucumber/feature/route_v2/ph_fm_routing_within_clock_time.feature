@@ -1,8 +1,8 @@
 @routing-ph @CancelCreatedReservations @fm-routing-ph
-Feature: FM Automated Routing
+Feature: PH - FM Automated Routing
 
   @CancelCreatedReservations
-  Scenario Outline: Auto Route Reservation - Date = Today, Creation = Within Start & End Clock Time, Driver has Existing Route - <Note>
+  Scenario Outline: PH - Auto Route Reservation - Date = Today, Creation = Within Start & End Clock Time, Driver has Existing Route - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":<zone_id>, "hubId":<hub_id>, "vehicleId":{vehicle-id}, "driverId":<driver_id> } |
@@ -54,7 +54,7 @@ Feature: FM Automated Routing
       | Pickup Type: Truck        | {fm-zone-id-1} | {fm-hub-id-1-truck}        | {fm-shipper-id-1-truck}        | {fm-shipper-legacy-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
 
   @CancelCreatedReservations
-  Scenario Outline: Auto Route Reservation - Date = Today, Creation = Within Start & End Clock Time, Driver has No Routes - <Note>
+  Scenario Outline: PH - Auto Route Reservation - Date = Today, Creation = Within Start & End Clock Time, Driver has No Routes - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
@@ -105,7 +105,7 @@ Feature: FM Automated Routing
       | Pickup Type: Truck        | {fm-zone-id-1} | {fm-hub-id-1-truck}        | {fm-shipper-id-1-truck}        | {fm-shipper-legacy-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
 
   @CancelCreatedReservations
-  Scenario Outline: Auto Route Reservation - Date = Today, No Driver Assigned for the Zone, Creation = Within Start & End Clock Time - <Note>
+  Scenario Outline: PH - Auto Route Reservation - Date = Today, No Driver Assigned for the Zone, Creation = Within Start & End Clock Time - <Note>
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And DB Core - verify waypoints record:
@@ -126,7 +126,7 @@ Feature: FM Automated Routing
       | Pickup Type: Truck        | {fm-zone-id-3} | {fm-shipper-legacy-id-3-truck}        | {fm-address-id-3-truck}        |
 
   @CancelCreatedReservations
-  Scenario Outline: Auto Route Reservation - Date = Today, Pickup Type = Hybrid, Creation = Within Start & End Clock Time
+  Scenario Outline: PH - Auto Route Reservation - Date = Today, Pickup Type = Hybrid, Creation = Within Start & End Clock Time
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And DB Core - verify waypoints record:
@@ -146,7 +146,7 @@ Feature: FM Automated Routing
       | {fm-zone-id-4} | {fm-shipper-legacy-id-4-hybrid} | {fm-address-id-4-hybrid} |
 
   @CancelCreatedReservations
-  Scenario Outline: Auto Route Reservation - Date = Tomorrow, Creation = Within Start & End Clock Time
+  Scenario Outline: PH - Auto Route Reservation - Date = Tomorrow, Creation = Within Start & End Clock Time
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 1 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 1 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
@@ -168,7 +168,7 @@ Feature: FM Automated Routing
       | Pickup Type: Truck        | {fm-zone-id-1} | {fm-shipper-legacy-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
 
   @CancelCreatedReservations
-  Scenario Outline: Auto Route Reservation - Order Create Flow, Date = Today, Creation = Within Start & End Clock Time, Driver has No Routes - <Note>
+  Scenario Outline: PH - Auto Route Reservation - Order Create Flow, Date = Today, Creation = Within Start & End Clock Time, Driver has No Routes - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "{fm-driver-id-5}"
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {fm-shipper-5-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
@@ -220,12 +220,12 @@ Feature: FM Automated Routing
       | waypointStatus | Routed                                   |
       | driverId       | {fm-driver-id-5}                         |
     Examples:
-      | Note                      | pickup_address_id | pickup_address                                                                                                                                                                                                                                                                 |
-      | Pickup Type: FM Dedicated | 160895            | { "name": "binti v4.1", "phone_number": "+65189189", "email": "binti@test.co", "address": { "address1": "barangay 140 pasay city metro manila", "address2": "#20-25", "country": "PH", "postcode": "1300", "latitude": "14.5400587875001", "longitude": "121.006363105892" } } |
-      | Pickup Type: Truck        | 160897            | { "name": "binti v4.1", "phone_number": "+65189189", "email": "binti@test.co", "address": { "address1": "barangay 140 pasay city metro manila","address2": "#20-25","postcode": "1300","country": "PH","latitude": 14.5400587875001,"longitude": 121.006363105892} }           |
+      | Note                      | pickup_address_id                      | pickup_address                                                                                                                                                                                                                                                                 |
+      | Pickup Type: FM Dedicated | {fm-address-id-5-fm-dedicated-ext-ref} | { "name": "binti v4.1", "phone_number": "+65189189", "email": "binti@test.co", "address": { "address1": "barangay 140 pasay city metro manila", "address2": "#20-25", "country": "PH", "postcode": "1300", "latitude": "14.5400587875001", "longitude": "121.006363105892" } } |
+      | Pickup Type: Truck        | {fm-address-id-5-truck-ext-ref}        | { "name": "binti v4.1", "phone_number": "+65189189", "email": "binti@test.co", "address": { "address1": "barangay 140 pasay city metro manila","address2": "#20-25","postcode": "1300","country": "PH","latitude": 14.5400587875001,"longitude": 121.006363105892} }           |
 
   @CancelCreatedReservations
-  Scenario Outline: Auto Route Reservation - Order Create Flow, Date = Today, Creation = Within Start & End Clock Time, Driver has Existing Route
+  Scenario Outline: PH - Auto Route Reservation - Order Create Flow, Date = Today, Creation = Within Start & End Clock Time, Driver has Existing Route
     Given API Route - Operator archive all unarchived routes of driver id "{fm-driver-id-5}"
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{fm-zone-id-5}, "hubId":{fm-hub-id-5}, "vehicleId":{vehicle-id}, "driverId":{fm-driver-id-5} } |
@@ -304,5 +304,5 @@ Feature: FM Automated Routing
       | waypointStatus | Routed                             |
       | driverId       | {fm-driver-id-5}                   |
     Examples:
-      | pickup_address_id_1 | pickup_address_id_2 | pickup_address                                                                                                                                                                                                                                                                 |
-      | 160895              | 160897              | { "name": "binti v4.1", "phone_number": "+65189189", "email": "binti@test.co", "address": { "address1": "barangay 140 pasay city metro manila", "address2": "#20-25", "country": "PH", "postcode": "1300", "latitude": "14.5400587875001", "longitude": "121.006363105892" } } |
+      | pickup_address_id_1                    | pickup_address_id_2             | pickup_address                                                                                                                                                                                                                                                                 |
+      | {fm-address-id-5-fm-dedicated-ext-ref} | {fm-address-id-5-truck-ext-ref} | { "name": "binti v4.1", "phone_number": "+65189189", "email": "binti@test.co", "address": { "address1": "barangay 140 pasay city metro manila", "address2": "#20-25", "country": "PH", "postcode": "1300", "latitude": "14.5400587875001", "longitude": "121.006363105892" } } |
