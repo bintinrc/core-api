@@ -1,4 +1,4 @@
-@ArchiveRouteCommonV2 @CancelCreatedReservations @routing @reservation @wip
+@ArchiveRouteCommonV2 @CancelCreatedReservations @routing @reservation
 Feature: Assign and Remove Single Reservation To Route
 
 
