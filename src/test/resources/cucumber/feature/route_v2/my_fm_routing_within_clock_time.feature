@@ -1,7 +1,7 @@
 @routing-my @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-my
 Feature: MY - FM Automated Routing - Within Clock Time
 
-  @CancelCreatedReservations @done
+  @CancelCreatedReservations
   Scenario Outline: MY - Auto Route Reservation - Date = Today, Creation = Within Start & End Clock Time, Driver has Existing Route - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create new route using data below:
@@ -53,7 +53,7 @@ Feature: MY - FM Automated Routing - Within Clock Time
       | Pickup Type: FM Dedicated | {fm-zone-id-1} | {fm-hub-id-1-fm-dedicated} | {fm-shipper-id-1-fm-dedicated} | {fm-shipper-legacy-id-1-fm-dedicated} | {fm-driver-1} | {fm-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-zone-id-1} | {fm-hub-id-1-truck}        | {fm-shipper-id-1-truck}        | {fm-shipper-legacy-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
 
-  @CancelCreatedReservations @done
+  @CancelCreatedReservations
   Scenario Outline: MY - Auto Route Reservation - Date = Today, Creation = Within Start & End Clock Time, Driver has No Routes - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create reservation using data below:
@@ -104,7 +104,7 @@ Feature: MY - FM Automated Routing - Within Clock Time
       | Pickup Type: FM Dedicated | {fm-zone-id-1} | {fm-hub-id-1-fm-dedicated} | {fm-shipper-id-1-fm-dedicated} | {fm-shipper-legacy-id-1-fm-dedicated} | {fm-driver-1} | {fm-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-zone-id-1} | {fm-hub-id-1-truck}        | {fm-shipper-id-1-truck}        | {fm-shipper-legacy-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
 
-  @CancelCreatedReservations @done
+  @CancelCreatedReservations
   Scenario Outline: MY - Auto Route Reservation - Date = Today, No Driver Assigned for the Zone, Creation = Within Start & End Clock Time - <Note>
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
@@ -145,7 +145,7 @@ Feature: MY - FM Automated Routing - Within Clock Time
       | zone_id        | shipper_legacy_id               | address_id               |
       | {fm-zone-id-4} | {fm-shipper-legacy-id-4-hybrid} | {fm-address-id-4-hybrid} |
 
-  @CancelCreatedReservations @done
+  @CancelCreatedReservations
   Scenario Outline: MY - Auto Route Reservation - Date = Tomorrow, Creation = Within Start & End Clock Time
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create reservation using data below:
@@ -167,7 +167,7 @@ Feature: MY - FM Automated Routing - Within Clock Time
       | Pickup Type: FM Dedicated | {fm-zone-id-1} | {fm-shipper-legacy-id-1-fm-dedicated} | {fm-driver-1} | {fm-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-zone-id-1} | {fm-shipper-legacy-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
 
-  @CancelCreatedReservations
+  @CancelCreatedReservations @wipFail
   Scenario Outline: MY - Auto Route Reservation - Order Create Flow, Date = Today, Creation = Within Start & End Clock Time, Driver has No Routes - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "{fm-driver-id-5}"
     Given API Order - Shipper create multiple V4 orders using data below:
@@ -224,7 +224,7 @@ Feature: MY - FM Automated Routing - Within Clock Time
       | Pickup Type: FM Dedicated | {fm-address-id-5-fm-dedicated-ext-ref} | { "name": "binti v4.1", "phone_number": "+65189189", "email": "binti@test.co", "address": { "address1": "barangay 140 pasay city metro manila", "address2": "#20-25", "country": "MY", "postcode": "96400", "latitude": 2.897574749844236, "longitude": 112.08453062175683 } } |
       | Pickup Type: Truck        | {fm-address-id-5-truck-ext-ref}        | { "name": "binti v4.1", "phone_number": "+65189189", "email": "binti@test.co", "address": { "address1": "barangay 140 pasay city metro manila", "address2": "#20-25", "country": "MY", "postcode": "96400", "latitude": 2.8975747498442366,"longitude": 112.08453062175681 } } |
 
-  @CancelCreatedReservations
+  @CancelCreatedReservations @wipFail
   Scenario Outline: MY - Auto Route Reservation - Order Create Flow, Date = Today, Creation = Within Start & End Clock Time, Driver has Existing Route
     Given API Route - Operator archive all unarchived routes of driver id "{fm-driver-id-5}"
     Given API Core - Operator create new route using data below:
