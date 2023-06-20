@@ -1,4 +1,4 @@
-@ForceSuccessOrder @order-details @order-price-details
+@ForceSuccessOrder @order-price-details
 Feature: Order Price Details
 
   @DeleteOrArchiveRoute
