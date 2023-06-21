@@ -1,4 +1,4 @@
-@ForceSuccessOrder  @routing @route-archive
+@ForceSuccessOrder @route-v2 @route-archive
 Feature: Archive Route
 
   @route-archive
