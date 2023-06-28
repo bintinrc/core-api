@@ -1,8 +1,7 @@
 @ArchiveDriverRoutes @CancelCreatedReservations @DeletePickupAppointmentJob @routing @pa-job
 Feature: Pickup Appointment Job Bulk Routing
 
-  #@DeletePickupAppointmentJob
-  @wip
+  @DeletePickupAppointmentJob
   Scenario: PUT /pickup-appointment-jobs/route-bulk - Route All Unrouted PA Jobs
     Given API Shipper - Operator create new shipper address using data below:
       | shipperId       | {shipper-5-id} |
