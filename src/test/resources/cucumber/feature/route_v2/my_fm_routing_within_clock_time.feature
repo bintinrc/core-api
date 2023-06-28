@@ -8,12 +8,6 @@ Feature: MY - FM Automated Routing - Within Clock Time
       | createRouteRequest | { "zoneId":<zone_id>, "hubId":<hub_id>, "vehicleId":{vehicle-id}, "driverId":<driver_id> } |
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
-    Then DB Core - verify route_logs record:
-      | id       | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | status   | 0                                  |
-      | hubId    | <hub_id>                           |
-      | zoneId   | <zone_id>                          |
-      | driverId | <driver_id>                        |
     Then DB Route - verify route_logs record:
       | legacyId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status   | 0                                  |
@@ -59,12 +53,6 @@ Feature: MY - FM Automated Routing - Within Clock Time
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And DB Route - get latest route_logs record for driver id "<driver_id>"
-    Then DB Core - verify route_logs record:
-      | id       | {KEY_LIST_OF_CREATED_ROUTES[1].legacyId} |
-      | status   | 0                                        |
-      | hubId    | <hub_id>                                 |
-      | zoneId   | <zone_id>                                |
-      | driverId | <driver_id>                              |
     Then DB Route - verify route_logs record:
       | legacyId | {KEY_LIST_OF_CREATED_ROUTES[1].legacyId} |
       | status   | 0                                        |
@@ -179,12 +167,6 @@ Feature: MY - FM Automated Routing - Within Clock Time
     And DB Core - get Order Pickup Data from order id "{KEY_LIST_OF_CREATED_ORDERS[1].id}"
     And API Core - Operator get reservation from reservation id "{KEY_CORE_LIST_OF_ORDER_PICKUPS[1].reservationId}"
     And DB Route - get latest route_logs record for driver id "{fm-driver-id-5}"
-    Then DB Core - verify route_logs record:
-      | id       | {KEY_LIST_OF_CREATED_ROUTES[1].legacyId} |
-      | status   | 0                                        |
-      | hubId    | {fm-hub-id-5}                            |
-      | zoneId   | {fm-zone-id-5}                           |
-      | driverId | {fm-driver-id-5}                         |
     Then DB Route - verify route_logs record:
       | legacyId | {KEY_LIST_OF_CREATED_ROUTES[1].legacyId} |
       | status   | 0                                        |
