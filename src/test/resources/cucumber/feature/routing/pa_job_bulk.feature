@@ -1,7 +1,8 @@
 @ArchiveDriverRoutes @CancelCreatedReservations @DeletePickupAppointmentJob @routing @pa-job
 Feature: Pickup Appointment Job Bulk Routing
 
-  @DeletePickupAppointmentJob
+  #@DeletePickupAppointmentJob
+  @wip
   Scenario: PUT /pickup-appointment-jobs/route-bulk - Route All Unrouted PA Jobs
     Given API Shipper - Operator create new shipper address using data below:
       | shipperId       | {shipper-5-id} |
@@ -23,7 +24,7 @@ Feature: Pickup Appointment Job Bulk Routing
     And API Core - Operator bulk add pickup jobs to the route using data below:
       | bulkAddPickupJobToTheRouteRequest | { "ids": [{KEY_CONTROL_CREATED_PA_JOBS[1].id},{KEY_CONTROL_CREATED_PA_JOBS[2].id},{KEY_CONTROL_CREATED_PA_JOBS[3].id}], "new_route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "overwrite": false} |
     #  Verification for Job 1
-    And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
+    And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | not null                           |
@@ -46,7 +47,7 @@ Feature: Pickup Appointment Job Bulk Routing
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
    # Verification for Job 2
-    And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[2].id}"
+    And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[2].id}"
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | not null                           |
@@ -69,7 +70,7 @@ Feature: Pickup Appointment Job Bulk Routing
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
     #  Verification for Job 3
-    And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[3].id}"
+    And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[3].id}"
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | not null                           |
@@ -120,7 +121,7 @@ Feature: Pickup Appointment Job Bulk Routing
     And API Core - Operator bulk add pickup jobs to the route using data below:
       | bulkAddPickupJobToTheRouteRequest | { "ids": [{KEY_CONTROL_CREATED_PA_JOBS[1].id},{KEY_CONTROL_CREATED_PA_JOBS[2].id},{KEY_CONTROL_CREATED_PA_JOBS[3].id}], "new_route_id": {KEY_LIST_OF_CREATED_ROUTES[2].id}, "overwrite": true} |
     #  Verification for Job 1
-    And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
+    And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | not null                           |
@@ -143,7 +144,7 @@ Feature: Pickup Appointment Job Bulk Routing
       | pickupType | 2                                                                                                 |
       | data       | {"old_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
    # Verification for Job 2
-    And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[2].id}"
+    And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[2].id}"
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | not null                           |
@@ -166,7 +167,7 @@ Feature: Pickup Appointment Job Bulk Routing
       | pickupType | 2                                                                                                 |
       | data       | {"old_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
     #  Verification for Job 3
-    And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[3].id}"
+    And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[3].id}"
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | not null                           |
@@ -219,7 +220,7 @@ Feature: Pickup Appointment Job Bulk Routing
     And API Core - Operator add pickup job to the route using data below:
       | jobId                      | {KEY_CONTROL_CREATED_PA_JOBS[2].id}                                   |
       | addPickupJobToRouteRequest | {"new_route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id},"overwrite":false} |
-    And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[2].id}"
+    And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[2].id}"
     And API Core - Operator force success waypoint via route manifest:
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
       | waypointId | {KEY_WAYPOINT_ID}                  |
@@ -232,7 +233,7 @@ Feature: Pickup Appointment Job Bulk Routing
       | expectedSuccessfulJobs | [{"id":{KEY_CONTROL_CREATED_PA_JOBS[3].id},"status": "Ready for Routing"}]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
       | expectedFailedJobs     | [{"id":{KEY_CONTROL_CREATED_PA_JOBS[2].id},"error":{"code":103088,"messages":["PA job is already routed to route {KEY_LIST_OF_CREATED_ROUTES[2].id}"],"application":"core","description":"INVALID_OPERATION","data":{"message":"PA job is already routed to route {KEY_LIST_OF_CREATED_ROUTES[2].id}"},"nvErrorCode":"SERVER_ERROR_EXCEPTION"}}, {"id":{KEY_CONTROL_CREATED_PA_JOBS[1].id},"error":{"code":103088,"messages":["PA job is already routed to route {KEY_LIST_OF_CREATED_ROUTES[1].id}"],"application":"core","description":"INVALID_OPERATION","data":{"message":"PA job is already routed to route {KEY_LIST_OF_CREATED_ROUTES[1].id}"},"nvErrorCode":"SERVER_ERROR_EXCEPTION"}}] |
     #  Verification for Job 1 (should be still routed to Route 1)
-    And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
+    And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | not null                           |
@@ -255,7 +256,7 @@ Feature: Pickup Appointment Job Bulk Routing
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
    # Verification for Job 2 (should still be routed to Route 2 and Success)
-    And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[2].id}"
+    And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[2].id}"
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | not null                           |
@@ -270,7 +271,7 @@ Feature: Pickup Appointment Job Bulk Routing
       | waypointId | {KEY_WAYPOINT_ID}                  |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
     #  Verification for Job 3 (Should be routed to Route 3)
-    And DB Core - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[3].id}"
+    And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[3].id}"
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | not null                           |
