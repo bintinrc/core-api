@@ -1,4 +1,4 @@
-@ForceSuccessOrder  @routing @bulk-route-rsvn
+@ForceSuccessOrder  @routing @bulk-route-rsvn @runnow
 Feature: Bulk Add Reservation to Route
 
   @CancelCreatedReservations

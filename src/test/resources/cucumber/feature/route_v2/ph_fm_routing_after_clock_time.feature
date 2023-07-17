@@ -1,4 +1,4 @@
-@routing-ph @CancelCreatedReservations @fm-routing-ph
+@routing-ph @CancelCreatedReservations @fm-routing-ph @runnow
 Feature: PH - FM Automated Routing
 
   @CancelCreatedReservations

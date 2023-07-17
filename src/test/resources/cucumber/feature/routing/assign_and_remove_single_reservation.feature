@@ -1,4 +1,4 @@
-@ArchiveRouteCommonV2 @CancelCreatedReservations @routing @reservation
+@ArchiveRouteCommonV2 @CancelCreatedReservations @routing @reservation @runnow
 Feature: Assign and Remove Single Reservation To Route
 
   Scenario: PUT /2.0/reservations/:routeid/route - Assign a Single Reservation to a Route

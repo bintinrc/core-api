@@ -1,4 +1,4 @@
-@ForceSuccessOrder @ArchiveDriverRoutes  @routing @zonal-routing-api @routing-refactor
+@ForceSuccessOrder @ArchiveDriverRoutes  @routing @zonal-routing-api @routing-refactor @runnow
 Feature: Zonal Routing API
 
   @happy-path
