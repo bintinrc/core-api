@@ -6,3 +6,4 @@ out/
 .allure/
 .settings/
 .project
+bin/

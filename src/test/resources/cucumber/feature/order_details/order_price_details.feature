@@ -1,4 +1,4 @@
-@ForceSuccessOrder @order-details @order-price-details
+@ForceSuccessOrder @order-price-details
 Feature: Order Price Details
 
   @DeleteOrArchiveRoute
@@ -166,6 +166,8 @@ Feature: Order Price Details
       | trackingId     | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1]} |
       | status         | COMPLETED                                  |
       | granularStatus | RETURNED_TO_SENDER                         |
+    And API Core - Operator get order details for tracking order "{KEY_CREATED_ORDER_TRACKING_ID}"
+    When DB Core - operator get waypoints details for "{KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].waypointId}"
     And API Operator verify order pricing details:
       | orderId               | {KEY_CREATED_ORDER_ID}                     |
       | trackingId            | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1]} |
@@ -180,8 +182,8 @@ Feature: Order Price Details
       | toDistrict            | null                                       |
       | toAddress             | 9 TUA KONG GREEN MANILA GARDENS SG 455384  |
       | toPostcode            | 455384                                     |
-      | toLatitude            | 1.3184395712682                            |
-      | toLongitude           | 103.925311276846                           |
+      | toLatitude            | {KEY_CORE_WAYPOINT_DETAILS.latitude}       |
+      | toLongitude           | {KEY_CORE_WAYPOINT_DETAILS.longitude}      |
       | toName                | Elsa Customer (RTS)                        |
       | fromCity              | null                                       |
       | fromLongitude         | 132.89808                                  |
@@ -213,9 +215,9 @@ Feature: Order Price Details
       | insuredValue          | null                                       |
       | shipperOrderRefNo     | {KEY_CREATED_ORDER.requestedTrackingId}    |
     And DB Operator verifies waypoint details:
-      | id        | {KEY_TRANSACTION_BEFORE.waypointId} |
-      | latitude  | 1.3184395712682                     |
-      | longitude | 103.925311276846                    |
+      | id        | {KEY_TRANSACTION_BEFORE.waypointId}   |
+      | latitude  | {KEY_CORE_WAYPOINT_DETAILS.latitude}  |
+      | longitude | {KEY_CORE_WAYPOINT_DETAILS.longitude} |
 
   @DeleteOrArchiveRoute
   Scenario: Get Success RTS Order Price Details with Change Delivery Address for Specific Country - SG
@@ -256,6 +258,8 @@ Feature: Order Price Details
       | trackingId     | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1]} |
       | status         | COMPLETED                                  |
       | granularStatus | RETURNED_TO_SENDER                         |
+    And API Core - Operator get order details for tracking order "{KEY_CREATED_ORDER_TRACKING_ID}"
+    When DB Core - operator get waypoints details for "{KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].waypointId}"
     And API Operator verify order pricing details:
       | orderId               | {KEY_CREATED_ORDER_ID}                     |
       | trackingId            | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1]} |
@@ -270,8 +274,8 @@ Feature: Order Price Details
       | toDistrict            | null                                       |
       | toAddress             | 9 TUA KONG GREEN MANILA GARDENS SG 455384  |
       | toPostcode            | 455384                                     |
-      | toLatitude            | 1.3184395712682                            |
-      | toLongitude           | 103.925311276846                           |
+      | toLatitude            | {KEY_CORE_WAYPOINT_DETAILS.latitude}       |
+      | toLongitude           | {KEY_CORE_WAYPOINT_DETAILS.longitude}      |
       | toName                | Elsa Customer (RTS)                        |
       | fromCity              | null                                       |
       | fromLongitude         | 132.89808                                  |
@@ -303,9 +307,9 @@ Feature: Order Price Details
       | insuredValue          | null                                       |
       | shipperOrderRefNo     | {KEY_CREATED_ORDER.requestedTrackingId}    |
     And DB Operator verifies waypoint details:
-      | id        | {KEY_TRANSACTION_BEFORE.waypointId} |
-      | latitude  | 1.3184395712682                     |
-      | longitude | 103.925311276846                    |
+      | id        | {KEY_TRANSACTION_BEFORE.waypointId}   |
+      | latitude  | {KEY_CORE_WAYPOINT_DETAILS.latitude}  |
+      | longitude | {KEY_CORE_WAYPOINT_DETAILS.longitude} |
 
   @DeleteOrArchiveRoute
   Scenario: Get Success Rescheduled Delivery Order Price Details without Change Delivery Address for Specific Country - SG
@@ -346,6 +350,8 @@ Feature: Order Price Details
       | trackingId     | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1]} |
       | status         | COMPLETED                                  |
       | granularStatus | COMPLETED                                  |
+    And API Core - Operator get order details for tracking order "{KEY_CREATED_ORDER_TRACKING_ID}"
+    When DB Core - operator get waypoints details for "{KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].waypointId}"
     And API Operator verify order pricing details:
       | orderId               | {KEY_CREATED_ORDER_ID}                     |
       | trackingId            | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1]} |
@@ -360,8 +366,8 @@ Feature: Order Price Details
       | toDistrict            | null                                       |
       | toAddress             | 9 TUA KONG GREEN MANILA GARDENS SG 455384  |
       | toPostcode            | 455384                                     |
-      | toLatitude            | 1.3184395712682                            |
-      | toLongitude           | 103.925311276846                           |
+      | toLatitude            | {KEY_CORE_WAYPOINT_DETAILS.latitude}       |
+      | toLongitude           | {KEY_CORE_WAYPOINT_DETAILS.longitude}      |
       | toName                | Elsa Sender                                |
       | fromCity              | null                                       |
       | fromLongitude         | 132.89808                                  |
@@ -393,9 +399,9 @@ Feature: Order Price Details
       | insuredValue          | null                                       |
       | shipperOrderRefNo     | {KEY_CREATED_ORDER.requestedTrackingId}    |
     And DB Operator verifies waypoint details:
-      | id        | {KEY_DELIVERY_WAYPOINT_ID} |
-      | latitude  | 1.3184395712682            |
-      | longitude | 103.925311276846           |
+      | id        | {KEY_DELIVERY_WAYPOINT_ID}            |
+      | latitude  | {KEY_CORE_WAYPOINT_DETAILS.latitude}  |
+      | longitude | {KEY_CORE_WAYPOINT_DETAILS.longitude} |
 
   @DeleteOrArchiveRoute
   Scenario: Get Success Rescheduled Delivery Order Price Details with Change Delivery Address for Specific Country - SG

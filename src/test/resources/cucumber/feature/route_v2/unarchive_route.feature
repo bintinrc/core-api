@@ -1,4 +1,4 @@
-@ForceSuccessOrder @ArchiveDriverRoutes  @ArchiveDriverRoutes @routing @route-unarchive
+@ForceSuccessOrder @ArchiveDriverRoutes  @ArchiveDriverRoutes @route-v2 @route-unarchive
 Feature: Unarchive Route
 
   @route-unarchive
@@ -9,10 +9,6 @@ Feature: Unarchive Route
       | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     When API Core - Operator unarchives routes below:
       | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-    Then DB Core - verify route_logs record:
-      | id       | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | archived | 0                                  |
-      | status   | 1                                  |
     Then DB Route - verify route_logs record:
       | legacyId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | archived | 0                                  |
@@ -35,10 +31,6 @@ Feature: Unarchive Route
       | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     When API Core - Operator unarchives routes below:
       | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-    Then DB Core - verify route_logs record:
-      | id       | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | archived | 0                                  |
-      | status   | 1                                  |
     Then DB Route - verify route_logs record:
       | legacyId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | archived | 0                                  |

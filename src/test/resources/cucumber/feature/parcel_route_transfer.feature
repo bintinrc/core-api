@@ -1,4 +1,4 @@
- @ArchiveDriverRoutes @parcel-route-transfer
+@ArchiveDriverRoutes @parcel-route-transfer
 Feature: Parcel Route Transfer
 
   @routing-refactor @happy-path
@@ -677,3 +677,34 @@ Feature: Parcel Route Transfer
 
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
+
+  Scenario: Driver Route Transfer Parcel - Resolve MISSING PETS Ticket
+    Given API Order - Shipper create multiple V4 orders using data below:
+      | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                               |
+      | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                           |
+      | generateFromAndTo   | RANDOM                                                                                                                                                                                                                                                                                                                                                                                            |
+      | v4OrderRequest      | { "service_type":"Parcel","service_level":"Standard", "parcel_job":{"dimensions": {"height": 2.7,"length": 2.8,"width": 1},"is_pickup_required":false, "pickup_date":"{date: 1 days next, yyyy-MM-dd}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{date: 1 days next, yyyy-MM-dd}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
+    And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
+    When API Recovery - Operator create recovery ticket:
+      | trackingId         | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]} |
+      | ticketType         | MISSING                               |
+      | entrySource        | RECOVERY SCANNING                     |
+      | investigatingParty | {DEFAULT-INVESTIGATING-PARTY}         |
+      | investigatingHubId | {DEFAULT-INVESTIGATING-HUB}           |
+      | orderOutcomeName   | ORDER OUTCOME (MISSING)               |
+      | creatorUserId      | {DEFAULT-CREATOR-USER-ID}             |
+      | creatorUserName    | {DEFAULT-CREATOR-USERNAME}            |
+      | creatorUserEmail   | {DEFAULT-CREATOR-EMAIL}               |
+    And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}" with granular status "ON_HOLD"
+    And API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+    When API Core - Operator parcel transfer to a new route:
+      | request | { "route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "from_driver_id": null, "to_driver_id": {driver-id}, "to_driver_hub_id": {sorting-hub-id}, "orders": [ { "tracking_id": "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}", "inbound_type": "VAN_FROM_NINJAVAN", "hub_id": {sorting-hub-id} } ] } |
+    And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}" with granular status "ON_VEHICLE_FOR_DELIVERY"
+    Then API Recovery - verify ticket details:
+      | trackingId | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}   |
+      | ticketId   | {KEY_CREATED_RECOVERY_TICKET.ticket.id} |
+      | status     | RESOLVED                                |
+      | outcome    | FOUND - INBOUND                         |
+    And API Core - Operator verify that "TICKET_RESOLVED" event is published for order id "{KEY_LIST_OF_CREATED_ORDERS[1].id}"
+

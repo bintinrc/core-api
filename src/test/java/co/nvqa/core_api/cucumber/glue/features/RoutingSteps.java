@@ -2,6 +2,7 @@ package co.nvqa.core_api.cucumber.glue.features;
 
 import co.nvqa.common.core.model.other.CoreExceptionResponse;
 import co.nvqa.common.core.model.reservation.BulkRouteReservationResponse;
+import co.nvqa.common.core.model.route.BulkAddPickupJobToRouteResponse;
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.common.model.DataEntity;
 import co.nvqa.commons.constants.HttpConstants;
@@ -13,6 +14,7 @@ import co.nvqa.commons.support.DateUtil;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import io.cucumber.guice.ScenarioScoped;
+import io.cucumber.java.After;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
 import java.util.Arrays;
@@ -214,4 +216,53 @@ public class RoutingSteps extends BaseSteps {
           o -> DataEntity.assertListContains(actualFailedJobs, o, "failed_jobs list"));
     }
   }
+
+  @When("API Core - Operator verifies response of bulk add pickup jobs to route")
+  public void verifyBulkRoutePickupJobsResponse(Map<String, String> data) {
+    Map<String, String> resolvedDataTable = resolveKeyValues(data);
+    BulkAddPickupJobToRouteResponse actualResponse = get(
+        CoreScenarioStorageKeys.KEY_CORE_BULK_ROUTE_PA_JOB_RESPONSE);
+
+    List<CoreExceptionResponse> actualSuccessfulPaJobs = actualResponse.getSuccessfulJobs();
+    List<CoreExceptionResponse> expectedSuccessfulPaJobs = fromJsonToList(
+        resolvedDataTable.get("expectedSuccessfulJobs"), CoreExceptionResponse.class);
+    if (!expectedSuccessfulPaJobs.isEmpty()) {
+      Assertions.assertThat(actualSuccessfulPaJobs.size())
+          .withFailMessage(
+              "actualSuccessfulJobs response size does not match expectedSuccessfulJobs")
+          .isEqualTo(expectedSuccessfulPaJobs.size());
+      Assertions.assertThat(actualSuccessfulPaJobs).usingRecursiveComparison()
+          .ignoringCollectionOrder()
+          .withFailMessage("actualSuccessfulJobs does not match expectedSuccessfulJobs")
+          .isEqualTo(expectedSuccessfulPaJobs);
+    }
+
+    List<CoreExceptionResponse> actualFailedPaJobs = actualResponse.getFailedJobs();
+    List<CoreExceptionResponse> expectedFailedPaJobs = fromJsonToList(
+        resolvedDataTable.get("expectedFailedJobs"), CoreExceptionResponse.class);
+
+    if (!expectedFailedPaJobs.isEmpty()) {
+      Assertions.assertThat(actualFailedPaJobs.size())
+          .withFailMessage(
+              "actualFailedJobs response size does not match expectedFailedJobs")
+          .isEqualTo(expectedFailedPaJobs.size());
+      Assertions.assertThat(actualFailedPaJobs).usingRecursiveComparison()
+          .ignoringCollectionOrder()
+          .withFailMessage("actualFailedJobs does not match expectedFailedJobs")
+          .isEqualTo(expectedFailedPaJobs);
+    }
+  }
+
+  @After("@ArchiveDriverRoutes")
+  public void cleanCreatedRoute() {
+    final List<Long> routeIds = get(KEY_LIST_OF_CREATED_ROUTE_ID);
+    try {
+      if (routeIds != null) {
+        routeIds.forEach(e -> getRouteClient().archiveRouteV2(e));
+      }
+    } catch (Throwable t) {
+      LOGGER.warn("Failed to archive route(s)");
+    }
+  }
+
 }
