@@ -1,4 +1,4 @@
-@ArchiveRouteCommonV2 @ForceSuccessOrder @DeletePickupAppointmentJob @CancelCreatedReservations @route-v2 @create-route-assign-waypoint @runnow
+@ArchiveRouteCommonV2 @ForceSuccessOrder @DeletePickupAppointmentJob @CancelCreatedReservations @route-v2 @create-route-assign-waypoint
 Feature: Create Route & Assign Waypoints
 
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Unrouted Waypoints to Route - Transaction, Reservation, PA Job

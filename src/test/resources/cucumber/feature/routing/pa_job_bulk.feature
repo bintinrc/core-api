@@ -1,4 +1,4 @@
-@ArchiveDriverRoutes @CancelCreatedReservations @DeletePickupAppointmentJob @routing @pa-job @runnow
+@ArchiveDriverRoutes @CancelCreatedReservations @DeletePickupAppointmentJob @routing @pa-job
 Feature: Pickup Appointment Job Bulk Routing
 
   @DeletePickupAppointmentJob
