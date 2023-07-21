@@ -1,4 +1,4 @@
-@ForceSuccessOrder @ArchiveDriverRoutes  @routing @zonal-routing-api @routing-refactor @runnow
+@ForceSuccessOrder @ArchiveDriverRoutes  @routing @zonal-routing-api @routing-refactor
 Feature: Zonal Routing API
 
   @happy-path
@@ -176,7 +176,7 @@ Feature: Zonal Routing API
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that driver "{driver-id}" list route showing only routed waypoints
 
-  @happy-path @changeofroute
+  @happy-path
   Scenario: Zonal Routing Edit Route API - Bulk Edit Waypoints Inside Multiple Routes - Move Routed Waypoints to Another Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When API Operator create new shipper address V2 using data below:
@@ -514,7 +514,6 @@ Feature: Zonal Routing API
       | pickupType | 1                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
-  @changeofroute
   Scenario: Zonal Routing Edit Route API - Bulk Edit Reservation Waypoints Inside Multiple Routes - Move Routed Reservation Waypoints to Another Route
     When API Operator create new shipper address V2 using data below:
       | shipperId       | {shipper-2-id} |

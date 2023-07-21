@@ -1,4 +1,4 @@
-@ForceSuccessOrder  @routing @bulk-route-rsvn @runnow
+@ForceSuccessOrder  @routing @bulk-route-rsvn
 Feature: Bulk Add Reservation to Route
 
   @CancelCreatedReservations
@@ -58,7 +58,7 @@ Feature: Bulk Add Reservation to Route
       | type      | 1                                               |
       | data      | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
-  @CancelCreatedReservations @changeofroute
+  @CancelCreatedReservations
   Scenario: PUT /2.0/reservations/route-bulk - Bulk Add Reservation to Route - Multiple Routed Reservations Added to New Route
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
