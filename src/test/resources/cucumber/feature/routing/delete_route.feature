@@ -1,4 +1,4 @@
-@ForceSuccessOrder  @routing @route-delete @runnow
+@ForceSuccessOrder  @routing @route-delete
 Feature: Delete Route
 
   @route-delete @routing-refactor @happy-path
@@ -31,7 +31,7 @@ Feature: Delete Route
       | Pickup   | uid:a9e166f2-0ca5-4aaf-baae-0593ba83dc00 | PP         | PICKUP           | Return       | Standard      | true                          |
       | Delivery | uid:c5e68f1d-09f8-4d9e-8632-8b9a5bd9d572 | DD         | DELIVERY         | Parcel       | Standard      | false                         |
 
-  @route-delete @routing-refactor @happy-path @removefromroute
+  @route-delete @routing-refactor @happy-path
   Scenario Outline: Operator Delete Driver Route Successfully - Single Pending Reservation
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When API Operator create new shipper address V2 using data below:
@@ -128,7 +128,7 @@ Feature: Delete Route
       | Note | hiptest-uid                              |
       |      | uid:991188e0-9c44-421b-b549-5b37d1f386af |
 
-  @route-delete @removefromroute
+  @route-delete
   Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
