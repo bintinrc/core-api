@@ -1,4 +1,4 @@
-@ForceSuccessOrder @ArchiveDriverRoutes  @routing @zonal-routing-api @routing-refactor
+@ForceSuccessOrder @ArchiveDriverRoutes  @routing @zonal-routing-api @routing-refactor @runnow
 Feature: Zonal Routing API
 
   @happy-path
@@ -123,6 +123,7 @@ Feature: Zonal Routing API
     And Verify that waypoints are shown on driver "{driver-id}" list route correctly
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
+  @removefromroute
   Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Remove Waypoints From Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When API Operator create new shipper address V2 using data below:
@@ -548,7 +549,7 @@ Feature: Zonal Routing API
       | pickupType | 1                                                                                                 |
       | data       | {"old_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
 
-  @DeletePickupAppointmentJob
+  @DeletePickupAppointmentJob @removefromroute
   Scenario: Zonal Routing Edit Route API - Edit Reservation Waypoints Inside a Route - Remove Reservation Waypoints From Route
     When API Operator create new shipper address V2 using data below:
       | shipperId       | {shipper-2-id} |

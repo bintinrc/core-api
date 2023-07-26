@@ -1,4 +1,4 @@
-@ArchiveRouteCommonV2 @CancelCreatedReservations @routing @reservation
+@ArchiveRouteCommonV2 @CancelCreatedReservations @routing @reservation @runnow
 Feature: Assign and Remove Single Reservation To Route
 
   Scenario: PUT /2.0/reservations/:routeid/route - Assign a Single Reservation to a Route
@@ -171,7 +171,7 @@ Feature: Assign and Remove Single Reservation To Route
       | expectedStatusCode   | 400                                                                                                                                                                                                                                         |
       | expectedErrorMessage | {"code":103088,"nvErrorCode":"SERVER_ERROR_EXCEPTION","messages":["Reservation is in final state [status: FAIL]"],"application":"core","description":"INVALID_OPERATION","data":{"message":"Reservation is in final state [status: FAIL]"}} |
 
-
+  @removefromroute
   Scenario: PUT /2.0/reservations/:routeid/unroute - Remove a Single Reservation from Route
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
@@ -204,7 +204,7 @@ Feature: Assign and Remove Single Reservation To Route
       | pickupType | 1                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
-
+  @removefromroute
   Scenario: PUT /2.0/reservations/:routeid/unroute - Remove a Single Reservation from Route - Reservation Has No Route
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
@@ -212,7 +212,7 @@ Feature: Assign and Remove Single Reservation To Route
       | expectedStatusCode   | 400                                                                                                                                                                                                                                                                                   |
       | expectedErrorMessage | {"code":103088,"nvErrorCode":"SERVER_ERROR_EXCEPTION","messages":["Reservation {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} has no route"],"application":"core","description":"INVALID_OPERATION","data":{"message":"Reservation {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} has no route"}} |
 
-
+  @removefromroute
   Scenario: PUT /2.0/reservations/:routeid/unroute - Remove a Single Reservation from Route - Reservation Status Success
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
@@ -244,7 +244,7 @@ Feature: Assign and Remove Single Reservation To Route
       | expectedStatusCode   | 400                                                                                                                                                                                                                                                                                                               |
       | expectedErrorMessage | {"code":103088,"nvErrorCode":"SERVER_ERROR_EXCEPTION","messages":["Cannot unroute Reservation {KEY_LIST_OF_RESERVATIONS[1].id} with SUCCESS status"],"application":"core","description":"INVALID_OPERATION","data":{"message":"Cannot unroute Reservation {KEY_LIST_OF_RESERVATIONS[1].id} with SUCCESS status"}} |
 
-
+  @removefromroute
   Scenario: PUT /2.0/reservations/:routeid/unroute - Remove a Single Reservation from Route - Reservation Status Fail
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
