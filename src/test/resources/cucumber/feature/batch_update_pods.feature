@@ -1,4 +1,4 @@
-@ForceSuccessOrder @ArchiveDriverRoutes @batch-update-pods
+@ForceSuccessOrder @ArchiveDriverRoutes @batch-update-pods @runnow
 Feature: Batch Update PODs
 
   @happy-path
