@@ -111,5 +111,5 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | driverId               | null                                |
     Examples:
       | Note                      | zone_id            | shipper_id                         | address_id                         |
-      | Pickup Type: FM Dedicated | {fm-paj-zone-id-3} | {fm-paj-shipper-id-3-fm-dedicated} | {fm-paj-address-id-3-fm-dedicated} |
-      | Pickup Type: Truck        | {fm-paj-zone-id-3} | {fm-paj-shipper-id-3-truck}        | {fm-paj-address-id-3-truck}        |
+      | Pickup Type: FM Dedicated | {fm-paj-zone-id-2} | {fm-paj-shipper-id-2-fm-dedicated} | {fm-paj-address-id-2-fm-dedicated} |
+      | Pickup Type: Truck        | {fm-paj-zone-id-2} | {fm-paj-shipper-id-2-truck}        | {fm-paj-address-id-2-truck}        |
