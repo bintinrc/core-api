@@ -163,7 +163,7 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | Pickup Type: Truck        | {fm-paj-zone-id-2} | {fm-paj-shipper-id-2-truck}        | {fm-paj-address-id-2-truck}        |
 
 
-  @done
+
   Scenario Outline: SG - Auto Route PAJ - Order Create Flow, Date = Today, Creation = After End Clock Time & Run Manual Cron Job, Driver has No Routes - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     And API Order - Shipper create multiple V4 orders using data below:
@@ -212,7 +212,7 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | Pickup Type: FM Dedicated | {fm-paj-driver-5} | {fm-paj-zone-id-5} | {fm-paj-hub-id-5-fm-dedicated} | {fm-paj-address-id-5-fm-dedicated} | { "name": "binti v4.1", "phone_number": "+65189189", "email": "binti@test.co", "address": { "address1": "4 Tuas Link 2", "address2": "#20-25", "country": "SG", "postcode": "638553", "latitude": 1.3368734948599406, "longitude": 103.63925100926828 } }                             |
       | Pickup Type: Truck        | {fm-paj-driver-5} | {fm-paj-zone-id-5} | {fm-paj-hub-id-5-truck}        | {fm-paj-address-id-5-truck}        | { "name": "PajAutoFmRoutingSgTruck", "phone_number": "+6581234567", "email": "PajAutoFmRoutingSg@shop.co", "address": { "address1": "4 Tuas Link 2", "address2": "#20-25", "country": "SG", "postcode": "638553", "latitude": 1.3368734948599406, "longitude": 103.63925100926828 } } |
 
-  @done
+
   Scenario Outline: SG - Auto Route PAJ - Order Create Flow, Date = Today, Creation = After End Clock Time & Run Manual Cron Job, Driver has Existing Route - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     And API Core - Operator create new route using data below:
@@ -261,3 +261,68 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | Note                      | driver_id         | zone_id            | hub_id                         | pickup_address_id                  | pickup_address                                                                                                                                                                                                                                                                        |
       | Pickup Type: FM Dedicated | {fm-paj-driver-5} | {fm-paj-zone-id-5} | {fm-paj-hub-id-5-fm-dedicated} | {fm-paj-address-id-5-fm-dedicated} | { "name": "binti v4.1", "phone_number": "+65189189", "email": "binti@test.co", "address": { "address1": "4 Tuas Link 2", "address2": "#20-25", "country": "SG", "postcode": "638553", "latitude": 1.3368734948599406, "longitude": 103.63925100926828 } }                             |
       | Pickup Type: Truck        | {fm-paj-driver-5} | {fm-paj-zone-id-5} | {fm-paj-hub-id-5-truck}        | {fm-paj-address-id-5-truck}        | { "name": "PajAutoFmRoutingSgTruck", "phone_number": "+6581234567", "email": "PajAutoFmRoutingSg@shop.co", "address": { "address1": "4 Tuas Link 2", "address2": "#20-25", "country": "SG", "postcode": "638553", "latitude": 1.3368734948599406, "longitude": 103.63925100926828 } } |
+
+
+  Scenario Outline: SG - Auto Route PAJ - Date = Tomorrow, Creation = After End Clock Time & Run Manual Cron Job - <Note>
+    And API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T22:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
+    Then DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
+    # Verify created PAJ is NOT auto routed
+    And DB Route - verify waypoints record:
+      | legacyId      | {KEY_WAYPOINT_ID} |
+      | seqNo         | null              |
+      | routeId       | null              |
+      | status        | Pending           |
+      | routingZoneId | <zone_id>         |
+    And API Control - Operator get pickup appointment job search details:
+      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 1 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
+    And API Control - Operator verify pickup appointment job search details:
+      | pickupAppointmentJobId | {KEY_CONTROL_CREATED_PA_JOBS[1].id} |
+      | waypointId             | {KEY_WAYPOINT_ID}                   |
+      | routeId                | null                                |
+      | routingZoneId          | <zone_id>                           |
+      | driverId               | null                                |
+    # Verify created PAJ still NOT auto routed after cron job because PAJ date = tomorrow
+    And API Route - Operator run FM PAJ auto route cron job for date "{date: 0 days next, yyyy-MM-dd}"
+    And DB Route - verify waypoints record:
+      | legacyId      | {KEY_WAYPOINT_ID} |
+      | seqNo         | null              |
+      | routeId       | null              |
+      | status        | Pending           |
+      | routingZoneId | <zone_id>         |
+    And API Control - Operator get pickup appointment job search details:
+      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 1 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
+    And API Control - Operator verify pickup appointment job search details:
+      | pickupAppointmentJobId | {KEY_CONTROL_CREATED_PA_JOBS[1].id} |
+      | waypointId             | {KEY_WAYPOINT_ID}                   |
+      | routeId                | null                                |
+      | routingZoneId          | <zone_id>                           |
+      | driverId               | null                                |
+    Examples:
+      | Note                      | zone_id            | shipper_id                         | address_id                         |
+      | Pickup Type: FM Dedicated | {fm-paj-zone-id-1} | {fm-paj-shipper-id-1-fm-dedicated} | {fm-paj-address-id-1-fm-dedicated} |
+      | Pickup Type: Truck        | {fm-paj-zone-id-1} | {fm-paj-shipper-id-1-truck}        | {fm-paj-address-id-1-truck}        |
+
+
+  Scenario Outline: SG - Auto Route PAJ - Date = Today, Pickup Type = Hybrid, Creation = After End Clock Time & Run Manual Cron Job
+    Given API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 0 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 0 days next, YYYY-MM-dd}T22:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
+    Then DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
+    And API Route - Operator run FM PAJ auto route cron job for date "{date: 0 days next, yyyy-MM-dd}"
+    And DB Route - verify waypoints record:
+      | legacyId      | {KEY_WAYPOINT_ID} |
+      | seqNo         | null              |
+      | routeId       | null              |
+      | status        | Pending           |
+      | routingZoneId | <zone_id>         |
+    And API Control - Operator get pickup appointment job search details:
+      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
+    And API Control - Operator verify pickup appointment job search details:
+      | pickupAppointmentJobId | {KEY_CONTROL_CREATED_PA_JOBS[1].id} |
+      | waypointId             | {KEY_WAYPOINT_ID}                   |
+      | routeId                | null                                |
+      | routingZoneId          | <zone_id>                           |
+      | driverId               | null                                |
+    Examples:
+      | zone_id            | shipper_id                   | address_id                   |
+      | {fm-paj-zone-id-3} | {fm-paj-shipper-id-3-hybrid} | {fm-paj-address-id-3-hybrid} |
