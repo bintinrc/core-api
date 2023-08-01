@@ -67,7 +67,7 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_WAYPOINT_ID}                  |
       | seqNo         | not null                           |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status        | Routed                             |
       | routingZoneId | <zone_id>                          |
     And DB Core - verify route_monitoring_data record:
@@ -86,7 +86,7 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
     And API Control - Operator verify pickup appointment job search details:
       | pickupAppointmentJobId | {KEY_CONTROL_CREATED_PA_JOBS[2].id} |
       | waypointId             | {KEY_WAYPOINT_ID}                   |
-      | routeId                | {KEY_LIST_OF_CREATED_ROUTES[2].id}  |
+      | routeId                | {KEY_LIST_OF_CREATED_ROUTES[1].id}  |
       | routingZoneId          | <zone_id>                           |
       | driverId               | <driver_id>                         |
     Examples:
