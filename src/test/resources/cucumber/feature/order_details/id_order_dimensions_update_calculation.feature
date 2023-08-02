@@ -1,4 +1,4 @@
-@ForceSuccessOrder @order-details-id @OrderDimensionsUpdateCalculationID
+@ForceSuccessOrder @order-details-id @OrderDimensionsUpdateCalculationID @Test
 Feature: ID - Order Dimensions Update Calculation
 
   Scenario Outline: ID - Update Weight upon Global Inbound - Shipper Submitted Weight > 100 KG (divide by 1000), Adjusted Weight <shipper_weight_case> - <Note>
@@ -49,24 +49,22 @@ Feature: ID - Order Dimensions Update Calculation
       | length | <length>          |
       | width  | <width>           |
       | height | <height>          |
-    Then DB Core - verify order weight updated to highest weight within range
-      | weight           | <expected_weight>                  |
-      | use_weight_range | <use_weight_range>                 |
-      | order_id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+    Then DB Core - verify order weight updated correctly
+      | weight   | <expected_weight>                  |
+      | order_id | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
     And API Sort - Operator global inbound
       | globalInboundRequest | {"inbound_type":"SORTING_HUB","to_reschedule":false,"to_show_shipper_info":false,"tags":[]} |
       | trackingId           | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}                                                       |
       | hubId                | {sorting-hub-id}                                                                            |
-    Then DB Core - verify order weight updated to highest weight within range
-      | weight           | <expected_weight>                  |
-      | use_weight_range | <use_weight_range>                 |
-      | order_id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+    Then DB Core - verify order weight updated correctly
+      | weight   | <expected_weight>                  |
+      | order_id | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
     Examples:
-      | Note                                     | shipper_weight_case | use_weight_range | expected_weight | shipper_submitted_weight | measured_weight | length | width | height |
-      | Highest Weight = Shipper Adjusted Weight | < 100 KG            | true             | 2.5             | 2500                     | 1.2             | 10     | 10    | 60     |
-      | Highest Weight = Measured Weight         | < 100 KG            | false            | 2.0             | 1500                     | 2               | 10     | 10    | 60     |
-      | Highest Weight = Volumetric Weight       | < 100 KG            | false            | 3.0             | 1500                     | 1               | 20     | 30    | 30     |
+      | Note                                     | shipper_weight_case | expected_weight | shipper_submitted_weight | measured_weight | length | width | height |
+      | Highest Weight = Shipper Adjusted Weight | < 100 KG            | 2.5             | 2500                     | 1.2             | 10     | 10    | 60     |
+      | Highest Weight = Measured Weight         | < 100 KG            | 2.0             | 1500                     | 2               | 10     | 10    | 60     |
+      | Highest Weight = Volumetric Weight       | < 100 KG            | 3.0             | 1500                     | 1               | 20     | 30    | 30     |
 
   Scenario Outline: ID - Update Weight upon Global Inbound - Shipper Submitted Weight <shipper_weight_case> - <Note>
     Given API Order - Shipper create multiple V4 orders using data below:
@@ -116,24 +114,22 @@ Feature: ID - Order Dimensions Update Calculation
       | length | <length>          |
       | width  | <width>           |
       | height | <height>          |
-    Then DB Core - verify order weight updated to highest weight within range
-      | weight           | <expected_weight>                  |
-      | use_weight_range | <use_weight_range>                 |
-      | order_id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+    Then DB Core - verify order weight updated correctly
+      | weight   | <expected_weight>                  |
+      | order_id | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
     And API Sort - Operator global inbound
       | globalInboundRequest | {"inbound_type":"SORTING_HUB","to_reschedule":false,"to_show_shipper_info":false,"tags":[]} |
       | trackingId           | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}                                                       |
       | hubId                | {sorting-hub-id}                                                                            |
-    Then DB Core - verify order weight updated to highest weight within range
-      | weight           | <expected_weight>                  |
-      | use_weight_range | <use_weight_range>                 |
-      | order_id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+    Then DB Core - verify order weight updated correctly
+      | weight   | <expected_weight>                  |
+      | order_id | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
     Examples:
-      | Note                                     | shipper_weight_case | use_weight_range | expected_weight | shipper_submitted_weight | measured_weight | length | width | height |
-      | Highest Weight = Shipper Adjusted Weight | < 100 KG            | true             | 2.5             | 2.5                      | 1.2             | 10     | 10    | 60     |
-      | Highest Weight = Measured Weight         | < 100 KG            | false            | 2.0             | 1.5                      | 2               | 10     | 10    | 60     |
-      | Highest Weight = Volumetric Weight       | < 100 KG            | false            | 3.0             | 1.5                      | 1               | 20     | 30    | 30     |
+      | Note                                     | shipper_weight_case | expected_weight | shipper_submitted_weight | measured_weight | length | width | height |
+      | Highest Weight = Shipper Adjusted Weight | < 100 KG            | 2.5             | 2.5                      | 1.2             | 10     | 10    | 60     |
+      | Highest Weight = Measured Weight         | < 100 KG            | 2.0             | 1.5                      | 2               | 10     | 10    | 60     |
+      | Highest Weight = Volumetric Weight       | < 100 KG            | 3.0             | 1.5                      | 1               | 20     | 30    | 30     |
 
   Scenario Outline: ID - Update Weight upon Edit Order Dimensions - Shipper Submitted Weight <shipper_weight_case> - <Note>
     Given API Order - Shipper create multiple V4 orders using data below:
@@ -147,17 +143,15 @@ Feature: ID - Order Dimensions Update Calculation
       | length | <length>          |
       | width  | <width>           |
       | height | <height>          |
-    Then DB Core - verify order weight updated to highest weight within range
+    Then DB Core - verify order weight updated correctly
       | weight           | <expected_weight>                  |
-      | use_weight_range | false                              |
       | order_id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
     And API Sort - Operator global inbound
       | globalInboundRequest | {"inbound_type":"SORTING_HUB","to_reschedule":false,"to_show_shipper_info":false,"tags":[]} |
       | trackingId           | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}                                                       |
       | hubId                | {sorting-hub-id}                                                                            |
-    Then DB Core - verify order weight updated to highest weight within range
+    Then DB Core - verify order weight updated correctly
       | weight           | <expected_weight>                  |
-      | use_weight_range | false                              |
       | order_id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
     Examples:
       | Note                                     | shipper_weight_case | expected_weight | shipper_submitted_weight | measured_weight | length | width | height |
@@ -177,17 +171,15 @@ Feature: ID - Order Dimensions Update Calculation
       | length | <length>          |
       | width  | <width>           |
       | height | <height>          |
-    Then DB Core - verify order weight updated to highest weight within range
+    Then DB Core - verify order weight updated correctly
       | weight           | <expected_weight>                  |
-      | use_weight_range | false                              |
       | order_id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
     And API Sort - Operator global inbound
       | globalInboundRequest | {"inbound_type":"SORTING_HUB","to_reschedule":false,"to_show_shipper_info":false,"tags":[]} |
       | trackingId           | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}                                                       |
       | hubId                | {sorting-hub-id}                                                                            |
-    Then DB Core - verify order weight updated to highest weight within range
+    Then DB Core - verify order weight updated correctly
       | weight           | <expected_weight>                  |
-      | use_weight_range | false                              |
       | order_id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
     Examples:
       | Note                                     | expected_weight | shipper_submitted_weight | measured_weight | length | width | height |
@@ -207,17 +199,15 @@ Feature: ID - Order Dimensions Update Calculation
       | length | <length>          |
       | width  | <width>           |
       | height | <height>          |
-    Then DB Core - verify order weight updated to highest weight within range
+    Then DB Core - verify order weight updated correctly
       | weight           | <expected_weight>                  |
-      | use_weight_range | false                              |
       | order_id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
     And API Sort - Operator global inbound
       | globalInboundRequest | {"inbound_type":"SORTING_HUB","to_reschedule":false,"to_show_shipper_info":false,"tags":[]} |
       | trackingId           | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}                                                       |
       | hubId                | {sorting-hub-id}                                                                            |
-    Then DB Core - verify order weight updated to highest weight within range
+    Then DB Core - verify order weight updated correctly
       | weight           | <expected_weight>                  |
-      | use_weight_range | false                              |
       | order_id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
     Examples:
       | Note                                     | shipper_weight_case | expected_weight | shipper_submitted_weight | measured_weight | length | width | height |
@@ -274,23 +264,21 @@ Feature: ID - Order Dimensions Update Calculation
       | length | <length>          |
       | width  | <width>           |
       | height | <height>          |
-    Then DB Core - verify order weight updated to highest weight within range
+    Then DB Core - verify order weight updated correctly
       | weight           | <expected_weight>                  |
-      | use_weight_range | <use_weight_range>                 |
       | order_id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
     And API Sort - Operator global inbound
       | globalInboundRequest | {"inbound_type":"SORTING_HUB","to_reschedule":false,"to_show_shipper_info":false,"tags":[]} |
       | trackingId           | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}                                                       |
       | hubId                | {sorting-hub-id}                                                                            |
-    Then DB Core - verify order weight updated to highest weight within range
+    Then DB Core - verify order weight updated correctly
       | weight           | <expected_weight>                  |
-      | use_weight_range | <use_weight_range>                 |
       | order_id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
     Examples:
-      | Note                                     | shipper_weight_case | use_weight_range | expected_weight | shipper_submitted_weight | measured_weight | length | width | height |
-      | Highest Weight = Shipper Adjusted Weight | < 100 KG            | true             | 2.5             | 2500                     | 1.2             | 10     | 10    | 60     |
-      | Highest Weight = Measured Weight         | < 100 KG            | false            | 2.0             | 1500                     | 2               | 10     | 10    | 60     |
-      | Highest Weight = Volumetric Weight       | < 100 KG            | false            | 3.0             | 1500                     | 1               | 20     | 30    | 30     |
+      | Note                                     | shipper_weight_case | expected_weight | shipper_submitted_weight | measured_weight | length | width | height |
+      | Highest Weight = Shipper Adjusted Weight | < 100 KG            | 2.5             | 2500                     | 1.2             | 10     | 10    | 60     |
+      | Highest Weight = Measured Weight         | < 100 KG            | 2.0             | 1500                     | 2               | 10     | 10    | 60     |
+      | Highest Weight = Volumetric Weight       | < 100 KG            | 3.0             | 1500                     | 1               | 20     | 30    | 30     |
 
   Scenario Outline: ID - Override Weight with Pricing Weight When Update Order Weight on Edit Order - <Note>
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
@@ -364,9 +352,8 @@ Feature: ID - Order Dimensions Update Calculation
       | globalInboundRequest | {"inbound_type":"SORTING_HUB","dimensions":{"width": <width>,"height": <height>,"length": <length>,"weight": <measured_weight>},"to_reschedule":false,"to_show_shipper_info":false,"tags":[]} |
       | trackingId           | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}                                                                                                                                                         |
       | hubId                | {sorting-hub-id}                                                                                                                                                                              |
-    Then DB Core - verify order weight updated to highest weight within range
+    Then DB Core - verify order weight updated correctly
       | weight           | <expected_weight>                  |
-      | use_weight_range | false                              |
       | order_id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
     Then DB Core - verify orders.weight and dimensions updated correctly for order id "{KEY_LIST_OF_CREATED_ORDERS[1].id}"
       | orders.data.originalWeight | <shipper_submitted_weight> |

@@ -1,4 +1,4 @@
-@ForceSuccessOrder @order-details @OrderDimensionsUpdateCalculationSG
+@ForceSuccessOrder @order-details @OrderDimensionsUpdateCalculationSG @Test
 Feature: SG - Order Dimensions Update Calculation
 
   Scenario: SG - Global Inbound Order with No Weight Changes - Shipper Submitted Weight = 0

@@ -1,4 +1,4 @@
-@ForceSuccessOrder @order-details @OrderDimensionsPartialUpdateCalculationSG
+@ForceSuccessOrder @order-details @OrderDimensionsPartialUpdateCalculationSG @Test
 Feature: SG - Partial Update Order Dimensions on Inbound
 
   https://studio.cucumber.io/projects/208144/test-plan/folders/2788728
