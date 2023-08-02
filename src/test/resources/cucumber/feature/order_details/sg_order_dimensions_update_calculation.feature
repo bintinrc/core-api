@@ -1,4 +1,4 @@
-@ForceSuccessOrder @order-details @OrderDimensionsUpdateCalculationSG @Test
+@ForceSuccessOrder @order-details @OrderDimensionsUpdateCalculationSG
 Feature: SG - Order Dimensions Update Calculation
 
   Scenario: SG - Global Inbound Order with No Weight Changes - Shipper Submitted Weight = 0
@@ -111,7 +111,7 @@ Feature: SG - Order Dimensions Update Calculation
     And Shipper verifies webhook request payload has correct details for status "Parcel Measurements Update" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper gets webhook request for event "Parcel Weight" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper verifies webhook request payload has correct details for status "Parcel Weight" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-
+    
   Scenario Outline: SG - Global Inbound Order with Weight Changes - Shipper Submitted Weight > 0 - <Note>
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook

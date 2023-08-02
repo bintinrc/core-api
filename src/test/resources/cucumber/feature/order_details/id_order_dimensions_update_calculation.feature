@@ -1,4 +1,4 @@
-@ForceSuccessOrder @order-details-id @OrderDimensionsUpdateCalculationID @Test
+@ForceSuccessOrder @order-details-id @OrderDimensionsUpdateCalculationID
 Feature: ID - Order Dimensions Update Calculation
 
   Scenario Outline: ID - Update Weight upon Global Inbound - Shipper Submitted Weight > 100 KG (divide by 1000), Adjusted Weight <shipper_weight_case> - <Note>
