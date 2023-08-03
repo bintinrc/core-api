@@ -72,7 +72,7 @@ Feature: Archive Route
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     And Archived route is not shown on his list routes
 
-  @route-archive @wip
+  @route-archive
   Scenario: Operator not Allowed to Archive an already Archived Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
