@@ -126,8 +126,7 @@ Feature: Create Route & Assign Waypoints
       | orderId          | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | routeEventSource | ADD_BY_TRACKING_OR_STAMP           |
-
-  @wip
+    
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Routed Waypoints to Route - Transaction, Reservation, PA Job
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
