@@ -13,13 +13,15 @@ Feature: Delete Route
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     And Operator add order to driver "<route_type>" route
     When Operator delete driver route with status code 200
-    Then DB Operator verifies soft-deleted route
+    Then DB Route - verify route_logs record:
+      | legacyId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | deletedAt | not null                           |
     And Operator search for "<transaction_type>" transaction with status "PENDING"
     And DB Operator verifies transaction route id is null
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
-
-    And DB Operator verifies route_monitoring_data is hard-deleted
+    And DB Core - verify route_monitoring_data is hard-deleted:
+      | {KEY_WAYPOINT_ID} |
     And API Event - Operator verify that event is published with the following details:
       | event            | PULL_OUT_OF_ROUTE      |
       | orderId          | {KEY_CREATED_ORDER_ID} |
@@ -45,15 +47,16 @@ Feature: Delete Route
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
     When Operator delete driver route with status code 200
-    And DB Operator verifies soft-deleted route
+    Then DB Route - verify route_logs record:
+      | legacyId  | {KEY_CREATED_ROUTE_ID} |
+      | deletedAt | not null               |
     And DB Operator verifies waypoint status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
-    And DB Operator verifies route_monitoring_data is hard-deleted
-    And DB Operator verifies shipper_pickups_search data updated correctly
-      | status          | PENDING |
-      | waypoint_status | Pending |
-      | route_id        | 0       |
-      | driver_id       | 0       |
+    And DB Core - verify route_monitoring_data is hard-deleted:
+      | {KEY_WAYPOINT_ID} |
+    And DB Core - verify shipper_pickup_search record:
+      | reservationId  | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
+      | waypointStatus | Pending                                  |
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
     Examples:
@@ -77,12 +80,15 @@ Feature: Delete Route
     And API Core - Operator merge routed waypoints:
       | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     When Operator delete driver route with status code 200
-    Then DB Operator verifies soft-deleted route
+    Then DB Route - verify route_logs record:
+      | legacyId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | deletedAt | not null                           |
     And Operator search for multiple "<transaction_type>" transactions with status "PENDING"
     And DB Operator verifies all transactions route id is null
     And DB Operator verifies all waypoints status is "PENDING"
     And DB Operator verifies waypoints.route_id & seq_no is NULL
-    And DB Operator verifies all route_monitoring_data is hard-deleted
+    And DB Core - verify route_monitoring_data is hard-deleted:
+      | {KEY_WAYPOINT_ID} |
     And API Event - Operator verify that event is published with the following details:
       | event            | PULL_OUT_OF_ROUTE      |
       | orderId          | {KEY_CREATED_ORDER_ID} |
@@ -99,9 +105,9 @@ Feature: Delete Route
     When API Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     When Operator delete driver route with status code 200
-    Then DB Operator verifies soft-deleted route
-
-
+    Then DB Route - verify route_logs record:
+      | legacyId  | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | deletedAt | not null                          |
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
     Examples:
@@ -121,7 +127,12 @@ Feature: Delete Route
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     When Operator delete multiple driver routes
-    Then DB Operator verifies multiple routes are soft-deleted
+    Then DB Route - verify route_logs record:
+      | legacyId  | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | deletedAt | not null                          |
+    Then DB Route - verify route_logs record:
+      | legacyId  | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
+      | deletedAt | not null                          |
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
     Examples:
@@ -142,13 +153,11 @@ Feature: Delete Route
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-
     And Operator Route the Reservation Pickup
     And Operator admin manifest force "<action>" reservation
     Then Operator delete driver route with status code 500
     And Operator verify delete route response with proper error message : "Reservation $reservation_id for Shipper $shipper_id has status <action>. Cannot delete route."
     And DB Operator verifies waypoint status is "<action>"
-
     Examples:
       | Note    | hiptest-uid                              | action  | service_type | service_level | parcel_job_is_pickup_required |
       | Success | uid:35a3e49a-435a-47ed-92dd-410ada4fad34 | Success | Parcel       | Standard      | true                          |
@@ -169,7 +178,6 @@ Feature: Delete Route
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-
     And Operator add order to driver "DD" route
     And Operator force "<terminal_state>" "DELIVERY" waypoint
     And Operator search for "DELIVERY" transaction with status "<terminal_state>"
@@ -197,7 +205,6 @@ Feature: Delete Route
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-
     And Operator add order to driver "PP" route
     And Operator force "<terminal_state>" "PICKUP" waypoint
     And Operator search for "PICKUP" transaction with status "<terminal_state>"
