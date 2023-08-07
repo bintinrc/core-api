@@ -1,4 +1,4 @@
-@routing-my @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-my
+@routing-my @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-rsvn-my
 Feature: MY - FM Automated Routing - Within Clock Time
 
   @CancelCreatedReservations

@@ -81,9 +81,10 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     And API Operator add parcel to the route using data below:
       | addParcelToRouteRequest | { "type":"PP" } |
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
     And API Operator add parcel to the route using data below:
       | addParcelToRouteRequest | { "type":"DD" } |
-    And API Operator start the route
+    And API Driver - Driver start route "{KEY_LIST_OF_CREATED_ROUTES[1].id}"
     Then Operator verify that order status-granular status is "Transit"-"Van_Enroute_To_Pickup"
     And DB Operator gets async handle of an order from its Tracking ID
     When API Operator cancel order with DELETE /2.2/orders/:trackingNumber
