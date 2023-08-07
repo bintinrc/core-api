@@ -1,4 +1,4 @@
-@ForceSuccessOrder @route-v2
+@ForceSuccessOrder @route-v2 @waypoints-merge
 Feature:PUT /waypoints/merge
 
   Scenario: PUT /route-v2/waypoints/merge - Merge Pickup and Delivery Waypoint on Zonal Routing - Same address, Email & Phone Number
