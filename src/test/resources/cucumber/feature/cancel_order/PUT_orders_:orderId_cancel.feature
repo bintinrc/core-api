@@ -84,7 +84,8 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | addParcelToRouteRequest | { "type":"PP" } |
     And API Operator add parcel to the route using data below:
       | addParcelToRouteRequest | { "type":"DD" } |
-    And API Operator start the route
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
+    And API Driver - Driver start route "{KEY_LIST_OF_CREATED_ROUTES[1].id}"
     Then Operator verify that order status-granular status is "Transit"-"Van_Enroute_To_Pickup"
     When API Operator cancel order with PUT /orders/:orderId/cancel
       | reason | Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |

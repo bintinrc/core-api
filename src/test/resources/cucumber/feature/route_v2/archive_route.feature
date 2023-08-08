@@ -10,7 +10,12 @@ Feature: Archive Route
       | zone_id    | {zone-id}        |
     When API Core - Operator archives routes below:
       | {KEY_CREATED_ROUTE_ID} |
-    Then DB Operator verifies route status is archived
+    Then DB Route - verify route_logs record:
+      | legacyId | {KEY_CREATED_ROUTE_ID} |
+      | status   | 3                      |
+      | hubId    | {sorting-hub-id}       |
+      | zoneId   | {zone-id}              |
+      | driverId | {driver-id}            |
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Archived route is not shown on his list routes
 
@@ -31,7 +36,12 @@ Feature: Archive Route
     And Operator add order to driver "DD" route
     When API Core - Operator archives routes below:
       | {KEY_CREATED_ROUTE_ID} |
-    Then DB Operator verifies route status is archived
+    Then DB Route - verify route_logs record:
+      | legacyId | {KEY_CREATED_ROUTE_ID} |
+      | status   | 3                      |
+      | hubId    | {sorting-hub-id}       |
+      | zoneId   | {zone-id}              |
+      | driverId | {driver-id}            |
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Archived route is not shown on his list routes
 
@@ -53,7 +63,12 @@ Feature: Archive Route
     And Driver Starts the route
     When API Core - Operator archives routes below:
       | {KEY_CREATED_ROUTE_ID} |
-    Then DB Operator verifies route status is archived
+    Then DB Route - verify route_logs record:
+      | legacyId | {KEY_CREATED_ROUTE_ID} |
+      | status   | 3                      |
+      | hubId    | {sorting-hub-id}       |
+      | zoneId   | {zone-id}              |
+      | driverId | {driver-id}            |
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     And Archived route is not shown on his list routes
 
@@ -73,12 +88,22 @@ Feature: Archive Route
     And Operator add order to driver "DD" route
     When API Core - Operator archives routes below:
       | {KEY_CREATED_ROUTE_ID} |
-    Then DB Operator verifies route status is archived
+    Then DB Route - verify route_logs record:
+      | legacyId | {KEY_CREATED_ROUTE_ID} |
+      | status   | 3                      |
+      | hubId    | {sorting-hub-id}       |
+      | zoneId   | {zone-id}              |
+      | driverId | {driver-id}            |
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Archived route is not shown on his list routes
     When API Core - Operator archives routes below:
       | {KEY_CREATED_ROUTE_ID} |
-    Then DB Operator verifies route status is archived
+    Then DB Route - verify route_logs record:
+      | legacyId | {KEY_CREATED_ROUTE_ID} |
+      | status   | 3                      |
+      | hubId    | {sorting-hub-id}       |
+      | zoneId   | {zone-id}              |
+      | driverId | {driver-id}            |
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Archived route is not shown on his list routes
 
