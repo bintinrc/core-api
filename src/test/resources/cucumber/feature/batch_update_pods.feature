@@ -297,7 +297,7 @@ Feature: Batch Update PODs
       | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
-  @happy-path @run-NV-11218
+  @happy-path @run-NV-11228
   Scenario: Driver picks up all X number of Normal parcels in one reservation
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
