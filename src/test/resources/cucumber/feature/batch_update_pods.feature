@@ -1,4 +1,4 @@
-@ForceSuccessOrder @ArchiveDriverRoutes @batch-update-pods @NV-11218
+@ForceSuccessOrder @ArchiveDriverRoutes @batch-update-pods
 Feature: Batch Update PODs
 
   @happy-path
@@ -297,7 +297,7 @@ Feature: Batch Update PODs
       | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
-  @happy-path @run-NV-11228
+  @happy-path
   Scenario: Driver picks up all X number of Normal parcels in one reservation
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -334,7 +334,7 @@ Feature: Batch Update PODs
       | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
-  @run-NV-11228
+
   Scenario: Driver Picks Up All X number of Return Parcels in One Reservation
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -376,7 +376,7 @@ Feature: Batch Update PODs
       | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
-  @run-NV-11228
+
   Scenario: Driver success reservation without scanning any parcel
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -401,7 +401,7 @@ Feature: Batch Update PODs
     Then DB Operator verifies reservation_blob is created
     And Verify blob data is correct
 
-  @run-NV-11228
+
   Scenario: Driver successes the reservation with X number of parcels but fails Y number of parcels (Partial Success)
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub, Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -428,7 +428,7 @@ Feature: Batch Update PODs
     Then DB Operator verifies reservation_blob is created
     And Verify blob data is correct
 
-  @run-NV-11228
+
   Scenario: Driver fails the reservation and fail all X number of normal parcels under a reservation
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -456,7 +456,7 @@ Feature: Batch Update PODs
     And Operator get proof details for "FAIL" transaction of "Normal" orders
     And DB Operator verifies transaction_blob is NOT created
 
-  @run-NV-11228
+
   Scenario: Driver fails the reservation and fail all X number of return parcels under a reservation
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -497,7 +497,7 @@ Feature: Batch Update PODs
       | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
-  @happy-path @run-NV-11228
+  @happy-path 
   Scenario: Driver fails the reservation without failing any parcel
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
