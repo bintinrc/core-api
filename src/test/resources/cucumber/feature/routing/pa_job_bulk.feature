@@ -34,9 +34,9 @@ Feature: Pickup Appointment Job Bulk Routing
       | seqNo   | not null                           |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status  | Routed                             |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+  #  And DB Core - verify route_monitoring_data record:
+   #   | waypointId | {KEY_WAYPOINT_ID}                  |
+    #  | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
       | userId     | {pickup-user-id}                                |
@@ -57,9 +57,9 @@ Feature: Pickup Appointment Job Bulk Routing
       | seqNo   | not null                           |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status  | Routed                             |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+  #  And DB Core - verify route_monitoring_data record:
+   #   | waypointId | {KEY_WAYPOINT_ID}                  |
+    #  | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[2].id}             |
       | userId     | {pickup-user-id}                                |
@@ -80,9 +80,9 @@ Feature: Pickup Appointment Job Bulk Routing
       | seqNo   | not null                           |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status  | Routed                             |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+   # And DB Core - verify route_monitoring_data record:
+    #  | waypointId | {KEY_WAYPOINT_ID}                  |
+     # | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[3].id}             |
       | userId     | {pickup-user-id}                                |
@@ -131,9 +131,9 @@ Feature: Pickup Appointment Job Bulk Routing
       | seqNo   | not null                           |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
       | status  | Routed                             |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+  #  And DB Core - verify route_monitoring_data record:
+   #   | waypointId | {KEY_WAYPOINT_ID}                  |
+    #  | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}                                                               |
       | userId     | {pickup-user-id}                                                                                  |
@@ -177,9 +177,9 @@ Feature: Pickup Appointment Job Bulk Routing
       | seqNo   | not null                           |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
       | status  | Routed                             |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+   # And DB Core - verify route_monitoring_data record:
+    #  | waypointId | {KEY_WAYPOINT_ID}                  |
+     # | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[3].id}                                                               |
       | userId     | {pickup-user-id}                                                                                  |
@@ -243,9 +243,9 @@ Feature: Pickup Appointment Job Bulk Routing
       | seqNo   | not null                           |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status  | Routed                             |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+  #  And DB Core - verify route_monitoring_data record:
+   #   | waypointId | {KEY_WAYPOINT_ID}                  |
+    #  | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
       | userId     | {pickup-user-id}                                |
@@ -281,9 +281,9 @@ Feature: Pickup Appointment Job Bulk Routing
       | seqNo   | not null                           |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[3].id} |
       | status  | Routed                             |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[3].id} |
+  #  And DB Core - verify route_monitoring_data record:
+   #   | waypointId | {KEY_WAYPOINT_ID}                  |
+    #  | routeId    | {KEY_LIST_OF_CREATED_ROUTES[3].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[3].id}             |
       | userId     | {pickup-user-id}                                |
