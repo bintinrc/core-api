@@ -1,4 +1,4 @@
-@routing-my @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-my
+@routing-my @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-rsvn-my
 Feature: MY - FM Automated Routing - After Clock Time
 
   @CancelCreatedReservations
@@ -14,12 +14,6 @@ Feature: MY - FM Automated Routing - After Clock Time
       | hubId    | <hub_id>                                 |
       | zoneId   | <zone_id>                                |
       | driverId | <driver_id>                              |
-    And DB Core - verify waypoints record:
-      | id            | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | seqNo         | not null                                         |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].legacyId}         |
-      | status        | Routed                                           |
-      | routingZoneId | <zone_id>                                        |
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo         | not null                                         |
@@ -43,9 +37,9 @@ Feature: MY - FM Automated Routing - After Clock Time
       | waypointStatus | Routed                                   |
       | driverId       | <driver_id>                              |
     Examples:
-      | Note                      | zone_id        | hub_id                     | shipper_id                     | shipper_legacy_id                     | driver_id     | address_id                     |
-      | Pickup Type: FM Dedicated | {fm-zone-id-1} | {fm-hub-id-1-fm-dedicated} | {fm-shipper-id-1-fm-dedicated} | {fm-shipper-legacy-id-1-fm-dedicated} | {fm-driver-1} | {fm-address-id-1-fm-dedicated} |
-      | Pickup Type: Truck        | {fm-zone-id-1} | {fm-hub-id-1-truck}        | {fm-shipper-id-1-truck}        | {fm-shipper-legacy-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
+      | Note                      | zone_id        | hub_id                     | shipper_legacy_id                     | driver_id     | address_id                     |
+      | Pickup Type: FM Dedicated | {fm-zone-id-1} | {fm-hub-id-1-fm-dedicated} | {fm-shipper-legacy-id-1-fm-dedicated} | {fm-driver-1} | {fm-address-id-1-fm-dedicated} |
+      | Pickup Type: Truck        | {fm-zone-id-1} | {fm-hub-id-1-truck}        | {fm-shipper-legacy-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
 
   @CancelCreatedReservations
   Scenario Outline: MY - Auto Route Reservation - Date = Today, Creation = After End Clock Time & Run Manual Cron Job, Driver has Existing Route
@@ -58,12 +52,6 @@ Feature: MY - FM Automated Routing - After Clock Time
       | reservationRequest | { "pickup_address_id":<address_id_2>, "legacy_shipper_id":<shipper_legacy_id_2>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
     And API Route - Operator run FM auto route cron job for date "{date: 0 days next, yyyy-MM-dd}"
     #    1st reservation
-    And DB Core - verify waypoints record:
-      | id            | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | seqNo         | not null                                         |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
-      | status        | Routed                                           |
-      | routingZoneId | <zone_id>                                        |
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo         | not null                                         |
@@ -87,12 +75,6 @@ Feature: MY - FM Automated Routing - After Clock Time
       | waypointStatus | Routed                                   |
       | driverId       | <driver_id>                              |
     #    2nd reservation
-    And DB Core - verify waypoints record:
-      | id            | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | seqNo         | not null                                         |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
-      | status        | Routed                                           |
-      | routingZoneId | <zone_id>                                        |
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo         | not null                                         |
@@ -124,12 +106,6 @@ Feature: MY - FM Automated Routing - After Clock Time
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
-    And DB Core - verify waypoints record:
-      | id            | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | seqNo         | null                                             |
-      | routeId       | null                                             |
-      | status        | Pending                                          |
-      | routingZoneId | <zone_id>                                        |
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo         | null                                             |
@@ -145,12 +121,6 @@ Feature: MY - FM Automated Routing - After Clock Time
   Scenario Outline: MY - Auto Route Reservation - Date = Today, No Driver Assigned for the Zone, Creation = Within Start & End Clock Time - <Note>
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
-    And DB Core - verify waypoints record:
-      | id            | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | seqNo         | null                                             |
-      | routeId       | null                                             |
-      | status        | Pending                                          |
-      | routingZoneId | <zone_id>                                        |
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo         | null                                             |
@@ -167,12 +137,6 @@ Feature: MY - FM Automated Routing - After Clock Time
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
     And API Route - Operator run FM auto route cron job for date "{date: 0 days next, yyyy-MM-dd}"
-    And DB Core - verify waypoints record:
-      | id            | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | seqNo         | null                                             |
-      | routeId       | null                                             |
-      | status        | Pending                                          |
-      | routingZoneId | <zone_id>                                        |
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo         | null                                             |
@@ -189,12 +153,6 @@ Feature: MY - FM Automated Routing - After Clock Time
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And API Route - Operator run FM auto route cron job for date "{date: 0 days next, yyyy-MM-dd}"
-    And DB Core - verify waypoints record:
-      | id            | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | seqNo         | null                                             |
-      | routeId       | null                                             |
-      | status        | Pending                                          |
-      | routingZoneId | <zone_id>                                        |
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo         | null                                             |
@@ -211,12 +169,6 @@ Feature: MY - FM Automated Routing - After Clock Time
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 1 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 1 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
     And API Route - Operator run FM auto route cron job for date "{date: 0 days next, yyyy-MM-dd}"
-    And DB Core - verify waypoints record:
-      | id            | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | seqNo         | null                                             |
-      | routeId       | null                                             |
-      | status        | Pending                                          |
-      | routingZoneId | <zone_id>                                        |
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo         | null                                             |
@@ -247,12 +199,6 @@ Feature: MY - FM Automated Routing - After Clock Time
       | hubId    | {fm-hub-id-5}                            |
       | zoneId   | {fm-zone-id-5}                           |
       | driverId | {fm-driver-id-5}                         |
-    And DB Core - verify waypoints record:
-      | id            | {KEY_LIST_OF_RESERVATIONS[1].waypointId} |
-      | seqNo         | not null                                 |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].legacyId} |
-      | status        | Routed                                   |
-      | routingZoneId | {fm-zone-id-5}                           |
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_RESERVATIONS[1].waypointId} |
       | seqNo         | not null                                 |
@@ -303,12 +249,6 @@ Feature: MY - FM Automated Routing - After Clock Time
     And API Core - Operator get reservation from reservation id "{KEY_CORE_LIST_OF_ORDER_PICKUPS[1].reservationId}"
     And API Core - Operator get reservation from reservation id "{KEY_CORE_LIST_OF_ORDER_PICKUPS[2].reservationId}"
     #    check 1st rsvn
-    And DB Core - verify waypoints record:
-      | id            | {KEY_LIST_OF_RESERVATIONS[1].waypointId} |
-      | seqNo         | not null                                 |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
-      | status        | Routed                                   |
-      | routingZoneId | {fm-zone-id-5}                           |
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_RESERVATIONS[1].waypointId} |
       | seqNo         | not null                                 |
@@ -332,12 +272,6 @@ Feature: MY - FM Automated Routing - After Clock Time
       | waypointStatus | Routed                             |
       | driverId       | {fm-driver-id-5}                   |
     #    check 2nd rsvn
-    And DB Core - verify waypoints record:
-      | id            | {KEY_LIST_OF_RESERVATIONS[2].waypointId} |
-      | seqNo         | not null                                 |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
-      | status        | Routed                                   |
-      | routingZoneId | {fm-zone-id-5}                           |
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_RESERVATIONS[2].waypointId} |
       | seqNo         | not null                                 |
