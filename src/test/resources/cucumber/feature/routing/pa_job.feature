@@ -249,3 +249,99 @@ Feature: Zonal Routing API
       | type       | 3                                               |
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
+
+  @DeletePickupAppointmentJob
+  Scenario: PUT /pickup-appointment-jobs/:paJobId/route - Add PA Job to a Route that has been started
+    Given API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    And API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+    When API Core - Operator add pickup job to the route using data below:
+      | jobId                      | {KEY_CONTROL_CREATED_PA_JOBS[1].id}                                   |
+      | addPickupJobToRouteRequest | {"new_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"overwrite":false} |
+    And DB Events - verify pickup_events record:
+      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
+      | userId     | {pickup-user-id}                                |
+      | userName   | {pickup-user-name}                              |
+      | userEmail  | {pickup-user-email}                             |
+      | type       | 1                                               |
+      | pickupType | 2                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
+    And API Driver - Driver start route "{KEY_LIST_OF_CREATED_ROUTES[1].id}"
+    And DB Route - verify route_logs record:
+      | legacyId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | status   | 1                                  |
+    And DB Events - verify pickup_events record:
+      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
+      | userId     | 586867                                          |
+      | userName   | core-api driver-routing-3                       |
+      | type       | 4                                               |
+      | pickupType | 2                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
+    Given API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-2-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-2-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    When API Core - Operator add pickup job to the route using data below:
+      | jobId                      | {KEY_CONTROL_CREATED_PA_JOBS[2].id}                                   |
+      | addPickupJobToRouteRequest | {"new_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"overwrite":false} |
+    And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[2].id}"
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID}                  |
+      | seqNo    | not null                           |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | status   | Routed                             |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_WAYPOINT_ID}                  |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+    And DB Events - verify pickup_events record:
+      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[2].id}             |
+      | userId     | {pickup-user-id}                                |
+      | userName   | {pickup-user-name}                              |
+      | userEmail  | {pickup-user-email}                             |
+      | type       | 1                                               |
+      | pickupType | 2                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
+    And DB Events - verify pickup_events record:
+      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[2].id}             |
+      | userId     | {pickup-user-id}                                |
+      | userName   | {pickup-user-name}                              |
+      | userEmail  | {pickup-user-email}                             |
+      | type       | 4                                               |
+      | pickupType | 2                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
+
+  @DeletePickupAppointmentJob @wip
+  Scenario: PUT /routes - Zonal Routing Edit Route API - Add PA Job to a Route that has been started
+    Given API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
+    And API Driver - Driver start route "{KEY_LIST_OF_CREATED_ROUTES[1].id}"
+    And DB Route - verify route_logs record:
+      | legacyId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | status   | 1                                  |
+    Given API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
+    When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
+      | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[1].id}, "waypoints":[{KEY_WAYPOINT_ID}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID}                  |
+      | seqNo    | not null                           |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | status   | Routed                             |
+    And DB Events - verify pickup_events record:
+      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
+      | userId     | {pickup-user-id}                                |
+      | userName   | {pickup-user-name}                              |
+      | userEmail  | {pickup-user-email}                             |
+      | type       | 1                                               |
+      | pickupType | 2                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
+    And DB Events - verify pickup_events record:
+      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
+      | userId     | {pickup-user-id}                                |
+      | userName   | {pickup-user-name}                              |
+      | userEmail  | {pickup-user-email}                             |
+      | type       | 4                                               |
+      | pickupType | 2                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
