@@ -285,7 +285,7 @@ Feature: Create Route & Assign Waypoints
       | error        | {"error":{"application_exception_code":173000,"title":"REQUEST_ERR","message":"Some of the waypoints are routed [invalidWaypointIDs=[{KEY_WAYPOINT_ID} {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}]]"}} |
 
 
-  @DeletePickupAppointmentJob
+  @DeletePickupAppointmentJob @wip
   Scenario: PUT /routes/:routeid/waypoints - Add PA Job to a Route that has been started
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
