@@ -293,7 +293,7 @@ Feature: Pickup Appointment Job Bulk Routing
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[3].id}} |
 
-  @DeletePickupAppointmentJob @wip
+  @DeletePickupAppointmentJob
   Scenario: PUT /pickup-appointment-jobs/route-bulk - Add PA Jobs to a Route that has been started
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
