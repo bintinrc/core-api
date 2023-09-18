@@ -68,7 +68,7 @@ Feature: Zonal Routing API
       | userEmail  | {pickup-user-email}                             |
       | type       | 1                                               |
       | pickupType | 2                                               |
-      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}                                                               |
       | userId     | {pickup-user-id}                                                                                  |
@@ -169,7 +169,7 @@ Feature: Zonal Routing API
       | userEmail  | {pickup-user-email}                             |
       | type       | 1                                               |
       | pickupType | 2                                               |
-      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}                                                               |
       | userId     | {pickup-user-id}                                                                                  |
