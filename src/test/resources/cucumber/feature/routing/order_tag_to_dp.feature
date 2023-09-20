@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-@ForceSuccessOrder  @routing @order-tag-to-dp @routing-refactor @rundp
-=======
 @ForceSuccessOrder  @routing1 @order-tag-to-dp @routing-refactor
->>>>>>> master
 Feature: Order Tag to DP
 
   @happy-path
