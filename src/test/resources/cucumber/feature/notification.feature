@@ -34,7 +34,6 @@ Feature: Notification
     Then Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
 
-  @rundp
   Scenario: Send Successful Delivery Webhook on Customer Collection of DP Order
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     Given Shipper id "{shipper-4-id}" subscribes to "Completed" webhook

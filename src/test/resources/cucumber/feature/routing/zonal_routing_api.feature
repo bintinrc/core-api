@@ -123,7 +123,6 @@ Feature: Zonal Routing API
     And Verify that waypoints are shown on driver "{driver-id}" list route correctly
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
-
   Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Remove Waypoints From Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When API Operator create new shipper address V2 using data below:
