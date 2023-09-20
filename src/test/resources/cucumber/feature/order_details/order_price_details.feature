@@ -176,7 +176,7 @@ Feature: Order Price Details
       | status         | COMPLETED                                  |
       | granularStatus | RETURNED_TO_SENDER                         |
     And API Core - Operator get order details for tracking order "{KEY_CREATED_ORDER_TRACKING_ID}"
-    When DB Core - operator get waypoints details for "{KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].waypointId}"
+    When DB Core - operator get waypoints details for "{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}"
     And API Operator verify order pricing details:
       | orderId               | {KEY_CREATED_ORDER_ID}                     |
       | trackingId            | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1]} |
@@ -274,7 +274,7 @@ Feature: Order Price Details
       | status         | COMPLETED                                  |
       | granularStatus | RETURNED_TO_SENDER                         |
     And API Core - Operator get order details for tracking order "{KEY_CREATED_ORDER_TRACKING_ID}"
-    When DB Core - operator get waypoints details for "{KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].waypointId}"
+    When DB Core - operator get waypoints details for "{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}"
     And API Operator verify order pricing details:
       | orderId               | {KEY_CREATED_ORDER_ID}                     |
       | trackingId            | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1]} |
