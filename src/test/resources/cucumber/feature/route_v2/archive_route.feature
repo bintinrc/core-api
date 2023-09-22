@@ -107,7 +107,7 @@ Feature: Archive Route
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Archived route is not shown on his list routes
 
-  @route-archive
+  @route-archive @route-delete
   Scenario: Operator not Allowed to Archive Driver Invalid Route Id - Deleted Route
     Given Operator create an empty route
       | driver_id  | {driver-id}      |
