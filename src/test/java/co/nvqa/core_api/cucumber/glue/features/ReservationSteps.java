@@ -59,13 +59,13 @@ public class ReservationSteps extends BaseSteps {
     Pickup pickup = get(KEY_CREATED_RESERVATION);
     String pickupAddress = get(KEY_INITIAL_RESERVATION_ADDRESS);
     put(KEY_PICKUP_ADDRESS_STRING, pickupAddress);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       searchPickup(pickup.getShipperId(), status);
       Pickup result = get(KEY_CREATED_RESERVATION);
       Assertions.assertThat(result.getStatus().toLowerCase())
           .as(String.format("reservation status id %d", result.getReservationId()))
           .isEqualTo(status.toLowerCase());
-    }, "operator verify reservation status");
+    }, "operator verify reservation status", 2000,50);
   }
 
   @When("Operator search for created DP reservation with status {string}")
