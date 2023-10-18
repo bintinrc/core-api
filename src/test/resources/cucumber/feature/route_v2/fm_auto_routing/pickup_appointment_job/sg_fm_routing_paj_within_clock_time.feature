@@ -84,7 +84,7 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | Pickup Type: FM Dedicated | {fm-paj-driver-1} | {fm-paj-zone-id-1} | {fm-paj-hub-id-1-fm-dedicated} | {fm-paj-shipper-id-1-fm-dedicated} | {fm-paj-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-paj-driver-1} | {fm-paj-zone-id-1} | {fm-paj-hub-id-1-truck}        | {fm-paj-shipper-id-1-truck}        | {fm-paj-address-id-1-truck}        |
 
-  @wip
+
   Scenario Outline: SG - Auto Route PAJ - Date = Today, No Driver Assigned for the Zone, Creation = Within Start & End Clock Time - <Note>
     Given API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 0 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 0 days next, YYYY-MM-dd}T22:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |

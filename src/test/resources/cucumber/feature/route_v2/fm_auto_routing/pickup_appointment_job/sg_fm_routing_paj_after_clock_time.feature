@@ -19,7 +19,7 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | Pickup Type: FM Dedicated | {fm-paj-zone-id-1} | {fm-paj-shipper-id-1-fm-dedicated} | {fm-paj-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-paj-zone-id-1} | {fm-paj-shipper-id-1-truck}        | {fm-paj-address-id-1-truck}        |
 
-  @wip
+
   Scenario Outline: SG - Auto Route PAJ - Date = Today, Creation = After End Clock Time & Run Manual Cron Job, Driver has Existing Route
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     And API Core - Operator create new route using data below:
