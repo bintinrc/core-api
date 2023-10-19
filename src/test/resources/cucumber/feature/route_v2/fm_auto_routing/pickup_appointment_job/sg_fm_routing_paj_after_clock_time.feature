@@ -57,11 +57,8 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
     And API Control - Operator get pickup appointment job search details:
       | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
     And API Control - Operator verify pickup appointment job search details:
-      | pickupAppointmentJobId | {KEY_CONTROL_CREATED_PA_JOBS[1].id} |
-      | waypointId             | {KEY_WAYPOINT_ID}                   |
-      | routeId                | {KEY_LIST_OF_CREATED_ROUTES[1].id}  |
-      | routingZoneId          | <zone_id>                           |
-      | driverId               | <driver_id>                         |
+      | actualData   | KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[1]                                                                                                                                                                         |
+      | expectedData | { "pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOBS[1].id}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "routing_zone_id": <zone_id>, "driver_id": <driver_id>   } |
     # Verify 2nd PAJ is routed to existing waypoint
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[2].id}"
     And DB Route - verify waypoints record:
@@ -84,11 +81,8 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
     And API Control - Operator get pickup appointment job search details:
       | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[2].id}]}}} |
     And API Control - Operator verify pickup appointment job search details:
-      | pickupAppointmentJobId | {KEY_CONTROL_CREATED_PA_JOBS[2].id} |
-      | waypointId             | {KEY_WAYPOINT_ID}                   |
-      | routeId                | {KEY_LIST_OF_CREATED_ROUTES[1].id}  |
-      | routingZoneId          | <zone_id>                           |
-      | driverId               | <driver_id>                         |
+      | actualData   | KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[2]                                                                                                                                                                         |
+      | expectedData | { "pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOBS[2].id}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "routing_zone_id": <zone_id>, "driver_id": <driver_id>   } |
     Examples:
       | driver_id         | zone_id            | hub_id                         | shipper_id                         | address_id_1                       | address_id_2                |
       | {fm-paj-driver-1} | {fm-paj-zone-id-1} | {fm-paj-hub-id-1-fm-dedicated} | {fm-paj-shipper-id-1-fm-dedicated} | {fm-paj-address-id-1-fm-dedicated} | {fm-paj-address-id-1-truck} |
@@ -127,11 +121,8 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
     And API Control - Operator get pickup appointment job search details:
       | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
     And API Control - Operator verify pickup appointment job search details:
-      | pickupAppointmentJobId | {KEY_CONTROL_CREATED_PA_JOBS[1].id} |
-      | waypointId             | {KEY_WAYPOINT_ID}                   |
-      | routeId                | {KEY_LIST_OF_CREATED_ROUTES[1].id}  |
-      | routingZoneId          | <zone_id>                           |
-      | driverId               | <driver_id>                         |
+      | actualData   | KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[1]                                                                                                                                                                         |
+      | expectedData | { "pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOBS[1].id}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "routing_zone_id": <zone_id>, "driver_id": <driver_id>   } |
     Examples:
       | Note                      | driver_id         | zone_id            | hub_id                         | shipper_id                         | address_id                         |
       | Pickup Type: FM Dedicated | {fm-paj-driver-1} | {fm-paj-zone-id-1} | {fm-paj-hub-id-1-fm-dedicated} | {fm-paj-shipper-id-1-fm-dedicated} | {fm-paj-address-id-1-fm-dedicated} |
@@ -152,16 +143,12 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
     And API Control - Operator get pickup appointment job search details:
       | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
     And API Control - Operator verify pickup appointment job search details:
-      | pickupAppointmentJobId | {KEY_CONTROL_CREATED_PA_JOBS[1].id} |
-      | waypointId             | {KEY_WAYPOINT_ID}                   |
-      | routeId                | null                                |
-      | routingZoneId          | <zone_id>                           |
-      | driverId               | null                                |
+      | actualData   | KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[1]                                                                                                      |
+      | expectedData | { "pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOBS[1].id}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": null, "driver_id": null   } |
     Examples:
       | Note                      | zone_id            | shipper_id                         | address_id                         |
       | Pickup Type: FM Dedicated | {fm-paj-zone-id-2} | {fm-paj-shipper-id-2-fm-dedicated} | {fm-paj-address-id-2-fm-dedicated} |
       | Pickup Type: Truck        | {fm-paj-zone-id-2} | {fm-paj-shipper-id-2-truck}        | {fm-paj-address-id-2-truck}        |
-
 
 
   Scenario Outline: SG - Auto Route PAJ - Order Create Flow, Date = Today, Creation = After End Clock Time & Run Manual Cron Job, Driver has No Routes - <Note>
@@ -202,11 +189,8 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
     And API Control - Operator get pickup appointment job search details:
       | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOB_IDS[1]}]}}} |
     And API Control - Operator verify pickup appointment job search details:
-      | pickupAppointmentJobId | {KEY_CONTROL_CREATED_PA_JOB_IDS[1]} |
-      | waypointId             | {KEY_WAYPOINT_ID}                   |
-      | routeId                | {KEY_LIST_OF_CREATED_ROUTES[1].id}  |
-      | routingZoneId          | <zone_id>                           |
-      | driverId               | <driver_id>                         |
+      | actualData   | KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[1]                                                                                                                                                                         |
+      | expectedData | { "pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOBS[1].id}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "routing_zone_id": <zone_id>, "driver_id": <driver_id>   } |
     Examples:
       | Note                      | driver_id         | zone_id            | hub_id                         | pickup_address_id                          | pickup_address                                                                                                                                                                                                                                                                        |
       | Pickup Type: FM Dedicated | {fm-paj-driver-5} | {fm-paj-zone-id-5} | {fm-paj-hub-id-5-fm-dedicated} | {fm-paj-address-id-5-fm-dedicated-ext-ref} | { "name": "binti v4.1", "phone_number": "+65189189", "email": "binti@test.co", "address": { "address1": "4 Tuas Link 2", "address2": "#20-25", "country": "SG", "postcode": "638553", "latitude": 1.3368734948599406, "longitude": 103.63925100926828 } }                             |
@@ -252,11 +236,8 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
     And API Control - Operator get pickup appointment job search details:
       | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOB_IDS[1]}]}}} |
     And API Control - Operator verify pickup appointment job search details:
-      | pickupAppointmentJobId | {KEY_CONTROL_CREATED_PA_JOB_IDS[1]} |
-      | waypointId             | {KEY_WAYPOINT_ID}                   |
-      | routeId                | {KEY_LIST_OF_CREATED_ROUTES[1].id}  |
-      | routingZoneId          | <zone_id>                           |
-      | driverId               | <driver_id>                         |
+      | actualData   | KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[1]                                                                                                                                                                         |
+      | expectedData | { "pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOBS[1].id}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "routing_zone_id": <zone_id>, "driver_id": <driver_id>   } |
     Examples:
       | Note                      | driver_id         | zone_id            | hub_id                         | pickup_address_id                          | pickup_address                                                                                                                                                                                                                                                                        |
       | Pickup Type: FM Dedicated | {fm-paj-driver-5} | {fm-paj-zone-id-5} | {fm-paj-hub-id-5-fm-dedicated} | {fm-paj-address-id-5-fm-dedicated-ext-ref} | { "name": "binti v4.1", "phone_number": "+65189189", "email": "binti@test.co", "address": { "address1": "4 Tuas Link 2", "address2": "#20-25", "country": "SG", "postcode": "638553", "latitude": 1.3368734948599406, "longitude": 103.63925100926828 } }                             |
@@ -277,11 +258,8 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
     And API Control - Operator get pickup appointment job search details:
       | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 1 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
     And API Control - Operator verify pickup appointment job search details:
-      | pickupAppointmentJobId | {KEY_CONTROL_CREATED_PA_JOBS[1].id} |
-      | waypointId             | {KEY_WAYPOINT_ID}                   |
-      | routeId                | null                                |
-      | routingZoneId          | <zone_id>                           |
-      | driverId               | null                                |
+      | actualData   | KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[1]                                                                                                      |
+      | expectedData | { "pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOBS[1].id}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": null, "driver_id": null   } |
     Examples:
       | Note                      | zone_id            | shipper_id                         | address_id                         |
       | Pickup Type: FM Dedicated | {fm-paj-zone-id-1} | {fm-paj-shipper-id-1-fm-dedicated} | {fm-paj-address-id-1-fm-dedicated} |
@@ -302,11 +280,8 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
     And API Control - Operator get pickup appointment job search details:
       | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
     And API Control - Operator verify pickup appointment job search details:
-      | pickupAppointmentJobId | {KEY_CONTROL_CREATED_PA_JOBS[1].id} |
-      | waypointId             | {KEY_WAYPOINT_ID}                   |
-      | routeId                | null                                |
-      | routingZoneId          | <zone_id>                           |
-      | driverId               | null                                |
+      | actualData   | KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[1]                                                                                                                                    |
+      | expectedData | { "pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOBS[1].id}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": null, "routing_zone_id": <zone_id>, "driver_id": null   } |
     Examples:
       | zone_id            | shipper_id                   | address_id                   |
       | {fm-paj-zone-id-3} | {fm-paj-shipper-id-3-hybrid} | {fm-paj-address-id-3-hybrid} |

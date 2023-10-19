@@ -17,7 +17,7 @@ buildscript {
     }
     dependencies {
         classpath "gradle.plugin.com.github.viswaramamoorthy:gradle-util-plugins:0.1.0-RELEASE"
-        classpath "co.nvqa:common-build:1.1.9"
+        classpath "co.nvqa:common-build:1.1.10"
         classpath "io.qameta.allure.gradle.report:allure-report-plugin:2.11.1"
         classpath "io.qameta.allure.gradle.adapter:allure-adapter-plugin:2.11.1"
     }
@@ -33,19 +33,19 @@ repositories {
 }
 
 dependencies {
-    implementation "co.nvqa:common-base:1.3.5"
-    implementation "co.nvqa:commons:2.5.22"
+    implementation "co.nvqa:common-base:1.3.8"
+    implementation "co.nvqa:commons:2.5.31"
     implementation "co.nvqa:common-auth:1.3.1"
-    implementation "co.nvqa:common-sort:1.2.2"
+    implementation "co.nvqa:common-sort:1.3.27"
     implementation "co.nvqa:common-core:1.3.20-RC5"
-    implementation "co.nvqa:common-corev2:1.2.14"
-    implementation "co.nvqa:common-recovery:1.3.1"
-    implementation "co.nvqa:common-driver:1.3.4"
-    implementation "co.nvqa:common-webhook:1.2.7"
-    implementation "co.nvqa:common-shipper:1.2.9"
-    implementation "co.nvqa:common-dp:1.2.17"
-    implementation "co.nvqa:common-ordercreate:1.2.9"
-    implementation "co.nvqa:common-sort:1.2.10"
+    implementation "co.nvqa:common-corev2:1.2.15"
+    implementation "co.nvqa:common-recovery:1.3.8"
+    implementation "co.nvqa:common-driver:1.3.13"
+    implementation "co.nvqa:common-webhook:1.3.5"
+    implementation "co.nvqa:common-shipper:1.3.16"
+    implementation "co.nvqa:common-dp:1.3.39"
+    implementation "co.nvqa:common-ordercreate:1.3.8"
+    implementation "co.nvqa:common-sort:1.3.27"
     testImplementation "ch.qos.logback:logback-classic:1.2.3"
     testImplementation "org.apache.poi:poi-ooxml:3.17"
 }

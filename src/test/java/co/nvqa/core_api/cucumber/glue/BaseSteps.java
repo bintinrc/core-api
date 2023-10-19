@@ -4,7 +4,6 @@ import co.nvqa.common.cucumber.glue.StandardSteps;
 import co.nvqa.commonauth.utils.TokenUtils;
 import co.nvqa.commons.client.core.BatchUpdatePodClient;
 import co.nvqa.commons.client.core.EventClient;
-import co.nvqa.commons.client.core.InboundClient;
 import co.nvqa.commons.client.core.OrderClient;
 import co.nvqa.commons.client.core.RouteClient;
 import co.nvqa.commons.client.core.RouteMonitoringClient;
@@ -13,6 +12,7 @@ import co.nvqa.commons.client.order_search.OrderSearchClient;
 import co.nvqa.commons.client.reservation.ReservationV2Client;
 import co.nvqa.commons.client.shipper.ShipperClient;
 import co.nvqa.commons.util.StandardTestUtils;
+import co.nvqa.commonsort.client.InboundClient;
 import co.nvqa.commonsort.client.SortClient;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import co.nvqa.core_api.cucumber.glue.util.CoreApiScenarioStorageKeys;
@@ -32,7 +32,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
   private EventClient eventClient;
   private ShipperPickupClient shipperPickupClient;
   private ReservationV2Client reservationV2Client;
-  private SortClient inboundClient;
+  private InboundClient inboundClient;
   private ShipperClient shipperClient;
   private co.nvqa.common.webhook.client.ShipperClient shipperWebhookClient;
   private RouteMonitoringClient routeMonitoringClient;
@@ -111,9 +111,9 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
     return reservationV2Client;
   }
 
-  protected synchronized SortClient getInboundClient() {
+  protected synchronized InboundClient getInboundClient() {
     if (inboundClient == null) {
-      inboundClient = new SortClient();
+      inboundClient = new InboundClient();
     }
     return inboundClient;
   }

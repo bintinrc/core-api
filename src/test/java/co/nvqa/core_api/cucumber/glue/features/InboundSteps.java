@@ -1,9 +1,9 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
-import co.nvqa.commonsort.model.GlobalInboundRequest;
-import co.nvqa.commonsort.model.GlobalInboundRequest.Dimension;
-import co.nvqa.commonsort.model.GlobalInboundResponse;
+import co.nvqa.commonsort.model.sort.GlobalInboundRequest;
+import co.nvqa.commonsort.model.sort.GlobalInboundRequest.Dimension;
+import co.nvqa.commonsort.model.sort.GlobalInboundResponse;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
@@ -32,6 +32,7 @@ public class InboundSteps extends BaseSteps {
       request.setScan(trackingId);
       request.setHubId(hubId);
       GlobalInboundResponse response = getInboundClient().doGlobalInbound(request);
+
       Assertions.assertThat(response.getStatus()).as("status is SUCCESSFUL_INBOUND")
           .isEqualTo("SUCCESSFUL_INBOUND");
     }, "operator global inbound");
