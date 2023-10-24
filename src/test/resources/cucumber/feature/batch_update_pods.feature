@@ -313,8 +313,7 @@ Feature: Batch Update PODs
     And Operator Search for Created Pickup for Shipper "{shipper-4-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "SUCCESS" All Orders under the reservation
-    # TODO  to fix error
-#    Then Operator verify that reservation status is "Success"
+    Then Operator verify that reservation status is "Success"
     And DB Operator verifies waypoint status is "SUCCESS"
     And Operator verify that all orders status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
     And Shipper gets webhook request for event "En-route to Sorting Hub" for all orders
@@ -355,8 +354,7 @@ Feature: Batch Update PODs
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     When API Batch Update Job Request to "SUCCESS" All Return Orders under the reservation
-    # TODO to fix error
-#    Then Operator verify that reservation status is "SUCCESS"
+    Then Operator verify that reservation status is "SUCCESS"
     And DB Operator verifies waypoint status is "SUCCESS"
     And Operator verify that all orders status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
     And Shipper gets webhook request for event "En-route to Sorting Hub" for all orders
@@ -394,8 +392,7 @@ Feature: Batch Update PODs
     And Operator Search for Created Pickup for Shipper "{shipper-4-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "SUCCESS" Reservation without any Parcel
-    # TODO to fix error
-#    Then Operator verify that reservation status is "SUCCESS"
+    Then Operator verify that reservation status is "SUCCESS"
     And DB Operator verifies waypoint status is "SUCCESS"
     And Operator verify that all orders status-granular status is "Pending"-"Pending_Pickup"
     And Verify NO "En-route to Sorting Hub" event sent for all orders
@@ -420,8 +417,7 @@ Feature: Batch Update PODs
     And Operator Search for Created Pickup for Shipper "{shipper-4-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to Partial Success Orders under the reservation
-    # TODO to fix error
-#    Then Operator verify that reservation status is "SUCCESS"
+    Then Operator verify that reservation status is "SUCCESS"
     And DB Operator verifies waypoint status is "SUCCESS"
     And Operator verify that "Success" orders status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
     And Operator verify that "Fail" orders status-granular status is "Pending"-"Pending_Pickup"
@@ -448,8 +444,7 @@ Feature: Batch Update PODs
     And Operator Search for Created Pickup for Shipper "{shipper-4-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "FAIL" All Orders under the reservation
-#    TODO to fix error
-#    Then Operator verify that reservation status is "FAIL"
+    Then Operator verify that reservation status is "FAIL"
     And DB Operator verifies waypoint status is "FAIL"
     And Operator verify that all orders status-granular status is "Pending"-"Pending_Pickup"
     And Shipper gets webhook request for event "Pickup fail" for all orders
@@ -481,8 +476,7 @@ Feature: Batch Update PODs
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     When API Batch Update Job Request to "FAIL" All Return Orders under the reservation
-    # TODO to fix error
-#    Then Operator verify that reservation status is "FAIL"
+    Then Operator verify that reservation status is "FAIL"
     And DB Operator verifies waypoint status is "FAIL"
     And Operator verify that all orders status-granular status is "Pickup_fail"-"Pickup_fail"
     And Shipper gets webhook request for event "Pickup fail" for all orders
@@ -519,8 +513,7 @@ Feature: Batch Update PODs
     And Operator Search for Created Pickup for Shipper "{shipper-4-legacy-id}" with status "Pending"
     And Operator Route the Reservation Pickup
     When API Batch Update Job Request to "FAIL" Reservation without any Parcel
-    # TODO to fix error
-#    Then Operator verify that reservation status is "FAIL"
+    Then Operator verify that reservation status is "FAIL"
     And DB Operator verifies waypoint status is "FAIL"
     And Operator verify that all orders status-granular status is "Pending"-"Pending_Pickup"
     And Verify NO "Pickup fail" event sent for all orders
