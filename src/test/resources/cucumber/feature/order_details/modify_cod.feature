@@ -39,7 +39,7 @@ Feature: Order Details
     When Operator "<action>" Order COD value with value 50.0
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103042                                           |
-      | message     | Not allowed to update 'Returned to Sender' order |
+      | message     | Not allowed to update an RTS order               |
       | application | core                                             |
       | description | INVALID_ORDER_EXCEPTION                          |
 
