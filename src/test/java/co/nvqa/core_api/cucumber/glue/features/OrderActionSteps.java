@@ -471,7 +471,7 @@ public class OrderActionSteps extends BaseSteps {
     List<Long> tagIds = List.of(tagId);
     callWithRetry(() -> {
       long orderId = searchOrder(trackingId).getId();
-      getOrderClient().addOrderLevelTags(orderId, tagIds);
+      getOrderClientV2().addOrderLevelTags(orderId, tagIds);
       put(KEY_LIST_OF_ORDER_TAG_IDS, tagIds);
       putInList(KEY_LIST_OF_PRIOR_TRACKING_IDS, trackingId);
     }, f("tag an order: %s", trackingId));

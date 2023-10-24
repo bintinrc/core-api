@@ -28,6 +28,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
 
   private static OrderSearchClient orderSearchClient;
   private static OrderClient orderClient;
+  private static co.nvqa.common.core.client.OrderClient orderClientV2;
   private RouteClient routeClient;
   private EventClient eventClient;
   private ShipperPickupClient shipperPickupClient;
@@ -51,6 +52,13 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
       orderClient = new OrderClient(TestConstants.API_BASE_URL, TokenUtils.getOperatorAuthToken());
     }
     return orderClient;
+  }
+
+  protected static synchronized co.nvqa.common.core.client.OrderClient getOrderClientV2() {
+    if (orderClientV2 == null) {
+      orderClientV2 = new co.nvqa.common.core.client.OrderClient();
+    }
+    return orderClientV2;
   }
 
   protected static synchronized OrderClient getShipperOrderClient(String shipperToken) {
