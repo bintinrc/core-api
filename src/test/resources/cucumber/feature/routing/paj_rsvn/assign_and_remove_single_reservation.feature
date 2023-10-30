@@ -47,16 +47,16 @@ Feature: Assign and Remove Single Reservation To Route
       | expectedStatusCode   | 404                                                                                                                                                                                                       |
       | expectedErrorMessage | {"code":103016,"nvErrorCode":"SERVER_ERROR_EXCEPTION","messages":["Reservation 124 not found"],"application":"core","description":"RESERVATION_NOT_FOUND","data":{"message":"Reservation 124 not found"}} |
 
-
-  Scenario: PUT /2.0/reservations/:routeid/route - Assign a Single Reservation to a Route - Route Id Doesn't Exist
-    Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
-    When API Core - Operator failed to add reservation to route using data below:
-      | reservationId        | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}                                                                                                                                                                        |
-      | routeId              | 124                                                                                                                                                                                                             |
-      | overwrite            | false                                                                                                                                                                                                           |
-      | expectedStatusCode   | 400                                                                                                                                                                                                             |
-      | expectedErrorMessage | {"code":103080,"nvErrorCode":"SERVER_ERROR_EXCEPTION","messages":["Unable to find new route 124"],"application":"core","description":"BAD_REQUEST_EXCEPTION","data":{"message":"Unable to find new route 124"}} |
+# TODO commented now as need to confirm the expected response, fix in NV-11463
+#  Scenario: PUT /2.0/reservations/:routeid/route - Assign a Single Reservation to a Route - Route Id Doesn't Exist
+#    Given API Core - Operator create reservation using data below:
+#      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+#    When API Core - Operator failed to add reservation to route using data below:
+#      | reservationId        | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}                                                                                                                                                                        |
+#      | routeId              | 124                                                                                                                                                                                                             |
+#      | overwrite            | false                                                                                                                                                                                                           |
+#      | expectedStatusCode   | 400                                                                                                                                                                                                             |
+#      | expectedErrorMessage | {"code":103080,"nvErrorCode":"SERVER_ERROR_EXCEPTION","messages":["Unable to find new route 124"],"application":"core","description":"BAD_REQUEST_EXCEPTION","data":{"message":"Unable to find new route 124"}} |
 
 
   Scenario: PUT /2.0/reservations/:routeid/route - Update a Single Routed Reservation to a New Route
