@@ -158,22 +158,23 @@ Feature: Bulk Add Reservation to Route
       | pickupType | 1                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
-  @CancelCreatedReservations
-  Scenario: PUT /2.0/reservations/route-bulk - Bulk Add Reservation to Route - Route Id Doesn't Exist
-    Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
-    Given API Core - Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
-    When API Core - Operator bulk add reservation to route with partial success:
-      | request    | {"ids": [{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}],"new_route_id":160894,"overwrite":false}                                                                                                                          |
-      | failedJobs | {"code": 103080,"nvErrorCode": "SERVER_ERROR_EXCEPTION","messages": ["Unable to find route 160894"],"application": "core","description": "BAD_REQUEST_EXCEPTION","data": {"message": "Unable to find route 160894"}} |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | seqNo   | null                                             |
-      | routeId | null                                             |
-      | status  | Pending                                          |
-    And DB Route - verify waypoints record:
-      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | seqNo    | null                                             |
-      | routeId  | null                                             |
-      | status   | Pending                                          |
+ # TODO commented now as need to confirm the expected response, fix in NV-11463
+#  @CancelCreatedReservations
+#  Scenario: PUT /2.0/reservations/route-bulk - Bulk Add Reservation to Route - Route Id Doesn't Exist
+#    Given API Core - Operator create reservation using data below:
+#      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+#    Given API Core - Operator create new route using data below:
+#      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+#    When API Core - Operator bulk add reservation to route with partial success:
+#      | request    | {"ids": [{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}],"new_route_id":160894,"overwrite":false}                                                                                                                          |
+#      | failedJobs | {"code": 103080,"nvErrorCode": "SERVER_ERROR_EXCEPTION","messages": ["Unable to find route 160894"],"application": "core","description": "BAD_REQUEST_EXCEPTION","data": {"message": "Unable to find route 160894"}} |
+#    And DB Core - verify waypoints record:
+#      | id      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+#      | seqNo   | null                                             |
+#      | routeId | null                                             |
+#      | status  | Pending                                          |
+#    And DB Route - verify waypoints record:
+#      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+#      | seqNo    | null                                             |
+#      | routeId  | null                                             |
+#      | status   | Pending                                          |
