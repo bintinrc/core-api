@@ -427,32 +427,6 @@ Feature: Zonal Routing API
       | Success Waypoint | Arrived at Sorting Hub | Success        |
       | Fail Waypoint    | Pickup fail            | Fail           |
 
-# TODO commented now as API has been deprecated, need to confirm if scenario need to remove permanently
-#  @happy-path
-#  Scenario: Zonal Routing API - Unmerge Waypoint with Multiple Transactions
-#    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
-#    When Shipper creates multiple orders : 3 orders with the same params
-#      | service_type                  | Parcel   |
-#      | service_level                 | Standard |
-#      | parcel_job_is_pickup_required | false    |
-#    And Operator search for multiple "DELIVERY" transactions with status "PENDING"
-#    And API Core - Operator merge waypoints on Zonal Routing:
-#      | {KEY_LIST_OF_WAYPOINT_IDS[1]} |
-#      | {KEY_LIST_OF_WAYPOINT_IDS[2]} |
-#      | {KEY_LIST_OF_WAYPOINT_IDS[3]} |
-#    And API Operator verifies Delivery transactions of following orders have same waypoint id:
-#      | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
-#      | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
-#      | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
-#    When Operator unmerge transactions
-#    Then API Operator verifies Delivery transactions of following orders have different waypoint id:
-#      | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
-#      | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
-#      | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
-#    And Operator get "DELIVERY" transaction waypoint Ids for all orders
-#    Then DB Operator verifies all waypoints status is "PENDING"
-#    And DB Operator verifies all waypoints.route_id & seq_no is NULL
-
   Scenario: Zonal Routing API - Create Driver Route & Assign Reservation Waypoints
     When API Operator create new shipper address V2 using data below:
       | shipperId       | {shipper-2-id} |
