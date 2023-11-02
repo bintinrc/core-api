@@ -1,7 +1,7 @@
 @ForceSuccessOrder  @ArchiveDriverRoutes @route-manifest
 Feature: Route Manifest
 
-  @happy-path
+  @happy-path @HighPriority
   Scenario Outline: Admin Manifest Force Finish a Reservation Tied to Normal Orders - <Note>
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates a reservation tied to Normal orders
