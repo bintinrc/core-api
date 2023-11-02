@@ -1,10 +1,10 @@
 package co.nvqa.core_api.cucumber.glue;
 
+import co.nvqa.common.core.client.BatchUpdatePodClient;
+import co.nvqa.common.core.client.OrderClient;
 import co.nvqa.common.cucumber.glue.StandardSteps;
 import co.nvqa.commonauth.utils.TokenUtils;
-import co.nvqa.commons.client.core.BatchUpdatePodClient;
 import co.nvqa.commons.client.core.EventClient;
-import co.nvqa.commons.client.core.OrderClient;
 import co.nvqa.commons.client.core.RouteClient;
 import co.nvqa.commons.client.core.RouteMonitoringClient;
 import co.nvqa.commons.client.core.ShipperPickupClient;
@@ -13,7 +13,6 @@ import co.nvqa.commons.client.reservation.ReservationV2Client;
 import co.nvqa.commons.client.shipper.ShipperClient;
 import co.nvqa.commons.util.StandardTestUtils;
 import co.nvqa.commonsort.client.InboundClient;
-import co.nvqa.commonsort.client.SortClient;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import co.nvqa.core_api.cucumber.glue.util.CoreApiScenarioStorageKeys;
 
@@ -49,16 +48,9 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
 
   protected static synchronized OrderClient getOrderClient() {
     if (orderClient == null) {
-      orderClient = new OrderClient(TestConstants.API_BASE_URL, TokenUtils.getOperatorAuthToken());
+      orderClient = new OrderClient();
     }
     return orderClient;
-  }
-
-  protected static synchronized co.nvqa.common.core.client.OrderClient getOrderClientV2() {
-    if (orderClientV2 == null) {
-      orderClientV2 = new co.nvqa.common.core.client.OrderClient();
-    }
-    return orderClientV2;
   }
 
   protected static synchronized OrderClient getShipperOrderClient(String shipperToken) {
@@ -145,8 +137,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
 
   protected synchronized BatchUpdatePodClient getBatchUpdatePodClient() {
     if (batchUpdatePodClient == null) {
-      batchUpdatePodClient = new BatchUpdatePodClient(TestConstants.API_BASE_URL,
-          TokenUtils.getOperatorAuthToken());
+      batchUpdatePodClient = new BatchUpdatePodClient();
     }
     return batchUpdatePodClient;
   }

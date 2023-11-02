@@ -1,8 +1,8 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
+import co.nvqa.common.core.model.order.Order.Dimension;
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.commons.constants.HttpConstants;
-import co.nvqa.commons.model.core.Dimension;
 import co.nvqa.commons.model.core.Order;
 import co.nvqa.commons.model.core.Rts;
 import co.nvqa.commons.model.core.Transaction;
@@ -471,7 +471,7 @@ public class OrderActionSteps extends BaseSteps {
     List<Long> tagIds = List.of(tagId);
     callWithRetry(() -> {
       long orderId = searchOrder(trackingId).getId();
-      getOrderClientV2().addOrderLevelTags(orderId, tagIds);
+      getOrderClient().addOrderLevelTags(orderId, tagIds);
       put(KEY_LIST_OF_ORDER_TAG_IDS, tagIds);
       putInList(KEY_LIST_OF_PRIOR_TRACKING_IDS, trackingId);
     }, f("tag an order: %s", trackingId));

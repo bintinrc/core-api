@@ -1,6 +1,6 @@
 package co.nvqa.core_api.cucumber.glue.support;
 
-import co.nvqa.commons.model.core.Order;
+import co.nvqa.common.core.model.order.Order;
 import co.nvqa.commons.model.core.Transaction;
 import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
@@ -24,9 +24,9 @@ public class OrderDetailHelper extends BaseSteps {
     return order;
   }
 
-  public static Transaction getTransaction(Order order, String type, String status) {
-    List<Transaction> transactions = order.getTransactions();
-    Transaction result;
+  public static Order.Transaction getTransaction(Order order, String type, String status) {
+    List<Order.Transaction> transactions = order.getTransactions();
+    Order.Transaction result;
     result = transactions.stream()
         .filter(e -> e.getType().equalsIgnoreCase(type))
         .filter(e -> e.getStatus().equalsIgnoreCase(status))

@@ -1,11 +1,11 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
-import co.nvqa.commons.model.core.Order;
+import co.nvqa.common.core.model.batch_update_pods.JobUpdate;
+import co.nvqa.common.core.model.order.Order;
 import co.nvqa.commons.model.core.Pickup;
 import co.nvqa.commons.model.core.Transaction;
 import co.nvqa.commons.model.core.batch_update_pod.BlobData;
 import co.nvqa.commons.model.core.batch_update_pod.FailedParcels;
-import co.nvqa.commons.model.core.batch_update_pod.JobUpdate;
 import co.nvqa.commons.model.core.batch_update_pod.ProofDetails;
 import co.nvqa.commons.model.driver.Job;
 import co.nvqa.commons.model.driver.JobV5;
@@ -729,9 +729,9 @@ public class BatchUpdatePodsSteps extends BaseSteps {
 
   private void getTransactionWaypointId(String transactionType) {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-    co.nvqa.commons.model.core.Order order = OrderDetailHelper.getOrderDetails(trackingId);
+    Order order = OrderDetailHelper.getOrderDetails(trackingId);
     put(KEY_CREATED_ORDER, order);
-    Transaction transaction = OrderDetailHelper
+    Order.Transaction transaction = OrderDetailHelper
         .getTransaction(order, transactionType, Transaction.STATUS_PENDING);
     put(KEY_WAYPOINT_ID, transaction.getWaypointId());
   }
