@@ -69,7 +69,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
-  @happy-path
+  @happy-path @HighPriority
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Van En-route to Pickup
     Given Shipper id "{shipper-4-id}" subscribes to "Cancelled" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"

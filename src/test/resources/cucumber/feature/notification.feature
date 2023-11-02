@@ -1,7 +1,7 @@
  @ArchiveDriverRoutes @notification
 Feature: Notification
 
-  @happy-path
+  @happy-path @HighPriority
   Scenario: Send Successful Delivery Webhook on Force Success from Edit Order
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -14,7 +14,7 @@ Feature: Notification
     Then Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
 
-  @happy-path
+  @happy-path @HighPriority
   Scenario: Send Successful Delivery Webhook on Force Success from Route Manifest
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -142,7 +142,7 @@ Feature: Notification
     Then Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
 
-  @happy-path
+  @happy-path @HighPriority
   Scenario: Send Route Start Webhook Notification
     Given Shipper id "{shipper-4-id}" subscribes to "On Vehicle for Delivery" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -195,7 +195,7 @@ Feature: Notification
     And Shipper verifies webhook request payload has correct details for status "On Vehicle for Delivery (RTS)"
     And Verify NO "On Vehicle for Delivery" event sent for all orders
 
-  @happy-path
+  @happy-path @HighPriority
   Scenario: Send First Attempt Delivery Fail & First Pending Reschedule Webhook on Driver Fails Delivery Order
     Given Shipper id "{shipper-4-id}" subscribes to "First Attempt Delivery Fail" webhook
     Given Shipper id "{shipper-4-id}" subscribes to "Pending Reschedule" webhook
@@ -294,7 +294,7 @@ Feature: Notification
     And Shipper gets webhook request for event "Arrived at Sorting Hub" for all orders
     And Shipper verifies webhook request payload has correct details for status "Arrived at Sorting Hub"
 
-  @happy-path
+  @happy-path @HighPriority
   Scenario: Send Successful Delivery Webhook with COD - Driver Success Delivery with COD
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"

@@ -1,7 +1,7 @@
 @ForceSuccessOrder  @routing1 @order-tag-to-dp @routing-refactor
 Feature: Order Tag to DP
 
-  @happy-path
+  @happy-path @HighPriority
   Scenario: Add to DP Holding Route upon Hub Inbound
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -459,7 +459,7 @@ Feature: Order Tag to DP
       | event   | UPDATE_AV                          |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
-  @ArchiveDriverRoutes @happy-path
+  @ArchiveDriverRoutes @happy-path @HighPriority
   Scenario: DELETE /2.0/orders/:orderId/routes-dp - Remove DP Order From Holding Route
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |

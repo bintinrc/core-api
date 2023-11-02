@@ -14,7 +14,7 @@ Feature: Unarchive Route
       | archived | 0                                  |
       | status   | 1                                  |
 
-  @route-unarchive @happy-path
+  @route-unarchive @happy-path @HighPriority
   Scenario: Operator Unarchive Driver Route Successfully - Route has Waypoints
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
