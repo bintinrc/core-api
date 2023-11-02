@@ -42,7 +42,7 @@ Feature: SG - Order Dimensions Update Calculation
     And Verify NO "Parcel Weight" event sent for order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Verify NO "Parcel Measurements Update" event sent for order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
 
-  @happy-path
+  @happy-path @HighPriority
   Scenario: SG - Global Inbound Order with No Weight Changes - Shipper Submitted Weight > 0
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
@@ -140,7 +140,7 @@ Feature: SG - Order Dimensions Update Calculation
       | New Weight > Current Weight | 3.5        |
       | New Weight < Current Weight | 1.1        |
 
-  @happy-path
+  @happy-path @HighPriority
   Scenario Outline: SG - Update Order Weight on Edit Order - <Note>
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
@@ -169,7 +169,7 @@ Feature: SG - Order Dimensions Update Calculation
       | New Weight > Current Weight | 3.5        |
       | New Weight < Current Weight | 1.1        |
 
-  @happy-path
+  @happy-path @HighPriority
   Scenario Outline: SG - Update Order Weight on Upload CSV Order Weight Update Page - <Note>
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook

@@ -35,7 +35,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
-  @happy-path
+  @happy-path @HighPriority
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Pending Pickup
     Given Shipper id "{shipper-4-id}" subscribes to "Cancelled" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"

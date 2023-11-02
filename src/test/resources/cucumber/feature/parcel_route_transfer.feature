@@ -1,7 +1,7 @@
 @ArchiveDriverRoutes @parcel-route-transfer
 Feature: Parcel Route Transfer
 
-  @routing-refactor @happy-path
+  @routing-refactor @happy-path @HighPriority
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Unrouted Delivery
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper creates multiple orders : 3 orders
@@ -121,7 +121,7 @@ Feature: Parcel Route Transfer
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
-  @routing-refactor @happy-path
+  @routing-refactor @happy-path @HighPriority
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Unrouted Delivery
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
