@@ -41,6 +41,7 @@ Feature: Zonal Routing API
     When API Driver set credentials "{driver-username}" and "{driver-password}"
     And Verify that waypoints are shown on driver "{driver-id}" list route correctly
 
+  @HighPriority
   Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Add Unrouted Waypoints to Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -123,6 +124,7 @@ Feature: Zonal Routing API
     And Verify that waypoints are shown on driver "{driver-id}" list route correctly
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
+  @HighPriority
   Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Remove Waypoints From Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When API Operator create new shipper address V2 using data below:
@@ -285,7 +287,7 @@ Feature: Zonal Routing API
     And Verify that waypoints are shown on driver "{driver-id}" list route correctly
     And Verify that waypoints are not shown on previous driver list route
 
-
+  @HighPriority
   Scenario: Add Merged Unrouted Waypoint to a Route from Zonal Routing Edit Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When API Operator create new shipper address V2 using data below:
@@ -324,6 +326,7 @@ Feature: Zonal Routing API
       | routeId          | {KEY_CREATED_ROUTE_ID}            |
       | routeEventSource | ADD_BY_ORDER                      |
 
+  @MediumPriority
   Scenario: Zonal Routing Edit Route API - Not Allowed to Move Success Waypoints to Another Route
     Given Operator create an empty route
       | driver_id  | {driver-2-id}    |
@@ -362,7 +365,7 @@ Feature: Zonal Routing API
     And DB Operator verifies waypoints.route_id & seq_no is populated correctly
     And DB Operator verifies all route_monitoring_data records
 
-
+  @HighPriority
   Scenario: Zonal Routing API - Set Routed Waypoint to Pending
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -390,6 +393,7 @@ Feature: Zonal Routing API
 
     And DB Operator verifies route_monitoring_data is hard-deleted
 
+  @MediumPriority
   Scenario Outline: Zonal Routing API - Not Allowed to Set Attempted Waypoint to Pending - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -427,6 +431,7 @@ Feature: Zonal Routing API
       | Success Waypoint | Arrived at Sorting Hub | Success        |
       | Fail Waypoint    | Pickup fail            | Fail           |
 
+  @HighPriority
   Scenario: Zonal Routing API - Create Driver Route & Assign Reservation Waypoints
     When API Operator create new shipper address V2 using data below:
       | shipperId       | {shipper-2-id} |
@@ -457,6 +462,7 @@ Feature: Zonal Routing API
       | pickupType | 1                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
+  @HighPriority
   Scenario: Zonal Routing Edit Route API - Edit Reservation Waypoints Inside a Route - Add Unrouted Reservation Waypoints to Route
     When API Operator create new shipper address V2 using data below:
       | shipperId       | {shipper-2-id} |
@@ -489,6 +495,7 @@ Feature: Zonal Routing API
       | pickupType | 1                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
+  @HighPriority
   Scenario: Zonal Routing Edit Route API - Bulk Edit Reservation Waypoints Inside Multiple Routes - Move Routed Reservation Waypoints to Another Route
     When API Operator create new shipper address V2 using data below:
       | shipperId       | {shipper-2-id} |
@@ -523,7 +530,7 @@ Feature: Zonal Routing API
       | pickupType | 1                                                                                                 |
       | data       | {"old_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
 
-  @DeletePickupAppointmentJob
+  @DeletePickupAppointmentJob @HighPriority
   Scenario: Zonal Routing Edit Route API - Edit Reservation Waypoints Inside a Route - Remove Reservation Waypoints From Route
     When API Operator create new shipper address V2 using data below:
       | shipperId       | {shipper-2-id} |
