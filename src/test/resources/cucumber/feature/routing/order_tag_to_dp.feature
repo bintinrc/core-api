@@ -82,6 +82,7 @@ Feature: Order Tag to DP
       | event   | UPDATE_AV                          |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
+  @HighPriority
   Scenario: Add to DP Holding Route upon Hub Inbound - Routed Order
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -171,7 +172,7 @@ Feature: Order Tag to DP
       | event   | UPDATE_AV                          |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
-  @ArchiveDriverRoutes
+  @ArchiveDriverRoutes @HighPriority
   Scenario: PUT /2.0/orders/:orderId/routes-dp - Add Order to DP Holding Route
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
@@ -208,6 +209,7 @@ Feature: Order Tag to DP
       | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | routeEventSource | ADD_BY_ORDER_DP                    |
 
+  @HighPriority
   Scenario: PUT /2.0/orders/:orderId/dps/routes-dp - Add Unrouted Order To DP
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
@@ -288,6 +290,7 @@ Feature: Order Tag to DP
       | event   | UPDATE_AV                          |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
+  @HighPriority
   Scenario: PUT /2.0/orders/:orderId/dps/routes-dp - Add Routed Order To DP
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
@@ -377,6 +380,7 @@ Feature: Order Tag to DP
       | event   | UPDATE_AV                          |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
+  @HighPriority
   Scenario: PUT /2.0/orders/:orderId/dps/routes-dp - Add Unrouted DP Order To Route
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
@@ -503,6 +507,7 @@ Feature: Order Tag to DP
       | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | routeEventSource | REMOVE_BY_ORDER_DP                 |
 
+  @HighPriority
   Scenario: PUT /2.0/orders/:orderId/dps/routes-dp - Add Routed DP Order To New Route
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
@@ -594,6 +599,7 @@ Feature: Order Tag to DP
       | event   | UPDATE_AV                          |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
+  @HighPriority
   Scenario: PUT /2.0/orders/:orderId/dps/routes-dp - Add Routed DP Order To New DP
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
@@ -674,6 +680,7 @@ Feature: Order Tag to DP
       | event   | UPDATE_AV                          |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
+  @HighPriority
   Scenario: PUT /2.0/orders/:orderId/dps/routes-dp - Add Routed DP Order To New DP and Route
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
@@ -760,6 +767,7 @@ Feature: Order Tag to DP
       | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | routeEventSource | REMOVE_BY_ORDER_DP                 |
 
+  @HighPriority
   Scenario: DELETE /2.0/orders/:orderId/dps/routes-dp - Remove and Unassigned DP Order From Holding Route
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -843,6 +851,7 @@ Feature: Order Tag to DP
       | oldRouteId       | {dp-holding-route-id}              |
       | routeEventSource | REMOVE_BY_ORDER_DP                 |
 
+  @HighPriority
   Scenario: DELETE /2.0/orders/:orderId/dps - Remove DP Order From Holding Route
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -911,6 +920,7 @@ Feature: Order Tag to DP
       | event   | UNASSIGNED_FROM_DP                 |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
+  @HighPriority
   Scenario: DELETE /2.1/orders/:orderId/dps - Remove DP Order From Holding Route
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -979,6 +989,7 @@ Feature: Order Tag to DP
       | event   | UNASSIGNED_FROM_DP                 |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
+  @HighPriority
   Scenario: POST /orders/:orderId/overstay - Overstay DP Order
     When API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
@@ -1074,6 +1085,7 @@ Feature: Order Tag to DP
       | event   | RTS                                |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
+  @HighPriority
   Scenario: POST /2.0/orders/:orderId/dropoff - Drop Off DP Order
     Given Shipper id "{shipper-id}" subscribes to "Arrived at Distribution Point" webhook
     When API Order - Shipper create multiple V4 orders using data below:
@@ -1105,6 +1117,7 @@ Feature: Order Tag to DP
       | orderId            | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | updateStatusReason | TRANSFER_FROM_DRIVER_TO_PUDO       |
 
+  @HighPriority
   Scenario: POST /2.0/orders/:orderId/collect - Customer Collection of DP Order
     Given Shipper id "{shipper-id}" subscribes to "Successful Delivery" webhook
     Given Shipper id "{shipper-id}" subscribes to "Completed" webhook

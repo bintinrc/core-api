@@ -1,7 +1,7 @@
 @ArchiveDriverRoutes @CancelCreatedReservations @DeletePickupAppointmentJob @routing2 @pa-job
 Feature: Pickup Appointment Job Bulk Routing
 
-  @DeletePickupAppointmentJob
+  @DeletePickupAppointmentJob @HighPriority
   Scenario: PUT /pickup-appointment-jobs/route-bulk - Route All Unrouted PA Jobs
     Given API Shipper - Operator create new shipper address using data below:
       | shipperId       | {shipper-5-id} |
@@ -93,7 +93,7 @@ Feature: Pickup Appointment Job Bulk Routing
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
 
-  @DeletePickupAppointmentJob
+  @DeletePickupAppointmentJob @HighPriority
   Scenario: PUT /pickup-appointment-jobs/route-bulk - Update All Routed PA Jobs to a New Route
     Given API Shipper - Operator create new shipper address using data below:
       | shipperId       | {shipper-5-id} |
@@ -189,8 +189,7 @@ Feature: Pickup Appointment Job Bulk Routing
       | pickupType | 2                                                                                                 |
       | data       | {"old_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
 
-
-  @DeletePickupAppointmentJob
+  @DeletePickupAppointmentJob @HighPriority
   Scenario: PUT /pickup-appointment-jobs/route-bulk - Partial Success Route PA Jobs
     Given API Shipper - Operator create new shipper address using data below:
       | shipperId       | {shipper-5-id} |
@@ -293,7 +292,7 @@ Feature: Pickup Appointment Job Bulk Routing
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[3].id}} |
 
-  @DeletePickupAppointmentJob
+  @DeletePickupAppointmentJob @HighPriority
   Scenario: PUT /pickup-appointment-jobs/route-bulk - Add PA Jobs to a Route that has been started
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |

@@ -33,7 +33,7 @@ Feature: Zonal Routing API
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
-  @DeletePickupAppointmentJob
+  @DeletePickupAppointmentJob @HighPriority
   Scenario: PUT /pickup-appointment-jobs/:paJobId/route - Update Routed PA Job to a New Route
     Given API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
@@ -78,7 +78,7 @@ Feature: Zonal Routing API
       | pickupType | 2                                                                                                 |
       | data       | {"old_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
 
-  @DeletePickupAppointmentJob
+  @DeletePickupAppointmentJob @HighPriority
   Scenario: POST /routes - Zonal Routing API - Create Driver Route & Assign PA Job Waypoint
     Given API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
@@ -107,7 +107,7 @@ Feature: Zonal Routing API
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
-  @DeletePickupAppointmentJob
+  @DeletePickupAppointmentJob @HighPriority
   Scenario: PUT /routes - Zonal Routing Edit Route API - Add Unrouted PA Job Waypoints to Route
     Given API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
@@ -138,7 +138,7 @@ Feature: Zonal Routing API
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
-  @DeletePickupAppointmentJob
+  @DeletePickupAppointmentJob @HighPriority
   Scenario: PUT /routes - Zonal Routing Edit Route API - Move Routed PA Job Waypoints to Another Route
     Given API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
@@ -179,7 +179,7 @@ Feature: Zonal Routing API
       | pickupType | 2                                                                                                 |
       | data       | {"old_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
 
-  @DeletePickupAppointmentJob @CancelCreatedReservations
+  @DeletePickupAppointmentJob @CancelCreatedReservations @HighPriority
   Scenario: PUT /routes - Zonal Routing Edit Route API - Remove PA Job Waypoints From Route
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
@@ -250,7 +250,7 @@ Feature: Zonal Routing API
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
-  @DeletePickupAppointmentJob
+  @DeletePickupAppointmentJob @HighPriority
   Scenario: PUT /pickup-appointment-jobs/:paJobId/route - Add PA Job to a Route that has been started
     Given API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
@@ -310,7 +310,7 @@ Feature: Zonal Routing API
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
-  @DeletePickupAppointmentJob
+  @DeletePickupAppointmentJob @HighPriority
   Scenario: PUT /routes - Zonal Routing Edit Route API - Add PA Job to a Route that has been started
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
