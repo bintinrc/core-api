@@ -3,6 +3,10 @@ package co.nvqa.core_api.cucumber.glue.features;
 import co.nvqa.common.core.model.batch_update_pods.ProofDetails;
 import co.nvqa.common.core.model.order.Order;
 import co.nvqa.common.core.model.order.Order.Transaction;
+import co.nvqa.common.core.model.route.ParcelRouteTransferRequest;
+import co.nvqa.common.core.model.route.ParcelRouteTransferResponse;
+import co.nvqa.common.core.model.route.ParcelRouteTransferResponse.FailedOrders;
+import co.nvqa.common.core.model.route.RouteResponse;
 import co.nvqa.common.driver.client.DriverClient;
 import co.nvqa.common.driver.model.rest.GetRouteResponse;
 import co.nvqa.common.driver.model.rest.GetRouteResponse.Parcel;
@@ -11,13 +15,8 @@ import co.nvqa.common.driver.model.rest.SubmitPodRequest.JobAction;
 import co.nvqa.common.driver.model.rest.SubmitPodRequest.JobMode;
 import co.nvqa.common.driver.model.rest.SubmitPodRequest.JobType;
 import co.nvqa.common.driver.model.rest.SubmitPodRequest.PhysicalItem;
-import co.nvqa.commons.model.core.route.FailedOrder;
-import co.nvqa.commons.model.core.route.ParcelRouteTransferRequest;
-import co.nvqa.commons.model.core.route.ParcelRouteTransferResponse;
-import co.nvqa.commons.model.core.route.Route;
-import co.nvqa.commons.model.driver.Waypoint;
-import co.nvqa.commons.support.DateUtil;
-import co.nvqa.commons.util.NvTestRuntimeException;
+import co.nvqa.common.utils.DateUtil;
+import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
@@ -84,7 +83,7 @@ public class DriverSteps extends BaseSteps {
 
   @Given("Driver Starts the route")
   public void driverStartRoute() {
-    Route route = get(KEY_CREATED_ROUTE);
+    RouteResponse route = get(KEY_CREATED_ROUTE);
     long routeId = route.getId();
     callWithRetry(() -> driverClient.startRoute(routeId), "driver starts route");
   }
@@ -188,33 +187,15 @@ public class DriverSteps extends BaseSteps {
     }, "driver parcel route transfer");
   }
 
-  @Then("Verify Parcel Route Transfer Response")
-  public void verifyRouteTransferResponse() {
-    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-    ParcelRouteTransferResponse response = get(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS);
-    co.nvqa.commons.model.driver.Route route = response.getRoutes().get(0);
-    put(KEY_CREATED_ROUTE_ID, route.getId());
-    putInList(KEY_LIST_OF_CREATED_ROUTE_ID, route.getId());
-    List<Waypoint> waypoints = route.getWaypoints();
-    trackingIds.forEach(e -> {
-      Waypoint waypoint = waypoints.stream().filter(o -> !o.getJobs().isEmpty())
-          .filter(o -> o.getJobs().get(0).getOrders().get(0).getTrackingId().equalsIgnoreCase(e))
-          .findAny().orElseThrow(
-              () -> new NvTestRuntimeException("Tracking Id is not available in response"));
-      Assertions.assertThat(waypoint.getJobs().get(0).getOrders().get(0).getTrackingId())
-          .as(String.format("tracking id %s found", e)).isEqualTo(e);
-    });
-  }
-
   @Then("Verify Parcel Route Transfer Failed Orders with message : {string}")
   public void verifyRouteTransferResponseFailed(String message) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     ParcelRouteTransferResponse response = get(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS);
-    List<FailedOrder> failedOrders = response.getFailedOrders();
+    List<FailedOrders> failedOrders = response.getFailedOrders();
     Assertions.assertThat(failedOrders.size() == trackingIds.size())
         .as("contains all failed orders").isTrue();
     trackingIds.forEach(e -> {
-      FailedOrder failedOrder = failedOrders.stream()
+      FailedOrders failedOrder = failedOrders.stream()
           .filter(o -> o.getTrackingIds().get(0).equalsIgnoreCase(e)).findAny().orElseThrow(
               () -> new NvTestRuntimeException(String.format("tracking id %s not found", e)));
       Assertions.assertThat(failedOrder.getTrackingIds().size()).as("tracking id size is 1")
@@ -227,7 +208,7 @@ public class DriverSteps extends BaseSteps {
   }
 
   private void driverGetWaypointDetails() {
-    Route route = get(KEY_CREATED_ROUTE);
+    RouteResponse route = get(KEY_CREATED_ROUTE);
     final Long routeId = route.getId();
     final Long waypointId = get(KEY_WAYPOINT_ID);
     final Long driverId = get(KEY_NINJA_DRIVER_ID);
@@ -356,9 +337,9 @@ public class DriverSteps extends BaseSteps {
     if (source.containsKey("to_exclude_routed_order")) {
       trackingIds.remove(0);
     }
-    List<co.nvqa.commons.model.core.route.Parcel> orders = new ArrayList<>();
+    List<ParcelRouteTransferRequest.Parcel> orders = new ArrayList<>();
     trackingIds.forEach(e -> {
-      co.nvqa.commons.model.core.route.Parcel parcel = new co.nvqa.commons.model.core.route.Parcel();
+      ParcelRouteTransferRequest.Parcel parcel = new ParcelRouteTransferRequest.Parcel();
       parcel.setTrackingId(e);
       parcel.setHubId(request.getToDriverHubId());
       parcel.setInboundType("VAN_FROM_NINJAVAN");

@@ -2,7 +2,6 @@ package co.nvqa.core_api.cucumber.glue.features;
 
 import co.nvqa.commons.model.core.Address;
 import co.nvqa.commons.model.core.Pickup;
-import co.nvqa.commons.model.core.Reservation;
 import co.nvqa.commons.model.core.route.Route;
 import co.nvqa.commons.support.DateUtil;
 import co.nvqa.commons.util.NvLogger;
@@ -10,7 +9,6 @@ import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import io.cucumber.guice.ScenarioScoped;
-import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;

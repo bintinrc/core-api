@@ -3,6 +3,8 @@ package co.nvqa.core_api.cucumber.glue.features;
 import co.nvqa.common.core.model.other.CoreExceptionResponse;
 import co.nvqa.common.core.model.reservation.BulkRouteReservationResponse;
 import co.nvqa.common.core.model.route.BulkAddPickupJobToRouteResponse;
+import co.nvqa.common.core.model.route.RouteRequest;
+import co.nvqa.common.core.model.route.RouteResponse;
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.common.model.DataEntity;
 import co.nvqa.commons.constants.HttpConstants;
@@ -40,14 +42,14 @@ public class RoutingSteps extends BaseSteps {
   @When("Operator create an empty route")
   public void operatorCreateEmptyRoute(Map<String, String> arg1) {
     final String json = toJsonCamelCase(arg1);
-    final Route route = fromJsonSnakeCase(json, Route.class);
+    final RouteRequest route = fromJsonSnakeCase(json, RouteRequest.class);
     put(KEY_NINJA_DRIVER_ID, route.getDriverId());
     route.setComments("Created for Core API testing, created at: "
         + DateUtil.getTodayDateTime_YYYY_MM_DD_HH_MM_SS());
     route.setTags(Arrays.asList(1, 4));
     route.setDate(DateUtil.generateUTCTodayDate());
     callWithRetry(() -> {
-      Route result = getRouteClient().createRoute(route);
+      RouteResponse result = getRouteClient().createRoute(route);
       Assertions.assertThat(route).as("created route is not null").isNotNull();
       put(KEY_CREATED_ROUTE, result);
       putInList(KEY_LIST_OF_CREATED_ROUTE_ID, result.getId());
