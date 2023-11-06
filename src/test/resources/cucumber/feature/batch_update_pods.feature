@@ -43,6 +43,7 @@ Feature: Batch Update PODs
       | RECIPIENT  | uid:70cd7f37-bca6-464e-866f-918528b7a14c | RECIPIENT  |
       | SUBSTITUTE | uid:024b7c50-548c-4429-826a-eb8166effb86 | SUBSTITUTE |
 
+  @HighPriority
   Scenario: Driver picks up X number of return parcels and fails Y number of return parcels in one waypoint (Partial Success)
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub, Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -168,6 +169,7 @@ Feature: Batch Update PODs
       | RECIPIENT  | uid:bfa103c7-66e1-4d84-add4-8bb43ca9c9fd | RECIPIENT  |
       | SUBSTITUTE | uid:3e86a2e5-1e5d-4e76-911a-5330f7859161 | SUBSTITUTE |
 
+  @HighPriority
   Scenario Outline: Driver delivers all X number of return parcels in one waypoint with POD type - <Note>
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery, Completed" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -210,6 +212,7 @@ Feature: Batch Update PODs
       | RECIPIENT  | uid:11b78edd-3021-40ab-9e8f-52913dfa1e66 | RECIPIENT  |
       | SUBSTITUTE | uid:3f5ab4a0-d234-4756-964f-a9eaebffcc99 | SUBSTITUTE |
 
+  @HighPriority
   Scenario: Driver Delivers X number of Parcels and Fails Y number of Parcels in One Waypoint (Partial Success)
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery, Completed, Pending Reschedule, First Attempt Delivery Fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -334,7 +337,7 @@ Feature: Batch Update PODs
       | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
-  @update-rsvn
+  @update-rsvn @HighPriority
   Scenario: Driver Picks Up All X number of Return Parcels in One Reservation
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -376,7 +379,7 @@ Feature: Batch Update PODs
       | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
-  @update-rsvn
+  @update-rsvn @HighPriority
   Scenario: Driver success reservation without scanning any parcel
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -401,7 +404,7 @@ Feature: Batch Update PODs
     Then DB Operator verifies reservation_blob is created
     And Verify blob data is correct
 
-  @update-rsvn
+  @update-rsvn @HighPriority
   Scenario: Driver successes the reservation with X number of parcels but fails Y number of parcels (Partial Success)
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub, Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -428,7 +431,7 @@ Feature: Batch Update PODs
     Then DB Operator verifies reservation_blob is created
     And Verify blob data is correct
 
-  @update-rsvn
+  @update-rsvn @HighPriority
   Scenario: Driver fails the reservation and fail all X number of normal parcels under a reservation
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -456,7 +459,7 @@ Feature: Batch Update PODs
     And Operator get proof details for "FAIL" transaction of "Normal" orders
     And DB Operator verifies transaction_blob is NOT created
 
-  @update-rsvn
+  @update-rsvn @HighPriority
   Scenario: Driver fails the reservation and fail all X number of return parcels under a reservation
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -522,6 +525,7 @@ Feature: Batch Update PODs
     And Verify blob data is correct
     And DB Operator verifies reservation_failure_reason is created correctly
 
+  @HighPriority
   Scenario: Shipper Got POD Webhook (Successful Pickup) with NO PODs Details after Driver Success Return Pickup with NO Proof Details
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -569,6 +573,7 @@ Feature: Batch Update PODs
     And Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery" for all orders
 
+  @HighPriority
   Scenario: Driver delivers order with COD to collect
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery, Completed" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
