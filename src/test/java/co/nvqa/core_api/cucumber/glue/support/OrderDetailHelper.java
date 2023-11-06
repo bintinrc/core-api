@@ -1,11 +1,13 @@
 package co.nvqa.core_api.cucumber.glue.support;
 
 import co.nvqa.common.core.model.order.Order;
+import co.nvqa.common.ordercreate.model.OrderSearchResponse;
 import co.nvqa.commons.model.core.Transaction;
 import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Then;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,8 +16,8 @@ import java.util.List;
 @ScenarioScoped
 public class OrderDetailHelper extends BaseSteps {
 
-  public static Order searchOrder(String trackingIdOrStampId) {
-    return getOrderSearchClient().searchOrderByTrackingId(trackingIdOrStampId);
+  public static OrderSearchResponse searchOrder(String trackingIdOrStampId) {
+    return getOrderSearchClient().searchOrders("tracking_id", Collections.singletonList(trackingIdOrStampId));
   }
 
   public static Order getOrderDetails(String trackingId) {

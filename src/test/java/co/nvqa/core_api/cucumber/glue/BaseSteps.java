@@ -1,14 +1,14 @@
 package co.nvqa.core_api.cucumber.glue;
 
 import co.nvqa.common.core.client.BatchUpdatePodClient;
+import co.nvqa.common.core.client.EventClient;
 import co.nvqa.common.core.client.OrderClient;
 import co.nvqa.common.core.client.RouteClient;
 import co.nvqa.common.cucumber.glue.StandardSteps;
+import co.nvqa.common.ordercreate.client.OrderSearchClient;
 import co.nvqa.commonauth.utils.TokenUtils;
-import co.nvqa.commons.client.core.EventClient;
 import co.nvqa.commons.client.core.RouteMonitoringClient;
 import co.nvqa.commons.client.core.ShipperPickupClient;
-import co.nvqa.commons.client.order_search.OrderSearchClient;
 import co.nvqa.commons.client.reservation.ReservationV2Client;
 import co.nvqa.commons.client.shipper.ShipperClient;
 import co.nvqa.commons.util.StandardTestUtils;
@@ -40,8 +40,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
 
   protected static synchronized OrderSearchClient getOrderSearchClient() {
     if (orderSearchClient == null) {
-      orderSearchClient = new OrderSearchClient(TestConstants.API_BASE_URL,
-          TokenUtils.getOperatorAuthToken());
+      orderSearchClient = new OrderSearchClient();
     }
     return orderSearchClient;
   }
@@ -90,8 +89,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
 
   protected synchronized EventClient getEventClient() {
     if (eventClient == null) {
-      eventClient = new EventClient(TestConstants.API_BASE_URL, TokenUtils.getOperatorAuthToken());
-    }
+      eventClient = new EventClient();    }
     return eventClient;
   }
 
