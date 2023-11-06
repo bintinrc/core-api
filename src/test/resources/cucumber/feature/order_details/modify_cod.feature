@@ -1,7 +1,7 @@
 @ForceSuccessOrder @ArchiveDriverRoutes @order-details @modify-cod
 Feature: Order Details
 
-  @modify-cod
+  @modify-cod @MediumPriority
   Scenario Outline: Do not allow to Modify COD if Order State is Completed - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -23,7 +23,7 @@ Feature: Order Details
       | Add COD    | Add    | 0   | uid:746af929-4ea9-43c6-b8b0-96f016cf1f90 |
       | Update COD | Update | 30  | uid:3c77e509-5b9d-46d9-a6ab-593a939b2101 |
 
-  @modify-cod
+  @modify-cod @MediumPriority
   Scenario Outline: Do not allow to Modify COD if Order State is Returned to Sender - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -48,7 +48,7 @@ Feature: Order Details
       | Add COD    | Add    | 0   | uid:26a72716-a98f-41b4-94f2-fc5b7920c48a |
       | Update COD | Update | 50  | uid:ca54ac49-1b0b-4753-bca3-42059040b975 |
 
-  @modify-cod @ArchiveDriverRoutes
+  @modify-cod @ArchiveDriverRoutes @MediumPriority
   Scenario Outline: Do not allow to Modify COD if Order State is On Vehicle for Delivery - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -80,7 +80,7 @@ Feature: Order Details
       | Add COD    | Add    | 0   | uid:fc92e5f7-ffc3-4503-8e66-2994360251a7 |
       | Update COD | Update | 50  | uid:469e522e-7d0a-4010-bfae-529daea0b8e0 |
 
-  @modify-cod
+  @modify-cod @MediumPriority
   Scenario: Do not allow to Modify COD if Order State is Completed - Delete COD
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -97,7 +97,7 @@ Feature: Order Details
       | application | core                                    |
       | description | INVALID_ORDER_EXCEPTION                 |
 
-  @modify-cod
+  @modify-cod @MediumPriority
   Scenario: Do not allow to Modify COD if Order State is Returned to Sender - Delete COD
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -117,7 +117,7 @@ Feature: Order Details
       | application | core                                             |
       | description | INVALID_ORDER_EXCEPTION                          |
 
-  @modify-cod @ArchiveDriverRoutes
+  @modify-cod @ArchiveDriverRoutes @MediumPriority
   Scenario: Do not allow to Modify COD if Order State is On Vehicle for Delivery - Delete COD
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
