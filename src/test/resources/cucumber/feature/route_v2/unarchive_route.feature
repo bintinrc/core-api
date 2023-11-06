@@ -1,7 +1,7 @@
 @ForceSuccessOrder @ArchiveDriverRoutes  @ArchiveDriverRoutes @route-v2 @route-unarchive
 Feature: Unarchive Route
 
-  @route-unarchive
+  @route-unarchive @HighPriority
   Scenario: Operator Unarchive Driver Route Successfully - Empty Route
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
@@ -36,14 +36,14 @@ Feature: Unarchive Route
       | archived | 0                                  |
       | status   | 1                                  |
 
-  @route-unarchive
+  @route-unarchive @MediumPriority
   Scenario: Operator Unarchive NON-archived Route
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     When API Core - Operator unarchives routes below:
       | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
 
-  @route-unarchive
+  @route-unarchive @MediumPriority
   Scenario: Operator Unarchive Invalid Route Id
     When API Core - Operator unarchives invalid route with data below:
       | routeId | 89  |

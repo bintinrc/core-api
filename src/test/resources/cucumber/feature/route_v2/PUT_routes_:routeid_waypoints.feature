@@ -1,6 +1,7 @@
 @ArchiveRouteCommonV2 @ForceSuccessOrder @DeletePickupAppointmentJob @CancelCreatedReservations @route-v2 @create-route-assign-waypoint
 Feature: Create Route & Assign Waypoints
 
+  @HighPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Unrouted Waypoints to Route - Transaction, Reservation, PA Job
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
@@ -127,6 +128,7 @@ Feature: Create Route & Assign Waypoints
       | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | routeEventSource | ADD_BY_TRACKING_OR_STAMP           |
 
+  @HighPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Routed Waypoints to Route - Transaction, Reservation, PA Job
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
@@ -159,6 +161,7 @@ Feature: Create Route & Assign Waypoints
       | responseCode | 400                                                                                                                                                                                                                                                                                                                                |
       | error        | {"error":{"application_exception_code":173000,"title":"REQUEST_ERR","message":"Some of the waypoints are routed [invalidWaypointIDs=[{KEY_WAYPOINT_ID} {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}]]"}} |
 
+  @MediumPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Invalid Waypoint to Route
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
@@ -168,7 +171,7 @@ Feature: Create Route & Assign Waypoints
       | responseCode | 400                                                                                                                                                               |
       | error        | {"error":{"application_exception_code":173000,"title":"REQUEST_ERR","message":"Some of the waypoints are missing or does not exist [missingWaypointIds=[1234]]"}} |
 
-
+  @MediumPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Waypoint to Invalid Route
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
@@ -184,6 +187,7 @@ Feature: Create Route & Assign Waypoints
       | responseCode | 404                                                                                                                                 |
       | error        | {"error":{"application_exception_code":173001,"title":"NOT_FOUND_ERR","message":"The requested route '[:routeId=1234]' not found"}} |
 
+  @MediumPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Success Waypoints to Route - Transaction, Reservation, PA Job
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
@@ -233,6 +237,7 @@ Feature: Create Route & Assign Waypoints
       | responseCode | 400                                                                                                                                                                                                                                                                                                                                |
       | error        | {"error":{"application_exception_code":173000,"title":"REQUEST_ERR","message":"Some of the waypoints are routed [invalidWaypointIDs=[{KEY_WAYPOINT_ID} {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}]]"}} |
 
+  @MediumPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Failed Waypoints to Route - Transaction, Reservation, PA Job
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
@@ -285,7 +290,7 @@ Feature: Create Route & Assign Waypoints
       | error        | {"error":{"application_exception_code":173000,"title":"REQUEST_ERR","message":"Some of the waypoints are routed [invalidWaypointIDs=[{KEY_WAYPOINT_ID} {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}]]"}} |
 
 
-  @DeletePickupAppointmentJob
+  @DeletePickupAppointmentJob @HighPriority
   Scenario: PUT /routes/:routeid/waypoints - Add PA Job to a Route that has been started
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
