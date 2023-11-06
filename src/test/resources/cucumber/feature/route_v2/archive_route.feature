@@ -1,7 +1,7 @@
 @ForceSuccessOrder @route-v2 @route-archive
 Feature: Archive Route
 
-  @route-archive
+  @route-archive @HighPriority
   Scenario: Operator Archive Driver Route Successfully - Empty Route
     Given Operator create an empty route
       | driver_id  | {driver-id}      |
@@ -45,7 +45,7 @@ Feature: Archive Route
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Archived route is not shown on his list routes
 
-  @route-archive
+  @route-archive @HighPriority
   Scenario: Operator Archive Driver Route Successfully - Status = IN_PROGRESS
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -72,7 +72,7 @@ Feature: Archive Route
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     And Archived route is not shown on his list routes
 
-  @route-archive
+  @route-archive @MediumPriority
   Scenario: Operator not Allowed to Archive an already Archived Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -107,7 +107,7 @@ Feature: Archive Route
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Archived route is not shown on his list routes
 
-  @route-archive @route-delete
+  @route-archive @route-delete @MediumPriority
   Scenario: Operator not Allowed to Archive Driver Invalid Route Id - Deleted Route
     Given Operator create an empty route
       | driver_id  | {driver-id}      |
@@ -122,7 +122,7 @@ Feature: Archive Route
       | message | The requested route '[:routeId=%s]' not found |
       | routeId | {KEY_CREATED_ROUTE_ID}                        |
 
-  @route-archive
+  @route-archive @MediumPriority
   Scenario: Operator not Allowed to Archive Driver Invalid Route Id - Route Not Found
     When API Core - Operator archives invalid route with data below:
       | routeId | 89  |

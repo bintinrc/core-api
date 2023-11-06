@@ -3,7 +3,7 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
 
   https://studio.cucumber.io/projects/208144/test-plan/folders/2930485
 
-
+  @HighPriority
   Scenario Outline: SG - Auto Route PAJ - Date = Today, Creation = Within Start & End Clock Time, Driver has No Routes - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     And API Control - Operator create pickup appointment job with data below:
@@ -43,7 +43,7 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | Pickup Type: FM Dedicated | {fm-paj-driver-1} | {fm-paj-zone-id-1} | {fm-paj-hub-id-1-fm-dedicated} | {fm-paj-shipper-id-1-fm-dedicated} | {fm-paj-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-paj-driver-1} | {fm-paj-zone-id-1} | {fm-paj-hub-id-1-truck}        | {fm-paj-shipper-id-1-truck}        | {fm-paj-address-id-1-truck}        |
 
-
+  @HighPriority
   Scenario Outline: SG - Auto Route PAJ - Date = Today, Creation = Within Start & End Clock Time, Driver has Existing Route - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     And API Core - Operator create new route using data below:
@@ -84,7 +84,7 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | Pickup Type: FM Dedicated | {fm-paj-driver-1} | {fm-paj-zone-id-1} | {fm-paj-hub-id-1-fm-dedicated} | {fm-paj-shipper-id-1-fm-dedicated} | {fm-paj-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-paj-driver-1} | {fm-paj-zone-id-1} | {fm-paj-hub-id-1-truck}        | {fm-paj-shipper-id-1-truck}        | {fm-paj-address-id-1-truck}        |
 
-
+  @HighPriority
   Scenario Outline: SG - Auto Route PAJ - Date = Today, No Driver Assigned for the Zone, Creation = Within Start & End Clock Time - <Note>
     Given API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 0 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 0 days next, YYYY-MM-dd}T22:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
@@ -106,7 +106,7 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | Pickup Type: FM Dedicated | {fm-paj-zone-id-2} | {fm-paj-shipper-id-2-fm-dedicated} | {fm-paj-address-id-2-fm-dedicated} |
       | Pickup Type: Truck        | {fm-paj-zone-id-2} | {fm-paj-shipper-id-2-truck}        | {fm-paj-address-id-2-truck}        |
 
-
+  @HighPriority
   Scenario Outline: SG - Auto Route PAJ - Date = Today, Pickup Type = Hybrid, Creation = Within Start & End Clock Time
     Given API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 0 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 0 days next, YYYY-MM-dd}T22:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
@@ -127,7 +127,7 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | zone_id            | shipper_id                   | address_id                   |
       | {fm-paj-zone-id-3} | {fm-paj-shipper-id-3-hybrid} | {fm-paj-address-id-3-hybrid} |
 
-
+  @HighPriority
   Scenario Outline: SG - Auto Route PAJ - Date = Tomorrow, Creation = Within Start & End Clock Time - <Note>
     And API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T22:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
@@ -149,7 +149,7 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | Pickup Type: FM Dedicated | {fm-paj-zone-id-1} | {fm-paj-shipper-id-1-fm-dedicated} | {fm-paj-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-paj-zone-id-1} | {fm-paj-shipper-id-1-truck}        | {fm-paj-address-id-1-truck}        |
 
-
+  @HighPriority
   Scenario Outline: SG - Auto Route PAJ - Order Create Flow, Date = Today, Creation = Within Start & End Clock Time, Driver has No Routes - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     And API Order - Shipper create multiple V4 orders using data below:
@@ -194,7 +194,7 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | Pickup Type: FM Dedicated | {fm-paj-driver-5} | {fm-paj-zone-id-5} | {fm-paj-hub-id-5-fm-dedicated} | {fm-paj-address-id-5-fm-dedicated-ext-ref} | { "name": "binti v4.1", "phone_number": "+65189189", "email": "binti@test.co", "address": { "address1": "4 Tuas Link 2", "address2": "#20-25", "country": "SG", "postcode": "638553", "latitude": 1.3368734948599406, "longitude": 103.63925100926828 } }                             |
       | Pickup Type: Truck        | {fm-paj-driver-5} | {fm-paj-zone-id-5} | {fm-paj-hub-id-5-truck}        | {fm-paj-address-id-5-truck-ext-ref}        | { "name": "PajAutoFmRoutingSgTruck", "phone_number": "+6581234567", "email": "PajAutoFmRoutingSg@shop.co", "address": { "address1": "4 Tuas Link 2", "address2": "#20-25", "country": "SG", "postcode": "638553", "latitude": 1.3368734948599406, "longitude": 103.63925100926828 } } |
 
-
+  @HighPriority
   Scenario Outline: SG - Auto Route PAJ - Order Create Flow, Date = Today, Creation = Within Start & End Clock Time, Driver has Existing Route - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     And API Core - Operator create new route using data below:

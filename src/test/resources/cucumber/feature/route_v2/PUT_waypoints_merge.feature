@@ -1,6 +1,7 @@
 @ForceSuccessOrder @route-v2 @waypoints-merge
 Feature:PUT /waypoints/merge
 
+  @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Merge Pickup and Delivery Waypoint on Zonal Routing - Same address, Email & Phone Number
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -46,6 +47,7 @@ Feature:PUT /waypoints/merge
       | id         | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
 
+  @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Merge Pickup and Delivery Waypoint on Zonal Routing - Same Address & Email But Different Phone Number
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
@@ -103,6 +105,7 @@ Feature:PUT /waypoints/merge
       | id         | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
 
+  @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Merge Pickup and Delivery Waypoint on Zonal Routing - Same Address & Phone Number But Different Email
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
@@ -160,6 +163,7 @@ Feature:PUT /waypoints/merge
       | id         | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
 
+  @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Merge Pickup and Delivery Waypoint on Zonal Routing - Default email OTP  - Same Default Email & Same Phone Number
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
@@ -217,6 +221,7 @@ Feature:PUT /waypoints/merge
       | id         | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
 
+  @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Merge DP Delivery Waypoint on Zonal Routing - Same DP Delivery
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
@@ -247,6 +252,7 @@ Feature:PUT /waypoints/merge
       | id         | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
 
+  @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Merge Delivery Waypoint on Zonal Routing - Non-Empty Delivery OTP - Different Delivery OTP
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
@@ -273,6 +279,7 @@ Feature:PUT /waypoints/merge
       | id         | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
 
+  @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Merge Delivery Waypoint on Zonal Routing - Empty Delivery OTP
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
@@ -299,6 +306,7 @@ Feature:PUT /waypoints/merge
       | id         | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
 
+  @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Disallow Merge Delivery Waypoint on Zonal Routing - Empty & Non-Empty Delivery OTP
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
@@ -331,6 +339,7 @@ Feature:PUT /waypoints/merge
       | id         | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
 
+  @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Disallow Merge Delivery Waypoint on Zonal Routing - Different Order Verification Method
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
@@ -363,6 +372,7 @@ Feature:PUT /waypoints/merge
       | id         | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
 
+  @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Disallow Merge DP Delivery Waypoint on Zonal Routing - Different DP Delivery
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
@@ -393,6 +403,7 @@ Feature:PUT /waypoints/merge
       | id         | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
 
+  @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Disallow Merge Pickup and Delivery Waypoint on Zonal Routing - Default email  - Same Default Email & Different Phone Number
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
@@ -450,6 +461,7 @@ Feature:PUT /waypoints/merge
       | id         | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[1].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[1].waypointId} |
 
+  @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Partial Merge Valid and Invalid Waypoint on Zonal Routing - Different Address
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |

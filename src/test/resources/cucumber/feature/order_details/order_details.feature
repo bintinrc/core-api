@@ -1,6 +1,7 @@
 @ForceSuccessOrder @order-details
 Feature: Order Details
 
+  @MediumPriority
   Scenario: Operator RTS Order With Status = Completed
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -19,6 +20,7 @@ Feature: Order Details
       | description | INVALID_OPERATION                             |
     Then Operator verify that order status-granular status is "Completed"-"Completed"
 
+  @MediumPriority
   Scenario: Operator RTS Order With Status = Returned To Sender
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -40,6 +42,7 @@ Feature: Order Details
       | description | ORDER_ALREADY_RTS              |
     Then Operator verify that order status-granular status is "Completed"-"Returned_to_Sender"
 
+  @MediumPriority
   Scenario: Operator RTS Order With Status = Cancelled
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -58,6 +61,7 @@ Feature: Order Details
       | description | INVALID_OPERATION                             |
     Then Operator verify that order status-granular status is "Cancelled"-"Cancelled"
 
+  @MediumPriority
   Scenario: Do Not Allow Force Success On Hold Order with Active PETS Ticket
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below

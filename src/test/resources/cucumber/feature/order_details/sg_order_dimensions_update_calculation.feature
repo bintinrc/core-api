@@ -1,6 +1,7 @@
 @ForceSuccessOrder @order-details @OrderDimensionsUpdateCalculationSG
 Feature: SG - Order Dimensions Update Calculation
 
+  @MediumPriority
   Scenario: SG - Global Inbound Order with No Weight Changes - Shipper Submitted Weight = 0
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
@@ -22,6 +23,7 @@ Feature: SG - Order Dimensions Update Calculation
     And Verify NO "Parcel Weight" event sent for order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Verify NO "Parcel Measurements Update" event sent for order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
 
+  @MediumPriority
   Scenario: SG - Global Inbound Order with No Weight Changes - Shipper Submitted Weight = NULL
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
@@ -64,6 +66,7 @@ Feature: SG - Order Dimensions Update Calculation
     And Verify NO "Parcel Weight" event sent for order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Verify NO "Parcel Measurements Update" event sent for order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
 
+  @HighPriority
   Scenario: SG - Global Inbound Order with Weight Changes - Shipper Submitted Weight = 0
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
@@ -88,6 +91,7 @@ Feature: SG - Order Dimensions Update Calculation
     And Shipper gets webhook request for event "Parcel Weight" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper verifies webhook request payload has correct details for status "Parcel Weight" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
 
+  @HighPriority
   Scenario: SG - Global Inbound Order with Weight Changes - Shipper Submitted Weight = NULL
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
@@ -111,7 +115,8 @@ Feature: SG - Order Dimensions Update Calculation
     And Shipper verifies webhook request payload has correct details for status "Parcel Measurements Update" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper gets webhook request for event "Parcel Weight" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper verifies webhook request payload has correct details for status "Parcel Weight" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-    
+
+  @HighPriority
   Scenario Outline: SG - Global Inbound Order with Weight Changes - Shipper Submitted Weight > 0 - <Note>
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
@@ -194,6 +199,7 @@ Feature: SG - Order Dimensions Update Calculation
       | New Weight > Current Weight | 3.5        |
       | New Weight < Current Weight | 1.1        |
 
+  @HighPriority
   Scenario: Update Weight & Dimensions upon Global Inbound - On Hold Order with MISSING Ticket
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook

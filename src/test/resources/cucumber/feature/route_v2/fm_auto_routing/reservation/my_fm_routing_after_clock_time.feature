@@ -1,7 +1,7 @@
 @routing-my @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-rsvn-my-1
 Feature: MY - FM Automated Routing - After Clock Time
 
-  @CancelCreatedReservations
+  @CancelCreatedReservations @HighPriority
   Scenario Outline: MY - Auto Route Reservation - Date = Today, Creation = After End Clock Time & Run Manual Cron Job, Driver has No Routes - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create reservation using data below:
@@ -41,7 +41,7 @@ Feature: MY - FM Automated Routing - After Clock Time
       | Pickup Type: FM Dedicated | {fm-zone-id-1} | {fm-hub-id-1-fm-dedicated} | {fm-shipper-legacy-id-1-fm-dedicated} | {fm-driver-1} | {fm-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-zone-id-1} | {fm-hub-id-1-truck}        | {fm-shipper-legacy-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
 
-  @CancelCreatedReservations
+  @CancelCreatedReservations @HighPriority
   Scenario Outline: MY - Auto Route Reservation - Date = Today, Creation = After End Clock Time & Run Manual Cron Job, Driver has Existing Route
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create new route using data below:
@@ -101,7 +101,7 @@ Feature: MY - FM Automated Routing - After Clock Time
       | zone_id        | hub_id                     | driver_id     | shipper_legacy_id_1                   | address_id_1                   | shipper_legacy_id_2            | address_id_2            |
       | {fm-zone-id-1} | {fm-hub-id-1-fm-dedicated} | {fm-driver-1} | {fm-shipper-legacy-id-1-fm-dedicated} | {fm-address-id-1-fm-dedicated} | {fm-shipper-legacy-id-1-truck} | {fm-address-id-1-truck} |
 
-  @CancelCreatedReservations
+  @CancelCreatedReservations @HighPriority
   Scenario Outline: MY - Auto Route Reservation - Date = Today, Creation = After End Clock Time - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create reservation using data below:
@@ -117,7 +117,7 @@ Feature: MY - FM Automated Routing - After Clock Time
       | Pickup Type: FM Dedicated | {fm-zone-id-1} | {fm-shipper-legacy-id-1-fm-dedicated} | {fm-driver-1} | {fm-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-zone-id-1} | {fm-shipper-legacy-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
 
-  @CancelCreatedReservations
+  @CancelCreatedReservations @HighPriority
   Scenario Outline: MY - Auto Route Reservation - Date = Today, No Driver Assigned for the Zone, Creation = Within Start & End Clock Time - <Note>
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
@@ -132,7 +132,7 @@ Feature: MY - FM Automated Routing - After Clock Time
       | Pickup Type: FM Dedicated | {fm-zone-id-3} | {fm-shipper-legacy-id-3-fm-dedicated} | {fm-address-id-3-fm-dedicated} |
       | Pickup Type: Truck        | {fm-zone-id-3} | {fm-shipper-legacy-id-3-truck}        | {fm-address-id-3-truck}        |
 
-  @CancelCreatedReservations
+  @CancelCreatedReservations @HighPriority
   Scenario Outline: MY - Auto Route Reservation - Date = Today, No Driver Assigned for the Zone, Creation = After End Clock Time & Run Manual Cron Job - <Note>
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
@@ -148,7 +148,7 @@ Feature: MY - FM Automated Routing - After Clock Time
       | Pickup Type: FM Dedicated | {fm-zone-id-3} | {fm-shipper-legacy-id-3-fm-dedicated} | {fm-address-id-3-fm-dedicated} |
       | Pickup Type: Truck        | {fm-zone-id-3} | {fm-shipper-legacy-id-3-truck}        | {fm-address-id-3-truck}        |
 
-  @CancelCreatedReservations
+  @CancelCreatedReservations @HighPriority
   Scenario Outline: MY - Auto Route Reservation - Date = Today, Pickup Type = Hybrid, Creation = After End Clock Time & Run Manual Cron Job
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
@@ -163,7 +163,7 @@ Feature: MY - FM Automated Routing - After Clock Time
       | zone_id        | shipper_legacy_id               | address_id               |
       | {fm-zone-id-4} | {fm-shipper-legacy-id-4-hybrid} | {fm-address-id-4-hybrid} |
 
-  @CancelCreatedReservations
+  @CancelCreatedReservations @HighPriority
   Scenario Outline: MY - Auto Route Reservation - Date = Tomorrow, Creation = After End Clock Time & Run Manual Cron Job - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create reservation using data below:
@@ -180,7 +180,7 @@ Feature: MY - FM Automated Routing - After Clock Time
       | Pickup Type: FM Dedicated | {fm-zone-id-1} | {fm-shipper-legacy-id-1-fm-dedicated} | {fm-driver-1} | {fm-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-zone-id-1} | {fm-shipper-legacy-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
 
-  @CancelCreatedReservations
+  @CancelCreatedReservations @HighPriority
   Scenario Outline: MY - Auto Route Reservation - Order Create Flow, Date = Today, Creation = After End Clock Time & Run Manual Cron Job, Driver has No Routes - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "{fm-driver-id-5}"
     Given API Order - Shipper create multiple V4 orders using data below:
@@ -226,7 +226,7 @@ Feature: MY - FM Automated Routing - After Clock Time
       | Pickup Type: FM Dedicated | {fm-address-id-5-fm-dedicated-ext-ref} | { "name": "BNC Shop MR", "phone_number": "+6581234567", "email": "bnc@shop.co", "address": { "address1": "Mukahh", "address2": "#20-25", "country": "MY", "postcode": "96400", "latitude": 2.899908, "longitude": 112.097377 } }                 |
       | Pickup Type: Truck        | {fm-address-id-5-truck-ext-ref}        | { "name": "BNC Shop MR", "phone_number": "+6581234567", "email": "bnc@shop.co", "address": { "address1": "Mukahh", "address2": "#20-25", "country": "MY", "postcode": "96400", "latitude": 2.897574749844236,"longitude": 112.08453062175683 } } |
 
-  @CancelCreatedReservations
+  @CancelCreatedReservations @HighPriority
   Scenario Outline: MY - Auto Route Reservation - Order Create Flow, Date = Today, Creation = After End Clock Time & Run Manual Cron Job, Driver has Existing Route
     Given API Route - Operator archive all unarchived routes of driver id "{fm-driver-id-5}"
     Given API Core - Operator create new route using data below:
