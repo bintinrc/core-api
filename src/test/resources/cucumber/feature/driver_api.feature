@@ -27,6 +27,7 @@ Feature: Driver API
       | routeId | {KEY_CREATED_ROUTE_ID} |
     And DB Operator verifies inbound_scans record with type "4" and correct route_id
 
+  @HighPriority
   Scenario: Driver Success a Return Pickup
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -50,6 +51,7 @@ Feature: Driver API
       | routeId | {KEY_CREATED_ROUTE_ID} |
     And DB Operator verifies inbound_scans record with type "1" and correct route_id
 
+  @HighPriority
   Scenario: Driver Success a Reservation Pickup by Scanning Normal Order
     Given Shipper authenticates using client id "{shipper-3-client-id}" and client secret "{shipper-3-client-secret}"
     When Shipper creates a reservation
@@ -73,6 +75,7 @@ Feature: Driver API
       | routeId | {KEY_CREATED_ROUTE_ID} |
     And DB Operator verifies inbound_scans record with type "1" and correct route_id
 
+  @HighPriority
   Scenario: Driver Success a Failed Delivery that was Rescheduled
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -117,6 +120,7 @@ Feature: Driver API
       | new_delivery_status | Pending |
       | new_delivery_type   | DD      |
 
+  @HighPriority
   Scenario: Driver Success a Failed Pickup that was Rescheduled
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -158,6 +162,7 @@ Feature: Driver API
       | new_pickup_status | Pending |
       | new_pickup_type   | PP      |
 
+  @HighPriority
   Scenario: Success Delivery Order - Create PETS Ticket - Resolve PETS ticket - Success New Delivery Transaction from Driver App
     Given Shipper id "{shipper-id}" subscribes to "Successful Delivery" webhook
     Given Shipper id "{shipper-id}" subscribes to "Completed" webhook
