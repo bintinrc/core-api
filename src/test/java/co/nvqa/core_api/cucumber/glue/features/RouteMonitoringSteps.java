@@ -1,15 +1,16 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
-import co.nvqa.commons.model.core.Pickup;
-import co.nvqa.commons.model.core.route_monitoring.RouteMonitoringResponse;
-import co.nvqa.commons.model.core.route_monitoring.Waypoint;
-import co.nvqa.commons.model.order_create.v4.OrderRequestV4;
-import co.nvqa.commons.model.order_create.v4.Timeslot;
-import co.nvqa.commons.model.order_create.v4.UserDetail;
-import co.nvqa.commons.support.DateUtil;
-import co.nvqa.commons.util.NvTestRuntimeException;
+import co.nvqa.common.core.model.pickup.Pickup;
+import co.nvqa.common.core.model.route_monitoring.RouteMonitoringResponse;
+import co.nvqa.common.core.model.route_monitoring.Waypoint;
+import co.nvqa.common.ordercreate.model.OrderRequestV4;
+import co.nvqa.common.ordercreate.model.OrderRequestV4.UserDetail;
+import co.nvqa.common.ordercreate.model.Timeslot;
+import co.nvqa.common.utils.DateUtil;
+import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -45,20 +46,20 @@ public class RouteMonitoringSteps extends BaseSteps {
     List<Long> zoneIds = get(KEY_LIST_OF_ZONE_IDS);
     String date = DateUtil.displayDate(DateUtil.getDate());
     long routeId = get(KEY_CREATED_ROUTE_ID);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       List<RouteMonitoringResponse> routeMonitoringDetails = getRouteMonitoringClient().getRouteMonitoringDetails(
           date, hubIds, zoneIds, 1000);
       RouteMonitoringResponse result = routeMonitoringDetails.stream()
           .filter(e -> e.getRouteId().equals(routeId)).findAny().orElseThrow(
               () -> new NvTestRuntimeException("Route Monitoring Data not found " + routeId));
       put(KEY_ROUTE_MONITORING_RESULT, result);
-    }, "get route monitoring data", 10);
+    }, "get route monitoring data");
 
   }
 
   @Given("Operator verifies Route Monitoring Data Has Correct Details for {string} Case")
   public void operatorChecksTotalParcelsCount(String waypointType, Map<String, Integer> arg1) {
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       operatorFilterRouteMonitoring();
       List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
       List<Pickup> pickups = get(KEY_LIST_OF_CREATED_RESERVATIONS);
@@ -92,12 +93,12 @@ public class RouteMonitoringSteps extends BaseSteps {
       if (waypointType.equalsIgnoreCase(WAYPOINT_TYPE_PENDING)) {
         Assertions.assertThat(result.getLastSeen()).as("Driver last seen is null").isNull();
       }
-    }, "check pending case", 30);
+    }, "check pending case");
   }
 
   @When("Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints")
   public void checkInvalidFailedDeliveries(Map<String, Integer> dataTable) {
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       operatorFilterRouteMonitoring();
       List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
       List<Pickup> pickups = get(KEY_LIST_OF_CREATED_RESERVATIONS);
@@ -146,14 +147,14 @@ public class RouteMonitoringSteps extends BaseSteps {
           .isEqualTo(0);
       Assertions.assertThat(result.getCompletionPercentage())
           .as(String.format("completion percentage %d", routeId)).isEqualTo(0.0);
-    }, "check invalid failed case", 30);
+    }, "check invalid failed case");
   }
 
 
   @Given("Operator verifies Route Monitoring Data for Empty Route has correct details")
   public void operatorChecksEmptyRouteData(Map<String, Integer> dataTable) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       operatorFilterRouteMonitoring();
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
       checkRouteDetails(result);
@@ -166,7 +167,7 @@ public class RouteMonitoringSteps extends BaseSteps {
       checkPendingDetails(routeId, result, dataTable);
       Assertions.assertThat(result.getLastSeen()).as("Last seen is null").isNull();
 
-    }, "check empty route", 30);
+    }, "check empty route");
   }
 
   @When("Operator get pending priority parcel details for {string}")
@@ -174,7 +175,7 @@ public class RouteMonitoringSteps extends BaseSteps {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     List<String> trackingIds = get(KEY_LIST_OF_PRIOR_TRACKING_IDS);
     put(WAYPOINT_TYPE_TRANSACTION, type);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       List<Waypoint> waypoints = getRouteMonitoringClient().getPendingPriorityParcelDetails(routeId,
           type).getParcels();
       trackingIds.forEach(e -> {
@@ -182,14 +183,14 @@ public class RouteMonitoringSteps extends BaseSteps {
         Assertions.assertThat(found).as("tracking id found").isTrue();
       });
       put(KEY_ROUTE_MONITORING_RESULT, waypoints);
-    }, "get pending priority details", 30);
+    }, "get pending priority details");
   }
 
   @When("Operator get {string} parcel details")
   public void operatorGetInvalidFailedParcelDetails(String type) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       List<Waypoint> waypoints;
       if (type.equalsIgnoreCase(WAYPOINT_TYPE_INVALID_FAILED_DELIVERIES)) {
         put(WAYPOINT_TYPE_TRANSACTION, "dd");
@@ -204,14 +205,14 @@ public class RouteMonitoringSteps extends BaseSteps {
         Assertions.assertThat(found).as("tracking id found").isTrue();
       });
       put(KEY_ROUTE_MONITORING_RESULT, waypoints);
-    }, String.format("get %s details", type), 30);
+    }, String.format("get %s details", type));
   }
 
   @When("Operator get invalid failed reservation details")
   public void operatorGetInvalidFailedReservationDetails() {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     List<Pickup> pickups = get(KEY_LIST_OF_CREATED_RESERVATIONS);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       List<Waypoint> waypoints = getRouteMonitoringClient().getInvalidFailedReservations(routeId)
           .getPickupAppointments();
       pickups.forEach(e -> {
@@ -220,7 +221,7 @@ public class RouteMonitoringSteps extends BaseSteps {
             .isTrue();
       });
       put(KEY_ROUTE_MONITORING_RESULT, waypoints);
-    }, "get invalid failed reservation details", 30);
+    }, "get invalid failed reservation details");
   }
 
   @When("Operator verifies invalid failed reservations details")
@@ -228,7 +229,7 @@ public class RouteMonitoringSteps extends BaseSteps {
     List<Pickup> pickups = get(KEY_LIST_OF_CREATED_RESERVATIONS);
     List<OrderRequestV4> orderDetails = get(KEY_LIST_OF_ORDER_CREATE_RESPONSE);
     Timeslot timeslot = orderDetails.get(0).getParcelJob().getPickupTimeslot();
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       operatorGetInvalidFailedReservationDetails();
       List<Waypoint> waypoints = get(KEY_ROUTE_MONITORING_RESULT);
       Assertions.assertThat(waypoints.size()).as("invalid failed reservation count")
@@ -248,7 +249,7 @@ public class RouteMonitoringSteps extends BaseSteps {
         Assertions.assertThat(waypoint.getTimeWindow().toLowerCase()).as("time window")
             .isEqualTo(getFormattedTimeslot(timeslot.getStartTime(), timeslot.getEndTime()));
       });
-    }, "get invalid failed reservation details", 30);
+    }, "get invalid failed reservation details");
   }
 
 
@@ -257,7 +258,7 @@ public class RouteMonitoringSteps extends BaseSteps {
     List<OrderRequestV4> transactionDetails = get(
         KEY_LIST_OF_ORDER_CREATE_RESPONSE);
     Map<String, OrderRequestV4> requestMap = get(KEY_LIST_OF_ORDER_CREATE_REQUEST);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       operatorGetInvalidFailedParcelDetails(type);
       List<Waypoint> waypoints = get(KEY_ROUTE_MONITORING_RESULT);
       Assertions.assertThat(waypoints.size()).as(String.format("%s count", type))
@@ -282,7 +283,7 @@ public class RouteMonitoringSteps extends BaseSteps {
           Assertions.assertThat(waypoint.getTags()).as("Tags is null").isNull();
         }
         UserDetail userDetail;
-        Map<String, String> address;
+        JsonNode address;
         String startTime;
         String endTime;
         if (type.equalsIgnoreCase(WAYPOINT_TYPE_INVALID_FAILED_DELIVERIES)) {
@@ -306,7 +307,7 @@ public class RouteMonitoringSteps extends BaseSteps {
         Assertions.assertThat(waypoint.getTimeWindow().toLowerCase()).as("time window")
             .isEqualTo(getFormattedTimeslot(startTime, endTime));
       });
-    }, String.format("get %s parcel details", type), 3);
+    }, String.format("get %s parcel details", type));
   }
 
   @When("Operator verifies pending priority parcel details")
@@ -314,7 +315,7 @@ public class RouteMonitoringSteps extends BaseSteps {
     List<OrderRequestV4> transactionDetails = getListOfPendingPriorityDetails();
     Map<String, OrderRequestV4> requestMap = get(KEY_LIST_OF_ORDER_CREATE_REQUEST);
     String type = get(WAYPOINT_TYPE_TRANSACTION);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       operatorGetPendingPriorityParcelDetails(type);
       List<Waypoint> waypoints = get(KEY_ROUTE_MONITORING_RESULT);
       Assertions.assertThat(waypoints.size()).as("pending priority parcel count")
@@ -322,7 +323,7 @@ public class RouteMonitoringSteps extends BaseSteps {
 
       transactionDetails.forEach(e -> {
         OrderRequestV4 temp = requestMap.get(e.getTrackingNumber());
-        Map<String, String> address;
+        JsonNode address;
         long orderId = getOrderClient().searchOrderByTrackingId(e.getTrackingNumber()).getId();
         Waypoint waypoint = waypoints.stream()
             .filter(o -> o.getTrackingId().contains(e.getTrackingNumber())).findAny().orElseThrow(
@@ -362,59 +363,59 @@ public class RouteMonitoringSteps extends BaseSteps {
             .isEqualToIgnoringCase(getFormattedTimeslot(startTime, endTime));
       });
 
-    }, "get pending priority details", 30);
+    }, "get pending priority details");
   }
 
   @When("Operator get empty pending priority parcel details for {string}")
   public void operatorGetEmptyPendingPriorityParcelDetails(String type) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       RouteMonitoringResponse response = getRouteMonitoringClient().getPendingPriorityParcelDetails(
           routeId, type);
       List<Waypoint> rsvn = response.getPickupAppointments();
       List<Waypoint> parcels = response.getParcels();
       Assertions.assertThat(parcels.isEmpty()).as("parcel details is empty").isTrue();
       Assertions.assertThat(rsvn.isEmpty()).as("pickup appointment details is empty").isTrue();
-    }, "get empty pending priority details", 30);
+    }, "get empty pending priority details");
   }
 
   @When("Operator get empty invalid failed deliveries parcel details")
   public void operatorGetEmptyInvalidFailedDeliveriesParcelDetails() {
     long routeId = get(KEY_CREATED_ROUTE_ID);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       RouteMonitoringResponse response = getRouteMonitoringClient().getInvalidFailedDeliveries(
           routeId);
       List<Waypoint> rsvn = response.getPickupAppointments();
       List<Waypoint> parcels = response.getParcels();
       Assertions.assertThat(parcels).as("parcel details is empty").isEmpty();
       Assertions.assertThat(rsvn).as("pickup appointment details is empty").isEmpty();
-    }, "get invalid failed deliveries details", 30);
+    }, "get invalid failed deliveries details");
   }
 
   @When("Operator get empty invalid failed pickup parcel details")
   public void operatorGetEmptyInvalidFailedPickupParcelDetails() {
     long routeId = get(KEY_CREATED_ROUTE_ID);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       RouteMonitoringResponse response = getRouteMonitoringClient().getInvalidFailedPickups(
           routeId);
       List<Waypoint> rsvn = response.getPickupAppointments();
       List<Waypoint> parcels = response.getParcels();
       Assertions.assertThat(parcels).as("parcel details is empty").isEmpty();
       Assertions.assertThat(rsvn).as("pickup appointment details is empty").isEmpty();
-    }, "get invalid failed pickup details", 30);
+    }, "get invalid failed pickup details");
   }
 
   @When("Operator get empty invalid failed reservation details")
   public void operatorGetEmptyInvalidFailedReservationDetails() {
     long routeId = get(KEY_CREATED_ROUTE_ID);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       RouteMonitoringResponse response = getRouteMonitoringClient().getInvalidFailedReservations(
           routeId);
       List<Waypoint> rsvn = response.getPickupAppointments();
       List<Waypoint> parcels = response.getParcels();
       Assertions.assertThat(rsvn).as("pickup appointment details is empty").isEmpty();
       Assertions.assertThat(parcels).as("parcel details is empty").isEmpty();
-    }, "get invalid failed reservation details", 30);
+    }, "get invalid failed reservation details");
   }
 
   @Then("Operator verifies waypoint details for {string} waypoint")
@@ -422,7 +423,7 @@ public class RouteMonitoringSteps extends BaseSteps {
     List<OrderRequestV4> transactionDetails = getListOfTransactionDetails();
     List<OrderRequestV4> reservationDetails = get(KEY_LIST_RESERVATION_REQUEST_DETAILS);
     Map<String, OrderRequestV4> requestMap = get(KEY_LIST_OF_ORDER_CREATE_REQUEST);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       operatorFilterRouteMonitoring();
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
       List<Waypoint> waypoints = result.getWaypoints();
@@ -432,7 +433,7 @@ public class RouteMonitoringSteps extends BaseSteps {
       if (!transactionDetails.isEmpty()) {
         transactionDetails.forEach(e -> {
           OrderRequestV4 temp = requestMap.get(e.getTrackingNumber());
-          Map<String, String> address;
+          JsonNode address;
           Waypoint waypoint = waypoints.stream()
               .filter(o -> o.getType().equalsIgnoreCase(WAYPOINT_TYPE_TRANSACTION))
               .filter(o -> o.getTrackingId().contains(e.getTrackingNumber())).findAny()
@@ -498,7 +499,7 @@ public class RouteMonitoringSteps extends BaseSteps {
       if (reservationDetails != null) {
         reservationDetails.forEach(e -> {
           OrderRequestV4 temp = requestMap.get(e.getTrackingNumber());
-          Map<String, String> address;
+          JsonNode address;
           Waypoint waypoint = waypoints.stream()
               .filter(o -> o.getType().equalsIgnoreCase(WAYPOINT_TYPE_RESERVATION))
               .filter(o -> o.getName().equalsIgnoreCase(e.getFrom().getName())).findAny()
@@ -535,39 +536,39 @@ public class RouteMonitoringSteps extends BaseSteps {
 
         });
       }
-    }, "check pending waypoint details", 30);
+    }, "check pending waypoint details");
   }
 
   @When("Operator verifies total pending priority parcels and other details")
   public void checkPendingPriorityParcels(Map<String, Integer> dataTable) {
     int totalExpectedCount = dataTable.get(KEY_TOTAL_EXPECTED_PENDING_PRIORITY);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       operatorFilterRouteMonitoring();
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
       Assertions.assertThat(result.getPendingPriorityParcels()).as("total pending priority parcels")
           .isEqualTo(totalExpectedCount);
       operatorChecksTotalParcelsCount(WAYPOINT_TYPE_PENDING, dataTable);
-    }, "check total pending priority parcels", 30);
+    }, "check total pending priority parcels");
   }
 
   @When("Operator verifies total pending priority parcels is now 0")
   public void excludeAttemptedPendingPriorityParcels() {
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       operatorFilterRouteMonitoring();
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
       Assertions.assertThat(result.getPendingPriorityParcels()).as("total pending priority parcels")
           .isEqualTo(0);
-    }, "check total pending priority parcels", 30);
+    }, "check total pending priority parcels");
   }
 
   @When("Operator verifies total invalid failed is 0 and other details")
   public void totalEmptyInvalidFailed(Map<String, Integer> waypointCounts) {
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       operatorFilterRouteMonitoring();
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
       Assertions.assertThat(result.getNumInvalidFailed()).as("total invalid failed").isEqualTo(0);
       operatorChecksTotalParcelsCount(WAYPOINT_TYPE_INVALID_FAILED, waypointCounts);
-    }, "check total invalid failed", 30);
+    }, "check total invalid failed");
   }
 
   private List<OrderRequestV4> getListOfTransactionDetails() {
@@ -650,7 +651,7 @@ public class RouteMonitoringSteps extends BaseSteps {
         .as(String.format("completion percentage %d", routeId)).isEqualTo(0.0);
   }
 
-  private String createExpectedPendingAddress(Map<String, String> address) {
+  private String createExpectedPendingAddress(JsonNode address) {
     return (address.get("address1") + " " + address.get("address2") + " " + address.get("postcode")
         + " " + address.get("country")).toLowerCase();
   }

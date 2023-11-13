@@ -1,18 +1,17 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
+import co.nvqa.common.constants.HttpConstants;
+import co.nvqa.common.core.model.order.Order;
 import co.nvqa.common.core.model.other.CoreExceptionResponse;
+import co.nvqa.common.core.model.pickup.Pickup;
 import co.nvqa.common.core.model.reservation.BulkRouteReservationResponse;
+import co.nvqa.common.core.model.route.AddParcelToRouteRequest;
 import co.nvqa.common.core.model.route.BulkAddPickupJobToRouteResponse;
 import co.nvqa.common.core.model.route.RouteRequest;
 import co.nvqa.common.core.model.route.RouteResponse;
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.common.model.DataEntity;
-import co.nvqa.commons.constants.HttpConstants;
-import co.nvqa.commons.model.core.Order;
-import co.nvqa.commons.model.core.Pickup;
-import co.nvqa.commons.model.core.route.AddParcelToRouteRequest;
-import co.nvqa.commons.model.core.route.Route;
-import co.nvqa.commons.support.DateUtil;
+import co.nvqa.common.utils.DateUtil;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import io.cucumber.guice.ScenarioScoped;
@@ -48,7 +47,7 @@ public class RoutingSteps extends BaseSteps {
         + DateUtil.getTodayDateTime_YYYY_MM_DD_HH_MM_SS());
     route.setTags(Arrays.asList(1, 4));
     route.setDate(DateUtil.generateUTCTodayDate());
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       RouteResponse result = getRouteClient().createRoute(route);
       Assertions.assertThat(route).as("created route is not null").isNotNull();
       put(KEY_CREATED_ROUTE, result);
@@ -62,12 +61,12 @@ public class RoutingSteps extends BaseSteps {
   @When("Operator create an empty route with past date")
   public void operatorCreateEmptyRoutePastDate(Map<String, String> arg1) {
     final String json = toJsonCamelCase(arg1);
-    final Route route = fromJsonSnakeCase(json, Route.class);
+    final RouteRequest route = fromJsonSnakeCase(json, RouteRequest.class);
     route.setComments("Created for Core API testing");
     route.setTags(List.of(1, 4));
     route.setDate(DateUtil.generateUTCYesterdayDate());
-    callWithRetry(() -> {
-      final Route result = getRouteClient().createRoute(route);
+    doWithRetry(() -> {
+      final RouteResponse result = getRouteClient().createRoute(route);
       Assertions.assertThat(route).as("created route is not null").isNotNull();
       put(KEY_CREATED_ROUTE, result);
       putInList(KEY_LIST_OF_CREATED_ROUTE_ID, result.getId());
@@ -79,7 +78,7 @@ public class RoutingSteps extends BaseSteps {
 
   @When("Operator add order to driver {string} route")
   public void operatorAddOrderToRoute(String type) {
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       final long routeId = get(KEY_CREATED_ROUTE_ID);
       final long orderId = get(KEY_CREATED_ORDER_ID);
       final AddParcelToRouteRequest request = new AddParcelToRouteRequest();
@@ -93,7 +92,7 @@ public class RoutingSteps extends BaseSteps {
 
   @When("Operator add order by tracking id to driver {string} route")
   public void operatorAddOrderByTrackingIdToRoute(String type) {
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       final long routeId = get(KEY_CREATED_ROUTE_ID);
       final String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
       final AddParcelToRouteRequest request = new AddParcelToRouteRequest();
@@ -117,26 +116,17 @@ public class RoutingSteps extends BaseSteps {
 
   @When("Operator delete driver route")
   public void operatorDeleteRoute() {
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       long routeId = get(KEY_CREATED_ROUTE_ID);
       getRouteClient().deleteRoute(routeId);
       LOGGER.info("route {} is successfully deleted", routeId);
     }, "delete driver route");
   }
 
-  @When("Operator delete multiple driver routes")
-  public void operatorDeleteMultipleRoute() {
-    callWithRetry(() -> {
-      List<Long> routeIds = get(KEY_LIST_OF_CREATED_ROUTE_ID);
-      getRouteClient().deleteMultipleRoutes(routeIds);
-      LOGGER.info("route {} is successfully deleted", Arrays.toString(routeIds.toArray()));
-    }, "delete multiple routes");
-  }
-
   @When("Operator delete driver route with status code {int}")
   public void operatorDeleteRouteUnSuccessFully(int statusCode) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       Response response = getRouteClient().deleteRouteAndGetRawResponse(routeId);
       Assertions.assertThat(response.getStatusCode()).as("response code").isEqualTo(statusCode);
       if (statusCode == HttpConstants.RESPONSE_200_SUCCESS) {
@@ -183,10 +173,10 @@ public class RoutingSteps extends BaseSteps {
 
   @When("Operator pull order out of {string} route")
   public void operatorPullOutOfRoute(String type) {
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       final String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
       final Order order = OrderDetailHelper.getOrderDetails(trackingId);
-      getRouteClient().pullOutWaypointFromRoute(order.getId(), type.toUpperCase());
+      getRouteClient().pullFromRoute(order.getId(), type.toUpperCase());
       putInList(KEY_LIST_OF_PULL_OUT_OF_ROUTE_TRACKING_ID, trackingId);
     }, "pull out of route");
   }
@@ -260,7 +250,7 @@ public class RoutingSteps extends BaseSteps {
     final List<Long> routeIds = get(KEY_LIST_OF_CREATED_ROUTE_ID);
     try {
       if (routeIds != null) {
-        routeIds.forEach(e -> getRouteClient().archiveRouteV2(e));
+        routeIds.forEach(e -> getRouteClient().archiveRoute(e));
       }
     } catch (Throwable t) {
       LOGGER.warn("Failed to archive route(s)");

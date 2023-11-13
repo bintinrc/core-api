@@ -1,9 +1,10 @@
 package co.nvqa.core_api.cucumber.glue.support;
 
 import co.nvqa.common.core.model.order.Order;
-import co.nvqa.common.ordercreate.model.OrderSearchResponse;
-import co.nvqa.commons.model.core.Transaction;
-import co.nvqa.commons.util.NvTestRuntimeException;
+import co.nvqa.common.core.model.order.Order.Transaction;
+import co.nvqa.common.ordercreate.model.OrderSearchRequest;
+import co.nvqa.common.ordercreate.model.OrderSearchResponse.OrderSearch;
+import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Then;
@@ -16,8 +17,12 @@ import java.util.List;
 @ScenarioScoped
 public class OrderDetailHelper extends BaseSteps {
 
-  public static OrderSearchResponse searchOrder(String trackingIdOrStampId) {
-    return getOrderSearchClient().searchOrders("tracking_id", Collections.singletonList(trackingIdOrStampId));
+  public static OrderSearch searchOrder(String trackingIdOrStampId) {
+    OrderSearchRequest request = new OrderSearchRequest();
+    request.addOrReplaceStringFilter("tracking_id", Collections.singletonList(trackingIdOrStampId));
+    return getOrderSearchClient()
+        .searchOrders(request).getSearchData()
+        .get(0).getOrder();
   }
 
   public static Order getOrderDetails(String trackingId) {
@@ -52,7 +57,7 @@ public class OrderDetailHelper extends BaseSteps {
 
   private void getTransactionWaypointId(String transactionType) {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-    co.nvqa.commons.model.core.Order order = OrderDetailHelper.getOrderDetails(trackingId);
+    Order order = OrderDetailHelper.getOrderDetails(trackingId);
     put(KEY_CREATED_ORDER, order);
     Transaction transaction = OrderDetailHelper
         .getTransaction(order, transactionType, Transaction.STATUS_PENDING);

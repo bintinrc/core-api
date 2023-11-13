@@ -26,7 +26,7 @@ public class InboundSteps extends BaseSteps {
   public void globalInbound(String hubInboundId) {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     Long hubId = Long.valueOf(hubInboundId);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       GlobalInboundRequest request = new GlobalInboundRequest();
       request.setInboundType("SORTING_HUB");
       request.setScan(trackingId);
@@ -49,7 +49,7 @@ public class InboundSteps extends BaseSteps {
 
   @Given("Operator global inbound at hub {string} for tid {string} with changes in dimensions")
   public void globalInbound(String hubId, String trackingId, Map<String, String> dimensions) {
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       GlobalInboundRequest request = new GlobalInboundRequest();
       request.setInboundType("SORTING_HUB");
       request.setScan(resolveValue(trackingId));

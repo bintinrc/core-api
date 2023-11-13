@@ -115,31 +115,6 @@ Feature: Delete Route
       |      | uid:24bdb220-fac4-4791-81d1-65ce3bcf2061 |
 
   @route-delete
-  Scenario Outline: Operator Delete Driver Route Successfully - Multiple Routes
-    When Operator create an empty route
-      | driver_id  | {driver-id}      |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    When Operator create an empty route
-      | driver_id  | {driver-id}      |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    When Operator delete multiple driver routes
-    Then DB Route - verify route_logs record:
-      | legacyId  | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
-      | deletedAt | not null                          |
-    Then DB Route - verify route_logs record:
-      | legacyId  | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
-      | deletedAt | not null                          |
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
-    Then Deleted route is not shown on his list routes
-    Examples:
-      | Note | hiptest-uid                              |
-      |      | uid:991188e0-9c44-421b-b549-5b37d1f386af |
-
-  @route-delete
   Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below

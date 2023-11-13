@@ -55,7 +55,7 @@ public class DriverSteps extends BaseSteps {
 
   @Given("Driver id {string} authenticated to login with username {string} and password {string}")
   public void driverLogin(String driverId, String username, String password) {
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       driverClient = new DriverClient();
       driverClient.authenticate(username, password);
       put(KEY_NINJA_DRIVER_ID, Long.valueOf(driverId));
@@ -66,7 +66,7 @@ public class DriverSteps extends BaseSteps {
   public void driverRouteNotShown() {
     final List<Long> routes = get(KEY_LIST_OF_CREATED_ROUTE_ID);
     final Long driverId = get(KEY_NINJA_DRIVER_ID);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       List<GetRouteResponse.Route> result = driverClient.getRoutes(driverId, "2.1").getData()
           .getRoutes();
       routes.forEach(e -> {
@@ -85,7 +85,7 @@ public class DriverSteps extends BaseSteps {
   public void driverStartRoute() {
     RouteResponse route = get(KEY_CREATED_ROUTE);
     long routeId = route.getId();
-    callWithRetry(() -> driverClient.startRoute(routeId), "driver starts route");
+    doWithRetry(() -> driverClient.startRoute(routeId), "driver starts route");
   }
 
   // TODO to remove after step replaced with one from common-driver
@@ -101,7 +101,7 @@ public class DriverSteps extends BaseSteps {
 
   @Given("Driver {string} Parcel {string}")
   public void driverDeliverParcels(String action, String type) {
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       getWaypointId(type);
       driverGetWaypointDetails();
       createDriverJobs(action.toUpperCase());
@@ -133,7 +133,7 @@ public class DriverSteps extends BaseSteps {
   @Given("Driver {string} Parcel previous {string}")
   public void driverDeliverPreviousFailedParcels(String action, String type) {
     Order order = get(KEY_CREATED_ORDER);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       createDriverJobs(action.toUpperCase());
       List<SubmitPodRequest.Job> jobs = get(KEY_LIST_OF_DRIVER_JOBS);
       SubmitPodRequest prevRequest = get(KEY_DRIVER_SUBMIT_POD_REQUEST);
@@ -169,7 +169,7 @@ public class DriverSteps extends BaseSteps {
   @When("Driver Transfer Parcel to Another Driver")
   public void driverTransferRoute(Map<String, String> source) {
     ParcelRouteTransferRequest request = createParcelRouteTransferRequest(source);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       ParcelRouteTransferResponse response = getRouteClient().parcelRouteTransfer(request);
       put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, response);
       put(KEY_ROUTE_EVENT_SOURCE, "ROUTE_TRANSFER");
@@ -179,7 +179,7 @@ public class DriverSteps extends BaseSteps {
   @When("Driver Transfer Parcel to Route with past date")
   public void driverTransferRoutePastDate(Map<String, String> source) {
     ParcelRouteTransferRequest request = createParcelRouteTransferRequest(source);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       Response response = getRouteClient().parcelRouteTransferAndGetRawResponse(request);
       put(KEY_API_RAW_RESPONSE, response);
       put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, response);
@@ -213,7 +213,7 @@ public class DriverSteps extends BaseSteps {
     final Long waypointId = get(KEY_WAYPOINT_ID);
     final Long driverId = get(KEY_NINJA_DRIVER_ID);
 
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       List<GetRouteResponse.Route> routes = driverClient.getRoutes(driverId, "2.1")
           .getData().getRoutes();
       routes.stream().filter(e -> e.getId() == (routeId))

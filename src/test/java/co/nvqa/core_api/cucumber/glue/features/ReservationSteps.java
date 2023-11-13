@@ -1,11 +1,12 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
-import co.nvqa.commons.model.core.Address;
-import co.nvqa.commons.model.core.Pickup;
-import co.nvqa.commons.model.core.route.Route;
-import co.nvqa.commons.support.DateUtil;
-import co.nvqa.commons.util.NvLogger;
-import co.nvqa.commons.util.NvTestRuntimeException;
+import co.nvqa.common.core.model.pickup.Pickup;
+import co.nvqa.common.core.model.pickup.PickupSearchRequest;
+import co.nvqa.common.core.model.route.RouteResponse;
+import co.nvqa.common.model.address.Address;
+import co.nvqa.common.utils.DateUtil;
+import co.nvqa.common.utils.JsonUtils;
+import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import io.cucumber.guice.ScenarioScoped;
@@ -40,7 +41,7 @@ public class ReservationSteps extends BaseSteps {
 
   @Given("Operator Search for Created Pickup for Shipper {string} with status {string}")
   public void operatorSearchForCreatedPickupForShipperWithStatus(String legacyId, String status) {
-    searchPickup(Long.parseLong(legacyId),status);
+    searchPickup(Long.parseLong(legacyId), status);
   }
 
   @And("Operator search for all reservations for shipper legacy id {long}")
@@ -63,7 +64,7 @@ public class ReservationSteps extends BaseSteps {
       Assertions.assertThat(result.getStatus().toLowerCase())
           .as(String.format("reservation status id %d", result.getReservationId()))
           .isEqualTo(status.toLowerCase());
-    }, "operator verify reservation status", 2000,50);
+    }, "operator verify reservation status", 2000, 50);
   }
 
   @When("Operator search for created DP reservation with status {string}")
@@ -81,12 +82,10 @@ public class ReservationSteps extends BaseSteps {
   public void operatorRouteReservation() {
     Pickup pickup = get(KEY_CREATED_RESERVATION);
     Long reservationId = pickup.getReservationId();
-    Route route = get(KEY_CREATED_ROUTE);
+    RouteResponse route = get(KEY_CREATED_ROUTE);
     Long routeId = route.getId();
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       getReservationV2Client().addReservationToRoute(routeId, reservationId);
-      NvLogger.success(DOMAIN,
-          String.format("reservation id %d added to route id %d", reservationId, routeId));
       put(KEY_WAYPOINT_ID, pickup.getWaypointId());
     }, "operator route the reservation");
   }
@@ -105,9 +104,9 @@ public class ReservationSteps extends BaseSteps {
   public void operatorPullReservationRoute() {
     Pickup pickup = get(KEY_CREATED_RESERVATION);
     long reservationId = pickup.getReservationId();
-    Route route = get(KEY_CREATED_ROUTE);
+    RouteResponse route = get(KEY_CREATED_ROUTE);
     long routeId = route.getId();
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       getReservationV2Client().pullReservationOutOfRoute(reservationId);
     }, "operator pull out reservation route");
   }
@@ -116,11 +115,11 @@ public class ReservationSteps extends BaseSteps {
   public void operatorForceFinishReservation(String action) {
     Long waypointId = get(KEY_WAYPOINT_ID);
     Long routeId = get(KEY_CREATED_ROUTE_ID);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       if (action.equalsIgnoreCase(ACTION_FAIL)) {
-        getOrderClient().forceFailWaypoint(routeId, waypointId, TestConstants.FAILURE_REASON_ID);
+        getRouteClient().forceFailWaypoint(routeId, waypointId, TestConstants.FAILURE_REASON_ID);
       } else {
-        getOrderClient().forceSuccessWaypoint(routeId, waypointId);
+        getRouteClient().forceSuccessWaypoint(routeId, waypointId);
       }
       Pickup pickup = get(KEY_CREATED_RESERVATION);
       searchPickup(pickup.getShipperId(), action);
@@ -131,8 +130,8 @@ public class ReservationSteps extends BaseSteps {
   private void operatorForceFailInvalidReservation() {
     Long waypointId = get(KEY_WAYPOINT_ID);
     Long routeId = get(KEY_CREATED_ROUTE_ID);
-    callWithRetry(() -> {
-      getOrderClient().forceFailWaypoint(routeId, waypointId,
+    doWithRetry(() -> {
+      getRouteClient().forceFailWaypoint(routeId, waypointId,
           TestConstants.RESERVATION_FAILURE_REASON_ID);
       LOGGER.info(DOMAIN + String.format("waypoint id %d force failed", waypointId));
     }, "admin force finish reservation");
@@ -142,8 +141,8 @@ public class ReservationSteps extends BaseSteps {
   public void operatorForceFailValidReservation() {
     Long waypointId = get(KEY_WAYPOINT_ID);
     Long routeId = get(KEY_CREATED_ROUTE_ID);
-    callWithRetry(() -> {
-      getOrderClient().forceFailWaypoint(routeId, waypointId,
+    doWithRetry(() -> {
+      getRouteClient().forceFailWaypoint(routeId, waypointId,
           TestConstants.RESERVATION_VALID_FAILURE_REASON_ID);
       LOGGER.info(DOMAIN + String.format("waypoint id %d force failed", waypointId));
     }, "admin force finish reservation");
@@ -176,11 +175,12 @@ public class ReservationSteps extends BaseSteps {
     param.put("max_result", 1000);
     param.put("shipper_ids", Collections.singletonList(legacyId));
     param.put("waypoint_status", Collections.singletonList(status));
+    PickupSearchRequest request = JsonUtils.fromMapSnakeCase(param, PickupSearchRequest.class);
 
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       LOGGER.info("Try to find reservation with address2: {}", pickupAddress);
-      doStepPause();
-      List<Pickup> pickups = getShipperPickupClient().search(param);
+      pause2s();
+      List<Pickup> pickups = getShipperPickupClient().searchPickupsWithFilters(request);
       Pickup pickup = pickups.stream()
           .filter(e -> (e.getAddress1() + " " + e.getAddress2()).equalsIgnoreCase(pickupAddress))
           .findAny().orElseThrow(() -> new NvTestRuntimeException("reservation details not found"));
@@ -191,6 +191,6 @@ public class ReservationSteps extends BaseSteps {
       putInList(KEY_LIST_OF_RESERVATION_TRACKING_IDS, trackingId);
       put(KEY_WAYPOINT_ID, pickup.getWaypointId());
       putInList(KEY_LIST_OF_WAYPOINT_IDS, pickup.getWaypointId());
-    }, f("search reservation with status %s", status), 30);
+    }, f("search reservation with status %s", status));
   }
 }

@@ -3,15 +3,14 @@ package co.nvqa.core_api.cucumber.glue;
 import co.nvqa.common.core.client.BatchUpdatePodClient;
 import co.nvqa.common.core.client.EventClient;
 import co.nvqa.common.core.client.OrderClient;
+import co.nvqa.common.core.client.PickupClient;
 import co.nvqa.common.core.client.RouteClient;
+import co.nvqa.common.core.client.RouteMonitoringClient;
 import co.nvqa.common.cucumber.glue.StandardSteps;
 import co.nvqa.common.ordercreate.client.OrderSearchClient;
+import co.nvqa.common.shipper.client.ShipperClient;
 import co.nvqa.commonauth.utils.TokenUtils;
-import co.nvqa.commons.client.core.RouteMonitoringClient;
-import co.nvqa.commons.client.core.ShipperPickupClient;
 import co.nvqa.commons.client.reservation.ReservationV2Client;
-import co.nvqa.commons.client.shipper.ShipperClient;
-import co.nvqa.commons.util.StandardTestUtils;
 import co.nvqa.commonsort.client.InboundClient;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import co.nvqa.core_api.cucumber.glue.util.CoreApiScenarioStorageKeys;
@@ -22,15 +21,11 @@ import co.nvqa.core_api.cucumber.glue.util.CoreApiScenarioStorageKeys;
 public abstract class BaseSteps extends StandardSteps<ScenarioManager> implements
     CoreApiScenarioStorageKeys {
 
-  private static final long DEFAULT_FALLBACK_MS = 500;
-  private static final int DEFAULT_RETRY = 10;
-
   private static OrderSearchClient orderSearchClient;
   private static OrderClient orderClient;
-  private static co.nvqa.common.core.client.OrderClient orderClientV2;
   private RouteClient routeClient;
   private EventClient eventClient;
-  private ShipperPickupClient shipperPickupClient;
+  private PickupClient shipperPickupClient;
   private ReservationV2Client reservationV2Client;
   private InboundClient inboundClient;
   private ShipperClient shipperClient;
@@ -53,23 +48,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
   }
 
   protected static synchronized OrderClient getShipperOrderClient(String shipperToken) {
-    return new OrderClient(TestConstants.API_BASE_URL, shipperToken);
-  }
-
-  @SuppressWarnings("unchecked")
-  protected void callWithRetry(Runnable runnable, String methodName) {
-    retryIfAssertionErrorOrRuntimeExceptionOccurred(runnable, methodName, DEFAULT_FALLBACK_MS,
-        DEFAULT_RETRY);
-  }
-
-  @SuppressWarnings("unchecked")
-  protected void callWithRetry(Runnable runnable, String methodName, int maxRetry) {
-    retryIfAssertionErrorOrRuntimeExceptionOccurred(runnable, methodName, DEFAULT_FALLBACK_MS,
-        maxRetry);
-  }
-
-  protected void doStepPause() {
-    StandardTestUtils.pause2s();
+    return new OrderClient(shipperToken);
   }
 
   protected synchronized RouteClient getRouteClient() {
@@ -81,22 +60,21 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
 
   protected synchronized RouteMonitoringClient getRouteMonitoringClient() {
     if (routeMonitoringClient == null) {
-      routeMonitoringClient = new RouteMonitoringClient(TestConstants.API_BASE_URL,
-          TokenUtils.getOperatorAuthToken());
+      routeMonitoringClient = new RouteMonitoringClient();
     }
     return routeMonitoringClient;
   }
 
   protected synchronized EventClient getEventClient() {
     if (eventClient == null) {
-      eventClient = new EventClient();    }
+      eventClient = new EventClient();
+    }
     return eventClient;
   }
 
-  protected synchronized ShipperPickupClient getShipperPickupClient() {
+  protected synchronized PickupClient getShipperPickupClient() {
     if (shipperPickupClient == null) {
-      shipperPickupClient = new ShipperPickupClient(TestConstants.API_BASE_URL,
-          TokenUtils.getOperatorAuthToken());
+      shipperPickupClient = new PickupClient();
     }
     return shipperPickupClient;
   }
@@ -118,8 +96,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
 
   protected synchronized ShipperClient getShipperClient() {
     if (shipperClient == null) {
-      shipperClient = new ShipperClient(TestConstants.API_BASE_URL,
-          TokenUtils.getOperatorAuthToken());
+      shipperClient = new ShipperClient();
     }
     return shipperClient;
   }

@@ -1,16 +1,16 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
+import co.nvqa.common.core.model.batch_update_pods.ProofDetails;
+import co.nvqa.common.core.model.pickup.Pickup;
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
+import co.nvqa.common.ordercreate.model.OrderRequestV4;
+import co.nvqa.common.utils.JsonUtils;
+import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.common.webhook.client.RequestBinClient;
 import co.nvqa.common.webhook.model.requestbin.Bin;
 import co.nvqa.common.webhook.model.requestbin.BinRequest;
 import co.nvqa.common.webhook.model.webhook.Webhook;
 import co.nvqa.common.webhook.model.webhook.WebhookRequest;
-import co.nvqa.commons.model.core.Pickup;
-import co.nvqa.commons.model.core.batch_update_pod.ProofDetails;
-import co.nvqa.commons.model.order_create.v4.OrderRequestV4;
-import co.nvqa.commons.util.JsonUtils;
-import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.commonsort.cucumber.KeysStorage;
 import co.nvqa.commonsort.model.sort.DwsInboundResponse;
 import co.nvqa.commonsort.model.sort.Hub;
@@ -314,22 +314,6 @@ public class WebhookSteps extends BaseSteps {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
       shipperVerifiesWebhookPayload(status);
     });
-  }
-
-  @Given("Shipper id {string} removes webhook subscriptions")
-  public void shipperRemoveWebhookSubs(String shipperGlobalId) {
-    doWithRetry(() -> cleanWebhookSubs(Long.parseLong(shipperGlobalId)), "remove webhook subs");
-  }
-
-  private void cleanWebhookSubs(Long shipperId) {
-    try {
-      Webhook[] webhooks = getShipperWebhookClient().getWebhookSubscription(shipperId);
-      Arrays.asList(webhooks)
-          .forEach(e -> getShipperClient().removeWebhookSubscription(shipperId, e.getId()));
-      LOGGER.info("webhook subscription cleared");
-    } catch (Throwable t) {
-      LOGGER.warn("Failed to clean webhook subs");
-    }
   }
 
   private void checkDeliverySuccessPod(WebhookRequest webhookRequest, String trackingId) {
