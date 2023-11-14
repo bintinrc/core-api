@@ -3,6 +3,7 @@ Feature: SG - Partial Update Order Dimensions on Inbound
 
   https://studio.cucumber.io/projects/208144/test-plan/folders/2788728
 
+  @HighPriority
   Scenario: SG - Global Inbound Order with All Dimensions ( L / W / H )  != 0 & weight != 0
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
@@ -54,7 +55,7 @@ Feature: SG - Partial Update Order Dimensions on Inbound
     And Shipper gets webhook request for event "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper verifies webhook request payload has correct details for status "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
 
-
+  @HighPriority
   Scenario: SG - Global Inbound Order with One Of Dimensions ( L / W / H ) = 0 & weight != 0
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
@@ -106,7 +107,7 @@ Feature: SG - Partial Update Order Dimensions on Inbound
     And Shipper gets webhook request for event "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper verifies webhook request payload has correct details for status "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
 
-
+  @HighPriority
   Scenario: SG - Global Inbound Order with All Dimensions ( L / W / H ) = 0  & weight != 0
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
@@ -157,7 +158,7 @@ Feature: SG - Partial Update Order Dimensions on Inbound
     And Shipper gets webhook request for event "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper verifies webhook request payload has correct details for status "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
 
-
+  @HighPriority
   Scenario: SG - Global Inbound Order with All Dimensions ( L / W / H ) != 0 & weight = 0
     Given Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
     And Shipper id "{shipper-id}" subscribes to "Arrived at Sorting Hub" webhook
@@ -205,7 +206,7 @@ Feature: SG - Partial Update Order Dimensions on Inbound
     And Shipper gets webhook request for event "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper verifies webhook request payload has correct details for status "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
 
-
+  @HighPriority
   Scenario: SG - Global Inbound Order with All Dimensions ( L / W / H ) = 0 & weight = 0
     Given Shipper id "{shipper-id}" subscribes to "Arrived at Sorting Hub" webhook
     And API Order - Shipper create multiple V4 orders using data below:
@@ -248,7 +249,7 @@ Feature: SG - Partial Update Order Dimensions on Inbound
     And Shipper gets webhook request for event "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper verifies webhook request payload has correct details for status "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
 
-
+  @HighPriority
   Scenario: SG - DWS Inbound Order with All Dimensions ( L / W / H ) != 0 & weight != 0
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
@@ -293,7 +294,7 @@ Feature: SG - Partial Update Order Dimensions on Inbound
     And Shipper gets webhook request for event "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper verifies webhook request payload has correct details for status "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
 
-
+  @HighPriority
   Scenario: SG - DWS Inbound Order with One Of Dimensions ( L / W / H ) = 0 & weight != 0
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
@@ -338,7 +339,7 @@ Feature: SG - Partial Update Order Dimensions on Inbound
     And Shipper gets webhook request for event "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper verifies webhook request payload has correct details for status "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
 
-
+  @HighPriority
   Scenario: SG - DWS Inbound Order with All Dimensions ( L / W / H ) = 0 & weight != 0
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
@@ -385,7 +386,7 @@ Feature: SG - Partial Update Order Dimensions on Inbound
     And Shipper gets webhook request for event "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper verifies webhook request payload has correct details for status "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
 
-
+  @HighPriority
   Scenario: SG - DWS Inbound Order with All Dimensions ( L / W / H ) != 0 & weight = 0
     Given Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
     And Shipper id "{shipper-id}" subscribes to "Arrived at Sorting Hub" webhook
@@ -429,6 +430,7 @@ Feature: SG - Partial Update Order Dimensions on Inbound
     And Shipper gets webhook request for event "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And Shipper verifies webhook request payload has correct details for status "Arrived at Sorting Hub" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
 
+  @HighPriority
   Scenario: SG - DWS Inbound Order with All Dimension ( L / W / H ) = 0 & weight = 0
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook

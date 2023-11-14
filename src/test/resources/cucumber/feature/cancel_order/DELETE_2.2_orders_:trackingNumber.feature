@@ -1,6 +1,7 @@
 @ForceSuccessOrder @ArchiveDriverRoutes  @cancel-order @/2.2/orders/:trackingNumber
 Feature: Cancel DELETE /2.2/orders/:trackingNumber
 
+  @MediumPriority
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Staging
     Given Shipper id "{shipper-4-id}" subscribes to "Cancelled" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -69,6 +70,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
+  @MediumPriority
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Van En-route to Pickup
     Given Shipper id "{shipper-4-id}" subscribes to "Cancelled" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -123,6 +125,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
+  @MediumPriority
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Pickup Fail
     Given Shipper id "{shipper-4-id}" subscribes to "Cancelled" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -176,7 +179,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | waypointId        | archived | status  |
       | {KEY_WAYPOINT_ID} | 1        | Pending |
 
-
+  @MediumPriority
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Returned to Sender
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
@@ -199,6 +202,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Operator verify that order status-granular status is "Completed"-"Returned_to_Sender"
     And Operator checks that "CANCEL" event is NOT published
 
+  @MediumPriority
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Completed
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
@@ -218,6 +222,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Operator verify that order status-granular status is "Completed"-"Completed"
     And Operator checks that "CANCEL" event is NOT published
 
+  @MediumPriority
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Cancelled
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
@@ -236,6 +241,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | description | ORDER_ALREADY_CANCELLED    |
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
 
+  @MediumPriority
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Arrived at Distribution Point
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
@@ -263,6 +269,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Operator verify that order status-granular status is "Transit"-"Arrived_at_Distribution_Point"
     And Operator checks that "CANCEL" event is NOT published
 
+  @MediumPriority
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Arrived at Sorting Hub
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
@@ -282,6 +289,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Operator verify that order status-granular status is "Transit"-"Arrived_at_Sorting_Hub"
     And Operator checks that "CANCEL" event is NOT published
 
+  @MediumPriority
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - En-route to Sorting Hub
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
@@ -301,6 +309,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Operator verify that order status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
     And Operator checks that "CANCEL" event is NOT published
 
+  @MediumPriority
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - On Vehicle for Delivery
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
@@ -320,6 +329,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Operator verify that order status-granular status is "Transit"-"On_Vehicle_for_Delivery"
     And Operator checks that "CANCEL" event is NOT published
 
+  @MediumPriority
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - On Hold
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
@@ -339,6 +349,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Operator verify that order status-granular status is "On_Hold"-"On_Hold"
     And Operator checks that "CANCEL" event is NOT published
 
+  @MediumPriority
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Transferred to 3PL
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below

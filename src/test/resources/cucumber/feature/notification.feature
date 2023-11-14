@@ -34,6 +34,7 @@ Feature: Notification
     Then Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
 
+  @HighPriority
   Scenario: Send Successful Delivery Webhook on Customer Collection of DP Order
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     Given Shipper id "{shipper-4-id}" subscribes to "Completed" webhook
@@ -73,6 +74,7 @@ Feature: Notification
       | event   | FROM_DP_TO_CUSTOMER    |
       | orderId | {KEY_CREATED_ORDER_ID} |
 
+  @HighPriority
   Scenario Outline: Send Successful Delivery Webhook with COD - Single Force Success - <Note>
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -90,6 +92,7 @@ Feature: Notification
       | COD Collected     | true         |
       | COD not Collected | false        |
 
+  @HighPriority
   Scenario Outline: Send Successful Delivery Webhook with COD - Admin Force Success Route Manifest - <Note>
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -113,6 +116,7 @@ Feature: Notification
       | COD Collected     | true         |
       | COD not Collected | false        |
 
+  @HighPriority
   Scenario Outline: Send Successful Delivery Webhook with COD - Bulk Force Success - <Note>
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -130,6 +134,7 @@ Feature: Notification
       | COD Collected     | true         |
       | COD not Collected | false        |
 
+  @HighPriority
   Scenario: Send Successful Delivery Webhook with COD - Bulk Force Success
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -167,6 +172,7 @@ Feature: Notification
     And Shipper gets webhook request for event "On Vehicle for Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "On Vehicle for Delivery"
 
+  @HighPriority
   Scenario: Send Route Start Webhook Notification - RTS
     Given Shipper id "{shipper-4-id}" subscribes to "On Vehicle for Delivery (RTS)" webhook
     Given Shipper id "{shipper-4-id}" subscribes to "On Vehicle for Delivery" webhook
@@ -223,6 +229,7 @@ Feature: Notification
     And Shipper gets webhook request for event "Pending Reschedule" for all orders
     And Shipper verifies webhook request payload has correct details for status "Pending Reschedule"
 
+  @HighPriority
   Scenario: Send First Attempt Delivery Fail & Second Pending Reschedule Webhook on Driver Fails Rescheduled Delivery Order
     Given Shipper id "{shipper-4-id}" subscribes to "First Attempt Delivery Fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -259,6 +266,7 @@ Feature: Notification
     And Shipper gets webhook request for event "Pending Reschedule" for all orders
     And Shipper verifies webhook request payload has correct details for status "Pending Reschedule"
 
+  @HighPriority
   Scenario: Send First Attempt Delivery Fail & First Pending Reschedule Webhook on Global Inbound Rescheduled Delivery Order
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below

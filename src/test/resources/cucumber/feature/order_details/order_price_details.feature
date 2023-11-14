@@ -1,7 +1,7 @@
 @ForceSuccessOrder @order-price-details
 Feature: Order Price Details
 
-  @DeleteOrArchiveRoute
+  @DeleteOrArchiveRoute @HighPriority
   Scenario: Get Success Return Pickup Order Price Details for Specific Country - SG
     Given API Shipper set Shipper V4 using data below:
       | shipperV4ClientId     | {shipper-client-id}     |
@@ -76,6 +76,7 @@ Feature: Order Price Details
       | latitude  | 1.45694483734937           |
       | longitude | 103.825580873988           |
 
+  @HighPriority
   Scenario: Get Order Price Details with Various Address Fields for Specific Country - SG
     Given API Shipper set Shipper V4 using data below:
       | shipperV4ClientId     | {shipper-client-id}     |
@@ -129,7 +130,7 @@ Feature: Order Price Details
       | insuredValue          | null                                       |
       | shipperOrderRefNo     | {KEY_CREATED_ORDER.requestedTrackingId}    |
 
-  @DeleteOrArchiveRoute
+  @DeleteOrArchiveRoute @HighPriority
   Scenario: Get Success RTS Order Price Details without Change Delivery Address for Specific Country - SG
     Given API Shipper set Shipper V4 using data below:
       | shipperV4ClientId     | {shipper-client-id}     |
@@ -228,7 +229,7 @@ Feature: Order Price Details
       | latitude  | {KEY_CORE_WAYPOINT_DETAILS.latitude}  |
       | longitude | {KEY_CORE_WAYPOINT_DETAILS.longitude} |
 
-  @DeleteOrArchiveRoute
+  @DeleteOrArchiveRoute @HighPriority
   Scenario: Get Success RTS Order Price Details with Change Delivery Address for Specific Country - SG
     Given API Shipper set Shipper V4 using data below:
       | shipperV4ClientId     | {shipper-client-id}     |
@@ -326,7 +327,7 @@ Feature: Order Price Details
       | latitude  | {KEY_CORE_WAYPOINT_DETAILS.latitude}  |
       | longitude | {KEY_CORE_WAYPOINT_DETAILS.longitude} |
 
-  @DeleteOrArchiveRoute
+  @DeleteOrArchiveRoute @HighPriority
   Scenario: Get Success Rescheduled Delivery Order Price Details without Change Delivery Address for Specific Country - SG
     Given API Shipper set Shipper V4 using data below:
       | shipperV4ClientId     | {shipper-client-id}     |
@@ -424,7 +425,7 @@ Feature: Order Price Details
       | latitude  | {KEY_CORE_WAYPOINT_DETAILS.latitude}  |
       | longitude | {KEY_CORE_WAYPOINT_DETAILS.longitude} |
 
-  @DeleteOrArchiveRoute
+  @DeleteOrArchiveRoute @HighPriority
   Scenario: Get Success Rescheduled Delivery Order Price Details with Change Delivery Address for Specific Country - SG
     Given API Shipper set Shipper V4 using data below:
       | shipperV4ClientId     | {shipper-client-id}     |

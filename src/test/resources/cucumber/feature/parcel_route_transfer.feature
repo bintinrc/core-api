@@ -69,7 +69,7 @@ Feature: Parcel Route Transfer
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
-  @routing-refactor
+  @routing-refactor @HighPriority
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Delivery
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -162,7 +162,7 @@ Feature: Parcel Route Transfer
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
-  @routing-refactor
+  @routing-refactor @HighPriority
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Routed Delivery
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper creates multiple orders : 3 orders
@@ -250,7 +250,7 @@ Feature: Parcel Route Transfer
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
     And Verify waypoints.seq_no & driver list waypoint ordering is correct
 
-  @routing-refactor
+  @routing-refactor @HighPriority
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Fail Delivery
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -303,7 +303,7 @@ Feature: Parcel Route Transfer
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
-  @routing-refactor
+  @routing-refactor @HighPriority
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Routed Fail Delivery
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -355,6 +355,7 @@ Feature: Parcel Route Transfer
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
+  @MediumPriority
   Scenario: Driver Not Allowed to Route Transfer Parcel with Status = Completed
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper creates multiple orders : 2 orders
@@ -377,6 +378,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies all transactions route id is null
     And Operator checks that "ROUTE_TRANSFER_SCAN" event is NOT published
 
+  @MediumPriority
   Scenario: Driver Not Allowed to Route Transfer Parcel with Status = Cancelled
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -398,6 +400,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies transaction route id is null
     And Operator checks that "ROUTE_TRANSFER_SCAN" event is NOT published
 
+  @MediumPriority
   Scenario: Driver Not Allowed to Route Transfer Parcel with Status = Returned to Sender
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -423,6 +426,7 @@ Feature: Parcel Route Transfer
     And DB Operator verifies transaction route id is null
     And Operator checks that "ROUTE_TRANSFER_SCAN" event is NOT published
 
+  @MediumPriority
   Scenario: Driver Not Allowed to Route Transfer Parcel to Past Date Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -444,6 +448,7 @@ Feature: Parcel Route Transfer
       | application | core                                            |
       | description | INVALID_ROUTE_DATE                              |
 
+  @HighPriority
   Scenario: Driver Route Transfer Parcel - Route has Assigned Delivery Waypoint
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -520,7 +525,7 @@ Feature: Parcel Route Transfer
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
-  @routing-refactor
+  @routing-refactor @HighPriority
   Scenario: Driver Route Transfer Parcel - Merged Waypoints
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper creates multiple orders : 3 orders with the same params
@@ -615,6 +620,7 @@ Feature: Parcel Route Transfer
     When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
     And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
 
+  @HighPriority
   Scenario: Driver Route Transfer Parcel - Resolve MISSING PETS Ticket
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                               |

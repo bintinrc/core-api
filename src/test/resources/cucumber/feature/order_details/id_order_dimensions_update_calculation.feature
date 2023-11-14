@@ -1,6 +1,7 @@
 @ForceSuccessOrder @order-details-id @OrderDimensionsUpdateCalculationID
 Feature: ID - Order Dimensions Update Calculation
 
+  @HighPriority
   Scenario Outline: ID - Update Weight upon Global Inbound - Shipper Submitted Weight > 100 KG (divide by 1000), Adjusted Weight <shipper_weight_case> - <Note>
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -37,6 +38,7 @@ Feature: ID - Order Dimensions Update Calculation
       | Highest Weight = Measured Weight         | <= 0.6 KG           | 450                      | 0.59            | 40     | 6     | 10     |
       | Highest Weight = Volumetric Weight       | <= 0.6 KG           | 450                      | 0.49            | 33     | 10    | 10     |
 
+  @HighPriority
   Scenario Outline: ID - Update Weight upon Global Inbound - Shipper Submitted weight > 100 KG (divide by 1000), Adjusted Weight > 0.6 & <shipper_weight_case> - <Note>
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -66,6 +68,7 @@ Feature: ID - Order Dimensions Update Calculation
       | Highest Weight = Measured Weight         | < 100 KG            | 2.0             | 1500                     | 2               | 10     | 10    | 60     |
       | Highest Weight = Volumetric Weight       | < 100 KG            | 3.0             | 1500                     | 1               | 20     | 30    | 30     |
 
+  @HighPriority
   Scenario Outline: ID - Update Weight upon Global Inbound - Shipper Submitted Weight <shipper_weight_case> - <Note>
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -102,6 +105,7 @@ Feature: ID - Order Dimensions Update Calculation
       | Highest Weight = Measured Weight         | <= 0.6 KG           | 450                      | 0.59            | 40     | 6     | 10     |
       | Highest Weight = Volumetric Weight       | <= 0.6 KG           | 450                      | 0.49            | 33     | 10    | 10     |
 
+  @HighPriority
   Scenario Outline: ID - Update Weight upon Global Inbound - Shipper Submitted Weight > 0.6 & <shipper_weight_case> - <Note>
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -131,6 +135,7 @@ Feature: ID - Order Dimensions Update Calculation
       | Highest Weight = Measured Weight         | < 100 KG            | 2.0             | 1.5                      | 2               | 10     | 10    | 60     |
       | Highest Weight = Volumetric Weight       | < 100 KG            | 3.0             | 1.5                      | 1               | 20     | 30    | 30     |
 
+  @HighPriority
   Scenario Outline: ID - Update Weight upon Edit Order Dimensions - Shipper Submitted Weight <shipper_weight_case> - <Note>
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -159,6 +164,7 @@ Feature: ID - Order Dimensions Update Calculation
       | Highest Weight = Measured Weight         | <= 0.6 KG           | 0.59            | 0.45                     | 0.59            | 40     | 6     | 10     |
       | Highest Weight = Volumetric Weight       | <= 0.6 KG           | 0.55            | 0.45                     | 0               | 33     | 10    | 10     |
 
+  @HighPriority
   Scenario Outline: ID - Update Weight upon Edit Order Dimensions - Shipper Submitted Weight > 100 KG - <Note>
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -187,6 +193,7 @@ Feature: ID - Order Dimensions Update Calculation
       | Highest Weight = Measured Weight         | 456             | 450                      | 456             | 60     | 100   | 400    |
       | Highest Weight = Volumetric Weight       | 550             | 550                      | 0               | 330    | 100   | 100    |
 
+  @HighPriority
   Scenario Outline: ID - Update Weight upon Edit Order Dimensions - Shipper Submitted Weight > 0.6 & <shipper_weight_case> - <Note>
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -215,6 +222,7 @@ Feature: ID - Order Dimensions Update Calculation
       | Highest Weight = Measured Weight         | < 100 KG            | 2.0             | 1.5                      | 2               | 10     | 10    | 60     |
       | Highest Weight = Volumetric Weight       | < 100 KG            | 3.0             | 1.5                      | 0               | 20     | 30    | 30     |
 
+  @HighPriority
   Scenario Outline: ID - Update Weight upon Edit Order Dimensions - Shipper Submitted Weight > 100 KG (divide by 1000), Adjusted Weight <shipper_weight_case> - <Note>
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -252,6 +260,7 @@ Feature: ID - Order Dimensions Update Calculation
       | Highest Weight = Measured Weight         | <= 0.6 KG           | 450                      | 0.59            | 40     | 6     | 10     |
       | Highest Weight = Volumetric Weight       | <= 0.6 KG           | 450                      | 0.49            | 33     | 10    | 10     |
 
+  @HighPriority
   Scenario Outline: ID - Update Weight upon Edit Order Dimensions - Shipper Submitted weight > 100 KG (divide by 1000), Adjusted Weight > 0.6 & <shipper_weight_case> - <Note>
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -280,6 +289,7 @@ Feature: ID - Order Dimensions Update Calculation
       | Highest Weight = Measured Weight         | < 100 KG            | 2.0             | 1500                     | 2               | 10     | 10    | 60     |
       | Highest Weight = Volumetric Weight       | < 100 KG            | 3.0             | 1500                     | 1               | 20     | 30    | 30     |
 
+  @HighPriority
   Scenario Outline: ID - Override Weight with Pricing Weight When Update Order Weight on Edit Order - <Note>
     Given Shipper id "{shipper-id}" subscribes to "Parcel Weight" webhook
     And Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
@@ -309,6 +319,7 @@ Feature: ID - Order Dimensions Update Calculation
       | Pricing Weight > Current Weight | 3.6    | 2.5            |
       | Pricing Weight < Current Weight | 3.6    | 1.2            |
 
+  @HighPriority
   Scenario: ID - Update Weight upon Global Inbound - Inbound Second Time with no Changes
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
@@ -340,6 +351,7 @@ Feature: ID - Order Dimensions Update Calculation
       | weight                 | {KEY_DIMENSION_CHANGES_REQUEST.weight} |
       | shipperSubmittedWeight | 1.5                                    |
 
+  @HighPriority
   Scenario Outline: ID - Update Weight upon Global Inbound - Override Measured Weight as Highest Weight - <Note>
     Given Shipper id "{shipper-id}" subscribes to "Parcel Measurements Update" webhook
     Given API Order - Shipper create multiple V4 orders using data below:

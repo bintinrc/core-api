@@ -1,8 +1,8 @@
 @ForceSuccessOrder @ArchiveDriverRoutes @order-details @delivery-verification-method
 Feature: Delivery Verification Method
 
-  @update-verification-method
-  Scenario: DO NOT Allow to Change Delivery Verification Method of Order Tagged to DP
+  @update-verification-method @MediumPriority
+  Scenario:   DO NOT Allow to Change Delivery Verification Method of Order Tagged to DP
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
@@ -17,7 +17,7 @@ Feature: Delivery Verification Method
       | application | core                            |
       | description | WAYPOINT_ROUTED_TO_DP_EXCEPTION |
 
-  @update-verification-method
+  @update-verification-method @MediumPriority
   Scenario Outline: DO NOT Allow to Change Delivery Verification Method of Order with NO ATL - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -41,7 +41,7 @@ Feature: Delivery Verification Method
       | delivery verification = AGE            | AGE            | uid:c9678118-9a5b-47dd-ad68-7bcc3d233ef0 |
       | delivery verification = IDENTIFICATION | IDENTIFICATION | uid:1943e648-14bd-4b48-a7de-a43e6377e631 |
 
-  @update-verification-method
+  @update-verification-method @MediumPriority
   Scenario: DO NOT Allow to Change Delivery Verification Method of RTS Order
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -59,7 +59,7 @@ Feature: Delivery Verification Method
       | application | core                     |
       | description | ORDER_ALREADY_RTS        |
 
-  @update-verification-method
+  @update-verification-method @MediumPriority
   Scenario: DO NOT Allow to Change Delivery Verification Method for High Value Shipper
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     And Shipper create order with parameters below
@@ -74,7 +74,7 @@ Feature: Delivery Verification Method
       | application | core                                                    |
       | description | BAD_REQUEST_EXCEPTION                                   |
 
-  @update-verification-method
+  @update-verification-method @MediumPriority
   Scenario: DO NOT Allow to Change Delivery Verification Method for Terminal State Order - Completed
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -91,7 +91,7 @@ Feature: Delivery Verification Method
       | application | core                      |
       | description | ORDER_COMPLETED_EXCEPTION |
 
-  @update-verification-method
+  @update-verification-method @MediumPriority
   Scenario: DO NOT Allow to Change Delivery Verification Method for Terminal State Order - Cancelled
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -108,7 +108,7 @@ Feature: Delivery Verification Method
       | application | core                      |
       | description | ORDER_COMPLETED_EXCEPTION |
 
-  @update-verification-method
+  @update-verification-method @MediumPriority
   Scenario: DO NOT Allow to Change Delivery Verification Method for Terminal State Order - Returned to Sender
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -128,7 +128,7 @@ Feature: Delivery Verification Method
       | application | core                      |
       | description | ORDER_COMPLETED_EXCEPTION |
 
-  @update-verification-method
+  @update-verification-method @MediumPriority
   Scenario: DO NOT Allow to Change Delivery Verification Method for Terminal State Order - Arrived at Distribution Point
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -153,7 +153,7 @@ Feature: Delivery Verification Method
       | application | core                      |
       | description | ORDER_COMPLETED_EXCEPTION |
 
-  @validate-verification-method
+  @validate-verification-method @MediumPriority
   Scenario: Validate ATL for Order Tagged to DP
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -165,7 +165,7 @@ Feature: Delivery Verification Method
     When Operator validate order for ATL
     Then Operator verify that response returns "false"
 
-  @validate-verification-method
+  @validate-verification-method @MediumPriority
   Scenario Outline: Validate ATL for Order with NO ATL - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -185,7 +185,7 @@ Feature: Delivery Verification Method
       | delivery verification = AGE            | AGE            | uid:cc9c5e0b-88ed-41d8-9f53-96eb912154e8 |
       | delivery verification = IDENTIFICATION | IDENTIFICATION | uid:8b8552dc-af46-445a-93af-bff76b246b35 |
 
-  @validate-verification-method
+  @validate-verification-method @MediumPriority
   Scenario: Validate ATL for RTS Order
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -199,7 +199,7 @@ Feature: Delivery Verification Method
     When Operator validate order for ATL
     Then Operator verify that response returns "false"
 
-  @validate-verification-method
+  @validate-verification-method @MediumPriority
   Scenario: Validate ATL for High Value Shipper Order
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     And Shipper create order with parameters below
@@ -210,7 +210,7 @@ Feature: Delivery Verification Method
     When Operator validate order for ATL
     Then Operator verify that response returns "false"
 
-  @validate-verification-method
+  @validate-verification-method @MediumPriority
   Scenario: Validate ATL for Terminal State Order - Completed
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -223,7 +223,7 @@ Feature: Delivery Verification Method
     When Operator validate order for ATL
     Then Operator verify that response returns "false"
 
-  @validate-verification-method
+  @validate-verification-method @MediumPriority
   Scenario: Validate ATL for Terminal State Order - Cancelled
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -236,7 +236,7 @@ Feature: Delivery Verification Method
     When Operator validate order for ATL
     Then Operator verify that response returns "false"
 
-  @validate-verification-method
+  @validate-verification-method @MediumPriority
   Scenario: Validate ATL for Terminal State Order - Returned to Sender
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -252,7 +252,7 @@ Feature: Delivery Verification Method
     When Operator validate order for ATL
     Then Operator verify that response returns "false"
 
-  @validate-verification-method
+  @validate-verification-method @MediumPriority
   Scenario: Validate ATL for Terminal State Order - Arrived at Distribution Point
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
@@ -273,7 +273,7 @@ Feature: Delivery Verification Method
     When Operator validate order for ATL
     Then Operator verify that response returns "false"
 
-  @validate-verification-method
+  @validate-verification-method @MediumPriority
   Scenario Outline: Validate ATL Order with Delivery Verification Method - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below

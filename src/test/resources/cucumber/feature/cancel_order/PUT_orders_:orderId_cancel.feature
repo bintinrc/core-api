@@ -1,6 +1,7 @@
 @ForceSuccessOrder @ArchiveDriverRoutes  @cancel-order @/orders/:orderId/cancel
 Feature: Cancel PUT /orders/:orderId/cancel
 
+  @MediumPriority
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Staging
     Given Shipper id "{shipper-4-id}" subscribes to "Cancelled" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -36,6 +37,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
+  @MediumPriority
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Pending Pickup
     Given Shipper id "{shipper-4-id}" subscribes to "Cancelled" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -124,6 +126,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
+  @MediumPriority
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Pickup Fail
     Given Shipper id "{shipper-4-id}" subscribes to "Cancelled" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -177,6 +180,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | waypointId        | archived | status  |
       | {KEY_WAYPOINT_ID} | 1        | Pending |
 
+  @MediumPriority
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Returned to Sender
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
@@ -198,6 +202,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator verify that order status-granular status is "Completed"-"Returned_to_Sender"
     And Operator checks that "CANCEL" event is NOT published
 
+  @MediumPriority
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Completed
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
@@ -216,6 +221,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator verify that order status-granular status is "Completed"-"Completed"
     And Operator checks that "CANCEL" event is NOT published
 
+  @MediumPriority
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Cancelled
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
@@ -232,6 +238,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | application | core                       |
       | description | ORDER_ALREADY_CANCELLED    |
 
+  @MediumPriority
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Arrived at Distribution Point
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
@@ -258,6 +265,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator verify that order status-granular status is "Transit"-"Arrived_at_Distribution_Point"
     And Operator checks that "CANCEL" event is NOT published
 
+  @MediumPriority
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Arrived at Sorting Hub
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And Shipper create order with parameters below
@@ -276,6 +284,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator verify that order status-granular status is "Transit"-"Arrived_at_Sorting_Hub"
     And Operator checks that "CANCEL" event is NOT published
 
+  @MediumPriority
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - En-route to Sorting Hub
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
@@ -294,6 +303,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator verify that order status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
     And Operator checks that "CANCEL" event is NOT published
 
+  @MediumPriority
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - On Vehicle for Delivery
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
@@ -312,6 +322,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator verify that order status-granular status is "Transit"-"On_Vehicle_for_Delivery"
     And Operator checks that "CANCEL" event is NOT published
 
+  @MediumPriority
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - On Hold
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below
@@ -330,6 +341,7 @@ Feature: Cancel PUT /orders/:orderId/cancel
     And Operator verify that order status-granular status is "On_Hold"-"On_Hold"
     And Operator checks that "CANCEL" event is NOT published
 
+  @MediumPriority
   Scenario: PUT /orders/:orderId/cancel - Cancel Order - Transferred to 3PL
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper create order with parameters below

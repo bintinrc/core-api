@@ -63,7 +63,7 @@ Feature: Delete Route
       | Note | hiptest-uid                              | service_type | service_level | parcel_job_is_pickup_required |
       |      | uid:5cf6b734-73e3-4689-b052-b04dc3fd467c | Parcel       | Standard      | true                          |
 
-  @route-delete @routing-refactor
+  @route-delete @routing-refactor @HighPriority
   Scenario Outline: Operator Delete Driver Route Successfully - Merged Pending Waypoint - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -100,7 +100,7 @@ Feature: Delete Route
       | Pickup   | uid:6512cf1c-ae48-408f-9815-444cc6357935 | PP         | PICKUP           | Return       | Standard      | true                          |
       | Delivery | uid:e806f2f4-a939-4e3d-89f0-0363d439880e | DD         | DELIVERY         | Parcel       | Standard      | false                         |
 
-  @route-delete @routing-refactor
+  @route-delete @routing-refactor @MediumPriority
   Scenario Outline: Operator Delete Driver Route Successfully - Single Empty Route
     When API Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
@@ -113,8 +113,8 @@ Feature: Delete Route
     Examples:
       | Note | hiptest-uid                              |
       |      | uid:24bdb220-fac4-4791-81d1-65ce3bcf2061 |
-
-  @route-delete
+    
+  @route-delete @MediumPriority
   Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -138,7 +138,7 @@ Feature: Delete Route
       | Success | uid:35a3e49a-435a-47ed-92dd-410ada4fad34 | Success | Parcel       | Standard      | true                          |
       | Fail    | uid:540916c7-68d9-4692-85b3-0097f460cc88 | Fail    | Parcel       | Standard      | true                          |
 
-  @route-delete
+  @route-delete @MediumPriority
   Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Delivery Transaction - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -166,7 +166,7 @@ Feature: Delete Route
       | Success | uid:adeef437-d902-453a-8da1-e6962f9454a2 | SUCCESS        | Parcel       | Standard      | false                         |
       | Fail    | uid:8dc735c2-de57-4caf-b0f6-e407cc287753 | FAIL           | Parcel       | Standard      | false                         |
 
-  @route-delete
+  @route-delete @MediumPriority
   Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Pickup Transaction - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
