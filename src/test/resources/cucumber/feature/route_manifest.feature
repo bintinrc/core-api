@@ -1,4 +1,4 @@
-@ForceSuccessOrder  @ArchiveDriverRoutes @route-manifest
+@ForceSuccessOrders  @ArchiveDriverRoutes @route-manifest
 Feature: Route Manifest
 
   @HighPriority

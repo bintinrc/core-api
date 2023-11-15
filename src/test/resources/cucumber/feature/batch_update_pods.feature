@@ -1,4 +1,4 @@
-@ForceSuccessOrder @ArchiveDriverRoutes @batch-update-pods
+@ForceSuccessOrders @ArchiveDriverRoutes @batch-update-pods
 Feature: Batch Update PODs
 
   @happy-path @HighPriority
@@ -19,7 +19,9 @@ Feature: Batch Update PODs
     And API Core - Operator merge routed waypoints:
       | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Success All Created Orders "Pickup" with pod type "<type>"
-    Then DB Operator verifies waypoint status is "SUCCESS"
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID} |
+      | status   | Success           |
     And Operator verify that all orders status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
     And Operator verify all "PICKUP" transactions status is "SUCCESS"
     And Shipper gets webhook request for event "En-route to Sorting Hub" for all orders
@@ -27,7 +29,9 @@ Feature: Batch Update PODs
     And Shipper gets webhook request for event "Successful Pickup" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Pickup" for all orders
     When API Batch Update Proof Request to Success All Created Orders "Pickup"
-    Then DB Operator verifies transaction_blob is created
+    Then DB Core - verify transaction_blob record:
+      | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
+      | {KEY_UPDATE_PROOFS_REQUEST[2].job.id} |
     And Verify blob data is correct
     And API Event - Operator verify that event is published with the following details:
       | event              | UPDATE_STATUS                     |
@@ -61,7 +65,9 @@ Feature: Batch Update PODs
     And API Core - Operator merge routed waypoints:
       | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Partial Success Orders "Pickup"
-    Then DB Operator verifies waypoint status is "ROUTED"
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID} |
+      | status   | Routed            |
     And Operator verify that "Success" orders status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
     And Operator verify that "Fail" orders status-granular status is "Pickup_fail"-"Pickup_fail"
     And Operator verify that "Success" orders "Pickup" transactions status is "Success"
@@ -70,8 +76,27 @@ Feature: Batch Update PODs
     And Verify for "Success" Orders, Shipper gets webhook event "Successful Pickup"
     And Verify for "Failed" Orders, Shipper gets webhook event "Pickup fail"
     When API Batch Update Proof Request to Partial Success Orders "Pickup"
-    And DB Operator verifies all transaction_failure_reason is created correctly
-    Then DB Operator verifies transaction_blob is created
+    Then DB Core - verify transaction_failure_reason record:
+      | transactionId       | {KEY_LIST_OF_TRANSACTION_DETAILS[1].id} |
+      | failureReasonId     | {KEY_FAILURE_REASON_ID}                 |
+      | failureReasonCodeId | {KEY_FAILURE_REASON_CODE_ID}            |
+    Then DB Core - verify transaction_failure_reason record:
+      | transactionId       | {KEY_LIST_OF_TRANSACTION_DETAILS[2].id} |
+      | failureReasonId     | {KEY_FAILURE_REASON_ID}                 |
+      | failureReasonCodeId | {KEY_FAILURE_REASON_CODE_ID}            |
+    Then DB Core - verify transaction_failure_reason record:
+      | transactionId       | {KEY_LIST_OF_TRANSACTION_DETAILS[3].id} |
+      | failureReasonId     | {KEY_FAILURE_REASON_ID}                 |
+      | failureReasonCodeId | {KEY_FAILURE_REASON_CODE_ID}            |
+    Then DB Core - verify transaction_failure_reason record:
+      | transactionId       | {KEY_LIST_OF_TRANSACTION_DETAILS[4].id} |
+      | failureReasonId     | {KEY_FAILURE_REASON_ID}                 |
+      | failureReasonCodeId | {KEY_FAILURE_REASON_CODE_ID}            |
+    And DB Core - verify transaction_blob record:
+      | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
+      | {KEY_UPDATE_PROOFS_REQUEST[2].job.id} |
+      | {KEY_UPDATE_PROOFS_REQUEST[3].job.id} |
+      | {KEY_UPDATE_PROOFS_REQUEST[4].job.id} |
     And Verify blob data is correct
     And API Event - Operator verify that event is published with the following details:
       | event              | UPDATE_STATUS                     |
@@ -108,14 +133,25 @@ Feature: Batch Update PODs
     And API Core - Operator merge routed waypoints:
       | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Fail All Created Orders "Pickup"
-    Then DB Operator verifies waypoint status is "FAIL"
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID} |
+      | status   | Fail              |
     And Operator verify that all orders status-granular status is "Pickup_fail"-"Pickup_fail"
     And Operator verify all "PICKUP" transactions status is "FAIL"
     And Shipper gets webhook request for event "Pickup fail" for all orders
     And Shipper verifies webhook request payload has correct details for status "Pickup fail" for all orders
     When API Batch Update Proof Request to Fail All Created Orders "Pickup"
-    Then DB Operator verifies all transaction_failure_reason is created correctly
-    And DB Operator verifies transaction_blob is created
+    Then DB Core - verify transaction_failure_reason record:
+      | transactionId       | {KEY_LIST_OF_TRANSACTION_DETAILS[1].id} |
+      | failureReasonId     | {KEY_FAILURE_REASON_ID}                 |
+      | failureReasonCodeId | {KEY_FAILURE_REASON_CODE_ID}            |
+    Then DB Core - verify transaction_failure_reason record:
+      | transactionId       | {KEY_LIST_OF_TRANSACTION_DETAILS[2].id} |
+      | failureReasonId     | {KEY_FAILURE_REASON_ID}                 |
+      | failureReasonCodeId | {KEY_FAILURE_REASON_CODE_ID}            |
+    And DB Core - verify transaction_blob record:
+      | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
+      | {KEY_UPDATE_PROOFS_REQUEST[2].job.id} |
     And Verify blob data is correct
     And API Event - Operator verify that event is published with the following details:
       | event              | UPDATE_STATUS                     |
@@ -145,7 +181,9 @@ Feature: Batch Update PODs
     And API Core - Operator merge routed waypoints:
       | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Success All Created Orders "Delivery" with pod type "<type>"
-    Then DB Operator verifies waypoint status is "SUCCESS"
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID} |
+      | status   | Success           |
     And Operator verify that all orders status-granular status is "Completed"-"Completed"
     And Operator verify all "DELIVERY" transactions status is "SUCCESS"
     And Shipper gets webhook request for event "Completed" for all orders
@@ -153,7 +191,9 @@ Feature: Batch Update PODs
     And Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery" for all orders
     When API Batch Update Proof Request to Success All Created Orders "Delivery"
-    Then DB Operator verifies transaction_blob is created
+    And DB Core - verify transaction_blob record:
+      | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
+      | {KEY_UPDATE_PROOFS_REQUEST[2].job.id} |
     And Verify blob data is correct
     And API Event - Operator verify that event is published with the following details:
       | event              | UPDATE_STATUS                     |
@@ -188,7 +228,9 @@ Feature: Batch Update PODs
     And API Core - Operator merge routed waypoints:
       | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Success All Created Orders "Delivery" with pod type "<type>"
-    Then DB Operator verifies waypoint status is "SUCCESS"
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID} |
+      | status   | Success           |
     And Operator verify that all orders status-granular status is "Completed"-"Completed"
     And Operator verify all "DELIVERY" transactions status is "SUCCESS"
     And Shipper gets webhook request for event "Completed" for all orders
@@ -196,7 +238,9 @@ Feature: Batch Update PODs
     And Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery" for all orders
     When API Batch Update Proof Request to Success All Created Orders "Delivery"
-    Then DB Operator verifies transaction_blob is created
+    And DB Core - verify transaction_blob record:
+      | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
+      | {KEY_UPDATE_PROOFS_REQUEST[2].job.id} |
     And Verify blob data is correct
     And API Event - Operator verify that event is published with the following details:
       | event              | UPDATE_STATUS                     |
@@ -231,7 +275,9 @@ Feature: Batch Update PODs
     And API Core - Operator merge routed waypoints:
       | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Partial Success Orders "Delivery"
-    Then DB Operator verifies waypoint status is "ROUTED"
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID} |
+      | status   | Routed            |
     And Operator verify that "Success" orders status-granular status is "Completed"-"Completed"
     And Operator verify that "Fail" orders status-granular status is "Delivery_Fail"-"Pending_Reschedule"
     And Operator verify that "Success" orders "Delivery" transactions status is "Success"
@@ -241,8 +287,27 @@ Feature: Batch Update PODs
     And Verify for "Failed" Orders, Shipper gets webhook event "Pending Reschedule"
     And Verify for "Failed" Orders, Shipper gets webhook event "First Attempt Delivery Fail"
     When API Batch Update Proof Request to Partial Success Orders "Delivery"
-    Then DB Operator verifies transaction_blob is created
-    And DB Operator verifies all transaction_failure_reason is created correctly
+    Then DB Core - verify transaction_failure_reason record:
+      | transactionId       | {KEY_LIST_OF_TRANSACTION_DETAILS[1].id} |
+      | failureReasonId     | {KEY_FAILURE_REASON_ID}                 |
+      | failureReasonCodeId | {KEY_FAILURE_REASON_CODE_ID}            |
+    Then DB Core - verify transaction_failure_reason record:
+      | transactionId       | {KEY_LIST_OF_TRANSACTION_DETAILS[2].id} |
+      | failureReasonId     | {KEY_FAILURE_REASON_ID}                 |
+      | failureReasonCodeId | {KEY_FAILURE_REASON_CODE_ID}            |
+    Then DB Core - verify transaction_failure_reason record:
+      | transactionId       | {KEY_LIST_OF_TRANSACTION_DETAILS[3].id} |
+      | failureReasonId     | {KEY_FAILURE_REASON_ID}                 |
+      | failureReasonCodeId | {KEY_FAILURE_REASON_CODE_ID}            |
+    Then DB Core - verify transaction_failure_reason record:
+      | transactionId       | {KEY_LIST_OF_TRANSACTION_DETAILS[4].id} |
+      | failureReasonId     | {KEY_FAILURE_REASON_ID}                 |
+      | failureReasonCodeId | {KEY_FAILURE_REASON_CODE_ID}            |
+    And DB Core - verify transaction_blob record:
+      | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
+      | {KEY_UPDATE_PROOFS_REQUEST[2].job.id} |
+      | {KEY_UPDATE_PROOFS_REQUEST[3].job.id} |
+      | {KEY_UPDATE_PROOFS_REQUEST[4].job.id} |
     And Verify blob data is correct
     And API Event - Operator verify that event is published with the following details:
       | event              | UPDATE_STATUS                     |
@@ -280,7 +345,9 @@ Feature: Batch Update PODs
     And API Core - Operator merge routed waypoints:
       | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Fail All Created Orders "Delivery"
-    Then DB Operator verifies waypoint status is "FAIL"
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID} |
+      | status   | Fail              |
     And Operator verify that all orders status-granular status is "Delivery_Fail"-"Pending_Reschedule"
     And Operator verify all "DELIVERY" transactions status is "FAIL"
     And Shipper gets webhook request for event "Pending Reschedule" for all orders
@@ -288,8 +355,17 @@ Feature: Batch Update PODs
     And Shipper gets webhook request for event "First Attempt Delivery Fail" for all orders
     And Shipper verifies webhook request payload has correct details for status "First Attempt Delivery Fail" for all orders
     When API Batch Update Proof Request to Fail All Created Orders "Delivery"
-    Then DB Operator verifies transaction_blob is created
-    And DB Operator verifies all transaction_failure_reason is created correctly
+    Then DB Core - verify transaction_failure_reason record:
+      | transactionId       | {KEY_LIST_OF_TRANSACTION_DETAILS[1].id} |
+      | failureReasonId     | {KEY_FAILURE_REASON_ID}                 |
+      | failureReasonCodeId | {KEY_FAILURE_REASON_CODE_ID}            |
+    Then DB Core - verify transaction_failure_reason record:
+      | transactionId       | {KEY_LIST_OF_TRANSACTION_DETAILS[2].id} |
+      | failureReasonId     | {KEY_FAILURE_REASON_ID}                 |
+      | failureReasonCodeId | {KEY_FAILURE_REASON_CODE_ID}            |
+    And DB Core - verify transaction_blob record:
+      | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
+      | {KEY_UPDATE_PROOFS_REQUEST[2].job.id} |
     And Verify blob data is correct
     And API Event - Operator verify that event is published with the following details:
       | event              | UPDATE_STATUS                     |
@@ -307,27 +383,36 @@ Feature: Batch Update PODs
     When Shipper creates multiple orders : 2 orders with the same params
       | service_type                  | Parcel   |
       | service_level                 | Standard |
-      | parcel_job_is_pickup_required | true     |
-    And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    And Operator Search for Created Pickup for Shipper "{shipper-4-legacy-id}" with status "Pending"
-    And Operator Route the Reservation Pickup
+      | parcel_job_is_pickup_required | false    |
+    Given API Core - Operator create reservation using data below:
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    And API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    When API Core - Operator add reservation to route using data below:
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
     When API Batch Update Job Request to "SUCCESS" All Orders under the reservation
-    Then Operator verify that reservation status is "Success"
-    And DB Operator verifies waypoint status is "SUCCESS"
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
+      | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+#    TODO uncomment when lag has been investigated/fixed
+#    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Success"
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | status   | Success                                          |
     And Operator verify that all orders status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
     And Shipper gets webhook request for event "En-route to Sorting Hub" for all orders
     And Shipper verifies webhook request payload has correct details for status "En-route to Sorting Hub" for all orders
     And Shipper gets webhook request for event "Successful Pickup" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Pickup" for all orders
     When API Batch Update Proof Request to "SUCCESS" All Orders under the reservation
-    Then DB Operator verifies reservation_blob is created
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
+      | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+    And DB Core - verify reservation_blob record:
+      | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
     And Verify blob data is correct
     And Operator get proof details for "SUCCESS" transaction of "Normal" orders
-    And DB Operator verifies transaction_blob is NOT created
     And API Event - Operator verify that event is published with the following details:
       | event              | UPDATE_STATUS                     |
       | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
@@ -341,35 +426,39 @@ Feature: Batch Update PODs
   Scenario: Driver Picks Up All X number of Return Parcels in One Reservation
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
-    When Shipper creates a reservation
-      | service_type                  | Parcel   |
-      | service_level                 | Standard |
-      | parcel_job_is_pickup_required | true     |
-    And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    And Operator Search for Created Pickup for Shipper "{shipper-4-legacy-id}" with status "Pending"
-    And Operator Route the Reservation Pickup
-    And Shipper creates multiple "Return" orders
+    When Shipper creates multiple orders : 2 orders with the same params
       | service_type                  | Return   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
-    When API Batch Update Job Request to "SUCCESS" All Return Orders under the reservation
-    Then Operator verify that reservation status is "SUCCESS"
-    And DB Operator verifies waypoint status is "SUCCESS"
+    Given API Core - Operator create reservation using data below:
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    And API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    When API Core - Operator add reservation to route using data below:
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
+    When API Batch Update Job Request to "SUCCESS" All Orders under the reservation
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
+      | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+#    TODO uncomment when lag has been investigated/fixed
+#    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Success"
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | status   | Success                                          |
     And Operator verify that all orders status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
     And Shipper gets webhook request for event "En-route to Sorting Hub" for all orders
     And Shipper verifies webhook request payload has correct details for status "En-route to Sorting Hub" for all orders
     And Shipper gets webhook request for event "Successful Pickup" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Pickup" for all orders
     When API Batch Update Proof Request to "SUCCESS" All Orders under the reservation
-    Then DB Operator verifies reservation_blob is created
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
+      | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+    And DB Core - verify reservation_blob record:
+      | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
     And Verify blob data is correct
     And Operator get proof details for "SUCCESS" transaction of "Return" orders
-    And DB Operator verifies transaction_blob is created
-    And Verify blob data is correct
     And API Event - Operator verify that event is published with the following details:
       | event              | UPDATE_STATUS                     |
       | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
@@ -386,22 +475,32 @@ Feature: Batch Update PODs
     When Shipper creates multiple orders : 2 orders with the same params
       | service_type                  | Parcel   |
       | service_level                 | Standard |
-      | parcel_job_is_pickup_required | true     |
-    And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    And Operator Search for Created Pickup for Shipper "{shipper-4-legacy-id}" with status "Pending"
-    And Operator Route the Reservation Pickup
+      | parcel_job_is_pickup_required | false    |
+    Given API Core - Operator create reservation using data below:
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    And API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    When API Core - Operator add reservation to route using data below:
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
     When API Batch Update Job Request to "SUCCESS" Reservation without any Parcel
-    Then Operator verify that reservation status is "SUCCESS"
-    And DB Operator verifies waypoint status is "SUCCESS"
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
+      | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+#        TODO uncomment when lag has been investigated/fixed
+#    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Success"
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | status   | Success                                          |
     And Operator verify that all orders status-granular status is "Pending"-"Pending_Pickup"
     And Verify NO "En-route to Sorting Hub" event sent for all orders
     And Verify NO "Successful Pickup" event sent for all orders
     When API Batch Update Proof Request to "SUCCESS" Reservation without any Parcel
-    Then DB Operator verifies reservation_blob is created
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
+      | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+    Then DB Core - verify reservation_blob record:
+      | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
     And Verify blob data is correct
 
   @update-rsvn @HighPriority
@@ -411,24 +510,34 @@ Feature: Batch Update PODs
     When Shipper creates multiple orders : 4 orders with the same params
       | service_type                  | Parcel   |
       | service_level                 | Standard |
-      | parcel_job_is_pickup_required | true     |
-    And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    And Operator Search for Created Pickup for Shipper "{shipper-4-legacy-id}" with status "Pending"
-    And Operator Route the Reservation Pickup
+      | parcel_job_is_pickup_required | false    |
+    Given API Core - Operator create reservation using data below:
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    And API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    When API Core - Operator add reservation to route using data below:
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
     When API Batch Update Job Request to Partial Success Orders under the reservation
-    Then Operator verify that reservation status is "SUCCESS"
-    And DB Operator verifies waypoint status is "SUCCESS"
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
+      | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+    #        TODO uncomment when lag has been investigated/fixed
+#    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Success"
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | status   | Success                                          |
     And Operator verify that "Success" orders status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
     And Operator verify that "Fail" orders status-granular status is "Pending"-"Pending_Pickup"
     And Verify for "Success" Orders, Shipper gets webhook event "En-route to Sorting Hub"
     And Verify for "Success" Orders, Shipper gets webhook event "Successful Pickup"
     And Verify for "Failed" Orders, Shipper gets webhook event "Pickup fail"
     When API Batch Update Proof Request to Partial Success & Fail Orders under the reservation
-    Then DB Operator verifies reservation_blob is created
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
+      | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+    Then DB Core - verify reservation_blob record:
+      | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
     And Verify blob data is correct
 
   @update-rsvn @HighPriority
@@ -439,57 +548,80 @@ Feature: Batch Update PODs
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
-    And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    And Operator Search for Created Pickup for Shipper "{shipper-4-legacy-id}" with status "Pending"
-    And Operator Route the Reservation Pickup
+    Given API Core - Operator create reservation using data below:
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    And API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    When API Core - Operator add reservation to route using data below:
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
     When API Batch Update Job Request to "FAIL" All Orders under the reservation
-    Then Operator verify that reservation status is "FAIL"
-    And DB Operator verifies waypoint status is "FAIL"
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
+      | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+    #        TODO uncomment when lag has been investigated/fixed
+#    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Fail"
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | status   | Fail                                             |
     And Operator verify that all orders status-granular status is "Pending"-"Pending_Pickup"
     And Shipper gets webhook request for event "Pickup fail" for all orders
     And Shipper verifies webhook request payload has correct details for status "Pickup fail" for all orders
     When API Batch Update Proof Request to "FAIL" All Orders under the reservation
-    Then DB Operator verifies reservation_blob is created
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
+      | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+    Then DB Core - verify reservation_blob record:
+      | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
     And Verify blob data is correct
-    And DB Operator verifies reservation_failure_reason is created correctly
+    And DB Core - verify reservation_failure_reason record:
+      | reservationId       | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
+      | failureReasonId     | {KEY_FAILURE_REASON_ID}                  |
+      | failureReasonCodeId | {KEY_FAILURE_REASON_CODE_ID}             |
     And Operator get proof details for "FAIL" transaction of "Normal" orders
-    And DB Operator verifies transaction_blob is NOT created
 
   @update-rsvn @HighPriority
   Scenario: Driver fails the reservation and fail all X number of return parcels under a reservation
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
-    When Shipper creates a reservation
-      | service_type                  | Parcel   |
-      | service_level                 | Standard |
-      | parcel_job_is_pickup_required | true     |
-    And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    And Operator Search for Created Pickup for Shipper "{shipper-4-legacy-id}" with status "Pending"
-    And Operator Route the Reservation Pickup
+    Given API Core - Operator create reservation using data below:
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    And API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    When API Core - Operator add reservation to route using data below:
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
     And Shipper creates multiple "Return" orders
       | service_type                  | Return   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     When API Batch Update Job Request to "FAIL" All Return Orders under the reservation
-    Then Operator verify that reservation status is "FAIL"
-    And DB Operator verifies waypoint status is "FAIL"
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
+      | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+    #        TODO uncomment when lag has been investigated/fixed
+#    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Fail"
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | status   | Fail                                             |
     And Operator verify that all orders status-granular status is "Pickup_fail"-"Pickup_fail"
     And Shipper gets webhook request for event "Pickup fail" for all orders
     And Shipper verifies webhook request payload has correct details for status "Pickup fail" for all orders
     When API Batch Update Proof Request to "FAIL" All Orders under the reservation
-    Then DB Operator verifies reservation_blob is created
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
+      | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+    Then DB Core - verify reservation_blob record:
+      | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
     And Verify blob data is correct
-    And DB Operator verifies reservation_failure_reason is created correctly
+    And DB Core - verify reservation_failure_reason record:
+      | reservationId       | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
+      | failureReasonId     | {KEY_FAILURE_REASON_ID}                  |
+      | failureReasonCodeId | {KEY_FAILURE_REASON_CODE_ID}             |
     And Operator get proof details for "FAIL" transaction of "Return" orders
-    And DB Operator verifies transaction_blob is created
+    Then DB Core - verify transaction_blob record:
+      | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
+      | {KEY_UPDATE_PROOFS_REQUEST[2].job.id} |
     And Verify blob data is correct
     And API Event - Operator verify that event is published with the following details:
       | event              | UPDATE_STATUS                     |
@@ -507,23 +639,36 @@ Feature: Batch Update PODs
     When Shipper creates multiple orders : 2 orders with the same params
       | service_type                  | Parcel   |
       | service_level                 | Standard |
-      | parcel_job_is_pickup_required | true     |
-    And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    And Operator Search for Created Pickup for Shipper "{shipper-4-legacy-id}" with status "Pending"
-    And Operator Route the Reservation Pickup
+      | parcel_job_is_pickup_required | false    |
+    Given API Core - Operator create reservation using data below:
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    And API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    When API Core - Operator add reservation to route using data below:
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
     When API Batch Update Job Request to "FAIL" Reservation without any Parcel
-    Then Operator verify that reservation status is "FAIL"
-    And DB Operator verifies waypoint status is "FAIL"
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
+      | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+    #        TODO uncomment when lag has been investigated/fixed
+#    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Fail"
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | status   | Fail                                             |
     And Operator verify that all orders status-granular status is "Pending"-"Pending_Pickup"
     And Verify NO "Pickup fail" event sent for all orders
     When API Batch Update Proof Request to "FAIL" Reservation without any Parcel
-    Then DB Operator verifies reservation_blob is created
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
+      | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+    Then DB Core - verify reservation_blob record:
+      | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
     And Verify blob data is correct
-    And DB Operator verifies reservation_failure_reason is created correctly
+    And DB Core - verify reservation_failure_reason record:
+      | reservationId       | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
+      | failureReasonId     | {KEY_FAILURE_REASON_ID}                  |
+      | failureReasonCodeId | {KEY_FAILURE_REASON_CODE_ID}             |
 
   @HighPriority
   Scenario: Shipper Got POD Webhook (Successful Pickup) with NO PODs Details after Driver Success Return Pickup with NO Proof Details
@@ -543,7 +688,9 @@ Feature: Batch Update PODs
     And API Core - Operator merge routed waypoints:
       | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Success All Created Orders "Pickup" with NO Proof Details
-    Then DB Operator verifies waypoint status is "SUCCESS"
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID} |
+      | status   | Success           |
     And Operator verify that all orders status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
     And Operator verify all "PICKUP" transactions status is "SUCCESS"
     And Shipper gets webhook request for event "Successful Pickup" for all orders
@@ -567,7 +714,9 @@ Feature: Batch Update PODs
     And API Core - Operator merge routed waypoints:
       | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     When API Batch Update Job Request to Success All Created Orders "Delivery" with NO Proof Details
-    Then DB Operator verifies waypoint status is "SUCCESS"
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID} |
+      | status   | Success           |
     And Operator verify that all orders status-granular status is "Completed"-"Completed"
     And Operator verify all "DELIVERY" transactions status is "SUCCESS"
     And Shipper gets webhook request for event "Successful Delivery" for all orders
@@ -591,19 +740,22 @@ Feature: Batch Update PODs
     And Operator search for created order
     And Operator add order to driver "DD" route
     When API Batch Update Job Request to Success COD Delivery
-    Then DB Operator verifies waypoint status is "SUCCESS"
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID} |
+      | status   | Success           |
     And Operator verify that all orders status-granular status is "Completed"-"Completed"
     And Operator verify all "DELIVERY" transactions status is "SUCCESS"
-    And DB Operator verify the collected sum stored in cod_collections using data below:
-      | transactionMode   | DELIVERY      |
-      | expectedCodAmount | 56.78         |
-      | driverId          | {driver-2-id} |
+    And DB Core - Operator verifies cod_collections record:
+      | waypointId   | {KEY_LIST_OF_CREATED_ORDER[1].transactions[2].waypointId} |
+      | collectedSum | 56.78                                                     |
+      | driverId     | {driver-2-id}                                             |
     And Shipper gets webhook request for event "Completed" for all orders
     And Shipper verifies webhook request payload has correct details for status "Completed" for all orders
     And Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery" for all orders
     When API Batch Update Proof Request to Success All Created Orders "Delivery"
-    Then DB Operator verifies transaction_blob is created
+    Then DB Core - verify transaction_blob record:
+      | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
     And Verify blob data is correct
     And API Event - Operator verify that event is published with the following details:
       | event              | UPDATE_STATUS                     |

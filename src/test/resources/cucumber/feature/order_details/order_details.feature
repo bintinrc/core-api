@@ -1,4 +1,4 @@
-@ForceSuccessOrder @order-details
+@ForceSuccessOrders @order-details
 Feature: Order Details
 
   @MediumPriority

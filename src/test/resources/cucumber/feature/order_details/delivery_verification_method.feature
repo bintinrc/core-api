@@ -1,4 +1,4 @@
-@ForceSuccessOrder @ArchiveDriverRoutes @order-details @delivery-verification-method
+@ForceSuccessOrders @ArchiveDriverRoutes @order-details @delivery-verification-method
 Feature: Delivery Verification Method
 
   @update-verification-method @MediumPriority

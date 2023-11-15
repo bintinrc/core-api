@@ -182,7 +182,7 @@ public class WebhookSteps extends BaseSteps {
               break;
             case SUCCESSFUL_PICKUP:
               //to exclude POD on Pickup with Normal Order
-              if ((pickup != null && order.getServiceType().equalsIgnoreCase("Parcel"))
+              if (order.getServiceType().equalsIgnoreCase("Parcel")
                   || proofDetails == null) {
                 Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
               } else {

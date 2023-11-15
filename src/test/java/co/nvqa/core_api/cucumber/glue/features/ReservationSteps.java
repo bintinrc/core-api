@@ -53,17 +53,20 @@ public class ReservationSteps extends BaseSteps {
     });
   }
 
-  @And("Operator verify that reservation status is {string}")
-  public void operatorRouteReservation(String status) {
-    Pickup pickup = get(KEY_CREATED_RESERVATION);
-    String pickupAddress = get(KEY_INITIAL_RESERVATION_ADDRESS);
-    put(KEY_PICKUP_ADDRESS_STRING, pickupAddress);
+  @And("Operator verify that reservation id {string} status is {string}")
+  public void operatorRouteReservation(String reservationId, String status) {
     doWithRetry(() -> {
-      searchPickup(pickup.getShipperId(), status);
-      Pickup result = get(KEY_CREATED_RESERVATION);
-      Assertions.assertThat(result.getStatus().toLowerCase())
-          .as(String.format("reservation status id %d", result.getReservationId()))
-          .isEqualTo(status.toLowerCase());
+      PickupSearchRequest request = new PickupSearchRequest();
+      request.setReservationIds(
+          Collections.singletonList(Long.parseLong(resolveValue(reservationId))));
+      List<Pickup> result = getShipperPickupClient().searchPickupsWithFilters(request);
+      Assertions.assertThat(result.size()).as("reservation is not empty")
+          .isEqualTo(1);
+      final Pickup pickup = result.get(0);
+      put(KEY_WAYPOINT_ID, pickup.getWaypointId());
+      Assertions.assertThat(pickup.getStatus())
+          .as(String.format("reservation status id %d", pickup.getReservationId()))
+          .isEqualToIgnoringCase(status);
     }, "operator verify reservation status", 2000, 50);
   }
 

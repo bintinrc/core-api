@@ -1,4 +1,4 @@
-@ForceSuccessOrder @order-details-id @OrderDimensionsUpdateCalculationID
+@ForceSuccessOrders @order-details-id @OrderDimensionsUpdateCalculationID
 Feature: ID - Order Dimensions Update Calculation
 
   @HighPriority

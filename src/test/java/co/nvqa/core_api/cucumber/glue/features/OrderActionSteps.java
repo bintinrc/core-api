@@ -12,9 +12,11 @@ import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.common.ordercreate.model.OrderSearchRequest;
 import co.nvqa.common.ordercreate.model.OrderSearchResponse;
 import co.nvqa.common.utils.NvTestRuntimeException;
+import co.nvqa.commons.client.order_search.OrderSearchClient;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import io.cucumber.guice.ScenarioScoped;
+import io.cucumber.java.After;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
@@ -472,7 +474,7 @@ public class OrderActionSteps extends BaseSteps {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     List<Long> tagIds = List.of(tagId);
     doWithRetry(() -> {
-      long orderId = searchOrder(trackingId).getSearchData().get(0).getOrder().getId();
+      long orderId = getOrderDetails(trackingId).getId();
       getOrderClient().addOrderLevelTags(orderId, tagIds);
       put(KEY_LIST_OF_ORDER_TAG_IDS, tagIds);
       putInList(KEY_LIST_OF_PRIOR_TRACKING_IDS, trackingId);
@@ -502,17 +504,20 @@ public class OrderActionSteps extends BaseSteps {
         "update order dimension");
   }
 
-  private OrderSearchResponse searchOrder(String trackingIdOrStampId) {
-    OrderSearchRequest request = new OrderSearchRequest();
-    request.addOrReplaceStringFilter("tracking_id", Collections.singletonList(trackingIdOrStampId));
-    return getOrderSearchClient().searchOrders(request);
+  @After("@ForceSuccessOrders")
+  public void cleanOrders() {
+    final List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
+    try {
+      if (orderIds != null) {
+        orderIds.forEach(e -> getOrderClient().forceSuccess(e));
+      }
+    } catch (Throwable t) {
+      LOGGER.warn("Failed to force success order(s)");
+    }
   }
 
   private Order getOrderDetails(String trackingId) {
-    long orderId = searchOrder(trackingId).getSearchData().get(0).getOrder().getId();
-    Order order = getOrderClient().getOrder(orderId);
-    Assertions.assertThat(order).as("order details").isNotNull();
-    return order;
+    return getOrderClient().searchOrderByTrackingId(trackingId);
   }
 
   private Transaction getTransaction(Order order, String type, String status) {
@@ -530,4 +535,5 @@ public class OrderActionSteps extends BaseSteps {
     return events.stream().filter(c -> c.getType().equalsIgnoreCase(event))
         .collect(Collectors.toList());
   }
+
 }

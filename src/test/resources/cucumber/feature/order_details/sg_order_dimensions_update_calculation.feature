@@ -1,4 +1,4 @@
-@ForceSuccessOrder @order-details @OrderDimensionsUpdateCalculationSG
+@ForceSuccessOrders @order-details @OrderDimensionsUpdateCalculationSG
 Feature: SG - Order Dimensions Update Calculation
 
   @MediumPriority

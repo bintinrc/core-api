@@ -9,6 +9,7 @@ import co.nvqa.common.core.model.batch_update_pods.ProofDetails;
 import co.nvqa.common.core.model.order.Order;
 import co.nvqa.common.core.model.order.Order.Transaction;
 import co.nvqa.common.core.model.pickup.Pickup;
+import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.common.ordercreate.model.OrderRequestV4;
 import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.common.webhook.model.webhook.WebhookRequest;
@@ -174,14 +175,15 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   }
 
   @Given("API Batch Update Job Request to {string} All Orders under the reservation")
-  public void apiBatchJobUpdateReservationAllOrders(String action) {
-    long routeId = get(KEY_CREATED_ROUTE_ID);
+  public void apiBatchJobUpdateReservationAllOrders(String action, Map<String, String> data) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-    Pickup pickup = get(KEY_CREATED_RESERVATION);
-    long reservationId = pickup.getReservationId();
+    Map<String, String> resolvedData = resolveKeyValues(data);
+    final long reservationId = Long.parseLong(resolvedData.get("reservationId"));
+    final long waypointId = Long.parseLong(resolvedData.get("waypointId"));
+    final long routeId = Long.parseLong(resolvedData.get("routeId"));
     doWithRetry(() -> {
-      long waypointId = get(KEY_WAYPOINT_ID);
-      List<JobUpdate> request = createReservationJobRequest(trackingIds, reservationId, action,
+      List<JobUpdate> request = createReservationJobRequest(trackingIds,
+          reservationId, action,
           action);
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
       put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
@@ -189,28 +191,20 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   }
 
   @Given("API Batch Update Job Request to {string} All Return Orders under the reservation")
-  public void apiBatchJobUpdateReservationAllReturnOrders(String action) {
-    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-    List<OrderRequestV4> orderRequest = get(KEY_LIST_OF_ORDER_CREATE_RESPONSE);
-    String normalTid = orderRequest.stream()
-        .filter(e -> e.getServiceType().equalsIgnoreCase("Parcel"))
-        .findAny().orElseThrow(() -> new NvTestRuntimeException("cant find order response"))
-        .getTrackingNumber();
-    trackingIds.remove(normalTid);
-    put(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, trackingIds);
-    apiBatchJobUpdateReservationAllOrders(action);
-    put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
+  public void apiBatchJobUpdateReservationAllReturnOrders(String action, Map<String, String> data) {
+    apiBatchJobUpdateReservationAllOrders(action, data);
   }
 
   @Given("API Batch Update Proof Request to {string} All Orders under the reservation")
-  public void apiBatchProofsUpdateReservationAllOrders(String action) {
-    long routeId = get(KEY_CREATED_ROUTE_ID);
+  public void apiBatchProofsUpdateReservationAllOrders(String action, Map<String, String> data) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-    Pickup pickup = get(KEY_CREATED_RESERVATION);
-    long reservationId = pickup.getReservationId();
+    Map<String, String> resolvedData = resolveKeyValues(data);
+    final long reservationId = Long.parseLong(resolvedData.get("reservationId"));
+    final long waypointId = Long.parseLong(resolvedData.get("waypointId"));
+    final long routeId = Long.parseLong(resolvedData.get("routeId"));
     doWithRetry(() -> {
-      long waypointId = get(KEY_WAYPOINT_ID);
-      List<JobUpdate> request = createReservationUpdateProofRequest(reservationId, trackingIds,
+      List<JobUpdate> request = createReservationUpdateProofRequest(
+          reservationId, trackingIds,
           action);
       put(KEY_UPDATE_PROOFS_REQUEST, request);
       getBatchUpdatePodClient().batchUpdatePodProofs(routeId, waypointId, request);
@@ -236,12 +230,12 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   }
 
   @Given("API Batch Update Proof Request to Partial Success & Fail Orders under the reservation")
-  public void apiBatchProofsUpdateReservationPartialSuccess() {
-    long routeId = get(KEY_CREATED_ROUTE_ID);
-    Pickup pickup = get(KEY_CREATED_RESERVATION);
-    long reservationId = pickup.getReservationId();
+  public void apiBatchProofsUpdateReservationPartialSuccess(Map<String, String> data) {
+    Map<String, String> resolvedData = resolveKeyValues(data);
+    final long reservationId = Long.parseLong(resolvedData.get("reservationId"));
+    final long waypointId = Long.parseLong(resolvedData.get("waypointId"));
+    final long routeId = Long.parseLong(resolvedData.get("routeId"));
     doWithRetry(() -> {
-      long waypointId = get(KEY_WAYPOINT_ID);
       List<JobUpdate> request = createReservationPartialSuccessProofRequest(reservationId);
       put(KEY_UPDATE_PROOFS_REQUEST, request);
       getBatchUpdatePodClient().batchUpdatePodProofs(routeId, waypointId, request);
@@ -249,12 +243,12 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   }
 
   @Given("API Batch Update Proof Request to {string} Reservation without any Parcel")
-  public void apiBatchProofsUpdateReservationNoOrders(String action) {
-    long routeId = get(KEY_CREATED_ROUTE_ID);
-    Pickup pickup = get(KEY_CREATED_RESERVATION);
-    long reservationId = pickup.getReservationId();
+  public void apiBatchProofsUpdateReservationNoOrders(String action, Map<String, String> data) {
+    Map<String, String> resolvedData = resolveKeyValues(data);
+    final long reservationId = Long.parseLong(resolvedData.get("reservationId"));
+    final long waypointId = Long.parseLong(resolvedData.get("waypointId"));
+    final long routeId = Long.parseLong(resolvedData.get("routeId"));
     doWithRetry(() -> {
-      long waypointId = get(KEY_WAYPOINT_ID);
       List<JobUpdate> request = createReservationUpdateProofRequest(reservationId,
           new ArrayList<>(), action);
       put(KEY_UPDATE_PROOFS_REQUEST, request);
@@ -263,13 +257,13 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   }
 
   @Given("API Batch Update Job Request to Partial Success Orders under the reservation")
-  public void apiBatchJobUpdateReservationPartialOrders() {
-    long routeId = get(KEY_CREATED_ROUTE_ID);
+  public void apiBatchJobUpdateReservationPartialOrders(Map<String, String> data) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-    Pickup pickup = get(KEY_CREATED_RESERVATION);
-    long reservationId = pickup.getReservationId();
+    Map<String, String> resolvedData = resolveKeyValues(data);
+    final long reservationId = Long.parseLong(resolvedData.get("reservationId"));
+    final long waypointId = Long.parseLong(resolvedData.get("waypointId"));
+    final long routeId = Long.parseLong(resolvedData.get("routeId"));
     doWithRetry(() -> {
-      long waypointId = get(KEY_WAYPOINT_ID);
       List<JobUpdate> request = createReservationPartialSuccessJobRequest(trackingIds,
           reservationId);
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
@@ -278,12 +272,12 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   }
 
   @Given("API Batch Update Job Request to {string} Reservation without any Parcel")
-  public void apiBatchJobUpdateReservationWithoutOrder(String action) {
-    long routeId = get(KEY_CREATED_ROUTE_ID);
-    Pickup pickup = get(KEY_CREATED_RESERVATION);
-    long reservationId = pickup.getReservationId();
+  public void apiBatchJobUpdateReservationWithoutOrder(String action, Map<String, String> data) {
+    Map<String, String> resolvedData = resolveKeyValues(data);
+    final long reservationId = Long.parseLong(resolvedData.get("reservationId"));
+    final long waypointId = Long.parseLong(resolvedData.get("waypointId"));
+    final long routeId = Long.parseLong(resolvedData.get("routeId"));
     doWithRetry(() -> {
-      long waypointId = get(KEY_WAYPOINT_ID);
       List<JobUpdate> request = createReservationJobWithoutParcelRequest(reservationId, action);
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
       put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
@@ -328,7 +322,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   @Given("Verify blob data is correct")
   public void dbOperatorVerifiesBlobData() {
     List<JobUpdate> proofRequest = get(KEY_UPDATE_PROOFS_REQUEST);
-    Map<Long, String> blobDataMap = get(KEY_LIST_OF_BLOB_DATA);
+    Map<Long, String> blobDataMap = get(CoreScenarioStorageKeys.KEY_CORE_LIST_OF_BLOB_DATA);
     doWithRetry(() -> {
       proofRequest.forEach(e -> {
         BlobData blobData = fromJsonSnakeCase(blobDataMap.get(e.getJob().getId()), BlobData.class);
@@ -366,8 +360,8 @@ public class BatchUpdatePodsSteps extends BaseSteps {
         }
         Assertions.assertThat(blobData.getStatus()).as("status is correct")
             .isEqualTo(e.getJob().getAction());
-        Pickup pickup = get(KEY_CREATED_RESERVATION);
-        if (pickup == null) {
+        List<Pickup> pickups = get(KEY_LIST_OF_CREATED_RESERVATIONS);
+        if (pickups == null) {
           Assertions.assertThat(blobData.getVerificationMethod()).as("no verification method")
               .isEqualTo("NO_VERIFICATION");
         } else {

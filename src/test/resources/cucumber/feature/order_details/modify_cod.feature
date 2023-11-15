@@ -1,4 +1,4 @@
-@ForceSuccessOrder @ArchiveDriverRoutes @order-details @modify-cod
+@ForceSuccessOrders @ArchiveDriverRoutes @order-details @modify-cod
 Feature: Order Details
 
   @modify-cod @MediumPriority

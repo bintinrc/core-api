@@ -1,4 +1,4 @@
-@ForceSuccessOrder  @routing1 @route-delete
+@ForceSuccessOrders  @routing1 @route-delete
 Feature: Delete Route
 
   @route-delete @routing-refactor @happy-path @HighPriority
@@ -113,7 +113,7 @@ Feature: Delete Route
     Examples:
       | Note | hiptest-uid                              |
       |      | uid:24bdb220-fac4-4791-81d1-65ce3bcf2061 |
-    
+
   @route-delete @MediumPriority
   Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
