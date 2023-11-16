@@ -1,4 +1,4 @@
- @ArchiveDriverRoutes @notification
+@ArchiveDriverRoutes @notification
 Feature: Notification
 
   @happy-path @HighPriority
@@ -35,46 +35,6 @@ Feature: Notification
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
 
   @HighPriority
-  Scenario: Send Successful Delivery Webhook on Customer Collection of DP Order
-    Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
-    Given Shipper id "{shipper-4-id}" subscribes to "Completed" webhook
-    And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
-    And Shipper create order with parameters below
-      | service_type                  | Parcel   |
-      | service_level                 | Standard |
-      | parcel_job_is_pickup_required | false    |
-    And Operator search for created order
-    And Operator perform global inbound at hub "{sorting-hub-id}"
-    And API Operator assign delivery waypoint of an order to DP Include Today with ID = "{dpms-id}"
-    And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    And Operator add order to driver "DD" route
-    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
-    And Driver Starts the route
-    And Driver "SUCCESS" Parcel "DELIVERY"
-    And DB Operator gets DP Job ID by Barcode
-    And API Operator do the DP Success for From Driver Flow
-    And DB Operator gets Customer Unlock Code Based on Tracking ID
-    And API DP do the Customer Collection from dp with ID = "{dp-id}"
-    Then Operator verify that order status-granular status is "Completed"-"Completed"
-    And Operator verify all "DELIVERY" transactions status is "SUCCESS"
-    Then DB Operator verifies waypoint status is "SUCCESS"
-    Then Shipper gets webhook request for event "Successful Delivery" for all orders
-    And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
-    Then Shipper gets webhook request for event "Completed" for all orders
-    And Shipper verifies webhook request payload has correct details for status "Completed"
-    And API Event - Operator verify that event is published with the following details:
-      | event              | UPDATE_STATUS          |
-      | orderId            | {KEY_CREATED_ORDER_ID} |
-      | updateStatusReason | RELEASED_FROM_DP       |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | FROM_DP_TO_CUSTOMER    |
-      | orderId | {KEY_CREATED_ORDER_ID} |
-
-  @HighPriority
   Scenario Outline: Send Successful Delivery Webhook with COD - Single Force Success - <Note>
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -84,7 +44,7 @@ Feature: Notification
       | parcel_job_is_pickup_required | false    |
       | parcel_job_cash_on_delivery   | 500.20   |
     And Operator search for created order
-    When API Operator force succeed created order with cod collected = "<codCollected>"
+    When API Core - Operator force success order "{KEY_LIST_OF_CREATED_ORDER[1].id}" with cod collected "<codCollected>"
     Then Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
     Examples:
@@ -126,7 +86,8 @@ Feature: Notification
       | parcel_job_is_pickup_required | false    |
       | parcel_job_cash_on_delivery   | 150      |
     And Operator search for created order
-    When Operator bulk force success all orders with cod collected : "<codCollected>"
+    When API Core - Operator bulk force success below orders with cod collected "<codCollected>":
+      | {KEY_CREATED_ORDER_ID} |
     Then Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
     Examples:
@@ -143,7 +104,8 @@ Feature: Notification
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    When Operator bulk force success all orders with cod collected : "false"
+    When API Core - Operator bulk force success below orders with cod collected "false":
+      | {KEY_CREATED_ORDER_ID} |
     Then Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
 
@@ -163,11 +125,12 @@ Feature: Notification
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
-    And Operator get "DELIVERY" transaction waypoint Ids for all orders
-    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
-    And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
+    And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
+    And API Driver - Driver van inbound:
+      | routeId | {KEY_CREATED_ROUTE_ID}                                                                                                                                                               |
+      | request | {"parcels":[{"inbound_type":"VAN_FROM_NINJAVAN","tracking_id":"{KEY_LIST_OF_CREATED_ORDER[1].trackingId}","waypoint_id":{KEY_LIST_OF_CREATED_ORDER[1].transactions[2].waypointId}}]} |
     And API Sort - Operator get hub details of hub id "{sorting-hub-id}"
-    And Driver Starts the route
+    And API Driver - Driver start route "{KEY_CREATED_ROUTE_ID}"
     Then Operator verify that order status-granular status is "Transit"-"On_Vehicle_for_Delivery"
     And Shipper gets webhook request for event "On Vehicle for Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "On Vehicle for Delivery"
@@ -183,23 +146,65 @@ Feature: Notification
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
     And Operator perform global inbound at hub "{sorting-hub-id}"
-    And API Operator RTS created order:
-      | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
+    And API Core - Operator rts order:
+      | orderId    | {KEY_CREATED_ORDER.id}                                                                                          |
+      | rtsRequest | { "reason": "Return to sender: Nobody at address", "timewindow_id":1, "date":"{date: 1 days next, yyyy-MM-dd}"} |
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
-    And Operator get "DELIVERY" transaction waypoint Ids for all orders
-    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
-    And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
+    And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
+    And API Driver - Driver van inbound:
+      | routeId | {KEY_CREATED_ROUTE_ID}                                                                                                                                                               |
+      | request | {"parcels":[{"inbound_type":"VAN_FROM_NINJAVAN","tracking_id":"{KEY_LIST_OF_CREATED_ORDER[1].trackingId}","waypoint_id":{KEY_LIST_OF_CREATED_ORDER[1].transactions[2].waypointId}}]} |
     And API Sort - Operator get hub details of hub id "{sorting-hub-id}"
-    And Driver Starts the route
+    And API Driver - Driver start route "{KEY_CREATED_ROUTE_ID}"
     Then Operator verify that order status-granular status is "Transit"-"On_Vehicle_for_Delivery"
     And Shipper gets webhook request for event "On Vehicle for Delivery (RTS)" for all orders
     And Shipper verifies webhook request payload has correct details for status "On Vehicle for Delivery (RTS)"
     And Verify NO "On Vehicle for Delivery" event sent for all orders
+
+  @HighPriority @wip2
+  Scenario: Send Successful Delivery Webhook on Customer Collection of DP Order
+    Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
+    Given Shipper id "{shipper-4-id}" subscribes to "Completed" webhook
+    And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
+    And Shipper create order with parameters below
+      | service_type                  | Parcel   |
+      | service_level                 | Standard |
+      | parcel_job_is_pickup_required | false    |
+    And Operator search for created order
+    And Operator perform global inbound at hub "{sorting-hub-id}"
+    And API Operator assign delivery waypoint of an order to DP Include Today with ID = "{dpms-id}"
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And Operator add order to driver "DD" route
+    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
+    And Driver Starts the route
+    And Driver "SUCCESS" Parcel "DELIVERY"
+    And DB Operator gets DP Job ID by Barcode
+    And API Operator do the DP Success for From Driver Flow
+    And DB Operator gets Customer Unlock Code Based on Tracking ID
+    And API DP do the Customer Collection from dp with ID = "{dp-id}"
+    Then Operator verify that order status-granular status is "Completed"-"Completed"
+    And Operator verify all "DELIVERY" transactions status is "SUCCESS"
+    Then DB Operator verifies waypoint status is "SUCCESS"
+    Then Shipper gets webhook request for event "Successful Delivery" for all orders
+    And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
+    Then Shipper gets webhook request for event "Completed" for all orders
+    And Shipper verifies webhook request payload has correct details for status "Completed"
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS          |
+      | orderId            | {KEY_CREATED_ORDER_ID} |
+      | updateStatusReason | RELEASED_FROM_DP       |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | FROM_DP_TO_CUSTOMER    |
+      | orderId | {KEY_CREATED_ORDER_ID} |
 
   @happy-path @HighPriority
   Scenario: Send First Attempt Delivery Fail & First Pending Reschedule Webhook on Driver Fails Delivery Order
