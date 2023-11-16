@@ -33,15 +33,16 @@ Feature: Order Details
       | parcel_job_cash_on_delivery   | <cod>    |
     And Operator search for created order
     And Operator perform global inbound at hub "{sorting-hub-id}"
-    And API Operator RTS created order:
-      | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
+    And API Core - Operator rts order:
+      | orderId    | {KEY_CREATED_ORDER.id}                                                                                          |
+      | rtsRequest | { "reason": "Return to sender: Nobody at address", "timewindow_id":1, "date":"{date: 1 days next, yyyy-MM-dd}"} |
     And Operator force success order
     When Operator "<action>" Order COD value with value 50.0
     Then Operator verify response code is 500 with error message details as follow
-      | code        | 103042                                           |
-      | message     | Not allowed to update an RTS order               |
-      | application | core                                             |
-      | description | INVALID_ORDER_EXCEPTION                          |
+      | code        | 103042                             |
+      | message     | Not allowed to update an RTS order |
+      | application | core                               |
+      | description | INVALID_ORDER_EXCEPTION            |
 
     Examples:
       | Note       | action | cod | hiptest-uid                              |
@@ -57,17 +58,9 @@ Feature: Order Details
       | parcel_job_is_pickup_required | false    |
       | parcel_job_cash_on_delivery   | <cod>    |
     And Operator search for created order
-    And Operator perform global inbound at hub "{sorting-hub-id}"
-    And Operator create an empty route
-      | driver_id  | {driver-id}      |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    And Operator add order to driver "DD" route
-    And Operator search for "DELIVERY" transaction with status "PENDING"
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
-    And API Operator Van Inbound parcel
-    And Driver Starts the route
+    And API Core - Operator update order granular status:
+      | orderId        | {KEY_CREATED_ORDER.id}  |
+      | granularStatus | On Vehicle for Delivery |
     When Operator "<action>" Order COD value with value 50.0
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103042                                                |
@@ -107,8 +100,9 @@ Feature: Order Details
       | parcel_job_cash_on_delivery   | 50       |
     And Operator search for created order
     And Operator perform global inbound at hub "{sorting-hub-id}"
-    And API Operator RTS created order:
-      | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
+    And API Core - Operator rts order:
+      | orderId    | {KEY_CREATED_ORDER.id}                                                                                          |
+      | rtsRequest | { "reason": "Return to sender: Nobody at address", "timewindow_id":1, "date":"{date: 1 days next, yyyy-MM-dd}"} |
     And Operator force success order
     When Operator deletes Order COD value
     Then Operator verify response code is 500 with error message details as follow
@@ -126,17 +120,9 @@ Feature: Order Details
       | parcel_job_is_pickup_required | false    |
       | parcel_job_cash_on_delivery   | 50       |
     And Operator search for created order
-    And Operator perform global inbound at hub "{sorting-hub-id}"
-    And Operator create an empty route
-      | driver_id  | {driver-id}      |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    And Operator add order to driver "DD" route
-    And Operator search for "DELIVERY" transaction with status "PENDING"
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
-    And API Operator Van Inbound parcel
-    And Driver Starts the route
+    And API Core - Operator update order granular status:
+      | orderId        | {KEY_CREATED_ORDER.id}  |
+      | granularStatus | On Vehicle for Delivery |
     When Operator deletes Order COD value
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103042                                                |

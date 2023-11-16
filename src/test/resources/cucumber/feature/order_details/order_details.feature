@@ -29,8 +29,9 @@ Feature: Order Details
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
     And Operator perform global inbound at hub "{sorting-hub-id}"
-    And API Operator RTS created order:
-      | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
+    And API Core - Operator rts order:
+      | orderId    | {KEY_CREATED_ORDER.id}                                                                                          |
+      | rtsRequest | { "reason": "Return to sender: Nobody at address", "timewindow_id":1, "date":"{date: 1 days next, yyyy-MM-dd}"} |
     And Operator force success order
     Then Operator verify that order status-granular status is "Completed"-"Returned_to_Sender"
     When Operator RTS invalid state Order
@@ -50,7 +51,7 @@ Feature: Order Details
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And API Operator cancel created order
+    And API Core - cancel order "{KEY_CREATED_ORDER.id}"
     Then Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     When Operator RTS invalid state Order
       | request | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
@@ -69,7 +70,9 @@ Feature: Order Details
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And API Operator update order granular status to = "On Hold"
+    And API Core - Operator update order granular status:
+      | orderId        | {KEY_CREATED_ORDER.id} |
+      | granularStatus | On Hold                |
     And Operator verify that order status-granular status is "On_Hold"-"On_Hold"
     When Operator force success invalid state Order
     Then Operator verify response code is 403 with error message details as follow
