@@ -90,11 +90,14 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator search for created order
-    And API Core - Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+    And Operator create an empty route
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And API Core - Operator add parcel to the route using data below:
-      | addParcelToRouteRequest | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"type":"PICKUP"} |
-      | orderId                 | {KEY_CREATED_ORDER.id}                                          |
+      | addParcelToRouteRequest | {"route_id":{KEY_CREATED_ROUTE_ID},"type":"PICKUP"} |
+      | orderId                 | {KEY_CREATED_ORDER.id}                              |
     And API Core - Operator update order granular status:
       | orderId        | {KEY_CREATED_ORDER.id} |
       | granularStatus | Van En-route to Pickup |
@@ -150,11 +153,14 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator search for created order
-    And API Core - Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+    And Operator create an empty route
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And API Core - Operator add parcel to the route using data below:
-      | addParcelToRouteRequest | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"type":"PICKUP"} |
-      | orderId                 | {KEY_CREATED_ORDER.id}                                          |
+      | addParcelToRouteRequest | {"route_id":{KEY_CREATED_ROUTE_ID},"type":"PICKUP"} |
+      | orderId                 | {KEY_CREATED_ORDER.id}                              |
     And Operator force "FAIL" "PICKUP" waypoint
     Then Operator verify that order status-granular status is "Pickup_Fail"-"Pickup_Fail"
     When API Operator cancel order with PUT /orders/:orderId/cancel
@@ -172,15 +178,15 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | id      | {KEY_CREATED_ORDER.transactions[1].id} |
       | status  | Fail                                   |
       | type    | PP                                     |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}     |
+      | routeId | {KEY_CREATED_ROUTE_ID}                 |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
       | status   | Fail                                           |
-      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}             |
+      | routeId  | {KEY_CREATED_ROUTE_ID}                         |
       | seqNo    | not null                                       |
     And DB Core - verify route_monitoring_data record:
       | waypointId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}             |
+      | routeId    | {KEY_CREATED_ROUTE_ID}                         |
     And DB Core - verify transactions record:
       | id       | {KEY_CREATED_ORDER.transactions[2].id}                                            |
       | status   | Cancelled                                                                         |
