@@ -113,7 +113,6 @@ public class OrderActionSteps extends BaseSteps {
       operatorSearchTransaction(type, status);
     });
     List<Long> waypointIds = get(KEY_LIST_OF_WAYPOINT_IDS);
-    put(KEY_LIST_OF_WAYPOINTS_SEQUENCE, waypointIds);
   }
 
   @Then("Operator verify all {string} transactions status is {string}")
