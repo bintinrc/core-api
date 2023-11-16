@@ -10,7 +10,12 @@ Feature: Route Manifest
       | parcel_job_is_pickup_required | false    |
     And Operator search for all created orders
     When Operator inbounds all orders at hub "{sorting-hub-id}"
-    And API Operator assign delivery multiple waypoint of an order to DP Include Today with ID = "{dpms-id}"
+    And API DP - Operator tag order to DP:
+      | request | {"order_id":{KEY_LIST_OF_CREATED_ORDER[1].id},"dp_id":{dp-id},"drop_off_date":"{date: 0 days next, yyyy-MM-dd}"} |
+    And API DP - Operator tag order to DP:
+      | request | {"order_id":{KEY_LIST_OF_CREATED_ORDER[2].id},"dp_id":{dp-id},"drop_off_date":"{date: 0 days next, yyyy-MM-dd}"} |
+    And API DP - Operator tag order to DP:
+      | request | {"order_id":{KEY_LIST_OF_CREATED_ORDER[3].id},"dp_id":{dp-id},"drop_off_date":"{date: 0 days next, yyyy-MM-dd}"} |
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
@@ -24,4 +29,12 @@ Feature: Route Manifest
     When Operator force "SUCCESS" "DELIVERY" waypoint
     Then Operator verify that all orders status-granular status is "Transit"-"Arrived_At_Distribution_Point"
     And Operator verify all "DELIVERY" transactions status is "SUCCESS"
-    And DB Operator verifies all waypoints status is "SUCCESS"
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_WAYPOINT_IDS[1]} |
+      | status   | Success                       |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_WAYPOINT_IDS[2]} |
+      | status   | Success                       |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_WAYPOINT_IDS[3]} |
+      | status   | Success                       |
