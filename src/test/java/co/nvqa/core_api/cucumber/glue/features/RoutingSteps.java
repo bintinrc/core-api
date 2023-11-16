@@ -141,26 +141,8 @@ public class RoutingSteps extends BaseSteps {
   @When("Operator verify delete route response with proper error message : {string}")
   public void verifyBadDeleteRoute(String message) {
     Response r = get(KEY_DELETE_ROUTE_RESPONSE);
-    Pickup pickup = get(KEY_CREATED_RESERVATION);
-    if (pickup != null) {
-      Assertions.assertThat(r.getBody().asString()).as("response message is correct")
-          .containsIgnoringCase(
-              String.format("Reservation %d for Shipper %d has status %s. Cannot delete route.",
-                  pickup.getReservationId(), pickup.getShipperId(),
-                  pickup.getStatus().toUpperCase()));
-    } else {
-      final Order order = get(KEY_CREATED_ORDER);
-      String type;
-      if (order.getType().equalsIgnoreCase("Return")) {
-        type = "Pickup";
-      } else {
-        type = "Delivery";
-      }
-      Assertions.assertThat(r.getBody().asString()).as("response message contains the message")
-          .containsIgnoringCase(
-              String.format("%s for Order %d has already been attempted. Cannot delete route.",
-                  type, order.getId()));
-    }
+    Assertions.assertThat(r.getBody().asString()).as("response message is correct")
+        .containsIgnoringCase(message);
   }
 
   @When("Operator verify route response with proper error message below:")
