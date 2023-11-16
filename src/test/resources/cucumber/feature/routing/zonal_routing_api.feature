@@ -403,7 +403,7 @@ Feature: Zonal Routing API
       | orderId          | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
       | routeEventSource | ZONAL_ROUTING_UPDATE               |
 
-  @HighPriority @wip2
+  @HighPriority
   Scenario: Add Merged Unrouted Waypoint to a Route from Zonal Routing Edit Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     Given API Core - Operator create reservation using data below:
@@ -412,32 +412,56 @@ Feature: Zonal Routing API
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
-    And Operator search for multiple "DELIVERY" transactions with status "PENDING"
-    And Operator create a route and assign waypoint from Zonal Routing API
-      | driver_id  | {driver-id}      |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    When Operator edit route by removing merged waypoints from Zonal Routing API
-      | driver_id  | {driver-id}  |
-      | vehicle_id | {vehicle-id} |
-    And Operator add order to driver "DELIVERY" route
-    And Operator gets only eligible routed orders
-    #    verify remaining unrouted order
-    And DB Operator verifies transaction route id is null
-    And DB Operator verifies waypoint status is "PENDING"
-    And DB Operator verifies waypoints.route_id & seq_no is NULL
-    And DB Operator verifies route_monitoring_data is hard-deleted
-    #    verify routed orders
-    Then DB Operator verifies all transactions routed to new route id
-    And DB Operator verifies all waypoints status is "ROUTED"
-    And DB Operator verifies all waypoints.route_id & seq_no is populated correctly
-    And DB Operator verifies all route_monitoring_data records
+    And API Core - Operator get multiple order details for tracking ids:
+      | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1]} |
+      | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[2]} |
+    And API Core - Operator create new route from zonal routing using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}]} |
+    And API Core - Operator merge routed waypoints:
+      | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+    And API Core - Operator get multiple order details for tracking ids:
+      | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1]} |
+      | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[2]} |
+    When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
+      | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[1].id}, "waypoints":[{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
+    And API Core - Operator get multiple order details for tracking ids:
+      | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1]} |
+      | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[2]} |
+    And API Core - Operator add parcel to the route using data below:
+      | addParcelToRouteRequest | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"type":"DELIVERY"} |
+      | orderId                 | {KEY_LIST_OF_CREATED_ORDERS[1].id}                                |
+    And API Core - Operator get multiple order details for tracking ids:
+      | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1]} |
+      | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[2]} |
+    #  WAYPOINT - RESERVATION
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | seqNo    | not null                                         |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+      | status   | Routed                                           |
+#    WAYPOINT - DELIVERY Routed
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | seqNo    | not null                                                   |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
+      | status   | Routed                                                     |
+#  WAYPOINT - DELIVERY Unrouted
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
+      | routeId | null                                               |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | seqNo    | null                                                       |
+      | routeId  | null                                                       |
+      | status   | Pending                                                    |
     And API Event - Operator verify that event is published with the following details:
-      | event            | ADD_TO_ROUTE                      |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
-      | routeId          | {KEY_CREATED_ROUTE_ID}            |
-      | routeEventSource | ADD_BY_ORDER                      |
+      | event            | ADD_TO_ROUTE                       |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | routeEventSource | ADD_BY_ORDER                       |
 
   @MediumPriority
   Scenario: Zonal Routing Edit Route API - Not Allowed to Move Success Waypoints to Another Route
