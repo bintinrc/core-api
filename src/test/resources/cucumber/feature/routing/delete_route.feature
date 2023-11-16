@@ -135,8 +135,34 @@ Feature: Delete Route
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
 
-  @route-delete @MediumPriority @wip
-  Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - <Note>
+  @route-delete @MediumPriority
+  Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - Fail
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given API Core - Operator create reservation using data below:
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    And Operator create an empty route
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And API Core - Operator add reservation to route using data below:
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                   |
+    And API Core - Operator force fail waypoint via route manifest:
+      | routeId         | {KEY_CREATED_ROUTE_ID}                           |
+      | waypointId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | failureReasonId | {failure-reason-id}                              |
+    Then Operator delete driver route with status code 500
+    And Operator verify delete route response with proper error message : "Reservation {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} for Shipper {KEY_LIST_OF_CREATED_RESERVATIONS[1].legacyShipperId} has status <action>. Cannot delete route."
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | status   | <action>                                         |
+    Examples:
+      | Note | action | service_type | service_level | parcel_job_is_pickup_required |
+      | Fail | Fail   | Parcel       | Standard      | true                          |
+
+  @route-delete @MediumPriority
+  Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - Success
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
@@ -152,16 +178,15 @@ Feature: Delete Route
       | routeId    | {KEY_CREATED_ROUTE_ID}                           |
       | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
     Then Operator delete driver route with status code 500
-    And Operator verify delete route response with proper error message : "Reservation {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} for Shipper {KEY_LIST_OF_CREATED_RESERVATIONS[1].shipperId} has status <action>. Cannot delete route."
+    And Operator verify delete route response with proper error message : "Reservation {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} for Shipper {KEY_LIST_OF_CREATED_RESERVATIONS[1].legacyShipperId} has status <action>. Cannot delete route."
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | status   | <action>                                         |
     Examples:
       | Note    | action  | service_type | service_level | parcel_job_is_pickup_required |
       | Success | Success | Parcel       | Standard      | true                          |
-      | Fail    | Fail    | Parcel       | Standard      | true                          |
 
-  @route-delete @MediumPriority @wip
+  @route-delete @MediumPriority
   Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Delivery Transaction - <Status>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
@@ -195,7 +220,7 @@ Feature: Delete Route
       | Success | SUCCESS        | Parcel       | Standard      | false                         |
       | Fail    | FAIL           | Parcel       | Standard      | false                         |
 
-  @route-delete @MediumPriority @wip
+  @route-delete @MediumPriority
   Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Pickup Transaction - <Status>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below

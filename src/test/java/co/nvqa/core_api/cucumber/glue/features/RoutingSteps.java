@@ -142,7 +142,7 @@ public class RoutingSteps extends BaseSteps {
   public void verifyBadDeleteRoute(String message) {
     Response r = get(KEY_DELETE_ROUTE_RESPONSE);
     Assertions.assertThat(r.getBody().asString()).as("response message is correct")
-        .containsIgnoringCase(message);
+        .containsIgnoringCase(resolveValue(message));
   }
 
   @When("Operator verify route response with proper error message below:")
