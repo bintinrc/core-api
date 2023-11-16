@@ -386,15 +386,18 @@ Feature: Batch Update PODs
       | parcel_job_is_pickup_required | false    |
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
-    And API Core - Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     When API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                   |
     When API Batch Update Job Request to "SUCCESS" All Orders under the reservation
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                           |
 #    TODO uncomment when lag has been investigated/fixed
 #    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Success"
     Then DB Route - verify waypoints record:
@@ -408,7 +411,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to "SUCCESS" All Orders under the reservation
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                           |
     And DB Core - verify reservation_blob record:
       | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
     And Verify blob data is correct
@@ -432,15 +435,18 @@ Feature: Batch Update PODs
       | parcel_job_is_pickup_required | true     |
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
-    And API Core - Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     When API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                   |
     When API Batch Update Job Request to "SUCCESS" All Orders under the reservation
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                           |
 #    TODO uncomment when lag has been investigated/fixed
 #    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Success"
     Then DB Route - verify waypoints record:
@@ -454,7 +460,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to "SUCCESS" All Orders under the reservation
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                           |
     And DB Core - verify reservation_blob record:
       | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
     And Verify blob data is correct
@@ -478,15 +484,18 @@ Feature: Batch Update PODs
       | parcel_job_is_pickup_required | false    |
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
-    And API Core - Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     When API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                   |
     When API Batch Update Job Request to "SUCCESS" Reservation without any Parcel
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                           |
 #        TODO uncomment when lag has been investigated/fixed
 #    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Success"
     Then DB Route - verify waypoints record:
@@ -498,7 +507,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to "SUCCESS" Reservation without any Parcel
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                           |
     Then DB Core - verify reservation_blob record:
       | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
     And Verify blob data is correct
@@ -513,15 +522,18 @@ Feature: Batch Update PODs
       | parcel_job_is_pickup_required | false    |
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
-    And API Core - Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     When API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                   |
     When API Batch Update Job Request to Partial Success Orders under the reservation
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                           |
     #        TODO uncomment when lag has been investigated/fixed
 #    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Success"
     Then DB Route - verify waypoints record:
@@ -535,7 +547,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to Partial Success & Fail Orders under the reservation
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                           |
     Then DB Core - verify reservation_blob record:
       | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
     And Verify blob data is correct
@@ -550,15 +562,18 @@ Feature: Batch Update PODs
       | parcel_job_is_pickup_required | true     |
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
-    And API Core - Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     When API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                   |
     When API Batch Update Job Request to "FAIL" All Orders under the reservation
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                           |
     #        TODO uncomment when lag has been investigated/fixed
 #    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Fail"
     Then DB Route - verify waypoints record:
@@ -570,7 +585,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to "FAIL" All Orders under the reservation
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                           |
     Then DB Core - verify reservation_blob record:
       | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
     And Verify blob data is correct
@@ -586,11 +601,14 @@ Feature: Batch Update PODs
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
-    And API Core - Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     When API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                   |
     And Shipper creates multiple "Return" orders
       | service_type                  | Return   |
       | service_level                 | Standard |
@@ -598,7 +616,7 @@ Feature: Batch Update PODs
     When API Batch Update Job Request to "FAIL" All Return Orders under the reservation
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                           |
     #        TODO uncomment when lag has been investigated/fixed
 #    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Fail"
     Then DB Route - verify waypoints record:
@@ -610,7 +628,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to "FAIL" All Orders under the reservation
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                           |
     Then DB Core - verify reservation_blob record:
       | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
     And Verify blob data is correct
@@ -642,15 +660,18 @@ Feature: Batch Update PODs
       | parcel_job_is_pickup_required | false    |
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
-    And API Core - Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     When API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                   |
     When API Batch Update Job Request to "FAIL" Reservation without any Parcel
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                           |
     #        TODO uncomment when lag has been investigated/fixed
 #    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Fail"
     Then DB Route - verify waypoints record:
@@ -661,7 +682,7 @@ Feature: Batch Update PODs
     When API Batch Update Proof Request to "FAIL" Reservation without any Parcel
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                           |
     Then DB Core - verify reservation_blob record:
       | {KEY_UPDATE_PROOFS_REQUEST[1].job.id} |
     And Verify blob data is correct

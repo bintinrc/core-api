@@ -46,15 +46,18 @@ Feature: Delete Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
-    And API Core - Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                   |
     When Operator delete driver route with status code 200
     Then DB Route - verify route_logs record:
-      | legacyId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | deletedAt | not null                           |
+      | legacyId  | {KEY_CREATED_ROUTE_ID} |
+      | deletedAt | not null               |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | routeId  | null                                             |
@@ -75,19 +78,22 @@ Feature: Delete Route
       | service_type                  | <service_type>                  |
       | service_level                 | <service_level>                 |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
-    And API Core - Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add order by tracking id to driver "<route_type>" route
     When Shipper create another order with the same parameters as before
     And Operator add order by tracking id to driver "<route_type>" route
     And Operator search for all created orders
     And API Core - Operator merge routed waypoints:
-      | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | {KEY_CREATED_ROUTE_ID} |
     When Operator delete driver route with status code 200
     Then DB Route - verify route_logs record:
-      | legacyId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | deletedAt | not null                           |
+      | legacyId  | {KEY_CREATED_ROUTE_ID} |
+      | deletedAt | not null               |
     And Operator search for multiple "<transaction_type>" transactions with status "PENDING"
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_TRANSACTION_IDS[1]} |
@@ -126,12 +132,15 @@ Feature: Delete Route
 
   @route-delete @routing-refactor @MediumPriority
   Scenario: Operator Delete Driver Route Successfully - Single Empty Route
-    And API Core - Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+    And Operator create an empty route
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     When Operator delete driver route with status code 200
     Then DB Route - verify route_logs record:
-      | legacyId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | deletedAt | not null                           |
+      | legacyId  | {KEY_CREATED_ROUTE_ID} |
+      | deletedAt | not null               |
     When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
     Then Deleted route is not shown on his list routes
 
