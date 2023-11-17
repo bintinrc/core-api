@@ -463,8 +463,8 @@ Feature: Order Price Details
       | jobMode         | DELIVERY                                                                                             |
       | failureReasonId | 18                                                                                                   |
     And API Core - Operator reschedule order:
-      | orderId           | {KEY_LIST_OF_CREATED_ORDERS[1].id}                                                                                                                                                                                                                                                                          |
-      | rescheduleRequest | {"name":"Elsa Customer","contact":"+6583014911","email":"elsa@ninja.com","address1":"288J BUKIT BATOK STREET 25","address2":"NATURE VIEW","postal_code":"659288","city":"Singapore","country":"Singapore","latitude": 1.3453,"longitude":103.7587,"date":"{date: 1 days next, yyyy-MM-dd}","timeWindow":-1} |
+      | orderId           | {KEY_LIST_OF_CREATED_ORDERS[1].id}                                                                                                                                                                                                                                                                            |
+      | rescheduleRequest | {"name":"Elsa Customer","contact":"+6583014911","email":"elsa@ninja.com","address_1":"288J BUKIT BATOK STREET 25","address_2":"NATURE VIEW","postal_code":"659288","city":"Singapore","country":"Singapore","latitude": 1.3453,"longitude":103.7587,"date":"{date: 1 days next, yyyy-MM-dd}","timeWindow":-1} |
     And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[1]"
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
