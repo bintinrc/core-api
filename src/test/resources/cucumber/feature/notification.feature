@@ -177,34 +177,49 @@ Feature: Notification
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
     And Operator perform global inbound at hub "{sorting-hub-id}"
-    And API Operator assign delivery waypoint of an order to DP Include Today with ID = "{dpms-id}"
+    And API DP - Operator tag order to DP:
+      | request | {"order_id":{KEY_CREATED_ORDER.id},"dp_id":{dp-id},"drop_off_date":"{date: 0 days next, yyyy-MM-dd}"} |
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
+    And API Core - Operator get order details for tracking order "KEY_CREATED_ORDER_TRACKING_ID"
     When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
-    And Driver Starts the route
-    And Driver "SUCCESS" Parcel "DELIVERY"
-    And DB Operator gets DP Job ID by Barcode
-    And API Operator do the DP Success for From Driver Flow
-    And DB Operator gets Customer Unlock Code Based on Tracking ID
-    And API DP do the Customer Collection from dp with ID = "{dp-id}"
+    And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
+    And API Driver - Driver van inbound:
+      | routeId | {KEY_CREATED_ROUTE.id}                                                                                                                                                      |
+      | request | {"parcels":[{"inbound_type":"VAN_FROM_NINJAVAN","tracking_id":"{KEY_CREATED_ORDER_TRACKING_ID}","waypoint_id":{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}}]} |
+    And API Driver - Driver start route "{KEY_CREATED_ROUTE.id}"
+    And Driver submit pod to "SUCCESS" waypoint
+      | routeId    | {KEY_CREATED_ROUTE.id}                                     |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | driverId   | {driver-2-id}                                              |
+    And API DP - DP user authenticate with username "{dp-user-username}" password "{dp-user-password}" and dp id "{dp-id}"
+    And DB DP - get DP job order with order "{KEY_LIST_OF_CREATED_ORDERS[1].id}" and status "PENDING"
+    And API DP - DP success parcel:
+      | request | [{ "tracking_id": "{KEY_CREATED_ORDER_TRACKING_ID}", "job_id": {KEY_DP_LIST_OF_DP_JOB_ORDERS[1].dpJobId},"received_from": "DRIVER"}] |
+    And API DP - DP Order is collected by customer:
+      | dpId               | {dp-id}                                              |
+      | customerUnlockCode | {KEY_DP_LIST_OF_DP_JOB_ORDERS[1].customerUnlockCode} |
+      | trackingId         | {KEY_CREATED_ORDER_TRACKING_ID}                      |
     Then Operator verify that order status-granular status is "Completed"-"Completed"
     And Operator verify all "DELIVERY" transactions status is "SUCCESS"
-    Then DB Operator verifies waypoint status is "SUCCESS"
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | status   | Success                                                    |
     Then Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery"
     Then Shipper gets webhook request for event "Completed" for all orders
     And Shipper verifies webhook request payload has correct details for status "Completed"
     And API Event - Operator verify that event is published with the following details:
-      | event              | UPDATE_STATUS          |
-      | orderId            | {KEY_CREATED_ORDER_ID} |
-      | updateStatusReason | RELEASED_FROM_DP       |
+      | event              | UPDATE_STATUS                      |
+      | orderId            | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | updateStatusReason | RELEASED_FROM_DP                   |
     And API Event - Operator verify that event is published with the following details:
-      | event   | FROM_DP_TO_CUSTOMER    |
-      | orderId | {KEY_CREATED_ORDER_ID} |
+      | event   | FROM_DP_TO_CUSTOMER                |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
   @happy-path @HighPriority
   Scenario: Send First Attempt Delivery Fail & First Pending Reschedule Webhook on Driver Fails Delivery Order

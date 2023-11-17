@@ -3,6 +3,8 @@ package co.nvqa.core_api.cucumber.glue.features;
 import co.nvqa.common.core.model.batch_update_pods.ProofDetails;
 import co.nvqa.common.core.model.pickup.Pickup;
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
+import co.nvqa.common.dp.constants.DpScenarioStorageKeys;
+import co.nvqa.common.dp.model.hibernate.DpJobOrder;
 import co.nvqa.common.ordercreate.model.OrderRequestV4;
 import co.nvqa.common.utils.JsonUtils;
 import co.nvqa.common.utils.NvTestRuntimeException;
@@ -167,8 +169,8 @@ public class WebhookSteps extends BaseSteps {
           Map<String, ProofDetails> proofDetails = get(KEY_MAP_PROOF_WEBHOOK_DETAILS);
           switch (webhookStatus) {
             case SUCCESSFUL_DELIVERY:
-              final Long dpJobId = get(KEY_DP_JOB_ID);
-              if (proofDetails == null || dpJobId != null) {
+              final List<DpJobOrder> dpJobs = get(DpScenarioStorageKeys.KEY_DP_LIST_OF_DP_JOB_ORDERS);
+              if (proofDetails == null || dpJobs != null) {
                 Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
               } else {
                 checkDeliverySuccessPod(request, trackingId);
