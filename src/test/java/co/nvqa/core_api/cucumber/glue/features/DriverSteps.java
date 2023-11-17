@@ -88,17 +88,6 @@ public class DriverSteps extends BaseSteps {
     doWithRetry(() -> driverClient.startRoute(routeId), "driver starts route");
   }
 
-  // TODO to remove after step replaced with one from common-driver
-  @Given("Driver Van Inbound Parcel at hub id {string}")
-  public void driverVanInboundParcel(String hubId) {
-//    long routeId = get(KEY_CREATED_ROUTE_ID);
-//    String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-//    long waypointId = get(KEY_WAYPOINT_ID);
-//    callWithRetry(() -> driverClient.scan(String.valueOf(routeId),
-//        VanInboundScanRequest.createSimpleRequest(Long.valueOf(hubId), trackingId, waypointId)),
-//        "driver van inbound parcel");
-  }
-
   @Given("Driver {string} Parcel {string}")
   public void driverDeliverParcels(String action, String type) {
     doWithRetry(() -> {
@@ -129,23 +118,6 @@ public class DriverSteps extends BaseSteps {
     }, "driver attempts waypoint");
   }
 
-  //to success/fail previously rescheduled failed delivery/pickup
-  @Given("Driver {string} Parcel previous {string}")
-  public void driverDeliverPreviousFailedParcels(String action, String type) {
-    Order order = get(KEY_CREATED_ORDER);
-    doWithRetry(() -> {
-      createDriverJobs(action.toUpperCase());
-      List<SubmitPodRequest.Job> jobs = get(KEY_LIST_OF_DRIVER_JOBS);
-      SubmitPodRequest prevRequest = get(KEY_DRIVER_SUBMIT_POD_REQUEST);
-      Long routeId = get(KEY_CREATED_ROUTE_ID);
-      Long waypointId = prevRequest.getWaypointId();
-      SubmitPodRequest request = createDefaultDriverSubmitPodRequest(waypointId, jobs);
-      request.setName(order.getToName());
-      put(KEY_ROUTE_EVENT_SOURCE, "TRANSACTION_UNROUTE");
-      driverClient.submitPod(routeId, waypointId, request);
-    }, "driver attempts waypoint");
-  }
-
   @Given("Driver Fails Parcel {string} with Valid Reason")
   public void driverFailedWithValidReason(String type) {
     put(KEY_BOOLEAN_DRIVER_FAILED_VALID, true);
@@ -159,11 +131,6 @@ public class DriverSteps extends BaseSteps {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
       driverDeliverParcels(action, type);
     });
-  }
-
-  @Given("Driver {string} Reservation Pickup")
-  public void driverPickupReservation(String action) {
-    driverDeliverParcels(action.toUpperCase(), WAYPOINT_TYPE_RESERVATION);
   }
 
   @When("Driver Transfer Parcel to Another Driver")
