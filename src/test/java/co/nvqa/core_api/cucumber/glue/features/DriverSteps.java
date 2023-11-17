@@ -172,6 +172,7 @@ public class DriverSteps extends BaseSteps {
     doWithRetry(() -> {
       ParcelRouteTransferResponse response = getRouteClient().parcelRouteTransfer(request);
       put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, response);
+      putInList(KEY_LIST_OF_CREATED_ROUTE_ID, response.getRouteId());
       put(KEY_ROUTE_EVENT_SOURCE, "ROUTE_TRANSFER");
     }, "driver parcel route transfer");
   }

@@ -13,61 +13,104 @@ Feature: Parcel Route Transfer
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
       | to_create_route  | true             |
-    And Operator search for multiple "DELIVERY" transactions with status "PENDING"
-
-    And DB Operator verifies all transactions routed to new route id
-
-    And DB Operator verifies all waypoints.route_id & seq_no is populated correctly
-
-    And DB Operator verifies all waypoints status is "ROUTED"
-    And DB Operator verifies all route_monitoring_data records
+    And API Core - Operator get multiple order details for tracking ids:
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[2] |
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[3] |
+    #    check order 1
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | seqNo    | 100                                                        |
+      | routeId  | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+      | status   | Routed                                                     |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+    #    check order 2
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | seqNo    | 100                                                        |
+      | routeId  | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+      | status   | Routed                                                     |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+    #    check order 3
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
+      | seqNo    | 100                                                        |
+      | routeId  | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+      | status   | Routed                                                     |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
     And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
     And API Event - Operator verify that event is published with the following details:
-      | event            | ROUTE_TRANSFER_SCAN               |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
-      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
-      | routeEventSource | ROUTE_TRANSFER                    |
+      | event            | ROUTE_TRANSFER_SCAN                           |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]}             |
+      | routeId          | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
+      | routeEventSource | ROUTE_TRANSFER                                |
     And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN               |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | event   | DRIVER_INBOUND_SCAN                           |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]}             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
     And API Event - Operator verify that event is published with the following details:
-      | event            | ADD_TO_ROUTE                      |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
-      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
-      | routeEventSource | ROUTE_TRANSFER                    |
+      | event            | ADD_TO_ROUTE                                  |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]}             |
+      | routeId          | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
+      | routeEventSource | ROUTE_TRANSFER                                |
     And API Event - Operator verify that event is published with the following details:
-      | event            | ROUTE_TRANSFER_SCAN               |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
-      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
-      | routeEventSource | ROUTE_TRANSFER                    |
+      | event            | ROUTE_TRANSFER_SCAN                           |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]}             |
+      | routeId          | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
+      | routeEventSource | ROUTE_TRANSFER                                |
     And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN               |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | event   | DRIVER_INBOUND_SCAN                           |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[2]}             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
     And API Event - Operator verify that event is published with the following details:
-      | event            | ADD_TO_ROUTE                      |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
-      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
-      | routeEventSource | ROUTE_TRANSFER                    |
+      | event            | ADD_TO_ROUTE                                  |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]}             |
+      | routeId          | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
+      | routeEventSource | ROUTE_TRANSFER                                |
     And API Event - Operator verify that event is published with the following details:
-      | event            | ROUTE_TRANSFER_SCAN               |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
-      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
-      | routeEventSource | ROUTE_TRANSFER                    |
+      | event            | ROUTE_TRANSFER_SCAN                           |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]}             |
+      | routeId          | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
+      | routeEventSource | ROUTE_TRANSFER                                |
     And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN               |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | event   | DRIVER_INBOUND_SCAN                           |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[3]}             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
     And API Event - Operator verify that event is published with the following details:
-      | event            | ADD_TO_ROUTE                      |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
-      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
-      | routeEventSource | ROUTE_TRANSFER                    |
-    And DB Operator verifies inbound_scans record for all orders with type "4" and correct route_id
-    When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
-    And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
-    And Verify waypoints.seq_no & driver list waypoint ordering is correct
+      | event            | ADD_TO_ROUTE                                  |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]}             |
+      | routeId          | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
+      | routeEventSource | ROUTE_TRANSFER                                |
+    And DB Core - Operator verifies inbound_scans record:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id}            |
+      | hubId   | {hub-id}                                      |
+      | type    | 4                                             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
+    And DB Core - Operator verifies inbound_scans record:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[2].id}            |
+      | hubId   | {hub-id}                                      |
+      | type    | 4                                             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
+    And DB Core - Operator verifies inbound_scans record:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[3].id}            |
+      | hubId   | {hub-id}                                      |
+      | type    | 4                                             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
 
   @routing-refactor @HighPriority
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Delivery
@@ -88,14 +131,20 @@ Feature: Parcel Route Transfer
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
       | to_create_route  | true             |
-    And Operator search for multiple "DELIVERY" transactions with status "PENDING"
-
-    And DB Operator verifies all transactions routed to new route id
-
-    And DB Operator verifies all waypoints status is "ROUTED"
-    And DB Operator verifies waypoints.route_id & seq_no is populated correctly
-
-    And DB Operator verifies all route_monitoring_data records
+    And API Core - Operator get multiple order details for tracking ids:
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
+    #    check order 1
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | seqNo    | 100                                                        |
+      | routeId  | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+      | status   | Routed                                                     |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
     And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
     And API Event - Operator verify that event is published with the following details:
       | event            | ROUTE_TRANSFER_SCAN               |
@@ -115,11 +164,11 @@ Feature: Parcel Route Transfer
       | event            | PULL_OUT_OF_ROUTE                 |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | routeEventSource | ROUTE_TRANSFER                    |
-    And DB Operator verifies inbound_scans record with type "4" and correct route_id
-
-    When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
-    And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
-    And Verify waypoints.seq_no & driver list waypoint ordering is correct
+    And DB Core - Operator verifies inbound_scans record:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id}            |
+      | hubId   | {hub-id}                                      |
+      | type    | 4                                             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
 
   @routing-refactor @happy-path @HighPriority
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Unrouted Delivery
@@ -130,17 +179,28 @@ Feature: Parcel Route Transfer
       | parcel_job_is_pickup_required | false    |
     And Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator search for multiple "DELIVERY" transactions with status "PENDING"
-    And API Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     When Driver Transfer Parcel to Another Driver
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
-    Then DB Operator verifies all transactions routed to new route id
-
-    And DB Operator verifies all waypoints status is "ROUTED"
-    And DB Operator verifies waypoints.route_id & seq_no is populated correctly
-
-    And DB Operator verifies all route_monitoring_data records
+    And API Core - Operator get multiple order details for tracking ids:
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
+    #    check order 1
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | seqNo    | 100                                                        |
+      | routeId  | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+      | status   | Routed                                                     |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
     And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
     And API Event - Operator verify that event is published with the following details:
       | event            | ROUTE_TRANSFER_SCAN               |
@@ -156,11 +216,11 @@ Feature: Parcel Route Transfer
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
       | routeEventSource | ROUTE_TRANSFER                    |
-    And DB Operator verifies inbound_scans record with type "4" and correct route_id
-
-    When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
-    And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
-    And Verify waypoints.seq_no & driver list waypoint ordering is correct
+    And DB Core - Operator verifies inbound_scans record:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id}            |
+      | hubId   | {hub-id}                                      |
+      | type    | 4                                             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
 
   @routing-refactor @HighPriority
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Routed Delivery
@@ -178,17 +238,54 @@ Feature: Parcel Route Transfer
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "DD" route
-    And API Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     When Driver Transfer Parcel to Another Driver
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
-    Then DB Operator verifies all transactions routed to new route id
-
-    And DB Operator verifies all waypoints status is "ROUTED"
-    And DB Operator verifies all waypoints.route_id & seq_no is populated correctly
-
-    And DB Operator verifies all route_monitoring_data records
+    And API Core - Operator get multiple order details for tracking ids:
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[2] |
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[3] |
+    #    check order 1
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | seqNo    | 100                                                        |
+      | routeId  | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+      | status   | Routed                                                     |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+    #    check order 2
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | seqNo    | 100                                                        |
+      | routeId  | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+      | status   | Routed                                                     |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+    #    check order 3
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
+      | seqNo    | 100                                                        |
+      | routeId  | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+      | status   | Routed                                                     |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
     And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
     And API Event - Operator verify that event is published with the following details:
       | event            | ROUTE_TRANSFER_SCAN               |
@@ -244,11 +341,21 @@ Feature: Parcel Route Transfer
       | event            | PULL_OUT_OF_ROUTE                 |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
       | routeEventSource | ROUTE_TRANSFER                    |
-    And DB Operator verifies inbound_scans record for all orders with type "4" and correct route_id
-
-    When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
-    And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
-    And Verify waypoints.seq_no & driver list waypoint ordering is correct
+    And DB Core - Operator verifies inbound_scans record:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id}            |
+      | hubId   | {hub-id}                                      |
+      | type    | 4                                             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
+    And DB Core - Operator verifies inbound_scans record:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[2].id}            |
+      | hubId   | {hub-id}                                      |
+      | type    | 4                                             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
+    And DB Core - Operator verifies inbound_scans record:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[3].id}            |
+      | hubId   | {hub-id}                                      |
+      | type    | 4                                             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
 
   @routing-refactor @HighPriority
   Scenario: Driver Route Transfer Parcel - No Driver Route Available for the Driver, Routed Fail Delivery
@@ -271,14 +378,20 @@ Feature: Parcel Route Transfer
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
       | to_create_route  | true             |
-    And Operator search for "DELIVERY" transaction with status "FAIL"
-
-    And DB Operator verifies transaction routed to new route id
-
-    And DB Operator verifies waypoint status is "ROUTED"
-    And DB Operator verifies waypoints.route_id & seq_no is populated correctly
-
-    And DB Operator verifies route_monitoring_data record
+    And API Core - Operator get multiple order details for tracking ids:
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
+    #    check order 1
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | seqNo    | 100                                                        |
+      | routeId  | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+      | status   | Routed                                                     |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
     And Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
     And API Event - Operator verify that event is published with the following details:
       | event            | ROUTE_TRANSFER_SCAN               |
@@ -298,10 +411,11 @@ Feature: Parcel Route Transfer
       | event            | PULL_OUT_OF_ROUTE                 |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | routeEventSource | ROUTE_TRANSFER                    |
-    And DB Operator verifies inbound_scans record with type "4" and correct route_id
-
-    When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
-    And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
+    And DB Core - Operator verifies inbound_scans record:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id}            |
+      | hubId   | {hub-id}                                      |
+      | type    | 4                                             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
 
   @routing-refactor @HighPriority
   Scenario: Driver Route Transfer Parcel - Driver Route Available for the Driver, Routed Fail Delivery
@@ -320,17 +434,29 @@ Feature: Parcel Route Transfer
     And Operator add order to driver "DD" route
     And Operator force "FAIL" "DELIVERY" waypoint
     Then Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
-    And API Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     When Driver Transfer Parcel to Another Driver
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
-    Then DB Operator verifies transaction routed to new route id
+    And API Core - Operator get multiple order details for tracking ids:
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
+    #    check order 1
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | seqNo    | 100                                                        |
+      | routeId  | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+      | status   | Routed                                                     |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
 
-    And DB Operator verifies waypoint status is "ROUTED"
-    And DB Operator verifies waypoints.route_id & seq_no is populated correctly
-
-    And DB Operator verifies route_monitoring_data record
     And Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
     And API Event - Operator verify that event is published with the following details:
       | event            | ROUTE_TRANSFER_SCAN               |
@@ -350,10 +476,11 @@ Feature: Parcel Route Transfer
       | event            | PULL_OUT_OF_ROUTE                 |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | routeEventSource | ROUTE_TRANSFER                    |
-    And DB Operator verifies inbound_scans record with type "4" and correct route_id
-
-    When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
-    And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
+    And DB Core - Operator verifies inbound_scans record:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id}            |
+      | hubId   | {hub-id}                                      |
+      | type    | 4                                             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
 
   @MediumPriority
   Scenario: Driver Not Allowed to Route Transfer Parcel with Status = Completed
@@ -375,7 +502,17 @@ Feature: Parcel Route Transfer
       | to_driver_hub_id | {sorting-hub-id} |
     Then Verify Parcel Route Transfer Failed Orders with message : "Completed"
     And Operator verify that all orders status-granular status is "Completed"-"Completed"
-    And DB Operator verifies all transactions route id is null
+    And API Core - Operator get multiple order details for tracking ids:
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[2] |
+    #    check order 1
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | null                                               |
+    #    check order 2
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
+      | routeId | null                                               |
     And Operator checks that "ROUTE_TRANSFER_SCAN" event is NOT published
 
   @MediumPriority
@@ -386,7 +523,7 @@ Feature: Parcel Route Transfer
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for "DELIVERY" transaction with status "PENDING"
-    And API Operator cancel created order
+    And API Core - cancel order "{KEY_CREATED_ORDER_ID}"
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
@@ -397,7 +534,12 @@ Feature: Parcel Route Transfer
       | to_driver_hub_id | {sorting-hub-id} |
     Then Verify Parcel Route Transfer Failed Orders with message : "Cancelled"
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
-    And DB Operator verifies transaction route id is null
+    And API Core - Operator get multiple order details for tracking ids:
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
+    #    check order 1
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | null                                               |
     And Operator checks that "ROUTE_TRANSFER_SCAN" event is NOT published
 
   @MediumPriority
@@ -410,8 +552,9 @@ Feature: Parcel Route Transfer
     And Operator search for created order
     And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator search for "DELIVERY" transaction with status "PENDING"
-    And API Operator RTS created order:
-      | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
+    And API Core - Operator rts order:
+      | orderId    | {KEY_CREATED_ORDER.id}                                                                                          |
+      | rtsRequest | { "reason": "Return to sender: Nobody at address", "timewindow_id":1, "date":"{date: 1 days next, yyyy-MM-dd}"} |
     And Operator force success order
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
@@ -423,7 +566,12 @@ Feature: Parcel Route Transfer
       | to_driver_hub_id | {sorting-hub-id} |
     Then Verify Parcel Route Transfer Failed Orders with message : "Returned to Sender"
     And Operator verify that order status-granular status is "Completed"-"Returned_to_Sender"
-    And DB Operator verifies transaction route id is null
+    And API Core - Operator get multiple order details for tracking ids:
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
+    #    check order 1
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | null                                               |
     And Operator checks that "ROUTE_TRANSFER_SCAN" event is NOT published
 
   @MediumPriority
@@ -465,33 +613,66 @@ Feature: Parcel Route Transfer
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
+    And API Core - Operator get multiple order details for tracking ids:
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[2] |
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[3] |
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[4] |
     And Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator search for multiple "DELIVERY" transactions with status "PENDING"
     When Driver Transfer Parcel to Another Driver
       | to_driver_id            | {driver-2-id}    |
       | to_driver_hub_id        | {sorting-hub-id} |
       | to_exclude_routed_order | true             |
-    Then DB Operator verifies all transactions routed to new route id
-
-    And DB Operator verifies all waypoints status is "ROUTED"
-    And DB Operator verifies all waypoints.route_id & seq_no is populated correctly
-    And DB Operator verifies all route_monitoring_data records
-    When Operator gets only eligible parcel for route transfer
+    #    check order 1
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | seqNo    | 100                                                        |
+      | routeId  | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+      | status   | Routed                                                     |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+    #    check order 2
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | seqNo    | 100                                                        |
+      | routeId  | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+      | status   | Routed                                                     |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+    #    check order 3
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
+      | seqNo    | 100                                                        |
+      | routeId  | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+      | status   | Routed                                                     |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+    #    check order 4
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].waypointId} |
+      | seqNo    | 100                                                        |
+      | routeId  | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+      | status   | Routed                                                     |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
     Then Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
-    And API Event - Operator verify that event is published with the following details:
-      | event            | ROUTE_TRANSFER_SCAN               |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
-      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
-      | routeEventSource | ROUTE_TRANSFER                    |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN               |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
-    And API Event - Operator verify that event is published with the following details:
-      | event            | ADD_TO_ROUTE                      |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
-      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
-      | routeEventSource | ROUTE_TRANSFER                    |
     And API Event - Operator verify that event is published with the following details:
       | event            | ROUTE_TRANSFER_SCAN               |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
@@ -520,10 +701,35 @@ Feature: Parcel Route Transfer
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
       | routeEventSource | ROUTE_TRANSFER                    |
-    And DB Operator verifies inbound_scans record for all orders with type "4" and correct route_id
-
-    When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
-    And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ROUTE_TRANSFER_SCAN               |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[4]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | DRIVER_INBOUND_SCAN               |
+      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[4]} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                      |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[4]} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
+      | routeEventSource | ROUTE_TRANSFER                    |
+    And DB Core - Operator verifies inbound_scans record:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[2].id}            |
+      | hubId   | {hub-id}                                      |
+      | type    | 4                                             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
+    And DB Core - Operator verifies inbound_scans record:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[3].id}            |
+      | hubId   | {hub-id}                                      |
+      | type    | 4                                             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
+    And DB Core - Operator verifies inbound_scans record:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[4].id}            |
+      | hubId   | {hub-id}                                      |
+      | type    | 4                                             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
 
   @routing-refactor @HighPriority
   Scenario: Driver Route Transfer Parcel - Merged Waypoints
@@ -542,7 +748,7 @@ Feature: Parcel Route Transfer
     And Operator add all orders to driver "DD" route
     And API Core - Operator merge routed waypoints:
       | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
-    Then API Operator verifies Delivery transactions of following orders have same waypoint id:
+    Then API Core - Operator verifies "Delivery" transactions of following orders have same waypoint id:
       | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
@@ -550,16 +756,50 @@ Feature: Parcel Route Transfer
       | to_driver_id     | {driver-2-id}    |
       | to_driver_hub_id | {sorting-hub-id} |
       | to_create_route  | true             |
-    Then API Operator verifies Delivery transactions of following orders have different waypoint id:
+    Then API Core - Operator verifies "Delivery" transactions of following orders have different waypoint id:
       | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
-    And Operator search for multiple "DELIVERY" transactions with status "PENDING"
-    And DB Operator verifies all transactions routed to new route id
-
-    And DB Operator verifies all waypoints status is "ROUTED"
-    And DB Operator verifies waypoints.route_id & seq_no is populated correctly
-    And DB Operator verifies all route_monitoring_data records
+    And API Core - Operator get multiple order details for tracking ids:
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[2] |
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[3] |
+    #    check order 1
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | seqNo    | 100                                                        |
+      | routeId  | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+      | status   | Routed                                                     |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+    #    check order 2
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | seqNo    | 100                                                        |
+      | routeId  | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+      | status   | Routed                                                     |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+    #    check order 3
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
+      | seqNo    | 100                                                        |
+      | routeId  | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
+      | status   | Routed                                                     |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}              |
     And Operator verify that all orders status-granular status is "Transit"-"On_Vehicle_For_Delivery"
     And API Event - Operator verify that event is published with the following details:
       | event            | ROUTE_TRANSFER_SCAN               |
@@ -615,10 +855,21 @@ Feature: Parcel Route Transfer
       | event            | PULL_OUT_OF_ROUTE                 |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
       | routeEventSource | ROUTE_TRANSFER                    |
-    And DB Operator verifies inbound_scans record with type "4" and correct route_id
-
-    When API Driver set credentials "{driver-2-username}" and "{driver-2-password}"
-    And Verify that waypoints are shown on driver "{driver-2-id}" list route correctly
+    And DB Core - Operator verifies inbound_scans record:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id}            |
+      | hubId   | {hub-id}                                      |
+      | type    | 4                                             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
+    And DB Core - Operator verifies inbound_scans record:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[2].id}            |
+      | hubId   | {hub-id}                                      |
+      | type    | 4                                             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
+    And DB Core - Operator verifies inbound_scans record:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[3].id}            |
+      | hubId   | {hub-id}                                      |
+      | type    | 4                                             |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
 
   @HighPriority
   Scenario: Driver Route Transfer Parcel - Resolve MISSING PETS Ticket
