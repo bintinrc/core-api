@@ -166,7 +166,7 @@ Feature: Notification
     And Shipper verifies webhook request payload has correct details for status "On Vehicle for Delivery (RTS)"
     And Verify NO "On Vehicle for Delivery" event sent for all orders
 
-  @HighPriority @wip2
+  @HighPriority
   Scenario: Send Successful Delivery Webhook on Customer Collection of DP Order
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery" webhook
     Given Shipper id "{shipper-4-id}" subscribes to "Completed" webhook
@@ -223,11 +223,17 @@ Feature: Notification
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
-    And Operator get "DELIVERY" transaction waypoint Ids for all orders
+    And API Core - Operator get order details for tracking order "KEY_CREATED_ORDER_TRACKING_ID"
     When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
-    And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
-    And Driver Starts the route
-    And Driver "FAIL" Parcel "DELIVERY"
+    And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
+    And API Driver - Driver van inbound:
+      | routeId | {KEY_CREATED_ROUTE.id}                                                                                                                                                      |
+      | request | {"parcels":[{"inbound_type":"VAN_FROM_NINJAVAN","tracking_id":"{KEY_CREATED_ORDER_TRACKING_ID}","waypoint_id":{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}}]} |
+    And API Driver - Driver start route "{KEY_CREATED_ROUTE.id}"
+    And Driver submit pod to "FAIL" waypoint
+      | routeId    | {KEY_CREATED_ROUTE.id}                                     |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | driverId   | {driver-2-id}                                              |
     Then Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
     And Shipper gets webhook request for event "First Attempt Delivery Fail" for all orders
     And Shipper verifies webhook request payload has correct details for status "First Attempt Delivery Fail"
@@ -250,21 +256,34 @@ Feature: Notification
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
-    And Operator get "DELIVERY" transaction waypoint Ids for all orders
+    And API Core - Operator get order details for tracking order "KEY_CREATED_ORDER_TRACKING_ID"
     When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
-    And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
-    And Driver Starts the route
-    And Driver "FAIL" Parcel "DELIVERY"
+    And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
+    And API Driver - Driver van inbound:
+      | routeId | {KEY_CREATED_ROUTE.id}                                                                                                                                                      |
+      | request | {"parcels":[{"inbound_type":"VAN_FROM_NINJAVAN","tracking_id":"{KEY_CREATED_ORDER_TRACKING_ID}","waypoint_id":{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}}]} |
+    And API Driver - Driver start route "{KEY_CREATED_ROUTE.id}"
+    And Driver submit pod to "FAIL" waypoint
+      | routeId    | {KEY_CREATED_ROUTE.id}                                     |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | driverId   | {driver-2-id}                                              |
     Then Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
-    When API Operator reschedule failed delivery order
+    And API Core - Operator reschedule order:
+      | orderId           | {KEY_LIST_OF_CREATED_ORDERS[1].id}        |
+      | rescheduleRequest | {"date":"{date: 0 days ago, yyyy-MM-dd}"} |
     And Operator search for "DELIVERY" transaction with status "PENDING"
     Then Operator verify that order status-granular status is "Transit"-"Enroute_to_sorting_hub"
     And Operator add order to driver "DD" route
-    And Operator get "DELIVERY" transaction waypoint Ids for all orders
-    And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
-    And Driver Starts the route
+    And API Core - Operator get order details for tracking order "KEY_CREATED_ORDER_TRACKING_ID"
+    And API Driver - Driver van inbound:
+      | routeId | {KEY_CREATED_ROUTE.id}                                                                                                                                                      |
+      | request | {"parcels":[{"inbound_type":"VAN_FROM_NINJAVAN","tracking_id":"{KEY_CREATED_ORDER_TRACKING_ID}","waypoint_id":{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}}]} |
+    And API Driver - Driver start route "{KEY_CREATED_ROUTE.id}"
     Given Shipper id "{shipper-4-id}" subscribes to "Pending Reschedule" webhook
-    And Driver "FAIL" Parcel "DELIVERY"
+    And Driver submit pod to "FAIL" waypoint
+      | routeId    | {KEY_CREATED_ROUTE.id}                                     |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].waypointId} |
+      | driverId   | {driver-2-id}                                              |
     Then Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
     And Shipper gets webhook request for event "First Attempt Delivery Fail" for all orders
     And Shipper verifies webhook request payload has correct details for status "First Attempt Delivery Fail"
@@ -286,15 +305,23 @@ Feature: Notification
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
-    And Operator get "DELIVERY" transaction waypoint Ids for all orders
     Given Shipper id "{shipper-4-id}" subscribes to "First Attempt Delivery Fail" webhook
     Given Shipper id "{shipper-4-id}" subscribes to "Pending Reschedule" webhook
+    And API Core - Operator get order details for tracking order "KEY_CREATED_ORDER_TRACKING_ID"
     When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
-    And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
-    And Driver Starts the route
-    And Driver "FAIL" Parcel "DELIVERY"
+    And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
+    And API Driver - Driver van inbound:
+      | routeId | {KEY_CREATED_ROUTE.id}                                                                                                                                                      |
+      | request | {"parcels":[{"inbound_type":"VAN_FROM_NINJAVAN","tracking_id":"{KEY_CREATED_ORDER_TRACKING_ID}","waypoint_id":{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}}]} |
+    And API Driver - Driver start route "{KEY_CREATED_ROUTE.id}"
+    And Driver submit pod to "FAIL" waypoint
+      | routeId    | {KEY_CREATED_ROUTE.id}                                     |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | driverId   | {driver-2-id}                                              |
     Then Operator verify that order status-granular status is "Delivery_Fail"-"Pending_Reschedule"
-    When API Operator reschedule failed delivery order
+    And API Core - Operator reschedule order:
+      | orderId           | {KEY_LIST_OF_CREATED_ORDERS[1].id}        |
+      | rescheduleRequest | {"date":"{date: 0 days ago, yyyy-MM-dd}"} |
     And Operator search for "DELIVERY" transaction with status "PENDING"
     Then Operator verify that order status-granular status is "Transit"-"Enroute_to_sorting_hub"
     Given Shipper id "{shipper-4-id}" subscribes to "Arrived at Sorting Hub" webhook
@@ -324,10 +351,16 @@ Feature: Notification
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
-    And Operator get "DELIVERY" transaction waypoint Ids for all orders
+    And API Core - Operator get order details for tracking order "KEY_CREATED_ORDER_TRACKING_ID"
     When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
-    And Driver Van Inbound Parcel at hub id "{sorting-hub-id}"
-    And Driver Starts the route
-    And Driver "SUCCESS" Parcel "DELIVERY"
+    And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
+    And API Driver - Driver van inbound:
+      | routeId | {KEY_CREATED_ROUTE.id}                                                                                                                                                      |
+      | request | {"parcels":[{"inbound_type":"VAN_FROM_NINJAVAN","tracking_id":"{KEY_CREATED_ORDER_TRACKING_ID}","waypoint_id":{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}}]} |
+    And API Driver - Driver start route "{KEY_CREATED_ROUTE.id}"
+    And Driver submit pod to "SUCCESS" waypoint
+      | routeId    | {KEY_CREATED_ROUTE.id}                                     |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | driverId   | {driver-2-id}                                              |
     Then Shipper gets webhook request for event "Successful Delivery" for all orders
     And Shipper verifies webhook request payload has correct details for status "Successful Delivery"

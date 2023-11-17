@@ -88,15 +88,16 @@ public class DriverSteps extends BaseSteps {
     doWithRetry(() -> driverClient.startRoute(routeId), "driver starts route");
   }
 
-  @Given("Driver {string} Parcel {string}")
-  public void driverDeliverParcels(String action, String type) {
+  @Given("Driver submit pod to {string} waypoint")
+  public void driverDeliverParcels(String action, Map<String, String> data) {
+    Map<String, String> resolvedData = resolveKeyValues(data);
+    final long routeId = Long.parseLong(resolvedData.get("routeId"));
+    final long waypointId = Long.parseLong(resolvedData.get("waypointId"));
+    final long driverId = Long.parseLong(resolvedData.get("driverId"));
     doWithRetry(() -> {
-      getWaypointId(type);
-      driverGetWaypointDetails();
+      driverGetWaypointDetails(routeId, waypointId, driverId);
       createDriverJobs(action.toUpperCase());
       List<SubmitPodRequest.Job> jobs = get(KEY_LIST_OF_DRIVER_JOBS);
-      Long routeId = get(KEY_CREATED_ROUTE_ID);
-      Long waypointId = get(KEY_WAYPOINT_ID);
       Order order = get(KEY_CREATED_ORDER);
 
       SubmitPodRequest request = createDefaultDriverSubmitPodRequest(waypointId, jobs);
@@ -118,20 +119,20 @@ public class DriverSteps extends BaseSteps {
     }, "driver attempts waypoint");
   }
 
-  @Given("Driver Fails Parcel {string} with Valid Reason")
-  public void driverFailedWithValidReason(String type) {
-    put(KEY_BOOLEAN_DRIVER_FAILED_VALID, true);
-    driverDeliverParcels("FAIL", type);
-  }
+//  @Given("Driver Fails Parcel {string} with Valid Reason")
+//  public void driverFailedWithValidReason(String type) {
+//    put(KEY_BOOLEAN_DRIVER_FAILED_VALID, true);
+//    driverDeliverParcels("FAIL", type);
+//  }
 
-  @Then("Driver {string} {string} for All Orders")
-  public void driverDeliverParcelsMultipleOrders(String action, String type) {
-    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-    trackingIds.forEach(e -> {
-      put(KEY_CREATED_ORDER_TRACKING_ID, e);
-      driverDeliverParcels(action, type);
-    });
-  }
+//  @Then("Driver {string} {string} for All Orders")
+//  public void driverDeliverParcelsMultipleOrders(String action, String type) {
+//    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
+//    trackingIds.forEach(e -> {
+//      put(KEY_CREATED_ORDER_TRACKING_ID, e);
+//      driverDeliverParcels(action, type);
+//    });
+//  }
 
   @When("Driver Transfer Parcel to Another Driver")
   public void driverTransferRoute(Map<String, String> source) {
@@ -175,12 +176,7 @@ public class DriverSteps extends BaseSteps {
     });
   }
 
-  private void driverGetWaypointDetails() {
-    RouteResponse route = get(KEY_CREATED_ROUTE);
-    final Long routeId = route.getId();
-    final Long waypointId = get(KEY_WAYPOINT_ID);
-    final Long driverId = get(KEY_NINJA_DRIVER_ID);
-
+  private void driverGetWaypointDetails(long routeId, long waypointId, long driverId) {
     doWithRetry(() -> {
       List<GetRouteResponse.Route> routes = driverClient.getRoutes(driverId, "2.1")
           .getData().getRoutes();
@@ -195,7 +191,7 @@ public class DriverSteps extends BaseSteps {
     }, "driver gets waypoint details");
   }
 
-  private void createPhysicalItems(PhysicalItem order, String action,
+  private void createPhysicalItems(Parcel order, String action,
       String jobType) {
     PhysicalItem job = new PhysicalItem();
     job.setAllowReschedule(false);
@@ -210,7 +206,8 @@ public class DriverSteps extends BaseSteps {
     job.setAction(JobAction.valueOf(StringUtils.upperCase(action)));
     job.setParcelWeight(order.getParcelWeight());
     job.setShipperId(order.getShipperId());
-    job.setRts(order.getRts());
+//    TODO check again
+//    job.setRts(order.getRts());
     if (action.equalsIgnoreCase(ACTION_FAIL)) {
       boolean idValidFailed = get(KEY_BOOLEAN_DRIVER_FAILED_VALID, false);
       if (idValidFailed) {
@@ -231,7 +228,7 @@ public class DriverSteps extends BaseSteps {
       List<Parcel> parcels = e.getParcels();
       parcels.stream().filter(o -> o.getTrackingId().equalsIgnoreCase(trackingId))
           .forEach(o -> put("parcel", o));
-      PhysicalItem parcel = get(("parcel"));
+      Parcel parcel = get(("parcel"));
       createPhysicalItems(parcel, action, e.getMode());
       List<PhysicalItem> orders = get(KEY_LIST_OF_CREATED_JOB_ORDERS);
       SubmitPodRequest.Job job = createDefaultDriverJobs(e, action);

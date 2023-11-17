@@ -164,7 +164,6 @@ public class WebhookSteps extends BaseSteps {
           Assertions.assertThat(request.getTrackingId()).as("tracking id is correct")
               .isEqualToIgnoringCase(trackingId);
           Webhook.WebhookStatus webhookStatus = Webhook.WebhookStatus.fromString(status);
-          Pickup pickup = get(KEY_CREATED_RESERVATION);
           Map<String, ProofDetails> proofDetails = get(KEY_MAP_PROOF_WEBHOOK_DETAILS);
           switch (webhookStatus) {
             case SUCCESSFUL_DELIVERY:
