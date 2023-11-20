@@ -353,10 +353,10 @@ Feature: Route Monitoring V2
       | Note | service_type | service_level | parcel_job_is_pickup_required |
       |      | Parcel       | Standard      | false                         |
 
-  @rmv2-invalid-failed-deliveries @HighPriority @wip2
+  @rmv2-invalid-failed-deliveries @HighPriority
   Scenario Outline: Operator Get Invalid Failed Deliveries Details After Driver Failed with Invalid Reason - Order with No Tags
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
-    When Shipper creates multiple orders : 3 orders
+    When Shipper creates multiple orders : 2 orders
       | service_type                  | <service_type>                  |
       | service_level                 | <service_level>                 |
       | requested_tracking_number     | <requested_tracking_number>     |
@@ -372,27 +372,19 @@ Feature: Route Monitoring V2
     And API Core - Operator get multiple order details for tracking ids:
       | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
       | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[2] |
-      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[3] |
-    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
-    And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
-    And API Driver - Driver start route "{KEY_CREATED_ROUTE.id}"
-    And Driver submit pod to "FAIL" waypoint
-      | routeId    | {KEY_CREATED_ROUTE.id}                                     |
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | driverId   | {driver-2-id}                                              |
-    And Driver submit pod to "FAIL" waypoint
-      | routeId    | {KEY_CREATED_ROUTE.id}                                     |
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
-      | driverId   | {driver-2-id}                                              |
-    And Driver submit pod to "FAIL" waypoint
-      | routeId    | {KEY_CREATED_ROUTE.id}                                     |
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
-      | driverId   | {driver-2-id}                                              |
+    And API Core - Operator force fail waypoint via route manifest:
+      | routeId         | {KEY_CREATED_ROUTE_ID}                                     |
+      | waypointId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | failureReasonId | {delivery-failure-reason-id}                               |
+    And API Core - Operator force fail waypoint via route manifest:
+      | routeId         | {KEY_CREATED_ROUTE_ID}                                     |
+      | waypointId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | failureReasonId | {delivery-failure-reason-id}                               |
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints
-      | KEY_TOTAL_EXPECTED_WAYPOINT       | 3 |
-      | KEY_TOTAL_EXPECTED_INVALID_FAILED | 3 |
-      | KEY_TOTAL_EXPECTED_EARLY          | 3 |
+      | KEY_TOTAL_EXPECTED_WAYPOINT       | 2 |
+      | KEY_TOTAL_EXPECTED_INVALID_FAILED | 2 |
+      | KEY_TOTAL_EXPECTED_EARLY          | 2 |
     When Operator get "invalid failed deliveries" parcel details
     Then Operator verifies "invalid failed deliveries" parcel details
 
@@ -400,7 +392,7 @@ Feature: Route Monitoring V2
       | Note | action | service_type | service_level | parcel_job_is_pickup_required |
       |      | FAIL   | Parcel       | Standard      | false                         |
 
-  @rmv2-invalid-failed-deliveries @HighPriority @wip2
+  @rmv2-invalid-failed-deliveries @HighPriority
   Scenario Outline: Operator Get Invalid Failed Deliveries Details After Driver Failed with Invalid Reason - Order Has PRIOR Tag
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates multiple orders : 2 orders
@@ -420,9 +412,14 @@ Feature: Route Monitoring V2
     And API Core - Operator get multiple order details for tracking ids:
       | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
       | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[2] |
-    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
-    And Driver Starts the route
-    And Driver "FAIL" "DELIVERY" for All Orders
+    And API Core - Operator force fail waypoint via route manifest:
+      | routeId         | {KEY_CREATED_ROUTE_ID}                                     |
+      | waypointId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | failureReasonId | {delivery-failure-reason-id}                               |
+    And API Core - Operator force fail waypoint via route manifest:
+      | routeId         | {KEY_CREATED_ROUTE_ID}                                     |
+      | waypointId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | failureReasonId | {delivery-failure-reason-id}                               |
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints
       | KEY_TOTAL_EXPECTED_WAYPOINT       | 2 |
@@ -436,7 +433,7 @@ Feature: Route Monitoring V2
       |      | DD         | Parcel       | Standard      | false                         |
 
 
-  @rmv2-invalid-failed-deliveries @HighPriority @wip2
+  @rmv2-invalid-failed-deliveries @HighPriority
   Scenario Outline: Operator Get Invalid Failed Deliveries Details on Route with NON-Invalid Failed Deliveries (Failed Delivery with Valid Reason)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
@@ -452,9 +449,12 @@ Feature: Route Monitoring V2
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator add order by tracking id to driver "DD" route
-    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
-    And Driver Starts the route
-    And Driver Fails Parcel "DELIVERY" with Valid Reason
+    And API Core - Operator get multiple order details for tracking ids:
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
+    And API Core - Operator force fail waypoint via route manifest:
+      | routeId         | {KEY_CREATED_ROUTE_ID}                                     |
+      | waypointId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | failureReasonId | {delivery-valid-failure-reason-id}                         |
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies total invalid failed is 0 and other details
       | KEY_TOTAL_EXPECTED_WAYPOINT     | 1 |
@@ -498,10 +498,10 @@ Feature: Route Monitoring V2
       | Note | service_type | service_level | parcel_job_is_pickup_required |
       |      | Parcel       | Standard      | false                         |
 
-  @rmv2-invalid-failed-pickups @HighPriority @wip2
+  @rmv2-invalid-failed-pickups @HighPriority
   Scenario Outline: Operator Get Invalid Failed Pickup Details After Driver Failed with Invalid Reason - Order with No Tags
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
-    When Shipper creates multiple orders : 3 orders
+    When Shipper creates multiple orders : 2 orders
       | service_type                  | <service_type>                  |
       | service_level                 | <service_level>                 |
       | requested_tracking_number     | <requested_tracking_number>     |
@@ -513,14 +513,22 @@ Feature: Route Monitoring V2
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "PP" route
-    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
-    And Driver Starts the route
-    And Driver "<action>" "PICKUP" for All Orders
+    And API Core - Operator get multiple order details for tracking ids:
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[2] |
+    And API Core - Operator force fail waypoint via route manifest:
+      | routeId         | {KEY_CREATED_ROUTE_ID}                                     |
+      | waypointId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} |
+      | failureReasonId | {pickup-failure-reason-id}                                 |
+    And API Core - Operator force fail waypoint via route manifest:
+      | routeId         | {KEY_CREATED_ROUTE_ID}                                     |
+      | waypointId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId} |
+      | failureReasonId | {pickup-failure-reason-id}                                 |
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints
-      | KEY_TOTAL_EXPECTED_WAYPOINT       | 3 |
-      | KEY_TOTAL_EXPECTED_INVALID_FAILED | 3 |
-      | KEY_TOTAL_EXPECTED_EARLY          | 3 |
+      | KEY_TOTAL_EXPECTED_WAYPOINT       | 2 |
+      | KEY_TOTAL_EXPECTED_INVALID_FAILED | 2 |
+      | KEY_TOTAL_EXPECTED_EARLY          | 2 |
     When Operator get "invalid failed pickups" parcel details
     Then Operator verifies "invalid failed pickups" parcel details
 
@@ -528,7 +536,7 @@ Feature: Route Monitoring V2
       | Note | action | service_type | service_level | parcel_job_is_pickup_required |
       |      | FAIL   | Return       | Standard      | true                          |
 
-  @rmv2-invalid-failed-pickups @HighPriority @wip2
+  @rmv2-invalid-failed-pickups @HighPriority
   Scenario Outline: Operator Get Invalid Failed Pickup Details After Driver Failed with Invalid Reason - Order Has PRIOR Tag
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper creates multiple orders : 2 orders
@@ -544,9 +552,17 @@ Feature: Route Monitoring V2
       | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add all orders to driver "<route_type>" route
-    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
-    And Driver Starts the route
-    And Driver "FAIL" "PICKUP" for All Orders
+    And API Core - Operator get multiple order details for tracking ids:
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[2] |
+    And API Core - Operator force fail waypoint via route manifest:
+      | routeId         | {KEY_CREATED_ROUTE_ID}                                     |
+      | waypointId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} |
+      | failureReasonId | {pickup-failure-reason-id}                                 |
+    And API Core - Operator force fail waypoint via route manifest:
+      | routeId         | {KEY_CREATED_ROUTE_ID}                                     |
+      | waypointId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId} |
+      | failureReasonId | {pickup-failure-reason-id}                                 |
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints
       | KEY_TOTAL_EXPECTED_WAYPOINT       | 2 |
@@ -560,7 +576,7 @@ Feature: Route Monitoring V2
       |      | PP         | Return       | Standard      | true                          |
 
 
-  @rmv2-invalid-failed-pickups @HighPriority @wip2
+  @rmv2-invalid-failed-pickups @HighPriority
   Scenario Outline: Operator Get Invalid Failed Pickup Details on Route with NON-Invalid Failed Pickup (Failed Pickup with Valid Reason)
     Given Shipper authenticates using client id "{shipper-2-client-id}" and client secret "{shipper-2-client-secret}"
     When Shipper create order with parameters below
@@ -575,9 +591,12 @@ Feature: Route Monitoring V2
       | zone_id    | {zone-id}        |
     And Operator search for created order
     And Operator add order to driver "PP" route
-    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
-    And Driver Starts the route
-    And Driver Fails Parcel "PICKUP" with Valid Reason
+    And API Core - Operator get multiple order details for tracking ids:
+      | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
+    And API Core - Operator force fail waypoint via route manifest:
+      | routeId         | {KEY_CREATED_ROUTE_ID}                                     |
+      | waypointId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} |
+      | failureReasonId | {pickup-valid-failure-reason-id}                           |
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies total invalid failed is 0 and other details
       | KEY_TOTAL_EXPECTED_WAYPOINT     | 1 |
