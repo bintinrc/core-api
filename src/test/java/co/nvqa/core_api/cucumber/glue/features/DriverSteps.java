@@ -119,21 +119,6 @@ public class DriverSteps extends BaseSteps {
     }, "driver attempts waypoint");
   }
 
-//  @Given("Driver Fails Parcel {string} with Valid Reason")
-//  public void driverFailedWithValidReason(String type) {
-//    put(KEY_BOOLEAN_DRIVER_FAILED_VALID, true);
-//    driverDeliverParcels("FAIL", type);
-//  }
-
-//  @Then("Driver {string} {string} for All Orders")
-//  public void driverDeliverParcelsMultipleOrders(String action, String type) {
-//    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-//    trackingIds.forEach(e -> {
-//      put(KEY_CREATED_ORDER_TRACKING_ID, e);
-//      driverDeliverParcels(action, type);
-//    });
-//  }
-
   @When("Driver Transfer Parcel to Another Driver")
   public void driverTransferRoute(Map<String, String> source) {
     ParcelRouteTransferRequest request = createParcelRouteTransferRequest(source);
@@ -195,19 +180,13 @@ public class DriverSteps extends BaseSteps {
       String jobType) {
     PhysicalItem job = new PhysicalItem();
     job.setAllowReschedule(false);
-//    TODO check again
-//    job.setDeliveryType(order.getDeliveryType());
     job.setTrackingId(order.getTrackingId());
     job.setId(order.getId());
-//    job.setType(order.getType());
-//    job.setInstruction(order.getInstruction());
     job.setParcelSize(order.getParcelSize());
     job.setStatus(order.getStatus());
     job.setAction(JobAction.valueOf(StringUtils.upperCase(action)));
     job.setParcelWeight(order.getParcelWeight());
     job.setShipperId(order.getShipperId());
-//    TODO check again
-//    job.setRts(order.getRts());
     if (action.equalsIgnoreCase(ACTION_FAIL)) {
       boolean idValidFailed = get(KEY_BOOLEAN_DRIVER_FAILED_VALID, false);
       if (idValidFailed) {

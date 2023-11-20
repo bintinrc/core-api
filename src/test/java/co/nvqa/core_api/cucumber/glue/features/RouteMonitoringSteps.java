@@ -1,6 +1,6 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
-import co.nvqa.common.core.model.pickup.Pickup;
+import co.nvqa.common.core.model.reservation.ReservationResponse;
 import co.nvqa.common.core.model.route_monitoring.RouteMonitoringResponse;
 import co.nvqa.common.core.model.route_monitoring.Waypoint;
 import co.nvqa.common.ordercreate.model.OrderRequestV4;
@@ -18,6 +18,7 @@ import io.cucumber.java.en.When;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 
 /**
@@ -47,8 +48,9 @@ public class RouteMonitoringSteps extends BaseSteps {
     String date = DateUtil.displayDate(DateUtil.getDate());
     long routeId = get(KEY_CREATED_ROUTE_ID);
     doWithRetry(() -> {
-      List<RouteMonitoringResponse> routeMonitoringDetails = getRouteMonitoringClient().getRouteMonitoringDetails(
-          date, hubIds, zoneIds, 1000);
+      List<RouteMonitoringResponse> routeMonitoringDetails = getRouteMonitoringClient()
+          .getRouteMonitoringDetails(
+              date, hubIds, zoneIds, 1000);
       RouteMonitoringResponse result = routeMonitoringDetails.stream()
           .filter(e -> e.getRouteId().equals(routeId)).findAny().orElseThrow(
               () -> new NvTestRuntimeException("Route Monitoring Data not found " + routeId));
@@ -62,20 +64,18 @@ public class RouteMonitoringSteps extends BaseSteps {
     doWithRetry(() -> {
       operatorFilterRouteMonitoring();
       List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-      List<Pickup> pickups = get(KEY_LIST_OF_CREATED_RESERVATIONS);
       List<Long> pullOutOrderTids = get(KEY_LIST_OF_PULL_OUT_OF_ROUTE_TRACKING_ID);
       long routeId = get(KEY_CREATED_ROUTE_ID);
-      int reservationCounts = 0;
-      if (pickups != null) {
-        reservationCounts = pickups.size();
-      }
       int pullOutOfRouteOrderCount = 0;
       if (pullOutOrderTids != null) {
         pullOutOfRouteOrderCount = pullOutOrderTids.size();
       }
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
       checkRouteDetails(result);
-      int expectedTotalParcels = trackingIds.size() - reservationCounts - pullOutOfRouteOrderCount;
+      int expectedTotalParcels = 0;
+      if (trackingIds != null) {
+        expectedTotalParcels = trackingIds.size() - pullOutOfRouteOrderCount;
+      }
       int actualTotalParcels = result.getTotalParcels();
       Assertions.assertThat(actualTotalParcels)
           .as(String.format("total parcels for route id %d", routeId))
@@ -101,16 +101,13 @@ public class RouteMonitoringSteps extends BaseSteps {
     doWithRetry(() -> {
       operatorFilterRouteMonitoring();
       List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-      List<Pickup> pickups = get(KEY_LIST_OF_CREATED_RESERVATIONS);
       long routeId = get(KEY_CREATED_ROUTE_ID);
-      int reservationCounts = 0;
-      if (pickups != null) {
-        reservationCounts = pickups.size();
-      }
-
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
       checkRouteDetails(result);
-      int expectedTotalParcels = trackingIds.size() - reservationCounts;
+      int expectedTotalParcels = 0;
+      if (trackingIds != null) {
+        expectedTotalParcels = trackingIds.size();
+      }
       int actualTotalParcels = result.getTotalParcels();
       Assertions.assertThat(actualTotalParcels)
           .as(String.format("total parcels for route id %d", routeId))
@@ -211,24 +208,22 @@ public class RouteMonitoringSteps extends BaseSteps {
   @When("Operator get invalid failed reservation details")
   public void operatorGetInvalidFailedReservationDetails() {
     long routeId = get(KEY_CREATED_ROUTE_ID);
-    List<Pickup> pickups = get(KEY_LIST_OF_CREATED_RESERVATIONS);
+    List<ReservationResponse> pickups = get(KEY_LIST_OF_CREATED_RESERVATIONS);
     doWithRetry(() -> {
       List<Waypoint> waypoints = getRouteMonitoringClient().getInvalidFailedReservations(routeId)
           .getPickupAppointments();
       pickups.forEach(e -> {
-        boolean found = waypoints.stream().anyMatch(o -> e.getReservationId().equals(o.getId()));
-        Assertions.assertThat(found).as(f("reservation id %d found", e.getReservationId()))
+        boolean found = waypoints.stream().anyMatch(o -> e.getId().equals(o.getId()));
+        Assertions.assertThat(found).as(f("reservation id %d found", e.getId()))
             .isTrue();
       });
       put(KEY_ROUTE_MONITORING_RESULT, waypoints);
     }, "get invalid failed reservation details");
   }
 
-  @When("Operator verifies invalid failed reservations details")
-  public void operatorVerifyInvalidFailedReservationDetails() {
-    List<Pickup> pickups = get(KEY_LIST_OF_CREATED_RESERVATIONS);
-    List<OrderRequestV4> orderDetails = get(KEY_LIST_OF_ORDER_CREATE_RESPONSE);
-    Timeslot timeslot = orderDetails.get(0).getParcelJob().getPickupTimeslot();
+  @When("Operator verifies invalid failed reservations details with address {string}")
+  public void operatorVerifyInvalidFailedReservationDetails(String address) {
+    List<ReservationResponse> pickups = get(KEY_LIST_OF_CREATED_RESERVATIONS);
     doWithRetry(() -> {
       operatorGetInvalidFailedReservationDetails();
       List<Waypoint> waypoints = get(KEY_ROUTE_MONITORING_RESULT);
@@ -236,18 +231,18 @@ public class RouteMonitoringSteps extends BaseSteps {
           .isEqualTo(pickups.size());
 
       pickups.forEach(e -> {
-        Waypoint waypoint = waypoints.stream().filter(o -> o.getId().equals(e.getReservationId()))
+        Waypoint waypoint = waypoints.stream().filter(o -> o.getId().equals(e.getId()))
             .findAny().orElseThrow(() -> new NvTestRuntimeException(
-                "reservation details not found: " + e.getReservationId()));
+                "reservation details not found: " + e.getId()));
         Assertions.assertThat(waypoint.getId()).as("reservation id")
-            .isEqualTo(e.getReservationId());
-        Assertions.assertThat(waypoint.getName().toLowerCase()).as("name")
-            .isEqualTo(e.getName().toLowerCase());
+            .isEqualTo(e.getId());
+        Assertions.assertThat(StringUtils.lowerCase(waypoint.getName())).as("name")
+            .isEqualTo(StringUtils.lowerCase(e.getName()));
         Assertions.assertThat(waypoint.getContact()).as("contact").isEqualTo(e.getContact());
-        Assertions.assertThat(waypoint.getAddress().toLowerCase()).as("address")
-            .isEqualTo(createExpectedReservationAddress(e));
-        Assertions.assertThat(waypoint.getTimeWindow().toLowerCase()).as("time window")
-            .isEqualTo(getFormattedTimeslot(timeslot.getStartTime(), timeslot.getEndTime()));
+        Assertions.assertThat(StringUtils.lowerCase(waypoint.getAddress())).as("address")
+            .isEqualTo(StringUtils.lowerCase(resolveValue(address)));
+        Assertions.assertThat(StringUtils.lowerCase(waypoint.getTimeWindow())).as("time window")
+            .isEqualTo("9am - 10pm");
       });
     }, "get invalid failed reservation details");
   }
@@ -652,13 +647,10 @@ public class RouteMonitoringSteps extends BaseSteps {
   }
 
   private String createExpectedPendingAddress(JsonNode address) {
-    return (address.get("address1") + " " + address.get("address2") + " " + address.get("postcode")
-        + " " + address.get("country")).toLowerCase();
-  }
-
-  private String createExpectedReservationAddress(Pickup pickup) {
-    return (pickup.getAddress1() + " " + pickup.getAddress2() + " " + pickup.getPostcode() + " "
-        + pickup.getCountry()).toLowerCase();
+    String expectedAddress = StringUtils.lowerCase(
+        address.get("address1") + " " + address.get("address2") + " " + address.get("postcode")
+            + " " + address.get("country"));
+    return StringUtils.replaceChars(expectedAddress, "\"", "");
   }
 
   private String getFormattedTimeslot(String startTime, String endTime) {
