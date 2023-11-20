@@ -1,7 +1,6 @@
 package co.nvqa.core_api.cucumber.glue.support;
 
 import co.nvqa.common.utils.StandardTestConstants;
-import co.nvqa.commons.util.NvLogger;
 
 /**
  * @author Binti Cahayati on 2020-07-01
@@ -58,9 +57,5 @@ public class TestConstants extends StandardTestConstants {
     RESERVATION_VALID_FAILURE_REASON = getString("reservation-valid-failure-reason-string");
     DEFAULT_DP_ADDRESS_ID = getInt("default-dp-address-id");
     DEFAULT_DP_SHIPPER_ID = getInt("default-dp-shipper-id");
-  }
-
-  public static void init() {
-    NvLogger.info("CONFIGURATION HELPER INITIATED");
   }
 }

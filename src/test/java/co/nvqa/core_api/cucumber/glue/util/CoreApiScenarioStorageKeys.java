@@ -1,8 +1,6 @@
 package co.nvqa.core_api.cucumber.glue.util;
 
-import co.nvqa.commons.cucumber.StandardScenarioStorageKeys;
-
-public interface CoreApiScenarioStorageKeys extends StandardScenarioStorageKeys {
+public interface CoreApiScenarioStorageKeys {
 
   //dp
   String KEY_DP_SHIPPER_LEGACY_ID = "KEY_DP_SHIPPER_LEGACY_ID";
@@ -36,7 +34,7 @@ public interface CoreApiScenarioStorageKeys extends StandardScenarioStorageKeys 
   String KEY_LIST_OF_CREATED_ORDER_TRACKING_ID = "KEY_LIST_OF_CREATED_ORDER_TRACKING_ID";
   String KEY_CREATED_ORDER_TRACKING_ID = "KEY_CREATED_ORDER_TRACKING_ID";
 
-//  orders
+  //  orders
   String KEY_CREATED_ORDER = "KEY_CREATED_ORDER";
   String KEY_LIST_OF_CREATED_ORDER = "KEY_LIST_OF_CREATED_ORDER";
   String KEY_CREATED_ORDER_ID = "KEY_CREATED_ORDER_ID";
@@ -46,6 +44,7 @@ public interface CoreApiScenarioStorageKeys extends StandardScenarioStorageKeys 
   String KEY_LIST_OF_ORDER_CREATE_RESPONSE = "KEY_LIST_OF_ORDER_CREATE_RESPONSE";
   String KEY_LIST_OF_ORDER_CREATE_REQUEST = "KEY_LIST_OF_ORDER_CREATE_REQUEST";
   String KEY_LIST_OF_PICKUP_ADDRESS_STRING = "KEY_LIST_OF_PICKUP_ADDRESS_STRING";
+  String KEY_PICKUP_ADDRESS_STRING = "KEY_PICKUP_ADDRESS_STRING";
 
   //rsvn
   String KEY_LIST_OF_RESERVATION_TRACKING_IDS = "KEY_LIST_OF_RESERVATION_TRACKING_IDS";
@@ -94,5 +93,19 @@ public interface CoreApiScenarioStorageKeys extends StandardScenarioStorageKeys 
   String KEY_WAYPOINT_ID = "KEY_WAYPOINT_ID";
   String KEY_UPDATE_PROOFS_REQUEST = "KEY_UPDATE_PROOFS_REQUEST";
 
-
+  // LEGACY
+  @Deprecated
+  String KEY_LIST_OF_CREATED_RESERVATIONS = "KEY_LIST_OF_CREATED_RESERVATIONS";
+  @Deprecated
+  String KEY_LIST_OF_CREATED_ROUTE_ID = "KEY_LIST_OF_CREATED_ROUTE_ID";
+  @Deprecated
+  String KEY_FAILURE_REASON_ID = "KEY_FAILURE_REASON_ID";
+  @Deprecated
+  String KEY_FAILURE_REASON_CODE_ID = "KEY_FAILURE_REASON_CODE_ID";
+  @Deprecated
+  String KEY_LIST_OF_HUB_IDS = "KEY_LIST_OF_HUB_IDS";
+  @Deprecated
+  String KEY_LIST_OF_ZONE_IDS = "KEY_LIST_OF_ZONE_ID";
+  @Deprecated
+  String KEY_ROUTE_SOURCE_BY_INBOUND = "KEY_ROUTE_SOURCE_BY_INBOUND";
 }
