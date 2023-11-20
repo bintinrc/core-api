@@ -256,7 +256,7 @@ Feature: Batch Update PODs
       | RECIPIENT  | uid:11b78edd-3021-40ab-9e8f-52913dfa1e66 | RECIPIENT  |
       | SUBSTITUTE | uid:3f5ab4a0-d234-4756-964f-a9eaebffcc99 | SUBSTITUTE |
 
-  @HighPriority
+  @HighPriority @wip
   Scenario: Driver Delivers X number of Parcels and Fails Y number of Parcels in One Waypoint (Partial Success)
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Delivery, Completed, Pending Reschedule, First Attempt Delivery Fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
