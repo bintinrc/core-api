@@ -73,11 +73,11 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
   }
 
   protected synchronized ShipperClient getShipperWebhookClient() {
-//    if (shipperWebhookClient == null) {
-//      shipperWebhookClient = new ShipperClient(
-//          TestConstants.API_BASE_URL,
-//          TokenUtils.getOperatorAuthToken(), null);
-//    }
+    if (shipperWebhookClient == null) {
+      shipperWebhookClient = new ShipperClient(
+          TestConstants.API_BASE_URL,
+          TokenUtils.getOperatorAuthToken(), null);
+    }
     return shipperWebhookClient;
   }
 
