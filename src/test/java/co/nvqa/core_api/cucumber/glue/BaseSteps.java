@@ -33,7 +33,6 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
   private PickupClient shipperPickupClient;
   @Inject
   private InboundClient inboundClient;
-  @Inject
   private ShipperClient shipperWebhookClient;
   @Inject
   private RouteMonitoringClient routeMonitoringClient;
