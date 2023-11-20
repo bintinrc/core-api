@@ -81,21 +81,6 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "batch update jobs");
   }
 
-  @Given("API Batch Update Job Request to fail and reschedule Delivery")
-  public void apiBatchJobUpdateOrderReschedule() {
-    long routeId = get(KEY_CREATED_ROUTE_ID);
-    List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
-    doWithRetry(() -> {
-      getTransactionWaypointId(Transaction.TYPE_DELIVERY);
-      long waypointId = get(KEY_WAYPOINT_ID);
-      List<JobUpdate> request = createTransactionJobRequest(trackingIds, ACTION_MODE_FAIL,
-          DELIVERY_JOB_MODE,
-          false, WebhookRequest.Pod.POD_TYPE_RECIPIENT, true);
-      getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
-    }, "batch update jobs");
-  }
-
   @Given("API Batch Update Job Request to Success All Created Orders {string} with NO Proof Details")
   public void apiBatchJobUpdateOrdersSuccessNoPods(String transactionType) {
     long routeId = get(KEY_CREATED_ROUTE_ID);

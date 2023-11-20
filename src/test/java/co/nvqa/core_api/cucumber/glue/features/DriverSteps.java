@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.slf4j.Logger;
@@ -46,6 +47,7 @@ public class DriverSteps extends BaseSteps {
   private static final String TYPE_DELIVERY = "DELIVERY";
   private static final String STATUS_PENDING = "pending";
 
+  @Inject
   private DriverClient driverClient;
 
   @Override
@@ -56,7 +58,6 @@ public class DriverSteps extends BaseSteps {
   @Given("Driver id {string} authenticated to login with username {string} and password {string}")
   public void driverLogin(String driverId, String username, String password) {
     doWithRetry(() -> {
-      driverClient = new DriverClient();
       driverClient.authenticate(username, password);
       put(KEY_NINJA_DRIVER_ID, Long.valueOf(driverId));
     }, "driver login");

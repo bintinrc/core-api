@@ -8,11 +8,12 @@ import co.nvqa.common.core.client.RouteClient;
 import co.nvqa.common.core.client.RouteMonitoringClient;
 import co.nvqa.common.cucumber.glue.StandardSteps;
 import co.nvqa.common.ordercreate.client.OrderSearchClient;
-import co.nvqa.common.shipper.client.ShipperClient;
+import co.nvqa.common.webhook.client.ShipperClient;
 import co.nvqa.commonauth.utils.TokenUtils;
 import co.nvqa.commonsort.client.InboundClient;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import co.nvqa.core_api.cucumber.glue.util.CoreApiScenarioStorageKeys;
+import javax.inject.Inject;
 
 /**
  * put any common methods here all step class should extend this class
@@ -20,27 +21,30 @@ import co.nvqa.core_api.cucumber.glue.util.CoreApiScenarioStorageKeys;
 public abstract class BaseSteps extends StandardSteps<ScenarioManager> implements
     CoreApiScenarioStorageKeys {
 
+  @Inject
   private static OrderSearchClient orderSearchClient;
+  @Inject
   private static OrderClient orderClient;
+  @Inject
   private RouteClient routeClient;
+  @Inject
   private EventClient eventClient;
+  @Inject
   private PickupClient shipperPickupClient;
+  @Inject
   private InboundClient inboundClient;
-  private co.nvqa.common.webhook.client.ShipperClient shipperWebhookClient;
+  @Inject
+  private ShipperClient shipperWebhookClient;
+  @Inject
   private RouteMonitoringClient routeMonitoringClient;
+  @Inject
   private BatchUpdatePodClient batchUpdatePodClient;
 
   protected static synchronized OrderSearchClient getOrderSearchClient() {
-    if (orderSearchClient == null) {
-      orderSearchClient = new OrderSearchClient();
-    }
     return orderSearchClient;
   }
 
   protected static synchronized OrderClient getOrderClient() {
-    if (orderClient == null) {
-      orderClient = new OrderClient();
-    }
     return orderClient;
   }
 
@@ -49,43 +53,28 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
   }
 
   protected synchronized RouteClient getRouteClient() {
-    if (routeClient == null) {
-      routeClient = new RouteClient();
-    }
     return routeClient;
   }
 
   protected synchronized RouteMonitoringClient getRouteMonitoringClient() {
-    if (routeMonitoringClient == null) {
-      routeMonitoringClient = new RouteMonitoringClient();
-    }
     return routeMonitoringClient;
   }
 
   protected synchronized EventClient getEventClient() {
-    if (eventClient == null) {
-      eventClient = new EventClient();
-    }
     return eventClient;
   }
 
   protected synchronized PickupClient getShipperPickupClient() {
-    if (shipperPickupClient == null) {
-      shipperPickupClient = new PickupClient();
-    }
     return shipperPickupClient;
   }
 
   protected synchronized InboundClient getInboundClient() {
-    if (inboundClient == null) {
-      inboundClient = new InboundClient();
-    }
     return inboundClient;
   }
 
-  protected synchronized co.nvqa.common.webhook.client.ShipperClient getShipperWebhookClient() {
+  protected synchronized ShipperClient getShipperWebhookClient() {
     if (shipperWebhookClient == null) {
-      shipperWebhookClient = new co.nvqa.common.webhook.client.ShipperClient(
+      shipperWebhookClient = new ShipperClient(
           TestConstants.API_BASE_URL,
           TokenUtils.getOperatorAuthToken(), null);
     }
@@ -93,9 +82,6 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
   }
 
   protected synchronized BatchUpdatePodClient getBatchUpdatePodClient() {
-    if (batchUpdatePodClient == null) {
-      batchUpdatePodClient = new BatchUpdatePodClient();
-    }
     return batchUpdatePodClient;
   }
 }

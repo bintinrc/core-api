@@ -4,9 +4,6 @@ import co.nvqa.commons.cucumber.StandardScenarioStorageKeys;
 
 public interface CoreApiScenarioStorageKeys extends StandardScenarioStorageKeys {
 
-  //dp
-  String KEY_DP_SHIPPER_LEGACY_ID = "KEY_DP_SHIPPER_LEGACY_ID";
-
   String KEY_LIST_OF_WEBHOOK_REQUEST = "KEY_LIST_OF_WEBHOOK_REQUEST";
   String KEY_WEBHOOK_PAYLOAD = "KEY_WEBHOOK_PAYLOAD";
   String KEY_LIST_OF_PARTIAL_SUCCESS_TID = "KEY_LIST_OF_PARTIAL_SUCCESS_TID";
