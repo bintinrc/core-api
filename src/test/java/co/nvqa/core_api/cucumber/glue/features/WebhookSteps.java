@@ -1,16 +1,18 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
+import co.nvqa.common.core.model.batch_update_pods.ProofDetails;
+import co.nvqa.common.core.model.pickup.Pickup;
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
+import co.nvqa.common.dp.constants.DpScenarioStorageKeys;
+import co.nvqa.common.dp.model.hibernate.DpJobOrder;
+import co.nvqa.common.ordercreate.model.OrderRequestV4;
+import co.nvqa.common.utils.JsonUtils;
+import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.common.webhook.client.RequestBinClient;
 import co.nvqa.common.webhook.model.requestbin.Bin;
 import co.nvqa.common.webhook.model.requestbin.BinRequest;
 import co.nvqa.common.webhook.model.webhook.Webhook;
 import co.nvqa.common.webhook.model.webhook.WebhookRequest;
-import co.nvqa.commons.model.core.Pickup;
-import co.nvqa.commons.model.core.batch_update_pod.ProofDetails;
-import co.nvqa.commons.model.order_create.v4.OrderRequestV4;
-import co.nvqa.commons.util.JsonUtils;
-import co.nvqa.commons.util.NvTestRuntimeException;
 import co.nvqa.commonsort.cucumber.KeysStorage;
 import co.nvqa.commonsort.model.sort.DwsInboundResponse;
 import co.nvqa.commonsort.model.sort.Hub;
@@ -164,12 +166,11 @@ public class WebhookSteps extends BaseSteps {
           Assertions.assertThat(request.getTrackingId()).as("tracking id is correct")
               .isEqualToIgnoringCase(trackingId);
           Webhook.WebhookStatus webhookStatus = Webhook.WebhookStatus.fromString(status);
-          Pickup pickup = get(KEY_CREATED_RESERVATION);
           Map<String, ProofDetails> proofDetails = get(KEY_MAP_PROOF_WEBHOOK_DETAILS);
           switch (webhookStatus) {
             case SUCCESSFUL_DELIVERY:
-              final Long dpJobId = get(KEY_DP_JOB_ID);
-              if (proofDetails == null || dpJobId != null) {
+              final List<DpJobOrder> dpJobs = get(DpScenarioStorageKeys.KEY_DP_LIST_OF_DP_JOB_ORDERS);
+              if (proofDetails == null || dpJobs != null) {
                 Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
               } else {
                 checkDeliverySuccessPod(request, trackingId);
@@ -182,7 +183,7 @@ public class WebhookSteps extends BaseSteps {
               break;
             case SUCCESSFUL_PICKUP:
               //to exclude POD on Pickup with Normal Order
-              if ((pickup != null && order.getServiceType().equalsIgnoreCase("Parcel"))
+              if (order.getServiceType().equalsIgnoreCase("Parcel")
                   || proofDetails == null) {
                 Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
               } else {
@@ -314,22 +315,6 @@ public class WebhookSteps extends BaseSteps {
       put(KEY_CREATED_ORDER_TRACKING_ID, e);
       shipperVerifiesWebhookPayload(status);
     });
-  }
-
-  @Given("Shipper id {string} removes webhook subscriptions")
-  public void shipperRemoveWebhookSubs(String shipperGlobalId) {
-    doWithRetry(() -> cleanWebhookSubs(Long.parseLong(shipperGlobalId)), "remove webhook subs");
-  }
-
-  private void cleanWebhookSubs(Long shipperId) {
-    try {
-      Webhook[] webhooks = getShipperWebhookClient().getWebhookSubscription(shipperId);
-      Arrays.asList(webhooks)
-          .forEach(e -> getShipperClient().removeWebhookSubscription(shipperId, e.getId()));
-      LOGGER.info("webhook subscription cleared");
-    } catch (Throwable t) {
-      LOGGER.warn("Failed to clean webhook subs");
-    }
   }
 
   private void checkDeliverySuccessPod(WebhookRequest webhookRequest, String trackingId) {

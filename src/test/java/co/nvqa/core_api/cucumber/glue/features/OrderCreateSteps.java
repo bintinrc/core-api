@@ -1,9 +1,8 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
+import co.nvqa.common.ordercreate.client.OrderCreateClient;
+import co.nvqa.common.ordercreate.model.OrderRequestV4;
 import co.nvqa.commonauth.utils.TokenUtils;
-import co.nvqa.commons.client.order_create.OrderCreateClientV4;
-import co.nvqa.commons.model.order_create.v4.OrderRequestV4;
-import co.nvqa.commons.util.NvLogger;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderCreateHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
@@ -17,8 +16,7 @@ import java.util.Map;
 @ScenarioScoped
 public class OrderCreateSteps extends BaseSteps {
 
-  private static final String DOMAIN = "ORDER-CREATION-STEPS";
-  private OrderCreateClientV4 orderCreateClientV4;
+  private OrderCreateClient orderCreateClient;
 
   @Override
   public void init() {
@@ -27,20 +25,19 @@ public class OrderCreateSteps extends BaseSteps {
 
   @Given("Shipper authenticates using client id {string} and client secret {string}")
   public void shipperAuthenticate(String clientId, String clientSecret) {
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       String token = TokenUtils.getShipperToken(clientId, clientSecret);
-      orderCreateClientV4 = new OrderCreateClientV4(TestConstants.API_BASE_URL,
+      orderCreateClient = new OrderCreateClient(TestConstants.API_BASE_URL,
           token);
       put(KEY_SHIPPER_V4_ACCESS_TOKEN, token);
     }, "shipper API authenticated");
   }
 
-  @Given("^Shipper create order with parameters below$")
+  @Given("Shipper create order with parameters below")
   public void shipperCreateOrder(Map<String, String> source) {
     OrderRequestV4 request = OrderCreateHelper.generateOrderV4(source);
-    callWithRetry(() -> {
-      OrderRequestV4 result = orderCreateClientV4.createOrder(request, "4.1");
-      NvLogger.success(DOMAIN, "order created tracking id: " + result.getTrackingNumber());
+    doWithRetry(() -> {
+      OrderRequestV4 result = orderCreateClient.createOrder(request);
       put(KEY_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
       putInList(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
       put(KEY_ORDER_CREATE_REQUEST, request);
@@ -67,7 +64,7 @@ public class OrderCreateSteps extends BaseSteps {
     }, "shipper create order");
   }
 
-  @Given("^Shipper creates a reservation tied to Normal orders$")
+  @Given("Shipper creates a reservation tied to Normal orders")
   public void shipperReservationTiedToNormalOrder(Map<String, String> source) {
     shipperCreateOrder(source);
     shipperCreateAnotherOrderWithSameParams();
@@ -78,24 +75,18 @@ public class OrderCreateSteps extends BaseSteps {
     shipperCreateOrder(source);
   }
 
-  @Given("^Shipper creates multiple (\\d+) reservations$")
-  public void shipperCreateMultipleReservation(int numberOfRsvn, Map<String, String> source) {
-    shipperCreateMultiplesOrders(numberOfRsvn, source);
-  }
 
-
-  @Given("^Shipper creates multiple \"([^\"]*)\" orders$")
+  @Given("Shipper creates multiple {string} orders")
   public void shipperCreateMultipleReturnOrders(String type, Map<String, String> source) {
     shipperCreateMultiplesOrders(2, source);
   }
 
-  @Given("^Shipper create another order with the same parameters as before$")
+  @Given("Shipper create another order with the same parameters as before")
   public void shipperCreateAnotherOrderWithSameParams() {
     OrderRequestV4 request = get(KEY_ORDER_CREATE_REQUEST);
     request.setRequestedTrackingNumber("");
-    callWithRetry(() -> {
-      OrderRequestV4 result = orderCreateClientV4.createOrder(request, "4.1");
-      NvLogger.success(DOMAIN, "order created tracking id: " + result.getTrackingNumber());
+    doWithRetry(() -> {
+      OrderRequestV4 result = orderCreateClient.createOrder(request);
       put(KEY_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
       putInList(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID, result.getTrackingNumber());
       putInList(KEY_LIST_OF_ORDER_CREATE_RESPONSE, result);
@@ -103,14 +94,14 @@ public class OrderCreateSteps extends BaseSteps {
     }, "shipper create another order");
   }
 
-  @Given("^Shipper creates multiple orders : (\\d+) orders$")
+  @Given("Shipper creates multiple orders : {int} orders")
   public void shipperCreateMultiplesOrders(int numberOfOrders, Map<String, String> source) {
     for (int i = 0; i < numberOfOrders; i++) {
       shipperCreateOrder(source);
     }
   }
 
-  @Given("^Shipper creates multiple orders : (\\d+) orders with the same params$")
+  @Given("Shipper creates multiple orders : {int} orders with the same params")
   public void shipperCreateMultiplesOrdersWithSameParams(int numberOfOrders,
       Map<String, String> source) {
     shipperCreateOrder(source);

@@ -1,4 +1,4 @@
-@ArchiveRouteCommonV2 @ForceSuccessOrder @DeletePickupAppointmentJob @CancelCreatedReservations @route-v2 @create-route-assign-waypoint
+@ArchiveRouteCommonV2 @ForceSuccessOrders @DeletePickupAppointmentJob @CancelCreatedReservations @route-v2 @create-route-assign-waypoint
 Feature: Create Route & Assign Waypoints
 
   @HighPriority

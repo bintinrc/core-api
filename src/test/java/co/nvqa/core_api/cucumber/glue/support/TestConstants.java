@@ -1,7 +1,6 @@
 package co.nvqa.core_api.cucumber.glue.support;
 
 import co.nvqa.common.utils.StandardTestConstants;
-import co.nvqa.commons.util.NvLogger;
 
 /**
  * @author Binti Cahayati on 2020-07-01
@@ -36,7 +35,7 @@ public class TestConstants extends StandardTestConstants {
   static {
     FAILURE_REASON_ID = getInt("failure-reason-id");
     ROUTE_MONITORING_DRIVER_NAME = getString("driver-2-name");
-    SORTING_HUB_NAME = getString("sorting-hub-name");
+    SORTING_HUB_NAME = getString("sorting-hub-name-2");
     ZONE_NAME = getString("zone-name");
     ORDER_TAG_PRIOR_ID = getInt("order-tag-prior-id");
     PICKUP_FAILURE_REASON_ID = getInt("pickup-failure-reason-id");
@@ -58,9 +57,5 @@ public class TestConstants extends StandardTestConstants {
     RESERVATION_VALID_FAILURE_REASON = getString("reservation-valid-failure-reason-string");
     DEFAULT_DP_ADDRESS_ID = getInt("default-dp-address-id");
     DEFAULT_DP_SHIPPER_ID = getInt("default-dp-shipper-id");
-  }
-
-  public static void init() {
-    NvLogger.info("CONFIGURATION HELPER INITIATED");
   }
 }

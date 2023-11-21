@@ -1,15 +1,16 @@
-@ForceSuccessOrder @ArchiveDriverRoutes @order-details @delivery-verification-method
+@ForceSuccessOrders @ArchiveDriverRoutes @order-details @delivery-verification-method
 Feature: Delivery Verification Method
 
   @update-verification-method @MediumPriority
-  Scenario:   DO NOT Allow to Change Delivery Verification Method of Order Tagged to DP
+  Scenario: DO NOT Allow to Change Delivery Verification Method of Order Tagged to DP
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     And Shipper create order with parameters below
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And API Operator assign delivery waypoint of an order to DP Include Today with ID = "{dpms-id}"
+    And API DP - Operator tag order to DP:
+      | request | {"order_id":{KEY_CREATED_ORDER.id},"dp_id":{dp-id},"drop_off_date":"{date: 0 days next, yyyy-MM-dd}"} |
     When Operator update delivery verfication with value "NONE"
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103092                          |
@@ -50,8 +51,9 @@ Feature: Delivery Verification Method
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
     And Operator perform global inbound at hub "{sorting-hub-id}"
-    And API Operator RTS created order:
-      | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
+    And API Core - Operator rts order:
+      | orderId    | {KEY_CREATED_ORDER.id}                                                                                          |
+      | rtsRequest | { "reason": "Return to sender: Nobody at address", "timewindow_id":1, "date":"{date: 1 days next, yyyy-MM-dd}"} |
     When Operator update delivery verfication with value "NONE"
     Then Operator verify response code is 400 with error message details as follow
       | code        | 103099                   |
@@ -99,7 +101,7 @@ Feature: Delivery Verification Method
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And API Operator cancel created order
+    And API Core - cancel order "{KEY_CREATED_ORDER.id}"
     Then Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     When Operator update delivery verfication with value "NONE"
     Then Operator verify response code is 500 with error message details as follow
@@ -117,8 +119,9 @@ Feature: Delivery Verification Method
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
     And Operator perform global inbound at hub "{sorting-hub-id}"
-    And API Operator RTS created order:
-      | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
+    And API Core - Operator rts order:
+      | orderId    | {KEY_CREATED_ORDER.id}                                                                                          |
+      | rtsRequest | { "reason": "Return to sender: Nobody at address", "timewindow_id":1, "date":"{date: 1 days next, yyyy-MM-dd}"} |
     And Operator force success order
     Then Operator verify that order status-granular status is "Completed"-"Returned_to_Sender"
     When Operator update delivery verfication with value "NONE"
@@ -136,15 +139,9 @@ Feature: Delivery Verification Method
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And Operator perform global inbound at hub "{sorting-hub-id}"
-    And API Operator assign delivery waypoint of an order to DP Include Today with ID = "{dpms-id}"
-    And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    And Operator add order to driver "DD" route
-    And Operator force "SUCCESS" "DELIVERY" waypoint
+    And API Core - Operator update order granular status:
+      | orderId        | {KEY_CREATED_ORDER.id}        |
+      | granularStatus | Arrived at Distribution Point |
     Then Operator verify that order status-granular status is "Transit"-"Arrived_at_Distribution_Point"
     When Operator update delivery verfication with value "NONE"
     Then Operator verify response code is 500 with error message details as follow
@@ -161,7 +158,8 @@ Feature: Delivery Verification Method
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And API Operator assign delivery waypoint of an order to DP Include Today with ID = "{dpms-id}"
+    And API DP - Operator tag order to DP:
+      | request | {"order_id":{KEY_CREATED_ORDER.id},"dp_id":{dp-id},"drop_off_date":"{date: 0 days next, yyyy-MM-dd}"} |
     When Operator validate order for ATL
     Then Operator verify that response returns "false"
 
@@ -194,8 +192,9 @@ Feature: Delivery Verification Method
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
     And Operator perform global inbound at hub "{sorting-hub-id}"
-    And API Operator RTS created order:
-      | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
+    And API Core - Operator rts order:
+      | orderId    | {KEY_CREATED_ORDER.id}                                                                                          |
+      | rtsRequest | { "reason": "Return to sender: Nobody at address", "timewindow_id":1, "date":"{date: 1 days next, yyyy-MM-dd}"} |
     When Operator validate order for ATL
     Then Operator verify that response returns "false"
 
@@ -231,7 +230,7 @@ Feature: Delivery Verification Method
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And API Operator cancel created order
+    And API Core - cancel order "{KEY_CREATED_ORDER.id}"
     Then Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     When Operator validate order for ATL
     Then Operator verify that response returns "false"
@@ -245,8 +244,9 @@ Feature: Delivery Verification Method
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
     And Operator perform global inbound at hub "{sorting-hub-id}"
-    And API Operator RTS created order:
-      | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
+    And API Core - Operator rts order:
+      | orderId    | {KEY_CREATED_ORDER.id}                                                                                          |
+      | rtsRequest | { "reason": "Return to sender: Nobody at address", "timewindow_id":1, "date":"{date: 1 days next, yyyy-MM-dd}"} |
     And Operator force success order
     Then Operator verify that order status-granular status is "Completed"-"Returned_to_Sender"
     When Operator validate order for ATL
@@ -260,15 +260,9 @@ Feature: Delivery Verification Method
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And Operator perform global inbound at hub "{sorting-hub-id}"
-    And API Operator assign delivery waypoint of an order to DP Include Today with ID = "{dpms-id}"
-    And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    And Operator add order to driver "DD" route
-    And Operator force "SUCCESS" "DELIVERY" waypoint
+    And API Core - Operator update order granular status:
+      | orderId        | {KEY_CREATED_ORDER.id}        |
+      | granularStatus | Arrived at Distribution Point |
     Then Operator verify that order status-granular status is "Transit"-"Arrived_at_Distribution_Point"
     When Operator validate order for ATL
     Then Operator verify that response returns "false"

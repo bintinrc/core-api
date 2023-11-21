@@ -1,21 +1,23 @@
 package co.nvqa.core_api.cucumber.glue.support;
 
+import co.nvqa.common.model.address.Address;
+import co.nvqa.common.ordercreate.model.Dimension;
+import co.nvqa.common.ordercreate.model.OrderRequestV4;
+import co.nvqa.common.ordercreate.model.OrderRequestV4.ParcelJob;
+import co.nvqa.common.ordercreate.model.OrderRequestV4.UserDetail;
+import co.nvqa.common.ordercreate.model.Timeslot;
+import co.nvqa.common.utils.DateUtil;
 import co.nvqa.common.utils.JsonUtils;
 import co.nvqa.common.utils.NvCountry;
 import co.nvqa.common.utils.NvTestRuntimeException;
+import co.nvqa.common.utils.RandomUtil;
+import co.nvqa.common.utils.ReflectionUtil;
 import co.nvqa.common.utils.StandardTestConstants;
 import co.nvqa.common.utils.StandardTestUtils;
-import co.nvqa.commons.cucumber.glue.AddressFactory;
-import co.nvqa.commons.model.core.Address;
-import co.nvqa.commons.model.core.Dimension;
-import co.nvqa.commons.model.order_create.v4.OrderRequestV4;
-import co.nvqa.commons.model.order_create.v4.Timeslot;
-import co.nvqa.commons.model.order_create.v4.UserDetail;
-import co.nvqa.commons.model.order_create.v4.job.ParcelJob;
-import co.nvqa.commons.support.DateUtil;
-import co.nvqa.commons.support.RandomUtil;
-import co.nvqa.commons.support.ReflectionUtil;
+import co.nvqa.common.utils.factory.address.AddressFactory;
 import co.nvqa.core_api.cucumber.glue.features.RouteMonitoringSteps;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -109,7 +111,13 @@ public class OrderCreateHelper {
       address.setPostcode(source.get("dp-address-postcode"));
     }
     address.setAddress2(address.getAddress2() + "-" + uniqueId);
-    result.setAddress(createMapFromAddress(address));
+    try {
+      JsonNode addressNode = JsonUtils
+          .getDefaultSnakeCaseMapper().readTree(JsonUtils.toJsonSnakeCase(address));
+      result.setAddress(addressNode);
+    } catch (JsonProcessingException ex) {
+      throw new NvTestRuntimeException("failed to parse json object " + ex.getMessage());
+    }
     return result;
   }
 

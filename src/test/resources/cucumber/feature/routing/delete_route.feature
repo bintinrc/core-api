@@ -1,4 +1,4 @@
-@ForceSuccessOrder  @routing1 @route-delete
+@ForceSuccessOrders @CancelCreatedReservations @routing1 @route-delete
 Feature: Delete Route
 
   @route-delete @routing-refactor @happy-path @HighPriority
@@ -9,59 +9,71 @@ Feature: Delete Route
       | service_level                 | <service_level>                 |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator search for created order
-    And API Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+    And Operator create an empty route
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator add order to driver "<route_type>" route
     When Operator delete driver route with status code 200
     Then DB Route - verify route_logs record:
-      | legacyId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | deletedAt | not null                           |
+      | legacyId  | {KEY_CREATED_ROUTE.id} |
+      | deletedAt | not null               |
     And Operator search for "<transaction_type>" transaction with status "PENDING"
-    And DB Operator verifies transaction route id is null
-    And DB Operator verifies waypoint status is "PENDING"
-    And DB Operator verifies waypoints.route_id & seq_no is NULL
+    And DB Core - verify transactions record:
+      | id      | {KEY_TRANSACTION_DETAILS.id} |
+      | routeId | null                         |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_TRANSACTION_DETAILS.waypointId} |
+      | routeId  | null                                 |
+      | seqNo    | null                                 |
+      | status   | Pending                              |
     And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_WAYPOINT_ID} |
+      | {KEY_TRANSACTION_DETAILS.waypointId} |
     And API Event - Operator verify that event is published with the following details:
       | event            | PULL_OUT_OF_ROUTE      |
       | orderId          | {KEY_CREATED_ORDER_ID} |
       | routeEventSource | ZONAL_ROUTING_REMOVE   |
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
     Then Deleted route is not shown on his list routes
+      | routeId  | {KEY_CREATED_ROUTE_ID} |
+      | driverId | {driver-id}            |
     Examples:
-      | Note     | hiptest-uid                              | route_type | transaction_type | service_type | service_level | parcel_job_is_pickup_required |
-      | Pickup   | uid:a9e166f2-0ca5-4aaf-baae-0593ba83dc00 | PP         | PICKUP           | Return       | Standard      | true                          |
-      | Delivery | uid:c5e68f1d-09f8-4d9e-8632-8b9a5bd9d572 | DD         | DELIVERY         | Parcel       | Standard      | false                         |
+      | Note     | route_type | transaction_type | service_type | service_level | parcel_job_is_pickup_required |
+      | Pickup   | PP         | PICKUP           | Return       | Standard      | true                          |
+      | Delivery | DD         | DELIVERY         | Parcel       | Standard      | false                         |
 
   @route-delete @routing-refactor @happy-path @HighPriority
-  Scenario Outline: Operator Delete Driver Route Successfully - Single Pending Reservation
+  Scenario: Operator Delete Driver Route Successfully - Single Pending Reservation
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
-    When API Operator create new shipper address V2 using data below:
-      | shipperId       | {shipper-2-id} |
-      | generateAddress | RANDOM         |
-    And API Operator create V2 reservation using data below:
-      | reservationRequest | { "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
-    And API Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+    Given API Core - Operator create reservation using data below:
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
-      | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                   |
     When Operator delete driver route with status code 200
     Then DB Route - verify route_logs record:
       | legacyId  | {KEY_CREATED_ROUTE_ID} |
       | deletedAt | not null               |
-    And DB Operator verifies waypoint status is "PENDING"
-    And DB Operator verifies waypoints.route_id & seq_no is NULL
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | routeId  | null                                             |
+      | seqNo    | null                                             |
+      | status   | Pending                                          |
     And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_WAYPOINT_ID} |
+      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
     And DB Core - verify shipper_pickup_search record:
       | reservationId  | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | waypointStatus | Pending                                  |
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
     Then Deleted route is not shown on his list routes
-    Examples:
-      | Note | hiptest-uid                              | service_type | service_level | parcel_job_is_pickup_required |
-      |      | uid:5cf6b734-73e3-4689-b052-b04dc3fd467c | Parcel       | Standard      | true                          |
+      | routeId  | {KEY_CREATED_ROUTE_ID} |
+      | driverId | {driver-id}            |
 
   @route-delete @routing-refactor @HighPriority
   Scenario Outline: Operator Delete Driver Route Successfully - Merged Pending Waypoint - <Note>
@@ -70,101 +82,129 @@ Feature: Delete Route
       | service_type                  | <service_type>                  |
       | service_level                 | <service_level>                 |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
-    And API Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+    And Operator create an empty route
+      | driver_id  | {driver-2-id}    |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
     And Operator search for all created orders
     And Operator add order by tracking id to driver "<route_type>" route
     When Shipper create another order with the same parameters as before
     And Operator add order by tracking id to driver "<route_type>" route
     And Operator search for all created orders
     And API Core - Operator merge routed waypoints:
-      | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | {KEY_CREATED_ROUTE_ID} |
     When Operator delete driver route with status code 200
     Then DB Route - verify route_logs record:
-      | legacyId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | deletedAt | not null                           |
+      | legacyId  | {KEY_CREATED_ROUTE_ID} |
+      | deletedAt | not null               |
     And Operator search for multiple "<transaction_type>" transactions with status "PENDING"
-    And DB Operator verifies all transactions route id is null
-    And DB Operator verifies all waypoints status is "PENDING"
-    And DB Operator verifies waypoints.route_id & seq_no is NULL
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_TRANSACTION_IDS[1]} |
+      | routeId | null                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_WAYPOINT_IDS[1]} |
+      | routeId  | null                          |
+      | seqNo    | null                          |
+      | status   | Pending                       |
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_TRANSACTION_IDS[2]} |
+      | routeId | null                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_WAYPOINT_IDS[2]} |
+      | routeId  | null                          |
+      | seqNo    | null                          |
+      | status   | Pending                       |
     And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_WAYPOINT_ID} |
+      | {KEY_LIST_OF_WAYPOINT_IDS[1]} |
+    And DB Core - verify route_monitoring_data is hard-deleted:
+      | {KEY_LIST_OF_WAYPOINT_IDS[2]} |
     And API Event - Operator verify that event is published with the following details:
-      | event            | PULL_OUT_OF_ROUTE      |
-      | orderId          | {KEY_CREATED_ORDER_ID} |
-      | routeEventSource | ZONAL_ROUTING_REMOVE   |
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
+      | event            | PULL_OUT_OF_ROUTE                 |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
+      | routeEventSource | ZONAL_ROUTING_REMOVE              |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                 |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
+      | routeEventSource | ZONAL_ROUTING_REMOVE              |
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
     Then Deleted route is not shown on his list routes
+      | routeId  | {KEY_CREATED_ROUTE_ID} |
+      | driverId | {driver-id}            |
     Examples:
-      | Note     | hiptest-uid                              | route_type | transaction_type | service_type | service_level | parcel_job_is_pickup_required |
-      | Pickup   | uid:6512cf1c-ae48-408f-9815-444cc6357935 | PP         | PICKUP           | Return       | Standard      | true                          |
-      | Delivery | uid:e806f2f4-a939-4e3d-89f0-0363d439880e | DD         | DELIVERY         | Parcel       | Standard      | false                         |
+      | Note     | route_type | transaction_type | service_type | service_level | parcel_job_is_pickup_required |
+      | Pickup   | PP         | PICKUP           | Return       | Standard      | true                          |
+      | Delivery | DD         | DELIVERY         | Parcel       | Standard      | false                         |
 
   @route-delete @routing-refactor @MediumPriority
-  Scenario Outline: Operator Delete Driver Route Successfully - Single Empty Route
-    When API Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
-    When Operator delete driver route with status code 200
-    Then DB Route - verify route_logs record:
-      | legacyId  | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
-      | deletedAt | not null                          |
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
-    Then Deleted route is not shown on his list routes
-    Examples:
-      | Note | hiptest-uid                              |
-      |      | uid:24bdb220-fac4-4791-81d1-65ce3bcf2061 |
-
-  @route-delete @MediumPriority
-  Scenario Outline: Operator Delete Driver Route Successfully - Multiple Routes
-    When Operator create an empty route
-      | driver_id  | {driver-id}      |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    When Operator create an empty route
-      | driver_id  | {driver-id}      |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    When Operator delete multiple driver routes
-    Then DB Route - verify route_logs record:
-      | legacyId  | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
-      | deletedAt | not null                          |
-    Then DB Route - verify route_logs record:
-      | legacyId  | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
-      | deletedAt | not null                          |
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
-    Then Deleted route is not shown on his list routes
-    Examples:
-      | Note | hiptest-uid                              |
-      |      | uid:991188e0-9c44-421b-b549-5b37d1f386af |
-
-  @route-delete @MediumPriority
-  Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - <Note>
-    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
-    When Shipper create order with parameters below
-      | service_type                  | <service_type>                  |
-      | service_level                 | <service_level>                 |
-      | requested_tracking_number     | <requested_tracking_number>     |
-      | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
-    And Operator Search for Created Pickup for Shipper "{shipper-legacy-id}" with status "Pending"
+  Scenario: Operator Delete Driver Route Successfully - Single Empty Route
     And Operator create an empty route
       | driver_id  | {driver-id}      |
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-    And Operator Route the Reservation Pickup
-    And Operator admin manifest force "<action>" reservation
-    Then Operator delete driver route with status code 500
-    And Operator verify delete route response with proper error message : "Reservation $reservation_id for Shipper $shipper_id has status <action>. Cannot delete route."
-    And DB Operator verifies waypoint status is "<action>"
-    Examples:
-      | Note    | hiptest-uid                              | action  | service_type | service_level | parcel_job_is_pickup_required |
-      | Success | uid:35a3e49a-435a-47ed-92dd-410ada4fad34 | Success | Parcel       | Standard      | true                          |
-      | Fail    | uid:540916c7-68d9-4692-85b3-0097f460cc88 | Fail    | Parcel       | Standard      | true                          |
+    When Operator delete driver route with status code 200
+    Then DB Route - verify route_logs record:
+      | legacyId  | {KEY_CREATED_ROUTE_ID} |
+      | deletedAt | not null               |
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
+    Then Deleted route is not shown on his list routes
+      | routeId  | {KEY_CREATED_ROUTE_ID} |
+      | driverId | {driver-id}            |
 
   @route-delete @MediumPriority
-  Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Delivery Transaction - <Note>
+  Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - Fail
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given API Core - Operator create reservation using data below:
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    And Operator create an empty route
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And API Core - Operator add reservation to route using data below:
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                   |
+    And API Core - Operator force fail waypoint via route manifest:
+      | routeId         | {KEY_CREATED_ROUTE_ID}                           |
+      | waypointId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | failureReasonId | {failure-reason-id}                              |
+    Then Operator delete driver route with status code 500
+    And Operator verify delete route response with proper error message : "Reservation {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} for Shipper {KEY_LIST_OF_CREATED_RESERVATIONS[1].legacyShipperId} has status <action>. Cannot delete route."
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | status   | <action>                                         |
+    Examples:
+      | Note | action | service_type | service_level | parcel_job_is_pickup_required |
+      | Fail | Fail   | Parcel       | Standard      | true                          |
+
+  @route-delete @MediumPriority
+  Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - Success
+    Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
+    Given API Core - Operator create reservation using data below:
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+    And Operator create an empty route
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And API Core - Operator add reservation to route using data below:
+      | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
+      | routeId       | {KEY_CREATED_ROUTE_ID}                   |
+    And API Core - Operator force success waypoint via route manifest:
+      | routeId    | {KEY_CREATED_ROUTE_ID}                           |
+      | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+    Then Operator delete driver route with status code 500
+    And Operator verify delete route response with proper error message : "Reservation {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} for Shipper {KEY_LIST_OF_CREATED_RESERVATIONS[1].legacyShipperId} has status <action>. Cannot delete route."
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
+      | status   | <action>                                         |
+    Examples:
+      | Note    | action  | service_type | service_level | parcel_job_is_pickup_required |
+      | Success | Success | Parcel       | Standard      | true                          |
+
+  @route-delete @MediumPriority
+  Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Delivery Transaction - <Status>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -182,17 +222,23 @@ Feature: Delete Route
     And Operator force "<terminal_state>" "DELIVERY" waypoint
     And Operator search for "DELIVERY" transaction with status "<terminal_state>"
     When Operator delete driver route with status code 500
-    And Operator verify delete route response with proper error message : "Delivery for Order $order_id has already been attempted. Cannot delete route."
-    Then DB Operator verifies transaction routed to new route id
-    And DB Operator verifies waypoint status is "<terminal_state>"
+    And Operator verify delete route response with proper error message : "Delivery for Order {KEY_CREATED_ORDER_ID} has already been attempted. Cannot delete route."
+    And DB Core - verify transactions record:
+      | id      | {KEY_TRANSACTION_ID}   |
+      | routeId | {KEY_CREATED_ROUTE_ID} |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID}      |
+      | routeId  | {KEY_CREATED_ROUTE_ID} |
+      | seqNo    | not null               |
+      | status   | <Status>               |
 
     Examples:
-      | Note    | hiptest-uid                              | terminal_state | service_type | service_level | parcel_job_is_pickup_required |
-      | Success | uid:adeef437-d902-453a-8da1-e6962f9454a2 | SUCCESS        | Parcel       | Standard      | false                         |
-      | Fail    | uid:8dc735c2-de57-4caf-b0f6-e407cc287753 | FAIL           | Parcel       | Standard      | false                         |
+      | Status  | terminal_state | service_type | service_level | parcel_job_is_pickup_required |
+      | Success | SUCCESS        | Parcel       | Standard      | false                         |
+      | Fail    | FAIL           | Parcel       | Standard      | false                         |
 
   @route-delete @MediumPriority
-  Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Pickup Transaction - <Note>
+  Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Pickup Transaction - <Status>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -209,11 +255,17 @@ Feature: Delete Route
     And Operator force "<terminal_state>" "PICKUP" waypoint
     And Operator search for "PICKUP" transaction with status "<terminal_state>"
     When Operator delete driver route with status code 500
-    Then Operator verify delete route response with proper error message : "Pickup for Order $order_id has already been attempted. Cannot delete route."
-    Then DB Operator verifies transaction routed to new route id
-    And DB Operator verifies waypoint status is "<terminal_state>"
+    Then Operator verify delete route response with proper error message : "Pickup for Order {KEY_CREATED_ORDER_ID} has already been attempted. Cannot delete route."
+    And DB Core - verify transactions record:
+      | id      | {KEY_TRANSACTION_ID}   |
+      | routeId | {KEY_CREATED_ROUTE_ID} |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID}      |
+      | routeId  | {KEY_CREATED_ROUTE_ID} |
+      | seqNo    | not null               |
+      | status   | <Status>               |
 
     Examples:
-      | Note    | hiptest-uid                              | terminal_state | service_type | service_level | parcel_job_is_pickup_required |
-      | Success | uid:94d33396-3638-4e91-bb8b-92be0adc9bfc | SUCCESS        | Return       | Standard      | true                          |
-      | Fail    | uid:bdd977cd-adec-4e56-9604-7fb178c66e64 | FAIL           | Return       | Standard      | true                          |
+      | Status  | terminal_state | service_type | service_level | parcel_job_is_pickup_required |
+      | Success | SUCCESS        | Return       | Standard      | true                          |
+      | Fail    | FAIL           | Return       | Standard      | true                          |

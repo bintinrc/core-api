@@ -1,4 +1,4 @@
-@ForceSuccessOrder  @routing1 @order-tag-to-dp @routing-refactor
+@ForceSuccessOrders  @routing1 @order-tag-to-dp @routing-refactor
 Feature: Order Tag to DP
 
   @happy-path @HighPriority

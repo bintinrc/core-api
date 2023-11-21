@@ -1,4 +1,4 @@
-@ForceSuccessOrder @ArchiveDriverRoutes  @cancel-order @/2.2/orders/:trackingNumber
+@ForceSuccessOrders @ArchiveDriverRoutes  @cancel-order @/2.2/orders/:trackingNumber
 Feature: Cancel DELETE /2.2/orders/:trackingNumber
 
   @MediumPriority
@@ -12,7 +12,6 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | is_staged                     | true     |
     And Operator verify that order status-granular status is "Staging"-"Staging"
     And Operator search for created order
-    And DB Operator gets async handle of an order from its Tracking ID
     When API Operator cancel order with DELETE /2.2/orders/:trackingNumber
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And API Event - Operator verify that event is published with the following details:
@@ -23,16 +22,22 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | orderId            | {KEY_CREATED_ORDER_ID} |
       | updateStatusReason | CANCEL                 |
     And Operator verify that order comment is appended with cancel reason = "cancellation reason : api cancellation request"
-    When API Operator get order details
-    And API Operator verify Pickup transaction of the created order using data below:
-      | status   | CANCELLED                                      |
+    And DB Core - verify transactions record:
+      | id       | {KEY_CREATED_ORDER.transactions[1].id}         |
+      | status   | Cancelled                                      |
       | comments | Cancellation reason : API CANCELLATION REQUEST |
-    And DB Operator verifies waypoint status is "PENDING"
-    And API Operator verify Delivery transaction of the created order using data below:
-      | status   | CANCELLED                                      |
+      | type     | PP                                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
+      | status   | Pending                                        |
+    And DB Core - verify transactions record:
+      | id       | {KEY_CREATED_ORDER.transactions[2].id}         |
+      | status   | Cancelled                                      |
       | comments | Cancellation reason : API CANCELLATION REQUEST |
-    And DB Operator verifies waypoint status is "PENDING"
-    And DB Operator verify Jaro Scores of the created order after cancel
+      | type     | DD                                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_CREATED_ORDER.transactions[2].waypointId} |
+      | status   | Pending                                        |
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
@@ -45,9 +50,7 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator search for created order
-    And DB Operator gets async handle of an order from its Tracking ID
     When API Operator cancel order with DELETE /2.2/orders/:trackingNumber
-    And API Operator get order details
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And API Event - Operator verify that event is published with the following details:
       | event   | CANCEL                 |
@@ -57,16 +60,22 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | orderId            | {KEY_CREATED_ORDER_ID} |
       | updateStatusReason | CANCEL                 |
     And Operator verify that order comment is appended with cancel reason = "Cancellation reason : api cancellation request"
-    When API Operator get order details
-    And API Operator verify Pickup transaction of the created order using data below:
-      | status   | CANCELLED                                      |
+    And DB Core - verify transactions record:
+      | id       | {KEY_CREATED_ORDER.transactions[1].id}         |
+      | status   | Cancelled                                      |
       | comments | Cancellation reason : API CANCELLATION REQUEST |
-    And DB Operator verifies waypoint status is "PENDING"
-    And API Operator verify Delivery transaction of the created order using data below:
-      | status   | CANCELLED                                      |
+      | type     | PP                                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
+      | status   | Pending                                        |
+    And DB Core - verify transactions record:
+      | id       | {KEY_CREATED_ORDER.transactions[2].id}         |
+      | status   | Cancelled                                      |
       | comments | Cancellation reason : API CANCELLATION REQUEST |
-    And DB Operator verifies waypoint status is "PENDING"
-    And DB Operator verify Jaro Scores of the created order after cancel
+      | type     | DD                                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_CREATED_ORDER.transactions[2].waypointId} |
+      | status   | Pending                                        |
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
@@ -79,18 +88,19 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator search for created order
-    And API Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
-    And API Operator add parcel to the route using data below:
-      | addParcelToRouteRequest | { "type":"PP" } |
-    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
-    And API Operator add parcel to the route using data below:
-      | addParcelToRouteRequest | { "type":"DD" } |
-    And API Driver - Driver start route "{KEY_LIST_OF_CREATED_ROUTES[1].id}"
+    And Operator create an empty route
+      | driver_id  | {driver-id}      |
+      | hub_id     | {sorting-hub-id} |
+      | vehicle_id | {vehicle-id}     |
+      | zone_id    | {zone-id}        |
+    And API Core - Operator add parcel to the route using data below:
+      | addParcelToRouteRequest | {"route_id":{KEY_CREATED_ROUTE_ID},"type":"PICKUP"} |
+      | orderId                 | {KEY_CREATED_ORDER.id}                              |
+    And API Core - Operator update order granular status:
+      | orderId        | {KEY_CREATED_ORDER.id} |
+      | granularStatus | Van En-route to Pickup |
     Then Operator verify that order status-granular status is "Transit"-"Van_Enroute_To_Pickup"
-    And DB Operator gets async handle of an order from its Tracking ID
     When API Operator cancel order with DELETE /2.2/orders/:trackingNumber
-    And API Operator get order details
     And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And API Event - Operator verify that event is published with the following details:
       | event   | CANCEL                 |
@@ -100,28 +110,34 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | orderId            | {KEY_CREATED_ORDER_ID} |
       | updateStatusReason | CANCEL                 |
     And Operator verify that order comment is appended with cancel reason = "cancellation reason : api cancellation request"
-    When API Operator get order details
-    And API Operator verify Pickup transaction of the created order using data below:
-      | status   | CANCELLED                                      |
+    And DB Core - verify transactions record:
+      | id       | {KEY_CREATED_ORDER.transactions[1].id}         |
+      | status   | Cancelled                                      |
       | comments | Cancellation reason : API CANCELLATION REQUEST |
-    And DB Operator verifies transaction route id is null
-    And DB Operator verifies waypoint status is "PENDING"
-    And DB Operator verifies waypoints.route_id & seq_no is NULL
-
-    And DB Operator verifies route_monitoring_data is hard-deleted
+      | type     | PP                                             |
+      | routeId  | null                                           |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
+      | status   | Pending                                        |
+      | routeId  | null                                           |
+      | seqNo    | null                                           |
+    And DB Core - verify route_monitoring_data is hard-deleted:
+      | {KEY_CREATED_ORDER.transactions[1].waypointId} |
+    And DB Core - verify transactions record:
+      | id       | {KEY_CREATED_ORDER.transactions[2].id}         |
+      | status   | Cancelled                                      |
+      | comments | Cancellation reason : API CANCELLATION REQUEST |
+      | type     | DD                                             |
+      | routeId  | null                                           |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_CREATED_ORDER.transactions[2].waypointId} |
+      | status   | Pending                                        |
+      | routeId  | null                                           |
+      | seqNo    | null                                           |
     And API Event - Operator verify that event is published with the following details:
       | event            | PULL_OUT_OF_ROUTE      |
       | orderId          | {KEY_CREATED_ORDER_ID} |
       | routeEventSource | REMOVE_BY_ORDER_CANCEL |
-    And API Operator verify Delivery transaction of the created order using data below:
-      | status   | CANCELLED                                      |
-      | comments | Cancellation reason : API CANCELLATION REQUEST |
-    And DB Operator verifies transaction route id is null
-    And DB Operator verifies waypoint status is "PENDING"
-    And DB Operator verifies waypoints.route_id & seq_no is NULL
-
-    And DB Operator verifies route_monitoring_data is hard-deleted
-    And DB Operator verify Jaro Scores of the created order after cancel
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
 
@@ -139,15 +155,12 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | hub_id     | {sorting-hub-id} |
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
-
-    And Operator add order to driver "PP" route
+    And API Core - Operator add parcel to the route using data below:
+      | addParcelToRouteRequest | {"route_id":{KEY_CREATED_ROUTE_ID},"type":"PICKUP"} |
+      | orderId                 | {KEY_CREATED_ORDER.id}                              |
     And Operator force "FAIL" "PICKUP" waypoint
-    And API Operator add parcel to the route using data below:
-      | addParcelToRouteRequest | { "type":"DD" } |
     Then Operator verify that order status-granular status is "Pickup_Fail"-"Pickup_Fail"
-    And DB Operator gets async handle of an order from its Tracking ID
     When API Operator cancel order with DELETE /2.2/orders/:trackingNumber
-    And API Operator get order details
     Then Operator verify that order status-granular status is "Cancelled"-"Cancelled"
     And API Event - Operator verify that event is published with the following details:
       | event   | CANCEL                 |
@@ -157,27 +170,32 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | orderId            | {KEY_CREATED_ORDER_ID} |
       | updateStatusReason | CANCEL                 |
     And Operator verify that order comment is appended with cancel reason = "cancellation reason : api cancellation request"
-    When API Operator get order details
-    And API Operator verify Pickup transaction of the created order using data below:
-      | status | FAIL |
-    And DB Operator verifies transaction routed to new route id
-    And DB Operator verifies waypoint status is "FAIL"
-    And DB Operator verifies waypoints.route_id & seq_no is populated correctly
-
-    And DB Operator verifies route_monitoring_data record
-    And API Operator verify Delivery transaction of the created order using data below:
-      | status   | CANCELLED                                      |
+    And DB Core - verify transactions record:
+      | id      | {KEY_CREATED_ORDER.transactions[1].id} |
+      | status  | Fail                                   |
+      | type    | PP                                     |
+      | routeId | {KEY_CREATED_ROUTE_ID}                 |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
+      | status   | Fail                                           |
+      | routeId  | {KEY_CREATED_ROUTE_ID}                         |
+      | seqNo    | not null                                       |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
+      | routeId    | {KEY_CREATED_ROUTE_ID}                         |
+    And DB Core - verify transactions record:
+      | id       | {KEY_CREATED_ORDER.transactions[2].id}         |
+      | status   | Cancelled                                      |
       | comments | Cancellation reason : API CANCELLATION REQUEST |
-    And DB Operator verifies transaction route id is null
-    And DB Operator verifies waypoint status is "PENDING"
-    And DB Operator verifies waypoints.route_id & seq_no is NULL
-
-    And DB Operator verifies route_monitoring_data is hard-deleted
+      | type     | DD                                             |
+      | routeId  | null                                           |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_CREATED_ORDER.transactions[2].waypointId} |
+      | status   | Pending                                        |
+      | routeId  | null                                           |
+      | seqNo    | null                                           |
     And Shipper gets webhook request for event "Cancelled"
     And Shipper verifies webhook request payload has correct details for status "Cancelled"
-    And DB Operator verify Jaro Scores record
-      | waypointId        | archived | status  |
-      | {KEY_WAYPOINT_ID} | 1        | Pending |
 
   @MediumPriority
   Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Returned to Sender
@@ -188,11 +206,11 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
     And Operator perform global inbound at hub "{sorting-hub-id}"
-    And API Operator RTS created order:
-      | rtsRequest | {"reason":"Return to sender: Nobody at address","timewindow_id":1,"date":"{gradle-next-1-day-yyyy-MM-dd}"} |
+    And API Core - Operator rts order:
+      | orderId    | {KEY_CREATED_ORDER.id}                                                                                          |
+      | rtsRequest | { "reason": "Return to sender: Nobody at address", "timewindow_id":1, "date":"{date: 1 days next, yyyy-MM-dd}"} |
     And Operator force success order
     Then Operator verify that order status-granular status is "Completed"-"Returned_to_Sender"
-    And DB Operator gets async handle of an order from its Tracking ID
     When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103093                       |
@@ -212,7 +230,6 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Operator search for created order
     And Operator force success order
     Then Operator verify that order status-granular status is "Completed"-"Completed"
-    And DB Operator gets async handle of an order from its Tracking ID
     When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103093                |
@@ -230,9 +247,8 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And API Operator cancel created order
+    And API Core - cancel order "{KEY_CREATED_ORDER.id}"
     Then Operator verify that order status-granular status is "Cancelled"-"Cancelled"
-    And DB Operator gets async handle of an order from its Tracking ID
     When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
     Then Operator verify response code is 400 with error message details as follow
       | code        | 103098                     |
@@ -249,17 +265,10 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
     And Operator search for created order
-    And Operator perform global inbound at hub "{sorting-hub-id}"
-    And API Operator assign delivery waypoint of an order to DP Include Today with ID = "{dpms-id}"
-    And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
-    And Operator add order to driver "DD" route
-    And Operator force "SUCCESS" "DELIVERY" waypoint
+    And API Core - Operator update order granular status:
+      | orderId        | {KEY_CREATED_ORDER.id}        |
+      | granularStatus | Arrived at Distribution Point |
     Then Operator verify that order status-granular status is "Transit"-"Arrived_at_Distribution_Point"
-    And DB Operator gets async handle of an order from its Tracking ID
     When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103093                                  |
@@ -279,7 +288,6 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
     And Operator search for created order
     And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator verify that order status-granular status is "Transit"-"Arrived_at_Sorting_Hub"
-    And DB Operator gets async handle of an order from its Tracking ID
     When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103093                           |
@@ -297,9 +305,10 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator search for created order
-    And API Operator update order granular status to = "En-route to Sorting Hub"
+    And API Core - Operator update order granular status:
+      | orderId        | {KEY_CREATED_ORDER.id}  |
+      | granularStatus | En-route to Sorting Hub |
     And Operator verify that order status-granular status is "Transit"-"Enroute_to_Sorting_Hub"
-    And DB Operator gets async handle of an order from its Tracking ID
     When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103093                            |
@@ -317,9 +326,10 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator search for created order
-    And API Operator update order granular status to = "On Vehicle for Delivery"
+    And API Core - Operator update order granular status:
+      | orderId        | {KEY_CREATED_ORDER.id}  |
+      | granularStatus | On Vehicle for Delivery |
     And Operator verify that order status-granular status is "Transit"-"On_Vehicle_for_Delivery"
-    And DB Operator gets async handle of an order from its Tracking ID
     When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103093                            |
@@ -337,9 +347,10 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator search for created order
-    And API Operator update order granular status to = "On Hold"
+    And API Core - Operator update order granular status:
+      | orderId        | {KEY_CREATED_ORDER.id} |
+      | granularStatus | On Hold                |
     And Operator verify that order status-granular status is "On_Hold"-"On_Hold"
-    And DB Operator gets async handle of an order from its Tracking ID
     When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103093                |
@@ -357,9 +368,10 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
     And Operator search for created order
-    And API Operator update order granular status to = "Transferred to 3PL"
+    And API Core - Operator update order granular status:
+      | orderId        | {KEY_CREATED_ORDER.id} |
+      | granularStatus | Transferred to 3PL     |
     And Operator verify that order status-granular status is "Transit"-"Transferred_to_3PL"
-    And DB Operator gets async handle of an order from its Tracking ID
     When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
     Then Operator verify response code is 500 with error message details as follow
       | code        | 103093                       |

@@ -1,4 +1,4 @@
-@ForceSuccessOrder @route-v2 @route-archive
+@ForceSuccessOrders @route-v2 @route-archive
 Feature: Archive Route
 
   @route-archive @HighPriority
@@ -16,8 +16,10 @@ Feature: Archive Route
       | hubId    | {sorting-hub-id}       |
       | zoneId   | {zone-id}              |
       | driverId | {driver-id}            |
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
-    Then Archived route is not shown on his list routes
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
+    Then Deleted route is not shown on his list routes
+      | routeId  | {KEY_CREATED_ROUTE_ID} |
+      | driverId | {driver-id}            |
 
   @route-archive @happy-path @HighPriority
   Scenario: Operator Archive Driver Route Successfully - Status = PENDING
@@ -42,8 +44,10 @@ Feature: Archive Route
       | hubId    | {sorting-hub-id}       |
       | zoneId   | {zone-id}              |
       | driverId | {driver-id}            |
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
-    Then Archived route is not shown on his list routes
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
+    Then Deleted route is not shown on his list routes
+      | routeId  | {KEY_CREATED_ROUTE_ID} |
+      | driverId | {driver-id}            |
 
   @route-archive @HighPriority
   Scenario: Operator Archive Driver Route Successfully - Status = IN_PROGRESS
@@ -59,8 +63,8 @@ Feature: Archive Route
       | vehicle_id | {vehicle-id}     |
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
-    And Driver Starts the route
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
+    And API Driver - Driver start route "{KEY_CREATED_ROUTE_ID}"
     When API Core - Operator archives routes below:
       | {KEY_CREATED_ROUTE_ID} |
     Then DB Route - verify route_logs record:
@@ -69,8 +73,9 @@ Feature: Archive Route
       | hubId    | {sorting-hub-id}       |
       | zoneId   | {zone-id}              |
       | driverId | {driver-id}            |
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
-    And Archived route is not shown on his list routes
+    Then Deleted route is not shown on his list routes
+      | routeId  | {KEY_CREATED_ROUTE_ID} |
+      | driverId | {driver-id}            |
 
   @route-archive @MediumPriority
   Scenario: Operator not Allowed to Archive an already Archived Route
@@ -94,8 +99,10 @@ Feature: Archive Route
       | hubId    | {sorting-hub-id}       |
       | zoneId   | {zone-id}              |
       | driverId | {driver-id}            |
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
-    Then Archived route is not shown on his list routes
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
+    Then Deleted route is not shown on his list routes
+      | routeId  | {KEY_CREATED_ROUTE_ID} |
+      | driverId | {driver-id}            |
     When API Core - Operator archives routes below:
       | {KEY_CREATED_ROUTE_ID} |
     Then DB Route - verify route_logs record:
@@ -104,8 +111,10 @@ Feature: Archive Route
       | hubId    | {sorting-hub-id}       |
       | zoneId   | {zone-id}              |
       | driverId | {driver-id}            |
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
-    Then Archived route is not shown on his list routes
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
+    Then Deleted route is not shown on his list routes
+      | routeId  | {KEY_CREATED_ROUTE_ID} |
+      | driverId | {driver-id}            |
 
   @route-archive @route-delete @MediumPriority
   Scenario: Operator not Allowed to Archive Driver Invalid Route Id - Deleted Route

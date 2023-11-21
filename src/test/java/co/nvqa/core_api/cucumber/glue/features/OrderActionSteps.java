@@ -1,27 +1,29 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
+import co.nvqa.common.constants.HttpConstants;
+import co.nvqa.common.core.client.OrderClient;
+import co.nvqa.common.core.model.event.Event;
+import co.nvqa.common.core.model.event.EventDetail;
+import co.nvqa.common.core.model.order.Order;
+import co.nvqa.common.core.model.order.Order.Dimension;
+import co.nvqa.common.core.model.order.Order.Transaction;
+import co.nvqa.common.core.model.order.RtsOrderRequest;
+import co.nvqa.common.core.model.other.CoreExceptionResponse.Error;
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
-import co.nvqa.commons.constants.HttpConstants;
-import co.nvqa.commons.model.core.Dimension;
-import co.nvqa.commons.model.core.Order;
-import co.nvqa.commons.model.core.Rts;
-import co.nvqa.commons.model.core.Transaction;
-import co.nvqa.commons.model.core.event.Event;
-import co.nvqa.commons.model.core.event.EventDetail;
-import co.nvqa.commons.model.other.ExceptionResponse;
-import co.nvqa.commons.util.NvTestRuntimeException;
+import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import io.cucumber.guice.ScenarioScoped;
+import io.cucumber.java.After;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.slf4j.Logger;
@@ -38,6 +40,9 @@ public class OrderActionSteps extends BaseSteps {
   private static final String ACTION_SUCCESS = "success";
   private static final String ACTION_FAIL = "fail";
 
+  @Inject
+  private OrderClient orderClient;
+
   @Override
   public void init() {
   }
@@ -45,7 +50,7 @@ public class OrderActionSteps extends BaseSteps {
   @Then("Operator search for created order")
   public void operatorSearchOrderByTrackingId() {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       LOGGER.info(
           f("retrieve created order details from core orders for tracking id %s", trackingId));
       Order order = getOrderDetails(trackingId);
@@ -77,7 +82,7 @@ public class OrderActionSteps extends BaseSteps {
   @Then("Operator search for {string} transaction with status {string} and tracking id {string}")
   public void operatorSearchTransaction(String type, String status, String tid) {
     String trackingId = resolveValue(tid);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       Order order = getOrderDetails(trackingId);
       put(KEY_CREATED_ORDER, order);
       put(KEY_CREATED_ORDER_ID, order.getId());
@@ -112,7 +117,6 @@ public class OrderActionSteps extends BaseSteps {
       operatorSearchTransaction(type, status);
     });
     List<Long> waypointIds = get(KEY_LIST_OF_WAYPOINT_IDS);
-    put(KEY_LIST_OF_WAYPOINTS_SEQUENCE, waypointIds);
   }
 
   @Then("Operator verify all {string} transactions status is {string}")
@@ -151,7 +155,7 @@ public class OrderActionSteps extends BaseSteps {
     Map<String, String> expectedData = resolveKeyValues(mapOfData);
     Long orderId = Long.valueOf(expectedData.get("orderId"));
     String event = expectedData.get("event");
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       List<Event> result = getOrderEvent(event, orderId);
       if (result.isEmpty()) {
         throw new NvTestRuntimeException(
@@ -169,7 +173,7 @@ public class OrderActionSteps extends BaseSteps {
   @Then("Operator checks that {string} event is NOT published")
   public void operatorVerifiesOrderEventNotPublished(String event) {
     long orderId = get(KEY_CREATED_ORDER_ID);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       List<Event> result = getOrderEvent(event, orderId);
       Assertions.assertThat(result.isEmpty()).as(String.format("%s event is NOT published", event))
           .isTrue();
@@ -243,7 +247,7 @@ public class OrderActionSteps extends BaseSteps {
   public void operatorVerifiesOrderStatus(String status, String granularStatus) {
     operatorSearchOrderByTrackingId();
     final Order o = get(KEY_CREATED_ORDER);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       operatorSearchOrderByTrackingId();
       Order order = get(KEY_CREATED_ORDER);
       Assertions.assertThat(order.getStatus())
@@ -259,7 +263,7 @@ public class OrderActionSteps extends BaseSteps {
   public void operatorVerifiesOrderComment(String comment) {
     operatorSearchOrderByTrackingId();
     final Order o = get(KEY_CREATED_ORDER);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       operatorSearchOrderByTrackingId();
       Order order = get(KEY_CREATED_ORDER);
       Assertions.assertThat(StringUtils.lowerCase(order.getComments())).as("order comment")
@@ -316,7 +320,7 @@ public class OrderActionSteps extends BaseSteps {
   @When("Operator force success order")
   public void operatorForceSuccessOrder() {
     long orderId = get(KEY_CREATED_ORDER_ID);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       getOrderClient().forceSuccess(orderId);
       LOGGER.info(f("order id %d force successed", orderId));
     }, "force success order");
@@ -336,11 +340,11 @@ public class OrderActionSteps extends BaseSteps {
     operatorSearchTransaction(type, Transaction.STATUS_PENDING);
     long waypointId = get(KEY_WAYPOINT_ID);
     long routeId = get(KEY_CREATED_ROUTE_ID);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       if (action.equalsIgnoreCase(ACTION_FAIL)) {
-        getOrderClient().forceFailWaypoint(routeId, waypointId, TestConstants.FAILURE_REASON_ID);
+        getRouteClient().forceFailWaypoint(routeId, waypointId, TestConstants.FAILURE_REASON_ID);
       } else {
-        getOrderClient().forceSuccessWaypoint(routeId, waypointId);
+        getRouteClient().forceSuccessWaypoint(routeId, waypointId);
       }
       LOGGER.info(f("waypoint id %d forced %s", waypointId, action));
     }, String.format("admin force finish %s", action));
@@ -352,12 +356,12 @@ public class OrderActionSteps extends BaseSteps {
     long waypointId = get(KEY_WAYPOINT_ID);
     long routeId = get(KEY_CREATED_ROUTE_ID);
     List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       if (Boolean.valueOf(codCollected)) {
-        getOrderClient().forceSuccessWaypointWithCodCollected(routeId, waypointId, orderIds);
+        getRouteClient().forceSuccessWaypointWithCodCollected(routeId, waypointId, orderIds);
       } else {
         List<Long> emptyOrderId = new ArrayList<>();
-        getOrderClient().forceSuccessWaypointWithCodCollected(routeId, waypointId, emptyOrderId);
+        getRouteClient().forceSuccessWaypointWithCodCollected(routeId, waypointId, emptyOrderId);
       }
       LOGGER.info(f("waypoint id %d forced success with cod", waypointId));
     }, "admin force finish success with cod");
@@ -394,16 +398,16 @@ public class OrderActionSteps extends BaseSteps {
   @When("Operator RTS invalid state Order")
   public void operatorRtsInvalidState(Map<String, String> request) {
     final Long orderId = get(KEY_CREATED_ORDER_ID);
-    final Rts rtsRequest = fromJsonSnakeCase(request.get("request"), Rts.class);
-    rtsRequest.setOrderId(orderId);
-    Response r = getOrderClient().setReturnedToSenderAndGetRawResponse(rtsRequest);
+    final RtsOrderRequest rtsRequest = fromJsonSnakeCase(request.get("request"),
+        RtsOrderRequest.class);
+    Response r = getOrderClient().setReturnedToSenderAndGetRawResponse(orderId, rtsRequest);
     put(KEY_API_RAW_RESPONSE, r);
   }
 
   @When("Operator force success invalid state Order")
   public void operatorForceSuccessInvalidState() {
     final Long orderId = get(KEY_CREATED_ORDER_ID);
-    Response r = getOrderClient().forceSuccessAndGetRawResponse(orderId, false);
+    Response r = getOrderClient().forceSuccessAsRawResponse(orderId, false);
     put(KEY_API_RAW_RESPONSE, r);
   }
 
@@ -427,16 +431,16 @@ public class OrderActionSteps extends BaseSteps {
   @When("Operator verify response code is {int} with error message details as follow")
   public void operatorVerifyResponseWithParams(int expectedHttpStatus, Map<String, String> params) {
     Map<String, String> expectedData = resolveKeyValues(params);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       Response response = get(KEY_API_RAW_RESPONSE);
       Assertions.assertThat(response.getStatusCode()).as("Http response code")
           .isEqualTo(expectedHttpStatus);
 
       String json = toJsonSnakeCase(expectedData);
-      ExceptionResponse expectedError = fromJsonSnakeCase(json, ExceptionResponse.class);
-      ExceptionResponse actualError;
+      Error expectedError = fromJsonSnakeCase(json, Error.class);
+      Error actualError;
       try {
-        actualError = fromJsonSnakeCase(response.body().asString(), ExceptionResponse.class);
+        actualError = fromJsonSnakeCase(response.body().asString(), Error.class);
       } catch (Exception e) {
         LOGGER.error("JSON error: " + e.getMessage());
         throw new RuntimeException("response is not valid JSON");
@@ -456,7 +460,7 @@ public class OrderActionSteps extends BaseSteps {
   @When("Operator verify response code is {int} with error message {string}")
   public void operatorVerifyResponseWithParams(int expectedHttpStatus, String message) {
     String errorMessage = resolveValue(message);
-    callWithRetry(() -> {
+    doWithRetry(() -> {
       Response response = get(KEY_API_RAW_RESPONSE);
       Assertions.assertThat(response.getStatusCode()).as("Http response code")
           .isEqualTo(expectedHttpStatus);
@@ -469,9 +473,9 @@ public class OrderActionSteps extends BaseSteps {
   public void operatorTagsOrder(Long tagId) {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     List<Long> tagIds = List.of(tagId);
-    callWithRetry(() -> {
-      long orderId = searchOrder(trackingId).getId();
-      getOrderClientV2().addOrderLevelTags(orderId, tagIds);
+    doWithRetry(() -> {
+      long orderId = getOrderDetails(trackingId).getId();
+      getOrderClient().addOrderLevelTags(orderId, tagIds);
       put(KEY_LIST_OF_ORDER_TAG_IDS, tagIds);
       putInList(KEY_LIST_OF_PRIOR_TRACKING_IDS, trackingId);
     }, f("tag an order: %s", trackingId));
@@ -496,22 +500,30 @@ public class OrderActionSteps extends BaseSteps {
     }
     put(CoreScenarioStorageKeys.KEY_SAVED_ORDER_WEIGHT, dimension.getWeight());
     put(KEY_DIMENSION_CHANGES_REQUEST, dimension);
-    callWithRetry(() -> getOrderClient().updateParcelDimensions(orderId, dimension),
+    doWithRetry(() -> getOrderClient().updateParcelDimensions(orderId, dimension),
         "update order dimension");
   }
 
-  private Order searchOrder(String trackingIdOrStampId) {
-    return getOrderSearchClient().searchOrderByTrackingId(trackingIdOrStampId);
+  @After("@ForceSuccessOrders")
+  public void cleanOrders() {
+    final List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
+    try {
+      if (orderIds != null) {
+        orderIds.forEach(e -> getOrderClient().forceSuccess(e));
+      }
+    } catch (Throwable t) {
+      LOGGER.warn("Failed to force success order(s)");
+    }
   }
 
-  private Order getOrderDetails(String trackingId) {
-    long orderId = searchOrder(trackingId).getId();
-    Order order = getOrderClient().getOrder(orderId);
-    Assertions.assertThat(order).as("order details").isNotNull();
-    return order;
+
+  @Override
+  protected Order getOrderDetails(String trackingId) {
+    return orderClient.searchOrderByTrackingId(trackingId);
   }
 
-  private Transaction getTransaction(Order order, String type, String status) {
+  @Override
+  protected Transaction getTransaction(Order order, String type, String status) {
     List<Transaction> transactions = order.getTransactions();
     Transaction result;
     result = transactions.stream().filter(e -> e.getType().equalsIgnoreCase(type))
@@ -526,4 +538,5 @@ public class OrderActionSteps extends BaseSteps {
     return events.stream().filter(c -> c.getType().equalsIgnoreCase(event))
         .collect(Collectors.toList());
   }
+
 }
