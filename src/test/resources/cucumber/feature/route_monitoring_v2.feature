@@ -1,4 +1,4 @@
-@ForceSuccessOrders  @ArchiveDriverRoutes @route-monitoring-v2
+@ForceSuccessOrders @CancelCreatedReservations @ArchiveDriverRoutes @route-monitoring-v2
 Feature: Route Monitoring V2
 
   @rmv2-empty-route @HighPriority
@@ -262,7 +262,6 @@ Feature: Route Monitoring V2
     And Operator verifies total pending priority parcels and other details
       | KEY_TOTAL_EXPECTED_WAYPOINT         | 1 |
       | KEY_TOTAL_EXPECTED_PENDING_PRIORITY | 1 |
-    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
     And API Driver - Driver start route "{KEY_CREATED_ROUTE.id}"
     And Driver submit pod to "<action>" waypoint
@@ -299,7 +298,6 @@ Feature: Route Monitoring V2
     And Operator verifies total pending priority parcels and other details
       | KEY_TOTAL_EXPECTED_WAYPOINT         | 1 |
       | KEY_TOTAL_EXPECTED_PENDING_PRIORITY | 1 |
-    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
     And API Driver - Driver start route "{KEY_CREATED_ROUTE.id}"
     And Driver submit pod to "<action>" waypoint
