@@ -4,10 +4,10 @@ Feature: Route Monitoring V2
   @rmv2-empty-route @HighPriority
   Scenario: Operator Create Empty Route And Verifies Route Monitoring Data
     Given Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data for Empty Route has correct details
       | KEY_TOTAL_EXPECTED_VALID_FAILED | 0 |
@@ -21,10 +21,10 @@ Feature: Route Monitoring V2
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And Operator search for created order
     And Operator add order to driver "<route_type>" route
     When Operator Filter Route Monitoring Data for Today's Date
@@ -49,10 +49,10 @@ Feature: Route Monitoring V2
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     When Shipper create another order with the same parameters as before
     When Shipper create another order with the same parameters as before
     And Operator search for all created orders
@@ -76,10 +76,10 @@ Feature: Route Monitoring V2
     And API Core - Operator create reservation using data below:
       | reservationRequest | {"legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId       | {KEY_CREATED_ROUTE.id}                   |
@@ -108,10 +108,10 @@ Feature: Route Monitoring V2
     And API Core - Operator create reservation using data below:
       | reservationRequest | {"legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[2].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId       | {KEY_CREATED_ROUTE.id}                   |
@@ -141,10 +141,10 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator search for all created orders
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And Operator add all orders to driver "<route_type>" route
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies Route Monitoring Data Has Correct Details for "Pending" Case
@@ -168,10 +168,10 @@ Feature: Route Monitoring V2
     And API Core - Operator create reservation using data below:
       | reservationRequest | {"legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId       | {KEY_CREATED_ROUTE.id}                   |
@@ -222,10 +222,10 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator tags all orders with PRIOR tag
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And Operator search for all created orders
     And Operator add all orders to driver "<route_type>" route
     When Operator Filter Route Monitoring Data for Today's Date
@@ -252,10 +252,10 @@ Feature: Route Monitoring V2
     And Operator tags order with PRIOR tag
     And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And Operator add order to driver "DD" route
     And API Core - Operator get order details for tracking order "KEY_CREATED_ORDER_TRACKING_ID"
     When Operator Filter Route Monitoring Data for Today's Date
@@ -288,10 +288,10 @@ Feature: Route Monitoring V2
     And Operator search for created order
     And Operator tags order with PRIOR tag
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And Operator add order to driver "PP" route
     And API Core - Operator get order details for tracking order "KEY_CREATED_ORDER_TRACKING_ID"
     When Operator Filter Route Monitoring Data for Today's Date
@@ -322,10 +322,10 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator tags order with PRIOR tag
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And Operator add order by tracking id to driver "DD" route
     When Shipper create order with parameters below
       | service_type                  | <service_type>                  |
@@ -361,10 +361,10 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And Operator search for all created orders
     And Operator add all orders to driver "DD" route
     And API Core - Operator get multiple order details for tracking ids:
@@ -401,10 +401,10 @@ Feature: Route Monitoring V2
     And Operator inbounds all orders at hub "{sorting-hub-id}"
     And Operator tags all orders with PRIOR tag
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And Operator search for all created orders
     And Operator add all orders to driver "<route_type>" route
     And API Core - Operator get multiple order details for tracking ids:
@@ -442,10 +442,10 @@ Feature: Route Monitoring V2
     And Operator search for created order
     And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And Operator add order by tracking id to driver "DD" route
     And API Core - Operator get multiple order details for tracking ids:
       | KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1] |
@@ -474,10 +474,10 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator perform global inbound at hub "{sorting-hub-id}"
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And Operator add order by tracking id to driver "DD" route
     Given API Shipper - Operator create new shipper address using data below:
       | shipperId       | {shipper-3-id} |
@@ -505,10 +505,10 @@ Feature: Route Monitoring V2
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And Operator search for all created orders
     And Operator add all orders to driver "PP" route
     And API Core - Operator get multiple order details for tracking ids:
@@ -544,10 +544,10 @@ Feature: Route Monitoring V2
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator tags all orders with PRIOR tag
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And Operator search for all created orders
     And Operator add all orders to driver "<route_type>" route
     And API Core - Operator get multiple order details for tracking ids:
@@ -583,10 +583,10 @@ Feature: Route Monitoring V2
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And Operator search for created order
     And Operator add order to driver "PP" route
     And API Core - Operator get multiple order details for tracking ids:
@@ -615,10 +615,10 @@ Feature: Route Monitoring V2
       | requested_tracking_number     | <requested_tracking_number>     |
       | parcel_job_is_pickup_required | <parcel_job_is_pickup_required> |
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And Operator search for created order
     And Operator add order to driver "PP" route
     Given API Shipper - Operator create new shipper address using data below:
@@ -649,10 +649,10 @@ Feature: Route Monitoring V2
     And API Core - Operator create reservation using data below:
       | reservationRequest | {"legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{date: 1 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}","pickup_end_time":"{date: 1 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId       | {KEY_CREATED_ROUTE.id}                   |
@@ -684,10 +684,10 @@ Feature: Route Monitoring V2
     And API Core - Operator create reservation using data below:
       | reservationRequest | {"legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId       | {KEY_CREATED_ROUTE.id}                   |
@@ -711,10 +711,10 @@ Feature: Route Monitoring V2
     And API Core - Operator create reservation using data below:
       | reservationRequest | {"legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
-      | driver_id  | {driver-2-id}    |
-      | hub_id     | {sorting-hub-id} |
-      | vehicle_id | {vehicle-id}     |
-      | zone_id    | {zone-id}        |
+      | driver_id  | {driver-2-id}      |
+      | hub_id     | {sorting-hub-id-2} |
+      | vehicle_id | {vehicle-id}       |
+      | zone_id    | {zone-id}          |
     And API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId       | {KEY_CREATED_ROUTE.id}                   |
