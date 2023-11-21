@@ -1,7 +1,7 @@
 @ForceSuccessOrders @CancelCreatedReservations @routing1 @route-delete
 Feature: Delete Route
 
-  @route-delete @routing-refactor @happy-path @HighPriority @wip
+  @route-delete @routing-refactor @happy-path @HighPriority
   Scenario Outline: Operator Delete Driver Route Successfully - Single Pending Transaction - <Note>
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     When Shipper create order with parameters below

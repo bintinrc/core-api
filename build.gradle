@@ -58,7 +58,6 @@ project.ext {
     cucumberGluePackage = [
             "co.nvqa.core_api.cucumber.glue",
             "classpath:co.nvqa.common.cucumber.glue",
-            "classpath:co.nvqa.commons.cucumber.glue",
             "classpath:co.nvqa.commonauth.cucumber.glue",
             "classpath:co.nvqa.commonsort.cucumber.glue",
             "classpath:co.nvqa.common.core.cucumber.glue",
