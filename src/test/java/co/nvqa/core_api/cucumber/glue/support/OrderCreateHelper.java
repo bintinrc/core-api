@@ -116,8 +116,7 @@ public class OrderCreateHelper {
           .getDefaultSnakeCaseMapper().readTree(JsonUtils.toJsonSnakeCase(address));
       result.setAddress(addressNode);
     } catch (JsonProcessingException ex) {
-//      throw new JsonProcessingException("failed to parse json object");
-//      ex.printStackTrace();
+      throw new NvTestRuntimeException("failed to parse json object " + ex.getMessage());
     }
     return result;
   }
