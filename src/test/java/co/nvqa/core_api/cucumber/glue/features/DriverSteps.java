@@ -55,7 +55,7 @@ public class DriverSteps extends BaseSteps {
   public void init() {
 
   }
-  
+
   @Given("Deleted route is not shown on his list routes")
   public void driverRouteNotShown(Map<String, String> data) {
     Map<String, String> resolvedData = resolveKeyValues(data);
