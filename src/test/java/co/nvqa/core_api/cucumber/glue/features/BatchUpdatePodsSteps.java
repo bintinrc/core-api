@@ -11,10 +11,8 @@ import co.nvqa.common.core.model.order.Order.Transaction;
 import co.nvqa.common.core.model.pickup.Pickup;
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.common.ordercreate.model.OrderRequestV4;
-import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.common.webhook.model.webhook.WebhookRequest;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
-import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
@@ -326,7 +324,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
           Assertions.assertThat(blobData.getFailureReasonId()).as("failure reason id")
               .isEqualTo(e.getJob().getFailureReasonId());
           Assertions.assertThat(
-              blobData.getFailureReasonTranslations().contains(e.getJob().getFailureReason()))
+                  blobData.getFailureReasonTranslations().contains(e.getJob().getFailureReason()))
               .as("failure reason translations").isTrue();
         }
         if (e.getJob().getType().equalsIgnoreCase("RESERVATION")) {
@@ -336,7 +334,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
                 e.getJob().getFailureReason() + ". " + e.getProofDetails().getComments());
           } else {
             Assertions.assertThat(
-                blobData.getScannedParcels().containsAll(e.getProofDetails().getTrackingIds()))
+                    blobData.getScannedParcels().containsAll(e.getProofDetails().getTrackingIds()))
                 .as("scanned parcels contains scanned tracking ids").isTrue();
             Assertions.assertThat(blobData.getReceivedParcels()).as("received parcels")
                 .isEqualTo(e.getProofDetails().getPickupQuantity());
@@ -361,7 +359,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       String action, String jobMode,
       boolean withCod, boolean allowReschedule) {
 
-    Order order = OrderDetailHelper.getOrderDetails(trackingId);
+    Order order = getOrderDetails(trackingId);
     if (Objects.isNull(order)) {
       LOGGER.info("null order: " + trackingId);
     }
@@ -404,7 +402,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
 
   private Parcel createTransactionOrder(String trackingId,
       String action, String jobMode) {
-    Order order = OrderDetailHelper.getOrderDetails(trackingId);
+    Order order = getOrderDetails(trackingId);
     put(KEY_CREATED_ORDER, order);
     Parcel jobOrder = new Parcel();
     jobOrder.setId(order.getId());
@@ -508,7 +506,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
 
   private Parcel createReservationOrder(String trackingId,
       String action) {
-    Order order = OrderDetailHelper.getOrderDetails(trackingId);
+    Order order = getOrderDetails(trackingId);
     put(KEY_CREATED_ORDER, order);
     Parcel job = new Parcel();
     job.setId(order.getId());
@@ -637,7 +635,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       if (!trackingIds.isEmpty()) {
         result.setPickupQuantity(0);
         trackingIds.forEach(e -> {
-          long orderId = OrderDetailHelper.searchOrder(e).getId();
+          long orderId = searchOrder(e).getId();
           FailedParcels temp = new FailedParcels();
           temp.setFailureReasonId(TestConstants.PICKUP_FAILURE_REASON_ID);
           temp.setFailureReason(TestConstants.PICKUP_FAILURE_REASON);
@@ -669,7 +667,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
 
     List<FailedParcels> failedParcels = new ArrayList<>();
     failedTrackingIds.forEach(e -> {
-      long orderId = OrderDetailHelper.searchOrder(e).getId();
+      long orderId = searchOrder(e).getId();
       FailedParcels temp = new FailedParcels();
       temp.setFailureReasonId(TestConstants.RESERVATION_VALID_FAILURE_REASON_ID);
       temp.setOrderId(orderId);
@@ -708,10 +706,10 @@ public class BatchUpdatePodsSteps extends BaseSteps {
 
   private void getTransactionWaypointId(String transactionType) {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-    Order order = OrderDetailHelper.getOrderDetails(trackingId);
+    Order order = getOrderDetails(trackingId);
     put(KEY_CREATED_ORDER, order);
-    Order.Transaction transaction = OrderDetailHelper
-        .getTransaction(order, transactionType, Transaction.STATUS_PENDING);
+    Order.Transaction transaction =
+        getTransaction(order, transactionType, Transaction.STATUS_PENDING);
     put(KEY_WAYPOINT_ID, transaction.getWaypointId());
   }
 }

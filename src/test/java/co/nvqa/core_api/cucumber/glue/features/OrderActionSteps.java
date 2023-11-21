@@ -516,11 +516,14 @@ public class OrderActionSteps extends BaseSteps {
     }
   }
 
-  private Order getOrderDetails(String trackingId) {
+
+  @Override
+  protected Order getOrderDetails(String trackingId) {
     return orderClient.searchOrderByTrackingId(trackingId);
   }
 
-  private Transaction getTransaction(Order order, String type, String status) {
+  @Override
+  protected Transaction getTransaction(Order order, String type, String status) {
     List<Transaction> transactions = order.getTransactions();
     Transaction result;
     result = transactions.stream().filter(e -> e.getType().equalsIgnoreCase(type))

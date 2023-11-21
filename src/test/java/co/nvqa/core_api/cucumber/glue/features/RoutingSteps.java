@@ -3,7 +3,6 @@ package co.nvqa.core_api.cucumber.glue.features;
 import co.nvqa.common.constants.HttpConstants;
 import co.nvqa.common.core.model.order.Order;
 import co.nvqa.common.core.model.other.CoreExceptionResponse;
-import co.nvqa.common.core.model.pickup.Pickup;
 import co.nvqa.common.core.model.reservation.BulkRouteReservationResponse;
 import co.nvqa.common.core.model.route.AddParcelToRouteRequest;
 import co.nvqa.common.core.model.route.BulkAddPickupJobToRouteResponse;
@@ -13,7 +12,6 @@ import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.common.model.DataEntity;
 import co.nvqa.common.utils.DateUtil;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
-import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.After;
 import io.cucumber.java.en.When;
@@ -157,7 +155,7 @@ public class RoutingSteps extends BaseSteps {
   public void operatorPullOutOfRoute(String type) {
     doWithRetry(() -> {
       final String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-      final Order order = OrderDetailHelper.getOrderDetails(trackingId);
+      final Order order = getOrderDetails(trackingId);
       getRouteClient().pullFromRoute(order.getId(), type.toUpperCase());
       putInList(KEY_LIST_OF_PULL_OUT_OF_ROUTE_TRACKING_ID, trackingId);
     }, "pull out of route");

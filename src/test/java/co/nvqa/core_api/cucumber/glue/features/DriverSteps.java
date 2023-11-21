@@ -18,7 +18,6 @@ import co.nvqa.common.driver.model.rest.SubmitPodRequest.PhysicalItem;
 import co.nvqa.common.utils.DateUtil;
 import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
-import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
@@ -234,9 +233,9 @@ public class DriverSteps extends BaseSteps {
       return;
     }
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-    Order order = OrderDetailHelper.getOrderDetails(trackingId);
-    Transaction transaction = OrderDetailHelper
-        .getTransaction(order, transactionType, STATUS_PENDING);
+    Order order = getOrderDetails(trackingId);
+    Transaction transaction =
+        getTransaction(order, transactionType, STATUS_PENDING);
     put(KEY_WAYPOINT_ID, transaction.getWaypointId());
   }
 
