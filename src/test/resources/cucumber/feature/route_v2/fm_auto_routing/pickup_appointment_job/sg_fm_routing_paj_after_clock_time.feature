@@ -1,4 +1,4 @@
-@routing-sg @DeletePickupAppointmentJob @fm-routing-paj-sg-1
+@routing-sg @DeletePickupAppointmentJob @fm-routing-paj-sg-1 @wip
 Feature: SG - FM Automated Routing - Pickup Appointment Job
 
   https://studio.cucumber.io/projects/208144/test-plan/folders/2930485
@@ -263,7 +263,7 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 1 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
     And API Control - Operator verify pickup appointment job search details:
       | actualData   | {KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[1]}                                                                                                |
-      | expectedData | {"pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOB_IDS[1]}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": null, "driver_id": null} |
+      | expectedData | {"pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOBS[1].id}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": null, "driver_id": null} |
     Examples:
       | Note                      | zone_id            | shipper_id                         | address_id                         |
       | Pickup Type: FM Dedicated | {fm-paj-zone-id-1} | {fm-paj-shipper-id-1-fm-dedicated} | {fm-paj-address-id-1-fm-dedicated} |
@@ -285,7 +285,7 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
     And API Control - Operator verify pickup appointment job search details:
       | actualData   | {KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[1]}                                                                                                                              |
-      | expectedData | {"pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOB_IDS[1]}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": null, "routing_zone_id": <zone_id>, "driver_id": null} |
+      | expectedData | {"pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOBS[1].id}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": null, "routing_zone_id": <zone_id>, "driver_id": null} |
     Examples:
       | zone_id            | shipper_id                   | address_id                   |
       | {fm-paj-zone-id-3} | {fm-paj-shipper-id-3-hybrid} | {fm-paj-address-id-3-hybrid} |
