@@ -16,6 +16,7 @@ import co.nvqa.common.utils.StandardTestConstants;
 import co.nvqa.common.utils.StandardTestUtils;
 import co.nvqa.common.utils.factory.address.AddressFactory;
 import co.nvqa.core_api.cucumber.glue.features.RouteMonitoringSteps;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalTime;
@@ -114,8 +115,8 @@ public class OrderCreateHelper {
       JsonNode addressNode = JsonUtils
           .getDefaultSnakeCaseMapper().readTree(JsonUtils.toJsonSnakeCase(address));
       result.setAddress(addressNode);
-    } catch (Exception ex) {
-      throw new NvTestRuntimeException(ex);
+    } catch (JsonProcessingException ex) {
+      throw new NvTestRuntimeException("failed to parse json object " + ex.getMessage());
     }
     return result;
   }

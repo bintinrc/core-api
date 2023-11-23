@@ -34,8 +34,10 @@ Feature: Delete Route
       | event            | PULL_OUT_OF_ROUTE      |
       | orderId          | {KEY_CREATED_ORDER_ID} |
       | routeEventSource | ZONAL_ROUTING_REMOVE   |
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
     Then Deleted route is not shown on his list routes
+      | routeId  | {KEY_CREATED_ROUTE_ID} |
+      | driverId | {driver-id}            |
     Examples:
       | Note     | route_type | transaction_type | service_type | service_level | parcel_job_is_pickup_required |
       | Pickup   | PP         | PICKUP           | Return       | Standard      | true                          |
@@ -68,8 +70,10 @@ Feature: Delete Route
     And DB Core - verify shipper_pickup_search record:
       | reservationId  | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | waypointStatus | Pending                                  |
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
     Then Deleted route is not shown on his list routes
+      | routeId  | {KEY_CREATED_ROUTE_ID} |
+      | driverId | {driver-id}            |
 
   @route-delete @routing-refactor @HighPriority
   Scenario Outline: Operator Delete Driver Route Successfully - Merged Pending Waypoint - <Note>
@@ -123,8 +127,10 @@ Feature: Delete Route
       | event            | PULL_OUT_OF_ROUTE                 |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | routeEventSource | ZONAL_ROUTING_REMOVE              |
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
     Then Deleted route is not shown on his list routes
+      | routeId  | {KEY_CREATED_ROUTE_ID} |
+      | driverId | {driver-id}            |
     Examples:
       | Note     | route_type | transaction_type | service_type | service_level | parcel_job_is_pickup_required |
       | Pickup   | PP         | PICKUP           | Return       | Standard      | true                          |
@@ -141,8 +147,10 @@ Feature: Delete Route
     Then DB Route - verify route_logs record:
       | legacyId  | {KEY_CREATED_ROUTE_ID} |
       | deletedAt | not null               |
-    When Driver id "{driver-id}" authenticated to login with username "{driver-username}" and password "{driver-password}"
+    And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
     Then Deleted route is not shown on his list routes
+      | routeId  | {KEY_CREATED_ROUTE_ID} |
+      | driverId | {driver-id}            |
 
   @route-delete @MediumPriority
   Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - Fail

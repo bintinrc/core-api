@@ -18,7 +18,6 @@ import co.nvqa.common.driver.model.rest.SubmitPodRequest.PhysicalItem;
 import co.nvqa.common.utils.DateUtil;
 import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
-import co.nvqa.core_api.cucumber.glue.support.OrderDetailHelper;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
@@ -30,6 +29,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import javax.inject.Inject;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.slf4j.Logger;
@@ -46,6 +47,8 @@ public class DriverSteps extends BaseSteps {
   private static final String TYPE_DELIVERY = "DELIVERY";
   private static final String STATUS_PENDING = "pending";
 
+  @Inject
+  @Getter
   private DriverClient driverClient;
 
   @Override
@@ -53,39 +56,22 @@ public class DriverSteps extends BaseSteps {
 
   }
 
-  @Given("Driver id {string} authenticated to login with username {string} and password {string}")
-  public void driverLogin(String driverId, String username, String password) {
-    doWithRetry(() -> {
-      driverClient = new DriverClient();
-      driverClient.authenticate(username, password);
-      put(KEY_NINJA_DRIVER_ID, Long.valueOf(driverId));
-    }, "driver login");
-  }
-
   @Given("Deleted route is not shown on his list routes")
-  public void driverRouteNotShown() {
-    final List<Long> routes = get(KEY_LIST_OF_CREATED_ROUTE_ID);
-    final Long driverId = get(KEY_NINJA_DRIVER_ID);
+  public void driverRouteNotShown(Map<String, String> data) {
+    Map<String, String> resolvedData = resolveKeyValues(data);
+    final long routeId = Long.parseLong(resolvedData.get("routeId"));
+    final long driverId = Long.parseLong(resolvedData.get("driverId"));
     doWithRetry(() -> {
-      List<GetRouteResponse.Route> result = driverClient.getRoutes(driverId, "2.1").getData()
+      List<GetRouteResponse.Route> result = getDriverClient().getRoutes(driverId, "2.1").getData()
           .getRoutes();
-      routes.forEach(e -> {
-        boolean found = result.stream().anyMatch(o -> o.getId() == e);
-        Assertions.assertThat(found).as("route is not shown in driver list routes").isFalse();
-      });
+      boolean found = result.stream().anyMatch(o -> o.getId() == routeId);
+      Assertions.assertThat(found).as("route is not shown in driver list routes").isFalse();
     }, "get list driver routes");
   }
 
   @Given("Archived route is not shown on his list routes")
-  public void archivedDriverRouteNotShown() {
-    driverRouteNotShown();
-  }
-
-  @Given("Driver Starts the route")
-  public void driverStartRoute() {
-    RouteResponse route = get(KEY_CREATED_ROUTE);
-    long routeId = route.getId();
-    doWithRetry(() -> driverClient.startRoute(routeId), "driver starts route");
+  public void archivedDriverRouteNotShown(Map<String, String> data) {
+    driverRouteNotShown(data);
   }
 
   @Given("Driver submit pod to {string} waypoint")
@@ -111,7 +97,7 @@ public class DriverSteps extends BaseSteps {
         putInMap(KEY_MAP_PROOF_WEBHOOK_DETAILS, order.getTrackingId(),
             proofDetails);
       }
-      driverClient.submitPod(routeId, waypointId, request);
+      getDriverClient().submitPod(routeId, waypointId, request);
       if (action.equalsIgnoreCase(ACTION_FAIL)) {
         int attemptCount = get(KEY_DRIVER_FAIL_ATTEMPT_COUNT, 0);
         put(KEY_DRIVER_FAIL_ATTEMPT_COUNT, ++attemptCount);
@@ -233,9 +219,9 @@ public class DriverSteps extends BaseSteps {
       return;
     }
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-    Order order = OrderDetailHelper.getOrderDetails(trackingId);
-    Transaction transaction = OrderDetailHelper
-        .getTransaction(order, transactionType, STATUS_PENDING);
+    Order order = getOrderDetails(trackingId);
+    Transaction transaction =
+        getTransaction(order, transactionType, STATUS_PENDING);
     put(KEY_WAYPOINT_ID, transaction.getWaypointId());
   }
 

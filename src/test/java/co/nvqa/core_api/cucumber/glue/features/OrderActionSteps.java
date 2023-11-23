@@ -1,6 +1,7 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
 import co.nvqa.common.constants.HttpConstants;
+import co.nvqa.common.core.client.OrderClient;
 import co.nvqa.common.core.model.event.Event;
 import co.nvqa.common.core.model.event.EventDetail;
 import co.nvqa.common.core.model.order.Order;
@@ -18,11 +19,11 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.slf4j.Logger;
@@ -38,6 +39,9 @@ public class OrderActionSteps extends BaseSteps {
   private static final Logger LOGGER = LoggerFactory.getLogger(OrderActionSteps.class);
   private static final String ACTION_SUCCESS = "success";
   private static final String ACTION_FAIL = "fail";
+
+  @Inject
+  private OrderClient orderClient;
 
   @Override
   public void init() {
@@ -512,11 +516,14 @@ public class OrderActionSteps extends BaseSteps {
     }
   }
 
-  private Order getOrderDetails(String trackingId) {
-    return getOrderClient().searchOrderByTrackingId(trackingId);
+
+  @Override
+  protected Order getOrderDetails(String trackingId) {
+    return orderClient.searchOrderByTrackingId(trackingId);
   }
 
-  private Transaction getTransaction(Order order, String type, String status) {
+  @Override
+  protected Transaction getTransaction(Order order, String type, String status) {
     List<Transaction> transactions = order.getTransactions();
     Transaction result;
     result = transactions.stream().filter(e -> e.getType().equalsIgnoreCase(type))

@@ -2,9 +2,6 @@ package co.nvqa.core_api.cucumber.glue.util;
 
 public interface CoreApiScenarioStorageKeys {
 
-  //dp
-  String KEY_DP_SHIPPER_LEGACY_ID = "KEY_DP_SHIPPER_LEGACY_ID";
-
   String KEY_LIST_OF_WEBHOOK_REQUEST = "KEY_LIST_OF_WEBHOOK_REQUEST";
   String KEY_WEBHOOK_PAYLOAD = "KEY_WEBHOOK_PAYLOAD";
   String KEY_LIST_OF_PARTIAL_SUCCESS_TID = "KEY_LIST_OF_PARTIAL_SUCCESS_TID";
@@ -94,18 +91,11 @@ public interface CoreApiScenarioStorageKeys {
   String KEY_UPDATE_PROOFS_REQUEST = "KEY_UPDATE_PROOFS_REQUEST";
 
   // LEGACY
-  @Deprecated
   String KEY_LIST_OF_CREATED_RESERVATIONS = "KEY_LIST_OF_CREATED_RESERVATIONS";
-  @Deprecated
   String KEY_LIST_OF_CREATED_ROUTE_ID = "KEY_LIST_OF_CREATED_ROUTE_ID";
-  @Deprecated
   String KEY_FAILURE_REASON_ID = "KEY_FAILURE_REASON_ID";
-  @Deprecated
   String KEY_FAILURE_REASON_CODE_ID = "KEY_FAILURE_REASON_CODE_ID";
-  @Deprecated
   String KEY_LIST_OF_HUB_IDS = "KEY_LIST_OF_HUB_IDS";
-  @Deprecated
   String KEY_LIST_OF_ZONE_IDS = "KEY_LIST_OF_ZONE_ID";
-  @Deprecated
   String KEY_ROUTE_SOURCE_BY_INBOUND = "KEY_ROUTE_SOURCE_BY_INBOUND";
 }

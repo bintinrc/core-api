@@ -186,7 +186,6 @@ Feature: Notification
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     And API Core - Operator get order details for tracking order "KEY_CREATED_ORDER_TRACKING_ID"
-    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
     And API Driver - Driver van inbound:
       | routeId | {KEY_CREATED_ROUTE.id}                                                                                                                                                      |
@@ -239,7 +238,6 @@ Feature: Notification
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     And API Core - Operator get order details for tracking order "KEY_CREATED_ORDER_TRACKING_ID"
-    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
     And API Driver - Driver van inbound:
       | routeId | {KEY_CREATED_ROUTE.id}                                                                                                                                                      |
@@ -272,7 +270,6 @@ Feature: Notification
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     And API Core - Operator get order details for tracking order "KEY_CREATED_ORDER_TRACKING_ID"
-    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
     And API Driver - Driver van inbound:
       | routeId | {KEY_CREATED_ROUTE.id}                                                                                                                                                      |
@@ -323,7 +320,6 @@ Feature: Notification
     Given Shipper id "{shipper-4-id}" subscribes to "First Attempt Delivery Fail" webhook
     Given Shipper id "{shipper-4-id}" subscribes to "Pending Reschedule" webhook
     And API Core - Operator get order details for tracking order "KEY_CREATED_ORDER_TRACKING_ID"
-    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
     And API Driver - Driver van inbound:
       | routeId | {KEY_CREATED_ROUTE.id}                                                                                                                                                      |
@@ -367,7 +363,6 @@ Feature: Notification
       | zone_id    | {zone-id}        |
     And Operator add order to driver "DD" route
     And API Core - Operator get order details for tracking order "KEY_CREATED_ORDER_TRACKING_ID"
-    When Driver id "{driver-2-id}" authenticated to login with username "{driver-2-username}" and password "{driver-2-password}"
     And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
     And API Driver - Driver van inbound:
       | routeId | {KEY_CREATED_ROUTE.id}                                                                                                                                                      |

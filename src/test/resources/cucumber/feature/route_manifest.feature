@@ -25,8 +25,10 @@ Feature: Route Manifest
     And Operator add all orders to driver "DD" route
     And API Core - Operator merge routed waypoints:
       | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
-    And Operator get "DELIVERY" transaction waypoint Ids for all orders
-    When Operator force "SUCCESS" "DELIVERY" waypoint
+    And API Core - Operator get order details for tracking order "{KEY_CREATED_ORDER_TRACKING_ID}"
+    And API Core - Operator force success waypoint via route manifest:
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTE_ID[1]}                          |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
     Then Operator verify that all orders status-granular status is "Transit"-"Arrived_At_Distribution_Point"
     And Operator verify all "DELIVERY" transactions status is "SUCCESS"
     And DB Route - verify waypoints record:

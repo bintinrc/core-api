@@ -75,11 +75,6 @@ public class OrderCreateSteps extends BaseSteps {
     shipperCreateOrder(source);
   }
 
-  @Given("^Shipper creates multiple (\\d+) reservations$")
-  public void shipperCreateMultipleReservation(int numberOfRsvn, Map<String, String> source) {
-    shipperCreateMultiplesOrders(numberOfRsvn, source);
-  }
-
 
   @Given("Shipper creates multiple {string} orders")
   public void shipperCreateMultipleReturnOrders(String type, Map<String, String> source) {
@@ -99,14 +94,14 @@ public class OrderCreateSteps extends BaseSteps {
     }, "shipper create another order");
   }
 
-  @Given("^Shipper creates multiple orders : (\\d+) orders$")
+  @Given("Shipper creates multiple orders : {int} orders")
   public void shipperCreateMultiplesOrders(int numberOfOrders, Map<String, String> source) {
     for (int i = 0; i < numberOfOrders; i++) {
       shipperCreateOrder(source);
     }
   }
 
-  @Given("^Shipper creates multiple orders : (\\d+) orders with the same params$")
+  @Given("Shipper creates multiple orders : {int} orders with the same params")
   public void shipperCreateMultiplesOrdersWithSameParams(int numberOfOrders,
       Map<String, String> source) {
     shipperCreateOrder(source);
