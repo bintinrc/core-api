@@ -8,7 +8,6 @@ import co.nvqa.common.core.client.RouteClient;
 import co.nvqa.common.core.client.RouteMonitoringClient;
 import co.nvqa.common.cucumber.glue.StandardSteps;
 import co.nvqa.common.ordercreate.client.OrderSearchClient;
-import co.nvqa.common.shipper.client.ShipperClient;
 import co.nvqa.commonauth.utils.TokenUtils;
 import co.nvqa.commonsort.client.InboundClient;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
