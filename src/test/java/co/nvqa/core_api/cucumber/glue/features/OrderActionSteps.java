@@ -95,17 +95,6 @@ public class OrderActionSteps extends BaseSteps {
       putInList(KEY_LIST_OF_TRANSACTION_IDS, transaction.getId());
       putInList(KEY_LIST_OF_WAYPOINT_IDS, transaction.getWaypointId());
       put(KEY_WAYPOINT_ID, transaction.getWaypointId());
-//      TODO to remove if it works
-      //to get newly create route id from parcel route transfer
-//      String routeSource = get(KEY_ROUTE_EVENT_SOURCE);
-//      if (get(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS) != null
-//          && routeSource.equalsIgnoreCase("ROUTE_TRANSFER")) {
-//        put(KEY_CREATED_ROUTE_ID, transaction.getRouteId());
-//        putInList(KEY_LIST_OF_CREATED_ROUTE_ID, transaction.getRouteId());
-//      }
-//      if (type.equalsIgnoreCase("DELIVERY")) {
-//        put(KEY_DELIVERY_WAYPOINT_ID, transaction.getWaypointId());
-//      }
     }, "retrieve transaction details from core");
   }
 
