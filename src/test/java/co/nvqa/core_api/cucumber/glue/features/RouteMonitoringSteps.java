@@ -34,7 +34,6 @@ public class RouteMonitoringSteps extends BaseSteps {
   private static final String WAYPOINT_TYPE_INVALID_FAILED = "invalid-failed";
   private static final String WAYPOINT_TYPE_PENDING = "pending";
   private static final String WAYPOINT_TYPE_INVALID_FAILED_DELIVERIES = "invalid failed deliveries";
-  private static final String WAYPOINT_TYPE_INVALID_FAILED_PICKUPS = "invalid failed pickups";
   private static final String WAYPOINT_TYPE_TRANSACTION = "TRANSACTION";
   private static final String WAYPOINT_TYPE_RESERVATION = "RESERVATION";
 

@@ -40,7 +40,6 @@ public class RoutingSteps extends BaseSteps {
   public void operatorCreateEmptyRoute(Map<String, String> arg1) {
     final String json = toJsonCamelCase(arg1);
     final RouteRequest route = fromJsonSnakeCase(json, RouteRequest.class);
-    put(KEY_NINJA_DRIVER_ID, route.getDriverId());
     route.setComments("Created for Core API testing, created at: "
         + DateUtil.getTodayDateTime_YYYY_MM_DD_HH_MM_SS());
     route.setTags(Arrays.asList(1, 4));
@@ -83,7 +82,6 @@ public class RoutingSteps extends BaseSteps {
       request.setRouteId(routeId);
       request.setType(type);
       getRouteClient().addParcelToRoute(orderId, request);
-      put(KEY_ROUTE_EVENT_SOURCE, "ADD_BY_ORDER");
       LOGGER.info("order id {} added to {} route id {}", orderId, type, routeId);
     }, "add parcel to route");
   }
@@ -98,7 +96,6 @@ public class RoutingSteps extends BaseSteps {
       request.setType(type);
       request.setTrackingId(trackingId);
       getRouteClient().addParcelToRouteByTrackingId(request);
-      put(KEY_ROUTE_EVENT_SOURCE, "ADD_BY_TRACKING_OR_STAMP");
       LOGGER.info("order {} added to {} route id {}", trackingId, type, routeId);
     }, "add parcel to route");
   }
@@ -132,7 +129,6 @@ public class RoutingSteps extends BaseSteps {
             .isEqualTo(f("[%d]", routeId));
       }
       put(KEY_DELETE_ROUTE_RESPONSE, response);
-      put(KEY_ROUTE_EVENT_SOURCE, "ZONAL_ROUTING_REMOVE");
     }, "delete driver route");
   }
 

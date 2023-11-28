@@ -60,7 +60,6 @@ public class BatchUpdatePodsSteps extends BaseSteps {
             false, podType, false);
       }
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update jobs");
   }
 
@@ -75,7 +74,6 @@ public class BatchUpdatePodsSteps extends BaseSteps {
           DELIVERY_JOB_MODE,
           true, WebhookRequest.Pod.POD_TYPE_RECIPIENT, false);
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update jobs");
   }
 
@@ -93,7 +91,6 @@ public class BatchUpdatePodsSteps extends BaseSteps {
         request = createTransactionJobRequestWithoutPods(trackingIds, DELIVERY_JOB_MODE);
       }
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update jobs");
   }
 
@@ -113,7 +110,6 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       }
       put(KEY_UPDATE_PROOFS_REQUEST, request);
       getBatchUpdatePodClient().batchUpdatePodProofs(routeId, waypointId, request);
-      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update proofs");
   }
 
@@ -133,7 +129,6 @@ public class BatchUpdatePodsSteps extends BaseSteps {
             false, WebhookRequest.Pod.POD_TYPE_RECIPIENT, false);
       }
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update jobs");
   }
 
@@ -153,7 +148,6 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       }
       put(KEY_UPDATE_PROOFS_REQUEST, request);
       getBatchUpdatePodClient().batchUpdatePodProofs(routeId, waypointId, request);
-      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update proofs");
   }
 
@@ -169,13 +163,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
           reservationId, action,
           action);
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update jobs");
-  }
-
-  @Given("API Batch Update Job Request to {string} All Return Orders under the reservation")
-  public void apiBatchJobUpdateReservationAllReturnOrders(String action, Map<String, String> data) {
-    apiBatchJobUpdateReservationAllOrders(action, data);
   }
 
   @Given("API Batch Update Proof Request to {string} All Orders under the reservation")
@@ -250,7 +238,6 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       List<JobUpdate> request = createReservationPartialSuccessJobRequest(trackingIds,
           reservationId);
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update jobs");
   }
 
@@ -263,7 +250,6 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     doWithRetry(() -> {
       List<JobUpdate> request = createReservationJobWithoutParcelRequest(reservationId, action);
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update jobs");
   }
 
@@ -298,7 +284,6 @@ public class BatchUpdatePodsSteps extends BaseSteps {
         request = createTransactionPartialSuccessJobRequest(trackingIds, DELIVERY_JOB_MODE);
       }
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
-      put(KEY_UPDATE_STATUS_REASON, "BATCH_POD_UPDATE");
     }, "batch update proofs");
   }
 
