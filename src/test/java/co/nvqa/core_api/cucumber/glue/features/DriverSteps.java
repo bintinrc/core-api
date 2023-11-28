@@ -6,7 +6,6 @@ import co.nvqa.common.core.model.order.Order.Transaction;
 import co.nvqa.common.core.model.route.ParcelRouteTransferRequest;
 import co.nvqa.common.core.model.route.ParcelRouteTransferResponse;
 import co.nvqa.common.core.model.route.ParcelRouteTransferResponse.FailedOrders;
-import co.nvqa.common.core.model.route.RouteResponse;
 import co.nvqa.common.driver.client.DriverClient;
 import co.nvqa.common.driver.model.rest.GetRouteResponse;
 import co.nvqa.common.driver.model.rest.GetRouteResponse.Parcel;
@@ -87,7 +86,6 @@ public class DriverSteps extends BaseSteps {
       Order order = get(KEY_CREATED_ORDER);
 
       SubmitPodRequest request = createDefaultDriverSubmitPodRequest(waypointId, jobs);
-      put(KEY_DRIVER_SUBMIT_POD_REQUEST, request);
       if (order != null) {
         request.setContact(order.getToContact());
         request.setName(order.getToName());
@@ -112,7 +110,6 @@ public class DriverSteps extends BaseSteps {
       ParcelRouteTransferResponse response = getRouteClient().parcelRouteTransfer(request);
       put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, response);
       putInList(KEY_LIST_OF_CREATED_ROUTE_ID, response.getRouteId());
-      put(KEY_ROUTE_EVENT_SOURCE, "ROUTE_TRANSFER");
     }, "driver parcel route transfer");
   }
 
@@ -123,7 +120,6 @@ public class DriverSteps extends BaseSteps {
       Response response = getRouteClient().parcelRouteTransferAndGetRawResponse(request);
       put(KEY_API_RAW_RESPONSE, response);
       put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, response);
-      put(KEY_ROUTE_EVENT_SOURCE, "ROUTE_TRANSFER");
     }, "driver parcel route transfer");
   }
 
@@ -211,18 +207,6 @@ public class DriverSteps extends BaseSteps {
     request.setMode(JobMode.valueOf(StringUtils.upperCase(job.getMode())));
     request.setType(JobType.valueOf(StringUtils.upperCase(job.getType())));
     return request;
-  }
-
-  private void getWaypointId(String transactionType) {
-    if (transactionType.equalsIgnoreCase(WAYPOINT_TYPE_RESERVATION)) {
-      LOGGER.info("reservation waypoint, no need get from order waypoint");
-      return;
-    }
-    String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
-    Order order = getOrderDetails(trackingId);
-    Transaction transaction =
-        getTransaction(order, transactionType, STATUS_PENDING);
-    put(KEY_WAYPOINT_ID, transaction.getWaypointId());
   }
 
   private void setOrderFailureReason(String jobType, PhysicalItem order) {

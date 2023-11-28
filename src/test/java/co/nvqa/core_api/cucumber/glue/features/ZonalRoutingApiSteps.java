@@ -34,7 +34,6 @@ public class ZonalRoutingApiSteps extends BaseSteps {
       put(KEY_CREATED_ROUTE, result);
       putInList(KEY_LIST_OF_CREATED_ROUTE_ID, result.getId());
       put(KEY_CREATED_ROUTE_ID, result.getId());
-      put(KEY_ROUTE_EVENT_SOURCE, "ZONAL_ROUTING_CREATE");
     }, "zonal routing create route");
   }
 
@@ -52,26 +51,7 @@ public class ZonalRoutingApiSteps extends BaseSteps {
       List<RouteResponse> result = getRouteClient()
           .zonalRoutingEditRoute(Collections.singletonList(route));
       Assertions.assertThat(result.get(0)).as("updated route is not null").isNotNull();
-      put(KEY_ROUTE_EVENT_SOURCE, "ZONAL_ROUTING_UPDATE");
     }, "zonal routing edit route");
-  }
-
-  @When("Operator gets only eligible routed orders")
-  public void operatorGetsEligibleRoutedOrders() {
-    List<Long> waypointIds = get(KEY_LIST_OF_WAYPOINT_IDS);
-    List<Long> transactionIds = get(KEY_LIST_OF_TRANSACTION_IDS);
-    List<Long> orderIds = get(KEY_LIST_OF_CREATED_ORDER_ID);
-    put(KEY_TRANSACTION_ID, transactionIds.get(0));
-    put(KEY_WAYPOINT_ID, waypointIds.get(1));
-    remove(KEY_LIST_OF_WAYPOINT_IDS);
-    remove(KEY_LIST_OF_TRANSACTION_IDS);
-    remove(KEY_LIST_OF_CREATED_ORDER_ID);
-    waypointIds.remove(1);
-    transactionIds.remove(0);
-    orderIds.remove(0);
-    putAllInList(KEY_LIST_OF_WAYPOINT_IDS, waypointIds);
-    putAllInList(KEY_LIST_OF_TRANSACTION_IDS, transactionIds);
-    putAllInList(KEY_LIST_OF_CREATED_ORDER_ID, orderIds);
   }
 
   @When("API Route - Operator edit route from Zonal Routing API with Invalid State")

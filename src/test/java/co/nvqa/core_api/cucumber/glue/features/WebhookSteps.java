@@ -158,7 +158,6 @@ public class WebhookSteps extends BaseSteps {
     String trackingId = resolveValue(tid);
     Map<String, WebhookRequest> webhookRequest = get(KEY_LIST_OF_WEBHOOK_REQUEST + status);
     WebhookRequest request = webhookRequest.get(trackingId);
-    put(KEY_WEBHOOK_PAYLOAD, request);
     OrderRequestV4 order = get(KEY_ORDER_CREATE_REQUEST);
     doWithRetry(() -> {
           Assertions.assertThat(request.getStatus()).as(f("status is %s", status))

@@ -613,7 +613,7 @@ Feature: Batch Update PODs
       | service_type                  | Return   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
-    When API Batch Update Job Request to "FAIL" All Return Orders under the reservation
+    When API Batch Update Job Request to "FAIL" All Orders under the reservation
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | routeId       | {KEY_CREATED_ROUTE_ID}                           |
