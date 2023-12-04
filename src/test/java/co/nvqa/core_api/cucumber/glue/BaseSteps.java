@@ -12,6 +12,7 @@ import co.nvqa.common.cucumber.glue.StandardSteps;
 import co.nvqa.common.ordercreate.client.OrderSearchClient;
 import co.nvqa.common.ordercreate.model.OrderSearchRequest;
 import co.nvqa.common.ordercreate.model.OrderSearchResponse.OrderSearch;
+import co.nvqa.common.ordercreate.model.OrderSearchResponse.SearchData;
 import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.common.webhook.client.ShipperClient;
 import co.nvqa.commonauth.utils.TokenUtils;
@@ -22,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
 import lombok.Getter;
+import org.assertj.core.api.Assertions;
 
 /**
  * put any common methods here all step class should extend this class
@@ -73,9 +75,10 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
   protected OrderSearch searchOrder(String trackingIdOrStampId) {
     OrderSearchRequest request = new OrderSearchRequest();
     request.addOrReplaceStringFilter("tracking_id", Collections.singletonList(trackingIdOrStampId));
-    return orderSearchClient
-        .searchOrders(request).getSearchData()
-        .get(0).getOrder();
+    List<SearchData> searchData = orderSearchClient.searchOrders(request).getSearchData();
+    Assertions.assertThat(searchData)
+        .as("Order searchData shoudl NOT be empty").isNotEmpty();
+    return searchData.get(0).getOrder();
   }
 
   protected Order getOrderDetails(String trackingId) {
