@@ -36,7 +36,7 @@ public class ReservationSteps extends BaseSteps {
         Assertions.assertThat(pickup.getStatus())
             .as(String.format("reservation status id %d", pickup.getReservationId()))
             .isEqualToIgnoringCase(status);
-      } catch (Exception e) {
+      } catch (AssertionError e) {
         throw new NvTestCoreReservationException("Reservation status not updated due to Kafka ", e);
       }
     }, "operator verify reservation status");
