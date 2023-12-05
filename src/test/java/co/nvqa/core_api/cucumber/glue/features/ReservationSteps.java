@@ -39,6 +39,6 @@ public class ReservationSteps extends BaseSteps {
       } catch (Exception e) {
         throw new NvTestCoreReservationException("Reservation status not updated due to Kafka ", e);
       }
-    }, "operator verify reservation status", 2000, 50);
+    }, "operator verify reservation status");
   }
 }
