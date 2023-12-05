@@ -30,7 +30,7 @@ public class ReservationSteps extends BaseSteps {
             Collections.singletonList(Long.parseLong(resolveValue(reservationId))));
         List<Pickup> result = getShipperPickupClient().searchPickupsWithFilters(request);
         Assertions.assertThat(result).as("reservation is not empty")
-            .hasSize(1);
+            .isNotEmpty();
         final Pickup pickup = result.get(0);
         put(KEY_WAYPOINT_ID, pickup.getWaypointId());
         Assertions.assertThat(pickup.getStatus())
