@@ -232,6 +232,9 @@ Feature: Route Monitoring V2
     And Operator verifies total pending priority parcels and other details
       | KEY_TOTAL_EXPECTED_WAYPOINT         | 3 |
       | KEY_TOTAL_EXPECTED_PENDING_PRIORITY | 3 |
+    And Operator verifies Route Monitoring Data Has Correct Details for "pending" Case
+      | KEY_TOTAL_EXPECTED_WAYPOINT         | 3 |
+      | KEY_TOTAL_EXPECTED_PENDING_PRIORITY | 3 |
     And Operator get pending priority parcel details for "<route_type>"
     And Operator verifies pending priority parcel details
 
@@ -260,6 +263,9 @@ Feature: Route Monitoring V2
     And API Core - Operator get order details for tracking order "KEY_CREATED_ORDER_TRACKING_ID"
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies total pending priority parcels and other details
+      | KEY_TOTAL_EXPECTED_WAYPOINT         | 1 |
+      | KEY_TOTAL_EXPECTED_PENDING_PRIORITY | 1 |
+    And Operator verifies Route Monitoring Data Has Correct Details for "pending" Case
       | KEY_TOTAL_EXPECTED_WAYPOINT         | 1 |
       | KEY_TOTAL_EXPECTED_PENDING_PRIORITY | 1 |
     And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
@@ -296,6 +302,9 @@ Feature: Route Monitoring V2
     And API Core - Operator get order details for tracking order "KEY_CREATED_ORDER_TRACKING_ID"
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies total pending priority parcels and other details
+      | KEY_TOTAL_EXPECTED_WAYPOINT         | 1 |
+      | KEY_TOTAL_EXPECTED_PENDING_PRIORITY | 1 |
+    And Operator verifies Route Monitoring Data Has Correct Details for "pending" Case
       | KEY_TOTAL_EXPECTED_WAYPOINT         | 1 |
       | KEY_TOTAL_EXPECTED_PENDING_PRIORITY | 1 |
     And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
@@ -342,6 +351,9 @@ Feature: Route Monitoring V2
       | routeId       | {KEY_CREATED_ROUTE.id}                   |
     When Operator Filter Route Monitoring Data for Today's Date
     And Operator verifies total pending priority parcels and other details
+      | KEY_TOTAL_EXPECTED_WAYPOINT         | 3 |
+      | KEY_TOTAL_EXPECTED_PENDING_PRIORITY | 1 |
+    And Operator verifies Route Monitoring Data Has Correct Details for "pending" Case
       | KEY_TOTAL_EXPECTED_WAYPOINT         | 3 |
       | KEY_TOTAL_EXPECTED_PENDING_PRIORITY | 1 |
     And Operator get pending priority parcel details for "DD"

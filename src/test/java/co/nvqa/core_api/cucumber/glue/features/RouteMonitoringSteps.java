@@ -3,7 +3,6 @@ package co.nvqa.core_api.cucumber.glue.features;
 import co.nvqa.common.core.model.reservation.ReservationResponse;
 import co.nvqa.common.core.model.route_monitoring.RouteMonitoringResponse;
 import co.nvqa.common.core.model.route_monitoring.Waypoint;
-import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.common.ordercreate.model.OrderRequestV4;
 import co.nvqa.common.ordercreate.model.OrderRequestV4.UserDetail;
 import co.nvqa.common.ordercreate.model.Timeslot;
@@ -62,7 +61,6 @@ public class RouteMonitoringSteps extends BaseSteps {
   @Given("Operator verifies Route Monitoring Data Has Correct Details for {string} Case")
   public void operatorChecksTotalParcelsCount(String waypointType, Map<String, Integer> arg1) {
     doWithRetry(() -> {
-      operatorFilterRouteMonitoring();
       List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
       List<Long> pullOutOrderTids = get(KEY_LIST_OF_PULL_OUT_OF_ROUTE_TRACKING_ID);
       long routeId = get(KEY_CREATED_ROUTE_ID);
@@ -538,11 +536,9 @@ public class RouteMonitoringSteps extends BaseSteps {
   public void checkPendingPriorityParcels(Map<String, Integer> dataTable) {
     int totalExpectedCount = dataTable.get(KEY_TOTAL_EXPECTED_PENDING_PRIORITY);
     doWithRetry(() -> {
-      operatorFilterRouteMonitoring();
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
-      Assertions.assertThat(result.getPendingPriorityParcels()).as("total pending priority parcels")
-          .isEqualTo(totalExpectedCount);
-      operatorChecksTotalParcelsCount(WAYPOINT_TYPE_PENDING, dataTable);
+      Assertions.assertThat(result.getPendingPriorityParcels())
+          .as("total pending priority parcels").isEqualTo(totalExpectedCount);
     }, "check total pending priority parcels");
   }
 
