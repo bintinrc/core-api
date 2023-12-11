@@ -97,7 +97,6 @@ public class RouteMonitoringSteps extends BaseSteps {
   @When("Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints")
   public void checkInvalidFailedDeliveries(Map<String, Integer> dataTable) {
     doWithRetry(() -> {
-      operatorFilterRouteMonitoring();
       List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
       long routeId = get(KEY_CREATED_ROUTE_ID);
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
