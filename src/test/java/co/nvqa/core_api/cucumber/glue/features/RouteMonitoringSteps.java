@@ -414,7 +414,6 @@ public class RouteMonitoringSteps extends BaseSteps {
     List<OrderRequestV4> reservationDetails = get(KEY_LIST_RESERVATION_REQUEST_DETAILS);
     Map<String, OrderRequestV4> requestMap = get(KEY_LIST_OF_ORDER_CREATE_REQUEST);
     doWithRetry(() -> {
-      operatorFilterRouteMonitoring();
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
       List<Waypoint> waypoints = result.getWaypoints();
       int expectedTotalWaypoints = get(KEY_TOTAL_EXPECTED_WAYPOINT);
@@ -542,7 +541,6 @@ public class RouteMonitoringSteps extends BaseSteps {
   @When("Operator verifies total pending priority parcels is now 0")
   public void excludeAttemptedPendingPriorityParcels() {
     doWithRetry(() -> {
-      operatorFilterRouteMonitoring();
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
       Assertions.assertThat(result.getPendingPriorityParcels()).as("total pending priority parcels")
           .isEqualTo(0);
