@@ -149,7 +149,6 @@ public class RouteMonitoringSteps extends BaseSteps {
   public void operatorChecksEmptyRouteData(Map<String, Integer> dataTable) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     doWithRetry(() -> {
-      operatorFilterRouteMonitoring();
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
       checkRouteDetails(result);
       Assertions.assertThat(result.getTotalParcels())
@@ -160,7 +159,6 @@ public class RouteMonitoringSteps extends BaseSteps {
           .as(String.format("total pending waypoints for route id %d", routeId)).isEqualTo(0);
       checkPendingDetails(routeId, result, dataTable);
       Assertions.assertThat(result.getLastSeen()).as("Last seen is null").isNull();
-
     }, "check empty route");
   }
 
