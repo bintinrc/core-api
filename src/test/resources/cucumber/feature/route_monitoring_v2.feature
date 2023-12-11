@@ -470,6 +470,10 @@ Feature: Route Monitoring V2
       | KEY_TOTAL_EXPECTED_WAYPOINT     | 1 |
       | KEY_TOTAL_EXPECTED_VALID_FAILED | 1 |
       | KEY_TOTAL_EXPECTED_EARLY        | 1 |
+    And Operator verifies Route Monitoring Data Has Correct Details for "invalid-failed" Case
+      | KEY_TOTAL_EXPECTED_WAYPOINT     | 1 |
+      | KEY_TOTAL_EXPECTED_VALID_FAILED | 1 |
+      | KEY_TOTAL_EXPECTED_EARLY        | 1 |
     And Operator get empty invalid failed deliveries parcel details
 
     Examples:
@@ -501,6 +505,8 @@ Feature: Route Monitoring V2
       | routeId       | {KEY_CREATED_ROUTE.id}                   |
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies total invalid failed is 0 and other details
+      | KEY_TOTAL_EXPECTED_WAYPOINT | 2 |
+    And Operator verifies Route Monitoring Data Has Correct Details for "invalid-failed" Case
       | KEY_TOTAL_EXPECTED_WAYPOINT | 2 |
     And Operator get empty invalid failed deliveries parcel details
 
@@ -612,6 +618,10 @@ Feature: Route Monitoring V2
       | KEY_TOTAL_EXPECTED_WAYPOINT     | 1 |
       | KEY_TOTAL_EXPECTED_VALID_FAILED | 1 |
       | KEY_TOTAL_EXPECTED_EARLY        | 1 |
+    And Operator verifies Route Monitoring Data Has Correct Details for "invalid-failed" Case
+      | KEY_TOTAL_EXPECTED_WAYPOINT     | 1 |
+      | KEY_TOTAL_EXPECTED_VALID_FAILED | 1 |
+      | KEY_TOTAL_EXPECTED_EARLY        | 1 |
     And Operator get empty invalid failed pickup parcel details
 
     Examples:
@@ -643,6 +653,8 @@ Feature: Route Monitoring V2
       | routeId       | {KEY_CREATED_ROUTE.id}                   |
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies total invalid failed is 0 and other details
+      | KEY_TOTAL_EXPECTED_WAYPOINT | 2 |
+    And Operator verifies Route Monitoring Data Has Correct Details for "invalid-failed" Case
       | KEY_TOTAL_EXPECTED_WAYPOINT | 2 |
     And Operator get empty invalid failed pickup parcel details
 
@@ -712,6 +724,10 @@ Feature: Route Monitoring V2
       | KEY_TOTAL_EXPECTED_WAYPOINT     | 1 |
       | KEY_TOTAL_EXPECTED_VALID_FAILED | 1 |
       | KEY_TOTAL_EXPECTED_EARLY        | 0 |
+    And Operator verifies Route Monitoring Data Has Correct Details for "infalid-failed" Case
+      | KEY_TOTAL_EXPECTED_WAYPOINT     | 1 |
+      | KEY_TOTAL_EXPECTED_VALID_FAILED | 1 |
+      | KEY_TOTAL_EXPECTED_EARLY        | 0 |
     And Operator get empty invalid failed reservation details
 
 
@@ -732,5 +748,7 @@ Feature: Route Monitoring V2
       | routeId       | {KEY_CREATED_ROUTE.id}                   |
     When Operator Filter Route Monitoring Data for Today's Date
     Then Operator verifies total invalid failed is 0 and other details
+      | KEY_TOTAL_EXPECTED_WAYPOINT | 1 |
+    And Operator verifies Route Monitoring Data Has Correct Details for "invalid-failed" Case
       | KEY_TOTAL_EXPECTED_WAYPOINT | 1 |
     And Operator get empty invalid failed reservation details

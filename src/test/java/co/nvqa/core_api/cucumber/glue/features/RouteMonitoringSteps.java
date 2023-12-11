@@ -555,10 +555,8 @@ public class RouteMonitoringSteps extends BaseSteps {
   @When("Operator verifies total invalid failed is 0 and other details")
   public void totalEmptyInvalidFailed(Map<String, Integer> waypointCounts) {
     doWithRetry(() -> {
-      operatorFilterRouteMonitoring();
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
       Assertions.assertThat(result.getNumInvalidFailed()).as("total invalid failed").isEqualTo(0);
-      operatorChecksTotalParcelsCount(WAYPOINT_TYPE_INVALID_FAILED, waypointCounts);
     }, "check total invalid failed");
   }
 
