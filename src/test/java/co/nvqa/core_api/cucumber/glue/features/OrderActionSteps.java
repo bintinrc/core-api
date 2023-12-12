@@ -13,7 +13,7 @@ import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import co.nvqa.core_api.exception.NvTestCoreEventException;
-import co.nvqa.core_api.exception.NvTestCoreOrderTransactionNotFoundException;
+import co.nvqa.core_api.exception.NvTestCoreOrderTransactionDetailsMismatchException;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Then;
@@ -515,7 +515,7 @@ public class OrderActionSteps extends BaseSteps {
     List<Transaction> transactions = order.getTransactions();
     return transactions.stream().filter(e -> e.getType().equalsIgnoreCase(type))
         .filter(e -> e.getStatus().equalsIgnoreCase(status)).findAny().orElseThrow(
-            () -> new NvTestCoreOrderTransactionNotFoundException(
+            () -> new NvTestCoreOrderTransactionDetailsMismatchException(
                 f("transaction details not found: %s", order.getTrackingId())));
   }
 

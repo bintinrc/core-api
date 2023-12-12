@@ -18,7 +18,7 @@ import co.nvqa.commonauth.utils.TokenUtils;
 import co.nvqa.commonsort.client.InboundClient;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import co.nvqa.core_api.cucumber.glue.util.CoreApiScenarioStorageKeys;
-import co.nvqa.core_api.exception.NvTestCoreOrderTransactionNotFoundException;
+import co.nvqa.core_api.exception.NvTestCoreOrderTransactionDetailsMismatchException;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
@@ -92,6 +92,6 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
         .filter(e -> e.getType().equalsIgnoreCase(type))
         .filter(e -> e.getStatus().equalsIgnoreCase(status))
         .findAny().orElseThrow(
-            () -> new NvTestCoreOrderTransactionNotFoundException("transaction details not found"));
+            () -> new NvTestCoreOrderTransactionDetailsMismatchException("transaction details not found"));
   }
 }
