@@ -1,13 +1,11 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
 import co.nvqa.common.core.model.batch_update_pods.ProofDetails;
-import co.nvqa.common.core.model.pickup.Pickup;
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.common.dp.constants.DpScenarioStorageKeys;
 import co.nvqa.common.dp.model.hibernate.DpJobOrder;
 import co.nvqa.common.ordercreate.model.OrderRequestV4;
 import co.nvqa.common.utils.JsonUtils;
-import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.common.webhook.client.RequestBinClient;
 import co.nvqa.common.webhook.model.requestbin.Bin;
 import co.nvqa.common.webhook.model.requestbin.BinRequest;
@@ -18,6 +16,7 @@ import co.nvqa.commonsort.model.sort.DwsInboundResponse;
 import co.nvqa.commonsort.model.sort.Hub;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
+import co.nvqa.core_api.exception.NvTestCoreWebhookException;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -91,8 +90,8 @@ public class WebhookSteps extends BaseSteps {
       List<String> jsonLists = new ArrayList<>();
       requests.forEach(e -> jsonLists.add(e.getBody()));
       String json = jsonLists.stream().filter(e -> e.contains(event) && e.contains(trackingId))
-          .findAny().orElseThrow(() -> new NvTestRuntimeException(
-              f("cant find webhook %s for %s", event, trackingId)));
+          .findAny().orElseThrow(() -> new NvTestCoreWebhookException(
+              f("webhook %s for %s not yet published due to Kafka lag", event, trackingId)));
       WebhookRequest webhookRequest = fromJsonSnakeCase(json, WebhookRequest.class);
       LOGGER.info(f("webhook event = %s found for %s", event, webhookRequest.getTrackingId()));
       putInMap(KEY_LIST_OF_WEBHOOK_REQUEST + event, webhookRequest.getTrackingId(), webhookRequest);
