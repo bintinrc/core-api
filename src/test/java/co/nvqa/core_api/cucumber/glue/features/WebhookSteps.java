@@ -91,7 +91,7 @@ public class WebhookSteps extends BaseSteps {
       requests.forEach(e -> jsonLists.add(e.getBody()));
       String json = jsonLists.stream().filter(e -> e.contains(event) && e.contains(trackingId))
           .findAny().orElseThrow(() -> new NvTestCoreWebhookException(
-              f("webhook %s for %s not yet published due to Kafka lag", event, trackingId)));
+              f("cant find webhook %s for %s", event, trackingId)));
       WebhookRequest webhookRequest = fromJsonSnakeCase(json, WebhookRequest.class);
       LOGGER.info(f("webhook event = %s found for %s", event, webhookRequest.getTrackingId()));
       putInMap(KEY_LIST_OF_WEBHOOK_REQUEST + event, webhookRequest.getTrackingId(), webhookRequest);
