@@ -13,6 +13,7 @@ import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
+import co.nvqa.core_api.exception.NvTestCoreEventException;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Then;
@@ -146,7 +147,7 @@ public class OrderActionSteps extends BaseSteps {
     doWithRetry(() -> {
       List<Event> result = getOrderEvent(event, orderId);
       if (result.isEmpty()) {
-        throw new NvTestRuntimeException(
+        throw new NvTestCoreEventException(
             f("events should not empty, order id: %d, event: %s", orderId,
                 event));
       }
@@ -179,17 +180,17 @@ public class OrderActionSteps extends BaseSteps {
       event = events.stream().filter(e -> Objects.equals(e.getOrderId(), orderId))
           .filter(e -> e.getType().equalsIgnoreCase(eventType))
           .filter(e -> e.getData().getSource().equalsIgnoreCase(source)).findAny()
-          .orElseThrow(() -> new NvTestRuntimeException("order event not found"));
+          .orElseThrow(() -> new NvTestCoreEventException("order event not found"));
     } else if (eventType.equalsIgnoreCase(Event.UPDATE_STATUS)) {
       String reason = mapOfData.get("updateStatusReason");
       event = events.stream().filter(e -> Objects.equals(e.getOrderId(), orderId))
           .filter(e -> e.getType().equalsIgnoreCase(eventType))
           .filter(e -> e.getData().getReason().equalsIgnoreCase(reason)).findAny()
-          .orElseThrow(() -> new NvTestRuntimeException("order event not found"));
+          .orElseThrow(() -> new NvTestCoreEventException("order event not found"));
     } else {
       event = events.stream().filter(e -> Objects.equals(e.getOrderId(), orderId))
           .filter(e -> e.getType().equalsIgnoreCase(eventType)).findAny()
-          .orElseThrow(() -> new NvTestRuntimeException("order event not found"));
+          .orElseThrow(() -> new NvTestCoreEventException("order event not found"));
     }
     EventDetail data = event.getData();
     switch (eventType) {
