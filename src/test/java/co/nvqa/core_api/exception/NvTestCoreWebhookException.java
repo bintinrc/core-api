@@ -1,8 +1,8 @@
 package co.nvqa.core_api.exception;
 
-import co.nvqa.common.utils.NvTestEnvironmentException;
+import co.nvqa.common.utils.NvTestProductException;
 
-public class NvTestCoreWebhookException extends NvTestEnvironmentException {
+public class NvTestCoreWebhookException extends NvTestProductException {
 
   public NvTestCoreWebhookException() {
   }
