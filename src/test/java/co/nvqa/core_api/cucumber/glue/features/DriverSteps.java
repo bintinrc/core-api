@@ -2,7 +2,6 @@ package co.nvqa.core_api.cucumber.glue.features;
 
 import co.nvqa.common.core.model.batch_update_pods.ProofDetails;
 import co.nvqa.common.core.model.order.Order;
-import co.nvqa.common.core.model.order.Order.Transaction;
 import co.nvqa.common.core.model.route.ParcelRouteTransferRequest;
 import co.nvqa.common.core.model.route.ParcelRouteTransferResponse;
 import co.nvqa.common.core.model.route.ParcelRouteTransferResponse.FailedOrders;
@@ -15,9 +14,9 @@ import co.nvqa.common.driver.model.rest.SubmitPodRequest.JobMode;
 import co.nvqa.common.driver.model.rest.SubmitPodRequest.JobType;
 import co.nvqa.common.driver.model.rest.SubmitPodRequest.PhysicalItem;
 import co.nvqa.common.utils.DateUtil;
-import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
+import co.nvqa.core_api.exception.NvTestCoreFailedOrdersNotFoundException;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -133,7 +132,7 @@ public class DriverSteps extends BaseSteps {
     trackingIds.forEach(e -> {
       FailedOrders failedOrder = failedOrders.stream()
           .filter(o -> o.getTrackingIds().get(0).equalsIgnoreCase(e)).findAny().orElseThrow(
-              () -> new NvTestRuntimeException(String.format("tracking id %s not found", e)));
+              () -> new NvTestCoreFailedOrdersNotFoundException(String.format("tracking id %s not found", e)));
       Assertions.assertThat(failedOrder.getTrackingIds().size()).as("tracking id size is 1")
           .isEqualTo(1);
       Assertions.assertThat(failedOrder.getTrackingIds().get(0)).as(f("tracking id is: %s", e))

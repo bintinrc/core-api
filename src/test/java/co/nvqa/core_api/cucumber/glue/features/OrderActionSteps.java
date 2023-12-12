@@ -10,9 +10,10 @@ import co.nvqa.common.core.model.order.Order.Transaction;
 import co.nvqa.common.core.model.order.RtsOrderRequest;
 import co.nvqa.common.core.model.other.CoreExceptionResponse.Error;
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
-import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
+import co.nvqa.core_api.exception.NvTestCoreOrderEventNotFoundException;
+import co.nvqa.core_api.exception.NvTestCoreOrderTransactionNotFoundException;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Then;
@@ -146,9 +147,8 @@ public class OrderActionSteps extends BaseSteps {
     doWithRetry(() -> {
       List<Event> result = getOrderEvent(event, orderId);
       if (result.isEmpty()) {
-        throw new NvTestRuntimeException(
-            f("events should not empty, order id: %d, event: %s", orderId,
-                event));
+        throw new NvTestCoreOrderEventNotFoundException(
+            f("events should not empty, order id: %d, event: %s", orderId, event));
       }
       Assertions.assertThat(result.get(0).getType().toLowerCase())
           .as(String.format("%s event is published", event)).isEqualTo(event.toLowerCase());
@@ -179,17 +179,17 @@ public class OrderActionSteps extends BaseSteps {
       event = events.stream().filter(e -> Objects.equals(e.getOrderId(), orderId))
           .filter(e -> e.getType().equalsIgnoreCase(eventType))
           .filter(e -> e.getData().getSource().equalsIgnoreCase(source)).findAny()
-          .orElseThrow(() -> new NvTestRuntimeException("order event not found"));
+          .orElseThrow(() -> new NvTestCoreOrderEventNotFoundException("order event not found"));
     } else if (eventType.equalsIgnoreCase(Event.UPDATE_STATUS)) {
       String reason = mapOfData.get("updateStatusReason");
       event = events.stream().filter(e -> Objects.equals(e.getOrderId(), orderId))
           .filter(e -> e.getType().equalsIgnoreCase(eventType))
           .filter(e -> e.getData().getReason().equalsIgnoreCase(reason)).findAny()
-          .orElseThrow(() -> new NvTestRuntimeException("order event not found"));
+          .orElseThrow(() -> new NvTestCoreOrderEventNotFoundException("order event not found"));
     } else {
       event = events.stream().filter(e -> Objects.equals(e.getOrderId(), orderId))
           .filter(e -> e.getType().equalsIgnoreCase(eventType)).findAny()
-          .orElseThrow(() -> new NvTestRuntimeException("order event not found"));
+          .orElseThrow(() -> new NvTestCoreOrderEventNotFoundException("order event not found"));
     }
     EventDetail data = event.getData();
     switch (eventType) {
@@ -512,12 +512,10 @@ public class OrderActionSteps extends BaseSteps {
   @Override
   protected Transaction getTransaction(Order order, String type, String status) {
     List<Transaction> transactions = order.getTransactions();
-    Transaction result;
-    result = transactions.stream().filter(e -> e.getType().equalsIgnoreCase(type))
+    return transactions.stream().filter(e -> e.getType().equalsIgnoreCase(type))
         .filter(e -> e.getStatus().equalsIgnoreCase(status)).findAny().orElseThrow(
-            () -> new NvTestRuntimeException(
+            () -> new NvTestCoreOrderTransactionNotFoundException(
                 f("transaction details not found: %s", order.getTrackingId())));
-    return result;
   }
 
   private List<Event> getOrderEvent(String event, long orderId) {
@@ -525,5 +523,4 @@ public class OrderActionSteps extends BaseSteps {
     return events.stream().filter(c -> c.getType().equalsIgnoreCase(event))
         .collect(Collectors.toList());
   }
-
 }
