@@ -10,10 +10,10 @@ import co.nvqa.common.core.model.order.Order.Transaction;
 import co.nvqa.common.core.model.order.RtsOrderRequest;
 import co.nvqa.common.core.model.other.CoreExceptionResponse.Error;
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
-import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import co.nvqa.core_api.exception.NvTestCoreEventException;
+import co.nvqa.core_api.exception.NvTestCoreOrderTransactionDetailsMismatchException;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Then;
@@ -513,12 +513,10 @@ public class OrderActionSteps extends BaseSteps {
   @Override
   protected Transaction getTransaction(Order order, String type, String status) {
     List<Transaction> transactions = order.getTransactions();
-    Transaction result;
-    result = transactions.stream().filter(e -> e.getType().equalsIgnoreCase(type))
+    return transactions.stream().filter(e -> e.getType().equalsIgnoreCase(type))
         .filter(e -> e.getStatus().equalsIgnoreCase(status)).findAny().orElseThrow(
-            () -> new NvTestRuntimeException(
+            () -> new NvTestCoreOrderTransactionDetailsMismatchException(
                 f("transaction details not found: %s", order.getTrackingId())));
-    return result;
   }
 
   private List<Event> getOrderEvent(String event, long orderId) {
@@ -526,5 +524,4 @@ public class OrderActionSteps extends BaseSteps {
     return events.stream().filter(c -> c.getType().equalsIgnoreCase(event))
         .collect(Collectors.toList());
   }
-
 }

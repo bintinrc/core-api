@@ -1,5 +1,6 @@
 package co.nvqa.core_api.cucumber.glue.support;
 
+import co.nvqa.common.core.exception.NvTestCoreCastingErrorException;
 import co.nvqa.common.model.address.Address;
 import co.nvqa.common.ordercreate.model.Dimension;
 import co.nvqa.common.ordercreate.model.OrderRequestV4;
@@ -9,7 +10,6 @@ import co.nvqa.common.ordercreate.model.Timeslot;
 import co.nvqa.common.utils.DateUtil;
 import co.nvqa.common.utils.JsonUtils;
 import co.nvqa.common.utils.NvCountry;
-import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.common.utils.RandomUtil;
 import co.nvqa.common.utils.ReflectionUtil;
 import co.nvqa.common.utils.StandardTestConstants;
@@ -66,7 +66,7 @@ public class OrderCreateHelper {
       parcelJob = mapper.readValue(jobJson, ParcelJob.class);
 
     } catch (Exception e) {
-      throw new NvTestRuntimeException("Unable to deserialize order v4 general object", e);
+      throw new NvTestCoreCastingErrorException("Unable to deserialize order v4 general object", e);
     }
     result.setRequestedTrackingNumber(generateRequestedTrackingId());
     String uniqueId = generateUniqueId();
@@ -116,7 +116,7 @@ public class OrderCreateHelper {
           .getDefaultSnakeCaseMapper().readTree(JsonUtils.toJsonSnakeCase(address));
       result.setAddress(addressNode);
     } catch (JsonProcessingException ex) {
-      throw new NvTestRuntimeException("failed to parse json object " + ex.getMessage());
+      throw new NvTestCoreCastingErrorException("failed to parse json object " + ex.getMessage());
     }
     return result;
   }
