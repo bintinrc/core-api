@@ -13,12 +13,12 @@ import co.nvqa.common.ordercreate.client.OrderSearchClient;
 import co.nvqa.common.ordercreate.model.OrderSearchRequest;
 import co.nvqa.common.ordercreate.model.OrderSearchResponse.OrderSearch;
 import co.nvqa.common.ordercreate.model.OrderSearchResponse.SearchData;
-import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.common.webhook.client.ShipperClient;
 import co.nvqa.commonauth.utils.TokenUtils;
 import co.nvqa.commonsort.client.InboundClient;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import co.nvqa.core_api.cucumber.glue.util.CoreApiScenarioStorageKeys;
+import co.nvqa.core_api.exception.NvTestCoreOrderTransactionDetailsMismatchException;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
@@ -83,17 +83,15 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
 
   protected Order getOrderDetails(String trackingId) {
     long orderId = searchOrder(trackingId).getId();
-    Order order = getOrderClient().getOrder(orderId);
-    return order;
+    return getOrderClient().getOrder(orderId);
   }
 
   protected Order.Transaction getTransaction(Order order, String type, String status) {
     List<Transaction> transactions = order.getTransactions();
-    Order.Transaction result;
-    result = transactions.stream()
+    return transactions.stream()
         .filter(e -> e.getType().equalsIgnoreCase(type))
         .filter(e -> e.getStatus().equalsIgnoreCase(status))
-        .findAny().orElseThrow(() -> new NvTestRuntimeException("transaction details not found"));
-    return result;
+        .findAny().orElseThrow(
+            () -> new NvTestCoreOrderTransactionDetailsMismatchException("transaction details not found"));
   }
 }
