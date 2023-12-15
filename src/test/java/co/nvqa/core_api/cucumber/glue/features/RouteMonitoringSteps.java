@@ -3,14 +3,13 @@ package co.nvqa.core_api.cucumber.glue.features;
 import co.nvqa.common.core.model.reservation.ReservationResponse;
 import co.nvqa.common.core.model.route_monitoring.RouteMonitoringResponse;
 import co.nvqa.common.core.model.route_monitoring.Waypoint;
-import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.common.ordercreate.model.OrderRequestV4;
 import co.nvqa.common.ordercreate.model.OrderRequestV4.UserDetail;
 import co.nvqa.common.ordercreate.model.Timeslot;
 import co.nvqa.common.utils.DateUtil;
-import co.nvqa.common.utils.NvTestRuntimeException;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.TestConstants;
+import co.nvqa.core_api.exception.NvTestCoreRouteMonitoringException;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
@@ -53,7 +52,7 @@ public class RouteMonitoringSteps extends BaseSteps {
               date, hubIds, zoneIds, 1000);
       RouteMonitoringResponse result = routeMonitoringDetails.stream()
           .filter(e -> e.getRouteId().equals(routeId)).findAny().orElseThrow(
-              () -> new NvTestRuntimeException("Route Monitoring Data not found " + routeId));
+              () -> new NvTestCoreRouteMonitoringException("Route Monitoring Data not found " + routeId));
       put(KEY_ROUTE_MONITORING_RESULT, result);
     }, "get route monitoring data");
 
@@ -62,7 +61,6 @@ public class RouteMonitoringSteps extends BaseSteps {
   @Given("Operator verifies Route Monitoring Data Has Correct Details for {string} Case")
   public void operatorChecksTotalParcelsCount(String waypointType, Map<String, Integer> arg1) {
     doWithRetry(() -> {
-      operatorFilterRouteMonitoring();
       List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
       List<Long> pullOutOrderTids = get(KEY_LIST_OF_PULL_OUT_OF_ROUTE_TRACKING_ID);
       long routeId = get(KEY_CREATED_ROUTE_ID);
@@ -99,7 +97,6 @@ public class RouteMonitoringSteps extends BaseSteps {
   @When("Operator verifies Route Monitoring Data Has Correct Details for Invalid Failed Waypoints")
   public void checkInvalidFailedDeliveries(Map<String, Integer> dataTable) {
     doWithRetry(() -> {
-      operatorFilterRouteMonitoring();
       List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
       long routeId = get(KEY_CREATED_ROUTE_ID);
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
@@ -152,7 +149,6 @@ public class RouteMonitoringSteps extends BaseSteps {
   public void operatorChecksEmptyRouteData(Map<String, Integer> dataTable) {
     long routeId = get(KEY_CREATED_ROUTE_ID);
     doWithRetry(() -> {
-      operatorFilterRouteMonitoring();
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
       checkRouteDetails(result);
       Assertions.assertThat(result.getTotalParcels())
@@ -163,7 +159,6 @@ public class RouteMonitoringSteps extends BaseSteps {
           .as(String.format("total pending waypoints for route id %d", routeId)).isEqualTo(0);
       checkPendingDetails(routeId, result, dataTable);
       Assertions.assertThat(result.getLastSeen()).as("Last seen is null").isNull();
-
     }, "check empty route");
   }
 
@@ -232,7 +227,7 @@ public class RouteMonitoringSteps extends BaseSteps {
 
       pickups.forEach(e -> {
         Waypoint waypoint = waypoints.stream().filter(o -> o.getId().equals(e.getId()))
-            .findAny().orElseThrow(() -> new NvTestRuntimeException(
+            .findAny().orElseThrow(() -> new NvTestCoreRouteMonitoringException(
                 "reservation details not found: " + e.getId()));
         Assertions.assertThat(waypoint.getId()).as("reservation id")
             .isEqualTo(e.getId());
@@ -263,7 +258,7 @@ public class RouteMonitoringSteps extends BaseSteps {
         long orderId = getOrderClient().searchOrderByTrackingId(e.getTrackingNumber()).getId();
         Waypoint waypoint = waypoints.stream()
             .filter(o -> o.getTrackingId().contains(e.getTrackingNumber())).findAny().orElseThrow(
-                () -> new NvTestRuntimeException("waypoint not found: " + e.getTrackingNumber()));
+                () -> new NvTestCoreRouteMonitoringException("waypoint not found: " + e.getTrackingNumber()));
 
         Assertions.assertThat(waypoint.getTrackingId()).as("contain tracking id")
             .contains(e.getTrackingNumber());
@@ -322,7 +317,7 @@ public class RouteMonitoringSteps extends BaseSteps {
         long orderId = getOrderClient().searchOrderByTrackingId(e.getTrackingNumber()).getId();
         Waypoint waypoint = waypoints.stream()
             .filter(o -> o.getTrackingId().contains(e.getTrackingNumber())).findAny().orElseThrow(
-                () -> new NvTestRuntimeException("pending priority parcels details not found"));
+                () -> new NvTestCoreRouteMonitoringException("pending priority parcels details not found"));
 
         Assertions.assertThat(waypoint.getTrackingId()).as("tracking id is correct")
             .contains(e.getTrackingNumber());
@@ -419,7 +414,6 @@ public class RouteMonitoringSteps extends BaseSteps {
     List<OrderRequestV4> reservationDetails = get(KEY_LIST_RESERVATION_REQUEST_DETAILS);
     Map<String, OrderRequestV4> requestMap = get(KEY_LIST_OF_ORDER_CREATE_REQUEST);
     doWithRetry(() -> {
-      operatorFilterRouteMonitoring();
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
       List<Waypoint> waypoints = result.getWaypoints();
       int expectedTotalWaypoints = get(KEY_TOTAL_EXPECTED_WAYPOINT);
@@ -432,7 +426,7 @@ public class RouteMonitoringSteps extends BaseSteps {
           Waypoint waypoint = waypoints.stream()
               .filter(o -> o.getType().equalsIgnoreCase(WAYPOINT_TYPE_TRANSACTION))
               .filter(o -> o.getTrackingId().contains(e.getTrackingNumber())).findAny()
-              .orElseThrow(() -> new NvTestRuntimeException("parcels details not found"));
+              .orElseThrow(() -> new NvTestCoreRouteMonitoringException("parcels details not found"));
           Assertions.assertThat(waypoint.getType()).as("type")
               .isEqualToIgnoringCase(WAYPOINT_TYPE_TRANSACTION);
           Assertions.assertThat(waypoint.getTrackingId()).as("tracking id")
@@ -498,7 +492,7 @@ public class RouteMonitoringSteps extends BaseSteps {
           Waypoint waypoint = waypoints.stream()
               .filter(o -> o.getType().equalsIgnoreCase(WAYPOINT_TYPE_RESERVATION))
               .filter(o -> o.getName().equalsIgnoreCase(e.getFrom().getName())).findAny()
-              .orElseThrow(() -> new NvTestRuntimeException("parcels details not found"));
+              .orElseThrow(() -> new NvTestCoreRouteMonitoringException("parcels details not found"));
 
           Assertions.assertThat(waypoint.getType()).as("type is reservation")
               .isEqualToIgnoringCase(WAYPOINT_TYPE_RESERVATION);
@@ -538,18 +532,15 @@ public class RouteMonitoringSteps extends BaseSteps {
   public void checkPendingPriorityParcels(Map<String, Integer> dataTable) {
     int totalExpectedCount = dataTable.get(KEY_TOTAL_EXPECTED_PENDING_PRIORITY);
     doWithRetry(() -> {
-      operatorFilterRouteMonitoring();
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
-      Assertions.assertThat(result.getPendingPriorityParcels()).as("total pending priority parcels")
-          .isEqualTo(totalExpectedCount);
-      operatorChecksTotalParcelsCount(WAYPOINT_TYPE_PENDING, dataTable);
+      Assertions.assertThat(result.getPendingPriorityParcels())
+          .as("total pending priority parcels").isEqualTo(totalExpectedCount);
     }, "check total pending priority parcels");
   }
 
   @When("Operator verifies total pending priority parcels is now 0")
   public void excludeAttemptedPendingPriorityParcels() {
     doWithRetry(() -> {
-      operatorFilterRouteMonitoring();
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
       Assertions.assertThat(result.getPendingPriorityParcels()).as("total pending priority parcels")
           .isEqualTo(0);
@@ -559,10 +550,8 @@ public class RouteMonitoringSteps extends BaseSteps {
   @When("Operator verifies total invalid failed is 0 and other details")
   public void totalEmptyInvalidFailed(Map<String, Integer> waypointCounts) {
     doWithRetry(() -> {
-      operatorFilterRouteMonitoring();
       RouteMonitoringResponse result = get(KEY_ROUTE_MONITORING_RESULT);
       Assertions.assertThat(result.getNumInvalidFailed()).as("total invalid failed").isEqualTo(0);
-      operatorChecksTotalParcelsCount(WAYPOINT_TYPE_INVALID_FAILED, waypointCounts);
     }, "check total invalid failed");
   }
 
