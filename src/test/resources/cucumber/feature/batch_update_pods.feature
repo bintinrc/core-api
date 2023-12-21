@@ -398,8 +398,7 @@ Feature: Batch Update PODs
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | routeId       | {KEY_CREATED_ROUTE_ID}                           |
-#    TODO uncomment when lag has been investigated/fixed
-#    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Success"
+    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Success"
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | status   | Success                                          |
@@ -447,8 +446,7 @@ Feature: Batch Update PODs
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | routeId       | {KEY_CREATED_ROUTE_ID}                           |
-#    TODO uncomment when lag has been investigated/fixed
-#    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Success"
+    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Success"
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | status   | Success                                          |
@@ -496,8 +494,7 @@ Feature: Batch Update PODs
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | routeId       | {KEY_CREATED_ROUTE_ID}                           |
-#        TODO uncomment when lag has been investigated/fixed
-#    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Success"
+    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Success"
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | status   | Success                                          |
@@ -534,8 +531,7 @@ Feature: Batch Update PODs
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | routeId       | {KEY_CREATED_ROUTE_ID}                           |
-    #        TODO uncomment when lag has been investigated/fixed
-#    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Success"
+    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Success"
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | status   | Success                                          |
@@ -574,8 +570,7 @@ Feature: Batch Update PODs
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | routeId       | {KEY_CREATED_ROUTE_ID}                           |
-    #        TODO uncomment when lag has been investigated/fixed
-#    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Fail"
+    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Fail"
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | status   | Fail                                             |
@@ -617,8 +612,7 @@ Feature: Batch Update PODs
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | routeId       | {KEY_CREATED_ROUTE_ID}                           |
-    #        TODO uncomment when lag has been investigated/fixed
-#    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Fail"
+    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Fail"
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | status   | Fail                                             |
@@ -672,8 +666,7 @@ Feature: Batch Update PODs
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}         |
       | waypointId    | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | routeId       | {KEY_CREATED_ROUTE_ID}                           |
-    #        TODO uncomment when lag has been investigated/fixed
-#    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Fail"
+    Then Operator verify that reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" status is "Fail"
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | status   | Fail                                             |

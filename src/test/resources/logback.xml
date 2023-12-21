@@ -18,7 +18,6 @@
   <logger name="co.nvqa.common.reporter.cucumber.formatter.CustomNvReporter" level="OFF"/>
   <logger name="co.nvqa.common.ui.support.AndroidSupport" level="INFO"/>
   <logger name="co.nvqa.common.utils.CustomLogger" level="DEBUG" />
-  <logger name="co.nvqa.commons.client.BaseApiClient.NvRequestLogger" level="DEBUG" />
   <logger name="com.epam.reportportal.service" level="OFF"/>
   <logger name="com.epam.reportportal.utils" level="OFF"/>
   <logger name="sh.qos.logback" level="OFF"/>
