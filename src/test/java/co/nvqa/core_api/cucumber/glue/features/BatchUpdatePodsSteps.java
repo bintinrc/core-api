@@ -1,5 +1,6 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
+import co.nvqa.common.core.exception.NvTestCoreCastingErrorException;
 import co.nvqa.common.core.model.batch_update_pods.BlobData;
 import co.nvqa.common.core.model.batch_update_pods.FailedParcels;
 import co.nvqa.common.core.model.batch_update_pods.Job;
@@ -290,6 +291,11 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   @Given("Verify blob data is correct")
   public void dbOperatorVerifiesBlobData() {
     List<JobUpdate> proofRequest = get(KEY_UPDATE_PROOFS_REQUEST);
+    try {
+      Assertions.assertThat(proofRequest).isNotNull();
+    } catch (Exception e) {
+      throw new NvTestCoreCastingErrorException("KEY_UPDATE_PROOFS_REQUEST should not be null", e);
+    }
     Map<Long, String> blobDataMap = get(CoreScenarioStorageKeys.KEY_CORE_LIST_OF_BLOB_DATA);
     doWithRetry(() -> {
       proofRequest.forEach(e -> {
