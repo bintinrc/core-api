@@ -60,10 +60,6 @@ Feature: Parcel Route Transfer
       | routeId          | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
       | routeEventSource | ROUTE_TRANSFER                                |
     And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN                           |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]}             |
-      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
-    And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                                  |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]}             |
       | routeId          | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
@@ -74,10 +70,6 @@ Feature: Parcel Route Transfer
       | routeId          | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
       | routeEventSource | ROUTE_TRANSFER                                |
     And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN                           |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[2]}             |
-      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
-    And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                                  |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]}             |
       | routeId          | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
@@ -87,10 +79,6 @@ Feature: Parcel Route Transfer
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]}             |
       | routeId          | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
       | routeEventSource | ROUTE_TRANSFER                                |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN                           |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[3]}             |
-      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId} |
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                                  |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]}             |
@@ -152,10 +140,6 @@ Feature: Parcel Route Transfer
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
       | routeEventSource | ROUTE_TRANSFER                    |
     And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN               |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
-    And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                      |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
@@ -207,10 +191,6 @@ Feature: Parcel Route Transfer
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
       | routeEventSource | ROUTE_TRANSFER                    |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN               |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                      |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
@@ -293,10 +273,6 @@ Feature: Parcel Route Transfer
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
       | routeEventSource | ROUTE_TRANSFER                    |
     And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN               |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
-    And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                      |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
@@ -310,10 +286,6 @@ Feature: Parcel Route Transfer
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
       | routeEventSource | ROUTE_TRANSFER                    |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN               |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                      |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
@@ -328,10 +300,6 @@ Feature: Parcel Route Transfer
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
       | routeEventSource | ROUTE_TRANSFER                    |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN               |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                      |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
@@ -399,10 +367,6 @@ Feature: Parcel Route Transfer
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
       | routeEventSource | ROUTE_TRANSFER                    |
     And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN               |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
-    And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                      |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
@@ -463,10 +427,6 @@ Feature: Parcel Route Transfer
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
       | routeEventSource | ROUTE_TRANSFER                    |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN               |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                      |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
@@ -679,10 +639,6 @@ Feature: Parcel Route Transfer
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
       | routeEventSource | ROUTE_TRANSFER                    |
     And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN               |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
-    And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                      |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
@@ -693,10 +649,6 @@ Feature: Parcel Route Transfer
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
       | routeEventSource | ROUTE_TRANSFER                    |
     And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN               |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
-    And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                      |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
@@ -706,10 +658,6 @@ Feature: Parcel Route Transfer
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[4]} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
       | routeEventSource | ROUTE_TRANSFER                    |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN               |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[4]} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[1]} |
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                      |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[4]} |
@@ -807,10 +755,6 @@ Feature: Parcel Route Transfer
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
       | routeEventSource | ROUTE_TRANSFER                    |
     And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN               |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
-    And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                      |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
@@ -824,10 +768,6 @@ Feature: Parcel Route Transfer
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
       | routeEventSource | ROUTE_TRANSFER                    |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN               |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                      |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
@@ -842,10 +782,6 @@ Feature: Parcel Route Transfer
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
       | routeEventSource | ROUTE_TRANSFER                    |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | DRIVER_INBOUND_SCAN               |
-      | orderId | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTE_ID[2]} |
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                      |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[3]} |
