@@ -1,5 +1,6 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
+import co.nvqa.common.core.model.batch_update_pods.Job;
 import co.nvqa.common.core.model.batch_update_pods.ProofDetails;
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.common.dp.constants.DpScenarioStorageKeys;
@@ -20,10 +21,12 @@ import co.nvqa.core_api.exception.NvTestCoreWebhookException;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.slf4j.Logger;
@@ -180,9 +183,10 @@ public class WebhookSteps extends BaseSteps {
               }
               break;
             case SUCCESSFUL_PICKUP:
-              //to exclude POD on Pickup with Normal Order
-              if (order.getServiceType().equalsIgnoreCase("Parcel")
-                  || proofDetails == null) {
+              //to exclude POD on Pickup with Normal Order under a reservation
+              final String jobType = get(KEY_UPDATE_PODS_JOB_TYPE);
+              if ((order.getServiceType().equalsIgnoreCase("Parcel")
+                  || proofDetails == null) && !jobType.equalsIgnoreCase("PICKUP_APPOINTMENT")) {
                 Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
               } else {
                 checkDeliverySuccessPod(request, trackingId);
