@@ -1,4 +1,4 @@
-@ForceSuccessOrders  @routing1 @order-tag-to-dp @routing-refactor
+@ForceSuccessOrders  @routing1 @order-tag-to-dp @routing-refactor @test
 Feature: Order Tag to DP
 
   @happy-path @HighPriority
@@ -1154,3 +1154,82 @@ Feature: Order Tag to DP
       | event              | UPDATE_STATUS                      |
       | orderId            | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | updateStatusReason | RELEASED_FROM_DP                   |
+
+  @HighPriority
+  Scenario: PUT /2.0/orders/:orderId/routes-dp - Add Multiple Merge Orders To DP Routes
+    Given API Order - Shipper create multiple V4 orders using data below:
+      | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+      | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+      | numberOfOrder       | 2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+      | generateFrom        | RANDOM                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+      | v4OrderRequest      | { "service_type":"Parcel","service_level":"Standard","to":{"name": "binti v4.1","phone_number": "+65189189","email": "binti@test.co", "address": {"address1": "80 MANDAI LAKE ROAD","address2": "Singapore Zoological","country": "SG","postcode": "511200","latitude": 1.3248209,"longitude": 103.6983167}},"parcel_job":{ "is_pickup_required":false, "pickup_date":"{{next-1-day-yyyy-MM-dd}}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
+    And API Core - Operator get multiple order details for tracking ids:
+      | KEY_LIST_OF_CREATED_TRACKING_IDS[1] |
+      | KEY_LIST_OF_CREATED_TRACKING_IDS[2] |
+    And API Sort - Operator global inbound multiple parcel for "{sorting-hub-id}" hub id with data below:
+      | KEY_LIST_OF_CREATED_TRACKING_IDS[1] |
+      | KEY_LIST_OF_CREATED_TRACKING_IDS[2] |
+    And API Core - Operator merge waypoints on Zonal Routing:
+      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+    Then API Core - Operator verifies response of merge waypoint on Zonal Routing
+      | expectedResponse | { "data": [ { "data": { "waypoint_id": {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}, "transaction_ids": [ {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id},{KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} ]} } ] } |
+      | actualResponse   | {KEY_CORE_MERGE_WAYPOINT_RESPONSE}                                                                                                                                                                                                     |
+    Then API Core - Operator verifies "Delivery" transactions of following orders have same waypoint id:
+      | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
+    Given API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+    When API Core - Operator new add parcel to DP holding route:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+    When API Core - Operator new add parcel to DP holding route:
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+    And API Core - Operator verifies "Delivery" transactions of following orders have different waypoint id:
+      | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
+    And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[1]"
+    And API Core - save the last Delivery transaction of "{KEY_LIST_OF_CREATED_ORDERS[1].id}" order from "KEY_LIST_OF_CREATED_ORDERS" as "KEY_TRANSACTION"
+    When DB Core - operator get waypoints details for "{KEY_TRANSACTION.waypointId}"
+    And DB Core - verify transactions record:
+      | id         | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | status     | Pending                                                    |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
+      | seqNo      | not null                                                   |
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | seqNo    | not null                                                   |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
+      | status   | Routed                                                     |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                       |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | routeEventSource | ADD_BY_ORDER_DP                    |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
+    And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[2]"
+    And API Core - save the last Delivery transaction of "{KEY_LIST_OF_CREATED_ORDERS[2].id}" order from "KEY_LIST_OF_CREATED_ORDERS" as "KEY_TRANSACTION"
+    When DB Core - operator get waypoints details for "{KEY_TRANSACTION.waypointId}"
+    And DB Core - verify transactions record:
+      | id         | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | status     | Pending                                                    |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
+      | seqNo      | not null                                                   |
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | seqNo    | not null                                                   |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
+      | status   | Routed                                                     |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                       |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | routeEventSource | ADD_BY_ORDER_DP                    |
+    And DB Core - verify route_monitoring_data record:
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
