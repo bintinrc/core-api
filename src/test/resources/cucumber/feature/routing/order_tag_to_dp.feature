@@ -792,6 +792,9 @@ Feature: Order Tag to DP
     When API Core - Operator untag from dp and remove from holding route:
       | request | {"dp_untag": {"user_id": 120701}, "remove_from_route_dp": {"type": "DELIVERY"}} |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id}                                              |
+    And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[1]"
+    And API Core - save the last Delivery transaction of "{KEY_LIST_OF_CREATED_ORDERS[1].id}" order from "KEY_LIST_OF_CREATED_ORDERS" as "KEY_TRANSACTION"
+    When DB Core - operator get waypoints details for "{KEY_TRANSACTION.waypointId}"
     Then DB Core - verify waypoints record:
       | id       | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | null                                                       |
