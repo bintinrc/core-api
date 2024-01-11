@@ -3,7 +3,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job
 
   https://studio.cucumber.io/projects/208144/test-plan/folders/2930485
 
-  @HighPriority
+  @HighPriority @done
   Scenario Outline: ID - Auto Route PAJ - Date = Today, Creation = Within Start & End Clock Time, Driver has No Routes - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     And API Control - Operator create pickup appointment job with data below:
@@ -44,7 +44,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job
       | Pickup Type: FM Dedicated | {fm-paj-driver-1} | {fm-paj-zone-id-1} | {fm-paj-hub-id-1-fm-dedicated} | {fm-paj-shipper-id-1-fm-dedicated} | {fm-paj-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-paj-driver-1} | {fm-paj-zone-id-1} | {fm-paj-hub-id-1-truck}        | {fm-paj-shipper-id-1-truck}        | {fm-paj-address-id-1-truck}        |
 
-  @HighPriority
+  @HighPriority @done
   Scenario Outline: ID - Auto Route PAJ - Date = Today, Creation = Within Start & End Clock Time, Driver has Existing Route - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     And API Core - Operator create new route using data below:
@@ -129,7 +129,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job
       | zone_id            | shipper_id                   | address_id                   |
       | {fm-paj-zone-id-3} | {fm-paj-shipper-id-3-hybrid} | {fm-paj-address-id-3-hybrid} |
 
-  @HighPriority
+  @HighPriority @done
   Scenario Outline: ID - Auto Route PAJ - Date = Tomorrow, Creation = Within Start & End Clock Time - <Note>
     And API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+07:00", "latest":"{date: 1 days next, YYYY-MM-dd}T22:00:00+07:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
