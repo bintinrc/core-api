@@ -15,7 +15,8 @@ public class NvTestCoreRouteMonitoringException extends NvTestProductException {
     super(message);
   }
 
-  public NvTestCoreRouteMonitoringException(String message, Throwable cause, boolean enableSuppression,
+  public NvTestCoreRouteMonitoringException(String message, Throwable cause,
+      boolean enableSuppression,
       boolean writableStackTrace) {
     super(message, cause, enableSuppression, writableStackTrace);
   }

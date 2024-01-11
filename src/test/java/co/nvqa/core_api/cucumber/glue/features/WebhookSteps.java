@@ -1,6 +1,5 @@
 package co.nvqa.core_api.cucumber.glue.features;
 
-import co.nvqa.common.core.model.batch_update_pods.Job;
 import co.nvqa.common.core.model.batch_update_pods.ProofDetails;
 import co.nvqa.common.core.utils.CoreScenarioStorageKeys;
 import co.nvqa.common.dp.constants.DpScenarioStorageKeys;
@@ -21,12 +20,10 @@ import co.nvqa.core_api.exception.NvTestCoreWebhookException;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.slf4j.Logger;

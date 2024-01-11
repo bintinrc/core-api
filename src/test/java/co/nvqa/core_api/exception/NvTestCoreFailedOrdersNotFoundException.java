@@ -15,7 +15,8 @@ public class NvTestCoreFailedOrdersNotFoundException extends NvTestProductExcept
     super(message);
   }
 
-  public NvTestCoreFailedOrdersNotFoundException(String message, Throwable cause, boolean enableSuppression,
+  public NvTestCoreFailedOrdersNotFoundException(String message, Throwable cause,
+      boolean enableSuppression,
       boolean writableStackTrace) {
     super(message, cause, enableSuppression, writableStackTrace);
   }
