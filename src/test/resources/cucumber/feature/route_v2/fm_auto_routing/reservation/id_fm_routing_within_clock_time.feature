@@ -1,17 +1,18 @@
 @routing-id @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-rsvn-id-2
 Feature: ID - FM Automated Routing - Within Clock Time
 
-#  Scenario: prepare data
-#    Given API Shipper - Operator create new shipper using data below:
-#      | shipperType | Normal |
-#    And API Shipper - Operator create new shipper address using data below:
-#      | shipperId             | {KEY_SHIPPER_LIST_OF_SHIPPERS[1].id}                                                                                                                                                                                                                          |
-#      | generateAddress       | null                                                                                                                                                                                                                                                          |
-#      | shipperAddressRequest | {"name":"QaRsvn1","contact":"09876576","email":"Station@gmail.com","address1":"36SenokoRd,Singapore","address2":"","country":"SG","latitude":1.3610824655719687,"longitude":103.82899312865466,"postcode":"124100","milkrun_settings":[],"is_milk_run":false} |
-#    And API Shipper - Operator create new shipper address using data below:
-#      | shipperId             | {KEY_SHIPPER_LIST_OF_SHIPPERS[1].id}                                                                                                                                                                                                                          |
-#      | generateAddress       | null                                                                                                                                                                                                                                                          |
-#      | shipperAddressRequest | {"name":"QaRsvn2","contact":"09876576","email":"Station@gmail.com","address1":"36SenokoRd,Singapore","address2":"","country":"SG","latitude":1.3610824655719687,"longitude":103.82899312865466,"postcode":"124100","milkrun_settings":[],"is_milk_run":false} |
+
+  Scenario: prepare data
+    Given API Shipper - Operator create new shipper using data below:
+      | shipperType | Normal |
+    And API Shipper - Operator create new shipper address using data below:
+      | shipperId             | {KEY_SHIPPER_LIST_OF_SHIPPERS[1].id}                                                                                                                                                                                                                          |
+      | generateAddress       | null                                                                                                                                                                                                                                                          |
+      | shipperAddressRequest | {"name":"QaRsvn1","contact":"09876576","email":"Station@gmail.com","address1":"36SenokoRd,Singapore","address2":"","country":"SG","latitude":1.3610824655719687,"longitude":103.82899312865466,"postcode":"124100","milkrun_settings":[],"is_milk_run":false} |
+    And API Shipper - Operator create new shipper address using data below:
+      | shipperId             | {KEY_SHIPPER_LIST_OF_SHIPPERS[1].id}                                                                                                                                                                                                                          |
+      | generateAddress       | null                                                                                                                                                                                                                                                          |
+      | shipperAddressRequest | {"name":"QaRsvn2","contact":"09876576","email":"Station@gmail.com","address1":"36SenokoRd,Singapore","address2":"","country":"SG","latitude":1.3610824655719687,"longitude":103.82899312865466,"postcode":"124100","milkrun_settings":[],"is_milk_run":false} |
 
 
   @CancelCreatedReservations @HighPriority @done
@@ -99,7 +100,7 @@ Feature: ID - FM Automated Routing - Within Clock Time
       | Pickup Type: FM Dedicated | {fm-rsvn-zone-id-1} | {fm-rsvn-hub-id-1-fm-dedicated} | {fm-rsvn-shipper-legacy-id-1-fm-dedicated} | {fm-rsvn-shipper-id-1-fm-dedicated} | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-rsvn-zone-id-1} | {fm-rsvn-hub-id-1-truck}        | {fm-rsvn-shipper-legacy-id-1-truck}        | {fm-rsvn-shipper-id-1-truck}        | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-truck}        |
 
-  @CancelCreatedReservations @HighPriority
+  @CancelCreatedReservations @HighPriority @done
   Scenario Outline: ID - Auto Route Reservation - Date = Today, No Driver Assigned for the Zone, Creation = Within Start & End Clock Time - <Note>
     Given API Core - Operator create reservation using data below:
       | reservationRequest | {"global_shipper_id": <shipper_global_id>, "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
@@ -110,9 +111,9 @@ Feature: ID - FM Automated Routing - Within Clock Time
       | status        | Pending                                          |
       | routingZoneId | <zone_id>                                        |
     Examples:
-      | Note                      | zone_id             | shipper_legacy_id                          | address_id                          |
-      | Pickup Type: FM Dedicated | {fm-rsvn-zone-id-3} | {fm-rsvn-shipper-legacy-id-3-fm-dedicated} | {fm-rsvn-address-id-3-fm-dedicated} |
-      | Pickup Type: Truck        | {fm-rsvn-zone-id-3} | {fm-rsvn-shipper-legacy-id-3-truck}        | {fm-rsvn-address-id-3-truck}        |
+      | Note                      | zone_id             | shipper_legacy_id                          | shipper_global_id                   | address_id                          |
+      | Pickup Type: FM Dedicated | {fm-rsvn-zone-id-2} | {fm-rsvn-shipper-legacy-id-2-fm-dedicated} | {fm-rsvn-shipper-id-2-fm-dedicated} | {fm-rsvn-address-id-2-fm-dedicated} |
+      | Pickup Type: Truck        | {fm-rsvn-zone-id-2} | {fm-rsvn-shipper-legacy-id-2-truck}        | {fm-rsvn-shipper-id-2-truck}        | {fm-rsvn-address-id-2-truck}        |
 
   @CancelCreatedReservations @HighPriority
   Scenario Outline: ID - Auto Route Reservation - Date = Today, Pickup Type = Hybrid, Creation = Within Start & End Clock Time
