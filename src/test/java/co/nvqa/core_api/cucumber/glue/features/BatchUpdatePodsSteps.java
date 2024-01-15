@@ -72,8 +72,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
       getTransactionWaypointId(Transaction.TYPE_DELIVERY);
       long waypointId = get(KEY_WAYPOINT_ID);
       List<JobUpdate> request = createTransactionJobRequest(trackingIds, ACTION_MODE_SUCCESS,
-          DELIVERY_JOB_MODE,
-          true, WebhookRequest.Pod.POD_TYPE_RECIPIENT, false);
+          DELIVERY_JOB_MODE, true, WebhookRequest.Pod.POD_TYPE_RECIPIENT, false);
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
     }, "batch update jobs");
   }
@@ -152,32 +151,36 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "batch update proofs");
   }
 
-  @Given("API Batch Update Job Request to {string} All Orders under the reservation")
-  public void apiBatchJobUpdateReservationAllOrders(String action, Map<String, String> data) {
+  @Given("API Batch Update Job Request to {string} All Orders under the {}")
+  public void apiBatchJobUpdateReservationAllOrders(String action, String pickupType,
+      Map<String, String> data) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     Map<String, String> resolvedData = resolveKeyValues(data);
     final long reservationId = Long.parseLong(resolvedData.get("reservationId"));
     final long waypointId = Long.parseLong(resolvedData.get("waypointId"));
     final long routeId = Long.parseLong(resolvedData.get("routeId"));
+    final String jobType = resolvedData.get("jobType");
+    put(KEY_UPDATE_PODS_JOB_TYPE, jobType);
     doWithRetry(() -> {
-      List<JobUpdate> request = createReservationJobRequest(trackingIds,
-          reservationId, action,
-          action);
+      List<JobUpdate> request = createReservationJobRequest(trackingIds, reservationId, action,
+          action, jobType);
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
     }, "batch update jobs");
   }
 
-  @Given("API Batch Update Proof Request to {string} All Orders under the reservation")
-  public void apiBatchProofsUpdateReservationAllOrders(String action, Map<String, String> data) {
+  @Given("API Batch Update Proof Request to {string} All Orders under the {}")
+  public void apiBatchProofsUpdateReservationAllOrders(String action, String pickupType,
+      Map<String, String> data) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     Map<String, String> resolvedData = resolveKeyValues(data);
     final long reservationId = Long.parseLong(resolvedData.get("reservationId"));
     final long waypointId = Long.parseLong(resolvedData.get("waypointId"));
     final long routeId = Long.parseLong(resolvedData.get("routeId"));
+    final String jobType = resolvedData.get("jobType");
+    put(KEY_UPDATE_PODS_JOB_TYPE, jobType);
     doWithRetry(() -> {
-      List<JobUpdate> request = createReservationUpdateProofRequest(
-          reservationId, trackingIds,
-          action);
+      List<JobUpdate> request = createReservationUpdateProofRequest(reservationId, trackingIds,
+          action, jobType);
       put(KEY_UPDATE_PROOFS_REQUEST, request);
       getBatchUpdatePodClient().batchUpdatePodProofs(routeId, waypointId, request);
     }, "batch update proofs");
@@ -201,55 +204,68 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     put(KEY_UPDATE_PROOFS_REQUEST, request);
   }
 
-  @Given("API Batch Update Proof Request to Partial Success & Fail Orders under the reservation")
-  public void apiBatchProofsUpdateReservationPartialSuccess(Map<String, String> data) {
+  @Given("API Batch Update Proof Request to Partial Success & Fail Orders under the {}")
+  public void apiBatchProofsUpdateReservationPartialSuccess(String pickupType,
+      Map<String, String> data) {
     Map<String, String> resolvedData = resolveKeyValues(data);
     final long reservationId = Long.parseLong(resolvedData.get("reservationId"));
     final long waypointId = Long.parseLong(resolvedData.get("waypointId"));
     final long routeId = Long.parseLong(resolvedData.get("routeId"));
+    final String jobType = resolvedData.get("jobType");
+    put(KEY_UPDATE_PODS_JOB_TYPE, jobType);
     doWithRetry(() -> {
-      List<JobUpdate> request = createReservationPartialSuccessProofRequest(reservationId);
+      List<JobUpdate> request = createReservationPartialSuccessProofRequest(reservationId, jobType);
       put(KEY_UPDATE_PROOFS_REQUEST, request);
       getBatchUpdatePodClient().batchUpdatePodProofs(routeId, waypointId, request);
     }, "batch update proofs");
   }
 
-  @Given("API Batch Update Proof Request to {string} Reservation without any Parcel")
-  public void apiBatchProofsUpdateReservationNoOrders(String action, Map<String, String> data) {
+  @Given("API Batch Update Proof Request to {string} {} without any Parcel")
+  public void apiBatchProofsUpdateReservationNoOrders(String action, String pickuptype,
+      Map<String, String> data) {
     Map<String, String> resolvedData = resolveKeyValues(data);
     final long reservationId = Long.parseLong(resolvedData.get("reservationId"));
     final long waypointId = Long.parseLong(resolvedData.get("waypointId"));
     final long routeId = Long.parseLong(resolvedData.get("routeId"));
+    final String jobType = resolvedData.get("jobType");
+    put(KEY_UPDATE_PODS_JOB_TYPE, jobType);
     doWithRetry(() -> {
       List<JobUpdate> request = createReservationUpdateProofRequest(reservationId,
-          new ArrayList<>(), action);
+          new ArrayList<>(), action, jobType);
       put(KEY_UPDATE_PROOFS_REQUEST, request);
       getBatchUpdatePodClient().batchUpdatePodProofs(routeId, waypointId, request);
     }, "batch update proofs");
   }
 
-  @Given("API Batch Update Job Request to Partial Success Orders under the reservation")
-  public void apiBatchJobUpdateReservationPartialOrders(Map<String, String> data) {
+  @Given("API Batch Update Job Request to Partial Success Orders under the {}")
+  public void apiBatchJobUpdateReservationPartialOrders(String pickupType,
+      Map<String, String> data) {
     List<String> trackingIds = get(KEY_LIST_OF_CREATED_ORDER_TRACKING_ID);
     Map<String, String> resolvedData = resolveKeyValues(data);
     final long reservationId = Long.parseLong(resolvedData.get("reservationId"));
     final long waypointId = Long.parseLong(resolvedData.get("waypointId"));
     final long routeId = Long.parseLong(resolvedData.get("routeId"));
+    final String jobType = resolvedData.get("jobType");
+    put(KEY_UPDATE_PODS_JOB_TYPE, jobType);
     doWithRetry(() -> {
       List<JobUpdate> request = createReservationPartialSuccessJobRequest(trackingIds,
-          reservationId);
+          reservationId, jobType);
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
     }, "batch update jobs");
   }
 
-  @Given("API Batch Update Job Request to {string} Reservation without any Parcel")
-  public void apiBatchJobUpdateReservationWithoutOrder(String action, Map<String, String> data) {
+  @Given("API Batch Update Job Request to {string} {} without any Parcel")
+  public void apiBatchJobUpdateReservationWithoutOrder(String action, String pickupType,
+      Map<String, String> data) {
     Map<String, String> resolvedData = resolveKeyValues(data);
     final long reservationId = Long.parseLong(resolvedData.get("reservationId"));
     final long waypointId = Long.parseLong(resolvedData.get("waypointId"));
     final long routeId = Long.parseLong(resolvedData.get("routeId"));
+    final String jobType = resolvedData.get("jobType");
+    put(KEY_UPDATE_PODS_JOB_TYPE, jobType);
     doWithRetry(() -> {
-      List<JobUpdate> request = createReservationJobWithoutParcelRequest(reservationId, action);
+      List<JobUpdate> request = createReservationJobWithoutParcelRequest(reservationId, action,
+          jobType);
       getBatchUpdatePodClient().batchUpdatePodJobs(routeId, waypointId, request);
     }, "batch update jobs");
   }
@@ -346,8 +362,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     }, "check blob data");
   }
 
-  private Job createTransactionJob(String trackingId,
-      String action, String jobMode,
+  private Job createTransactionJob(String trackingId, String action, String jobMode,
       boolean withCod, boolean allowReschedule) {
 
     Order order = getOrderDetails(trackingId);
@@ -391,8 +406,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     return job;
   }
 
-  private Parcel createTransactionOrder(String trackingId,
-      String action, String jobMode) {
+  private Parcel createTransactionOrder(String trackingId, String action, String jobMode) {
     Order order = getOrderDetails(trackingId);
     put(KEY_CREATED_ORDER, order);
     Parcel jobOrder = new Parcel();
@@ -465,14 +479,13 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     List<String> successTrackingIds = get(KEY_LIST_OF_PARTIAL_SUCCESS_TID);
     List<JobUpdate> result = new ArrayList<>();
     result.addAll(
-        createTransactionUpdateProofRequest(successTrackingIds, ACTION_MODE_SUCCESS, jobMode
-        ));
+        createTransactionUpdateProofRequest(successTrackingIds, ACTION_MODE_SUCCESS, jobMode));
     result.addAll(
         createTransactionUpdateProofRequest(failedTrackingIds, ACTION_MODE_FAIL, jobMode));
     return result;
   }
 
-  private Job createReservationJob(long jobId, String action) {
+  private Job createReservationJob(long jobId, String action, String jobType) {
 
     Integer failureReasonId = TestConstants.RESERVATION_FAILURE_REASON_ID;
     String failureReasonString = TestConstants.RESERVATION_FAILURE_REASON;
@@ -482,7 +495,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     job.setAction(action);
     job.setId(jobId);
     job.setMode(Job.MODE_PICKUP);
-    job.setType(Job.TYPE_RESERVATION);
+    job.setType(jobType);
     job.setStatus(Job.STATUS_PENDING);
     if (action.equalsIgnoreCase(ACTION_MODE_FAIL)) {
       job.setFailureReason(failureReasonString);
@@ -495,8 +508,7 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     return job;
   }
 
-  private Parcel createReservationOrder(String trackingId,
-      String action) {
+  private Parcel createReservationOrder(String trackingId, String action) {
     Order order = getOrderDetails(trackingId);
     put(KEY_CREATED_ORDER, order);
     Parcel job = new Parcel();
@@ -512,13 +524,13 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   }
 
   private List<JobUpdate> createReservationJobRequest(List<String> trackingIds, long rsvnId,
-      String jobAction, String orderAction) {
+      String jobAction, String orderAction, String jobType) {
     List<JobUpdate> result = new ArrayList<>();
     trackingIds.forEach(e -> {
       JobUpdate temp = new JobUpdate();
       temp.setToUpdateJob(true);
       temp.setCommitDate(Instant.now().toEpochMilli());
-      temp.setJob(createReservationJob(rsvnId, jobAction));
+      temp.setJob(createReservationJob(rsvnId, jobAction, jobType));
       temp.setParcel(createReservationOrder(e, orderAction));
       temp.setProofWebhookDetails(
           createProofWebhookDetails(WebhookRequest.Pod.POD_TYPE_RECIPIENT, PICKUP_JOB_MODE));
@@ -527,18 +539,19 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     return result;
   }
 
-  private List<JobUpdate> createReservationJobWithoutParcelRequest(Long rsvnId, String jobAction) {
+  private List<JobUpdate> createReservationJobWithoutParcelRequest(Long rsvnId, String jobAction,
+      String jobType) {
     List<JobUpdate> result = new ArrayList<>();
     JobUpdate temp = new JobUpdate();
     temp.setToUpdateJob(true);
     temp.setCommitDate(Instant.now().toEpochMilli());
-    temp.setJob(createReservationJob(rsvnId, jobAction));
+    temp.setJob(createReservationJob(rsvnId, jobAction, jobType));
     result.add(temp);
     return result;
   }
 
   private List<JobUpdate> createReservationPartialSuccessJobRequest(List<String> trackingIds,
-      Long rsvnId) {
+      Long rsvnId, String jobType) {
     int halfIndex = trackingIds.size() / 2;
     List<String> failedTrackingIds = trackingIds.subList(0, halfIndex);
     put(KEY_LIST_OF_PARTIAL_FAIL_TID, failedTrackingIds);
@@ -546,19 +559,19 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     put(KEY_LIST_OF_PARTIAL_SUCCESS_TID, successTrackingIds);
     List<JobUpdate> result = new ArrayList<>();
     result.addAll(createReservationJobRequest(successTrackingIds, rsvnId, ACTION_MODE_SUCCESS,
-        ACTION_MODE_SUCCESS));
+        ACTION_MODE_SUCCESS, jobType));
     result.addAll(createReservationJobRequest(failedTrackingIds, rsvnId, ACTION_MODE_SUCCESS,
-        ACTION_MODE_FAIL));
+        ACTION_MODE_FAIL, jobType));
     return result;
   }
 
-  private List<JobUpdate> createReservationPartialSuccessProofRequest(Long rsvnId) {
+  private List<JobUpdate> createReservationPartialSuccessProofRequest(Long rsvnId, String jobType) {
     List<String> failedTrackingIds = get(KEY_LIST_OF_PARTIAL_FAIL_TID);
     List<String> successTrackingIds = get(KEY_LIST_OF_PARTIAL_SUCCESS_TID);
     List<JobUpdate> result = new ArrayList<>();
     JobUpdate temp = new JobUpdate();
     temp.setCommitDate(Instant.now().toEpochMilli());
-    temp.setJob(createReservationJob(rsvnId, ACTION_MODE_SUCCESS));
+    temp.setJob(createReservationJob(rsvnId, ACTION_MODE_SUCCESS, jobType));
     temp.setProofDetails(
         createReservationProofDetailsPartialSuccess(failedTrackingIds, successTrackingIds));
     result.add(temp);
@@ -685,11 +698,11 @@ public class BatchUpdatePodsSteps extends BaseSteps {
   }
 
   private List<JobUpdate> createReservationUpdateProofRequest(Long rsvnId, List<String> trackingIds,
-      String jobAction) {
+      String jobAction, String jobType) {
     List<JobUpdate> result = new ArrayList<>();
     JobUpdate temp = new JobUpdate();
     temp.setCommitDate(Instant.now().toEpochMilli());
-    temp.setJob(createReservationJob(rsvnId, jobAction));
+    temp.setJob(createReservationJob(rsvnId, jobAction, jobType));
     temp.setProofDetails(createReservationProofDetails(trackingIds, jobAction));
     result.add(temp);
     return result;
@@ -699,8 +712,8 @@ public class BatchUpdatePodsSteps extends BaseSteps {
     String trackingId = get(KEY_CREATED_ORDER_TRACKING_ID);
     Order order = getOrderDetails(trackingId);
     put(KEY_CREATED_ORDER, order);
-    Order.Transaction transaction =
-        getTransaction(order, transactionType, Transaction.STATUS_PENDING);
+    Order.Transaction transaction = getTransaction(order, transactionType,
+        Transaction.STATUS_PENDING);
     put(KEY_WAYPOINT_ID, transaction.getWaypointId());
   }
 }

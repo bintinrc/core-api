@@ -132,7 +132,8 @@ public class DriverSteps extends BaseSteps {
     trackingIds.forEach(e -> {
       FailedOrders failedOrder = failedOrders.stream()
           .filter(o -> o.getTrackingIds().get(0).equalsIgnoreCase(e)).findAny().orElseThrow(
-              () -> new NvTestCoreFailedOrdersNotFoundException(String.format("tracking id %s not found", e)));
+              () -> new NvTestCoreFailedOrdersNotFoundException(
+                  String.format("tracking id %s not found", e)));
       Assertions.assertThat(failedOrder.getTrackingIds().size()).as("tracking id size is 1")
           .isEqualTo(1);
       Assertions.assertThat(failedOrder.getTrackingIds().get(0)).as(f("tracking id is: %s", e))

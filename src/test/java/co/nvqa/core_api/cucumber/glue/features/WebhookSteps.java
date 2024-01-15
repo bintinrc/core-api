@@ -180,9 +180,10 @@ public class WebhookSteps extends BaseSteps {
               }
               break;
             case SUCCESSFUL_PICKUP:
-              //to exclude POD on Pickup with Normal Order
-              if (order.getServiceType().equalsIgnoreCase("Parcel")
-                  || proofDetails == null) {
+              //to exclude POD on Pickup with Normal Order under a reservation
+              final String jobType = get(KEY_UPDATE_PODS_JOB_TYPE, "TRANSACTION");
+              if ((order.getServiceType().equalsIgnoreCase("Parcel")
+                  || proofDetails == null) && !jobType.equalsIgnoreCase("PICKUP_APPOINTMENT")) {
                 Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
               } else {
                 checkDeliverySuccessPod(request, trackingId);

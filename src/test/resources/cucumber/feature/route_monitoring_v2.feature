@@ -74,7 +74,7 @@ Feature: Route Monitoring V2
       | shipperId       | {shipper-3-id} |
       | generateAddress | RANDOM         |
     And API Core - Operator create reservation using data below:
-      | reservationRequest | {"legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | {"global_shipper_id":{shipper-3-id}, "legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
       | driver_id  | {driver-2-id}      |
       | hub_id     | {sorting-hub-id-2} |
@@ -101,12 +101,12 @@ Feature: Route Monitoring V2
       | shipperId       | {shipper-3-id} |
       | generateAddress | RANDOM         |
     And API Core - Operator create reservation using data below:
-      | reservationRequest | {"legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | {"global_shipper_id":{shipper-3-id}, "legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     Given API Shipper - Operator create new shipper address using data below:
       | shipperId       | {shipper-3-id} |
       | generateAddress | RANDOM         |
     And API Core - Operator create reservation using data below:
-      | reservationRequest | {"legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[2].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | {"global_shipper_id":{shipper-3-id}, "legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[2].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
       | driver_id  | {driver-2-id}      |
       | hub_id     | {sorting-hub-id-2} |
@@ -166,7 +166,7 @@ Feature: Route Monitoring V2
       | shipperId       | {shipper-3-id} |
       | generateAddress | RANDOM         |
     And API Core - Operator create reservation using data below:
-      | reservationRequest | {"legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | {"global_shipper_id":{shipper-3-id}, "legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
       | driver_id  | {driver-2-id}      |
       | hub_id     | {sorting-hub-id-2} |
@@ -345,7 +345,7 @@ Feature: Route Monitoring V2
       | shipperId       | {shipper-3-id} |
       | generateAddress | RANDOM         |
     And API Core - Operator create reservation using data below:
-      | reservationRequest | {"legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | {"global_shipper_id":{shipper-3-id}, "legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId       | {KEY_CREATED_ROUTE.id}                   |
@@ -499,7 +499,7 @@ Feature: Route Monitoring V2
       | shipperId       | {shipper-3-id} |
       | generateAddress | RANDOM         |
     And API Core - Operator create reservation using data below:
-      | reservationRequest | {"legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | {"global_shipper_id":{shipper-3-id}, "legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId       | {KEY_CREATED_ROUTE.id}                   |
@@ -647,7 +647,7 @@ Feature: Route Monitoring V2
       | shipperId       | {shipper-3-id} |
       | generateAddress | RANDOM         |
     And API Core - Operator create reservation using data below:
-      | reservationRequest | {"legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | {"global_shipper_id":{shipper-3-id}, "legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId       | {KEY_CREATED_ROUTE.id}                   |
@@ -669,9 +669,9 @@ Feature: Route Monitoring V2
       | shipperId       | {shipper-3-id} |
       | generateAddress | RANDOM         |
     And API Core - Operator create reservation using data below:
-      | reservationRequest | {"legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}","pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | {"global_shipper_id":{shipper-3-id}, "legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}","pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
     And API Core - Operator create reservation using data below:
-      | reservationRequest | {"legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{date: 1 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}","pickup_end_time":"{date: 1 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | {"global_shipper_id":{shipper-3-id}, "legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{date: 1 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}","pickup_end_time":"{date: 1 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
       | driver_id  | {driver-2-id}      |
       | hub_id     | {sorting-hub-id-2} |
@@ -706,7 +706,7 @@ Feature: Route Monitoring V2
       | shipperId       | {shipper-3-id} |
       | generateAddress | RANDOM         |
     And API Core - Operator create reservation using data below:
-      | reservationRequest | {"legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | {"global_shipper_id":{shipper-3-id}, "legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
       | driver_id  | {driver-2-id}      |
       | hub_id     | {sorting-hub-id-2} |
@@ -737,7 +737,7 @@ Feature: Route Monitoring V2
       | shipperId       | {shipper-3-id} |
       | generateAddress | RANDOM         |
     And API Core - Operator create reservation using data below:
-      | reservationRequest | {"legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | {"global_shipper_id":{shipper-3-id}, "legacy_shipper_id":{shipper-3-legacy-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
       | driver_id  | {driver-2-id}      |
       | hub_id     | {sorting-hub-id-2} |
