@@ -60,7 +60,7 @@ Feature: ID - FM Automated Routing - Within Clock Time
       | Pickup Type: FM Dedicated | {fm-rsvn-zone-id-1} | {fm-rsvn-hub-id-1-fm-dedicated} | {fm-rsvn-shipper-legacy-id-1-fm-dedicated} | {fm-rsvn-shipper-id-1-fm-dedicated} | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-rsvn-zone-id-1} | {fm-rsvn-hub-id-1-truck}        | {fm-rsvn-shipper-legacy-id-1-truck}        | {fm-rsvn-shipper-id-1-truck}        | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-truck}        |
 
-  @CancelCreatedReservations @HighPriority
+  @CancelCreatedReservations @HighPriority @done
   Scenario Outline: ID - Auto Route Reservation - Date = Today, Creation = Within Start & End Clock Time, Driver has No Routes - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create reservation using data below:
@@ -95,9 +95,9 @@ Feature: ID - FM Automated Routing - Within Clock Time
       | waypointStatus | Routed                                   |
       | driverId       | <driver_id>                              |
     Examples:
-      | Note                      | zone_id             | hub_id                          | shipper_legacy_id                          | driver_id          | address_id                          |
-      | Pickup Type: FM Dedicated | {fm-rsvn-zone-id-1} | {fm-rsvn-hub-id-1-fm-dedicated} | {fm-rsvn-shipper-legacy-id-1-fm-dedicated} | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-fm-dedicated} |
-      | Pickup Type: Truck        | {fm-rsvn-zone-id-1} | {fm-rsvn-hub-id-1-truck}        | {fm-rsvn-shipper-legacy-id-1-truck}        | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-truck}        |
+      | Note                      | zone_id             | hub_id                          | shipper_legacy_id                          | shipper_global_id                   | driver_id          | address_id                          |
+      | Pickup Type: FM Dedicated | {fm-rsvn-zone-id-1} | {fm-rsvn-hub-id-1-fm-dedicated} | {fm-rsvn-shipper-legacy-id-1-fm-dedicated} | {fm-rsvn-shipper-id-1-fm-dedicated} | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-fm-dedicated} |
+      | Pickup Type: Truck        | {fm-rsvn-zone-id-1} | {fm-rsvn-hub-id-1-truck}        | {fm-rsvn-shipper-legacy-id-1-truck}        | {fm-rsvn-shipper-id-1-truck}        | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-truck}        |
 
   @CancelCreatedReservations @HighPriority
   Scenario Outline: ID - Auto Route Reservation - Date = Today, No Driver Assigned for the Zone, Creation = Within Start & End Clock Time - <Note>
@@ -128,7 +128,7 @@ Feature: ID - FM Automated Routing - Within Clock Time
       | zone_id             | shipper_legacy_id                    | address_id                    |
       | {fm-rsvn-zone-id-4} | {fm-rsvn-shipper-legacy-id-4-hybrid} | {fm-rsvn-address-id-4-hybrid} |
 
-  @CancelCreatedReservations @HighPriority
+  @CancelCreatedReservations @HighPriority @done
   Scenario Outline: ID - Auto Route Reservation - Date = Tomorrow, Creation = Within Start & End Clock Time
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create reservation using data below:
@@ -140,9 +140,9 @@ Feature: ID - FM Automated Routing - Within Clock Time
       | status        | Pending                                          |
       | routingZoneId | <zone_id>                                        |
     Examples:
-      | Note                      | zone_id             | shipper_legacy_id                          | driver_id          | address_id                          |
-      | Pickup Type: FM Dedicated | {fm-rsvn-zone-id-1} | {fm-rsvn-shipper-legacy-id-1-fm-dedicated} | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-fm-dedicated} |
-      | Pickup Type: Truck        | {fm-rsvn-zone-id-1} | {fm-rsvn-shipper-legacy-id-1-truck}        | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-truck}        |
+      | Note                      | zone_id             | hub_id                          | shipper_legacy_id                          | shipper_global_id                   | driver_id          | address_id                          |
+      | Pickup Type: FM Dedicated | {fm-rsvn-zone-id-1} | {fm-rsvn-hub-id-1-fm-dedicated} | {fm-rsvn-shipper-legacy-id-1-fm-dedicated} | {fm-rsvn-shipper-id-1-fm-dedicated} | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-fm-dedicated} |
+      | Pickup Type: Truck        | {fm-rsvn-zone-id-1} | {fm-rsvn-hub-id-1-truck}        | {fm-rsvn-shipper-legacy-id-1-truck}        | {fm-rsvn-shipper-id-1-truck}        | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-truck}        |
 
   @CancelCreatedReservations @HighPriority
   Scenario Outline: ID - Auto Route Reservation - Order Create Flow, Date = Today, Creation = Within Start & End Clock Time, Driver has No Routes - <Note>
