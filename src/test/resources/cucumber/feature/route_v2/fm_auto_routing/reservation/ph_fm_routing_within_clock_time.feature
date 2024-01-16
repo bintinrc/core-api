@@ -1,6 +1,8 @@
 @routing-ph @CancelCreatedReservations @fm-routing-rsvn-ph-2
 Feature: PH - FM Automated Routing
 
+   # Can only run within: 6am - 6pm PH time
+
   @CancelCreatedReservations @HighPriority
   Scenario Outline: PH - Auto Route Reservation - Date = Today, Creation = Within Start & End Clock Time, Driver has Existing Route - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"

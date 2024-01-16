@@ -1,5 +1,7 @@
-@routing-my @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-rsvn-my-1
+@routing-my @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-rsvn-my-1 @wip
 Feature: MY - FM Automated Routing - After Clock Time
+
+  # Can only run before: 10am or after: 2pm MY time
 
   @CancelCreatedReservations @HighPriority
   Scenario Outline: MY - Auto Route Reservation - Date = Today, Creation = After End Clock Time & Run Manual Cron Job, Driver has No Routes - <Note>

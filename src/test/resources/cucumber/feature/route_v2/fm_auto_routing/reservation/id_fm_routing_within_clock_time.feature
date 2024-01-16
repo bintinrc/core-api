@@ -1,6 +1,8 @@
 @routing-id @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-rsvn-id-2
 Feature: ID - FM Automated Routing - Within Clock Time
 
+  # Can only run within: 8am - 8pm ID time
+
   @CancelCreatedReservations @HighPriority
   Scenario Outline: ID - Auto Route Reservation - Date = Today, Creation = Within Start & End Clock Time, Driver has Existing Route - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"

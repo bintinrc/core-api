@@ -1,6 +1,8 @@
 @routing-my @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-rsvn-my-2
 Feature: MY - FM Automated Routing - Within Clock Time
 
+  # Can only run within: 10am - 2pm MY time
+
   @CancelCreatedReservations @HighPriority
   Scenario Outline: MY - Auto Route Reservation - Date = Today, Creation = Within Start & End Clock Time, Driver has Existing Route - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"

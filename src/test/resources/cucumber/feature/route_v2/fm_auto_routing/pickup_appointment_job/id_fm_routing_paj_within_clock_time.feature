@@ -3,6 +3,8 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job
 
   https://studio.cucumber.io/projects/208144/test-plan/folders/2930485
 
+  # Can only run within: 8am - 8pm ID time
+
   @HighPriority 
   Scenario Outline: ID - Auto Route PAJ - Date = Today, Creation = Within Start & End Clock Time, Driver has No Routes - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
