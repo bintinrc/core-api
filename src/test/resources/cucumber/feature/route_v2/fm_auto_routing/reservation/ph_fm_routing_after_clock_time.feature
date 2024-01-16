@@ -1,4 +1,4 @@
-@routing-ph @CancelCreatedReservations @fm-routing-rsvn-ph-1
+@routing-ph @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-rsvn-ph-outside
 Feature: PH - FM Automated Routing
 
   # Can only run before: 6am or after 6pm PH time

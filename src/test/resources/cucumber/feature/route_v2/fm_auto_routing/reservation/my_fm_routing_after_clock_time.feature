@@ -1,4 +1,4 @@
-@routing-my @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-rsvn-my-1 @wip
+@routing-my @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-rsvn-my-outside
 Feature: MY - FM Automated Routing - After Clock Time
 
   # Can only run before: 10am or after: 2pm MY time

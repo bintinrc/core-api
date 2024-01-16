@@ -1,9 +1,9 @@
-@routing-sg @DeletePickupAppointmentJob @fm-routing-paj-sg-1
+@routing-sg @DeletePickupAppointmentJob @fm-routing-paj-sg-outside
 Feature: SG - FM Automated Routing - Pickup Appointment Job
 
   https://studio.cucumber.io/projects/208144/test-plan/folders/2930485
 
-   # Can only run before: 6am or after: 4pm SG time
+  # Can only run before: 6am or after: 4pm SG time
 
   @HighPriority
   Scenario Outline: SG - Auto Route PAJ - Date = Today, Creation = After End Clock Time - <Note>

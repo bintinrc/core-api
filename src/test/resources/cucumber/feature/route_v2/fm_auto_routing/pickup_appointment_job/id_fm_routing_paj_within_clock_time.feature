@@ -1,4 +1,4 @@
-@routing-id @DeletePickupAppointmentJob @fm-routing-paj-id-2
+@routing-id @DeletePickupAppointmentJob @fm-routing-paj-id-within
 Feature: ID - FM Automated Routing - Pickup Appointment Job
 
   https://studio.cucumber.io/projects/208144/test-plan/folders/2930485

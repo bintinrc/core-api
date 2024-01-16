@@ -1,4 +1,4 @@
-@routing-sg @DeletePickupAppointmentJob @fm-routing-paj-sg-2
+@routing-sg @DeletePickupAppointmentJob @fm-routing-paj-sg-within
 Feature: SG - FM Automated Routing - Pickup Appointment Job
 
   https://studio.cucumber.io/projects/208144/test-plan/folders/2930485
