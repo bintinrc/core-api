@@ -6,7 +6,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job - Outside Time Range
   @HighPriority
   Scenario Outline: ID - Auto Route PAJ - Date = Today, Creation = After End Clock Time - <Note>
     Given API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 0 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 0 days next, YYYY-MM-dd}T22:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
+      | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 0 days next, YYYY-MM-dd}T09:00:00+07:00", "latest":"{date: 0 days next, YYYY-MM-dd}T22:00:00+07:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
     Then DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_WAYPOINT_ID} |
@@ -25,9 +25,9 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job - Outside Time Range
     And API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":<zone_id>, "hubId":<hub_id>, "driverId":<driver_id> } |
     And API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id_1> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 0 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 0 days next, YYYY-MM-dd}T22:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
+      | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id_1> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 0 days next, YYYY-MM-dd}T09:00:00+07:00", "latest":"{date: 0 days next, YYYY-MM-dd}T22:00:00+07:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
     And API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id_2> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 0 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 0 days next, YYYY-MM-dd}T22:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
+      | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id_2> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 0 days next, YYYY-MM-dd}T09:00:00+07:00", "latest":"{date: 0 days next, YYYY-MM-dd}T22:00:00+07:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
     And API Route - Operator run FM PAJ auto route cron job for date "{date: 0 days next, yyyy-MM-dd}"
     And DB Route - verify route_logs record:
       | legacyId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
@@ -55,7 +55,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job - Outside Time Range
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
     And API Control - Operator get pickup appointment job search details:
-      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
+      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+07:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
     And API Control - Operator verify pickup appointment job search details:
       | actualData   | {KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[1]}                                                                                                                                      |
       | expectedData | {"pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOBS[1].id}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "driver_id": <driver_id> } |
@@ -80,7 +80,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job - Outside Time Range
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
     And API Control - Operator get pickup appointment job search details:
-      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[2].id}]}}} |
+      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+07:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[2].id}]}}} |
     And API Control - Operator verify pickup appointment job search details:
       | actualData   | {KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[2]}                                                                                                                                     |
       | expectedData | {"pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOBS[2].id}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "driver_id": <driver_id>} |
@@ -93,7 +93,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job - Outside Time Range
   Scenario Outline: ID - Auto Route PAJ - Date = Today, Creation = After End Clock Time & Run Manual Cron Job, Driver has No Routes - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     And API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 0 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 0 days next, YYYY-MM-dd}T22:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
+      | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 0 days next, YYYY-MM-dd}T09:00:00+07:00", "latest":"{date: 0 days next, YYYY-MM-dd}T22:00:00+07:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
     And API Route - Operator run FM PAJ auto route cron job for date "{date: 0 days next, yyyy-MM-dd}"
     And DB Route - get latest route_logs record for driver id "<driver_id>"
     And DB Route - verify route_logs record:
@@ -121,7 +121,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job - Outside Time Range
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
     And API Control - Operator get pickup appointment job search details:
-      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
+      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+07:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
     And API Control - Operator verify pickup appointment job search details:
       | actualData   | {KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[1]}                                                                                                                                     |
       | expectedData | {"pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOBS[1].id}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "driver_id": <driver_id>} |
@@ -134,7 +134,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job - Outside Time Range
   @HighPriority
   Scenario Outline: ID - Auto Route PAJ - Date = Today, No Driver Assigned for the Zone, Creation = After End Clock Time & Run Manual Cron Job - <Note>
     And API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 0 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 0 days next, YYYY-MM-dd}T22:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
+      | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 0 days next, YYYY-MM-dd}T09:00:00+07:00", "latest":"{date: 0 days next, YYYY-MM-dd}T22:00:00+07:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
     And API Route - Operator run FM PAJ auto route cron job for date "{date: 0 days next, yyyy-MM-dd}"
     Then DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - verify waypoints record:
@@ -144,7 +144,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job - Outside Time Range
       | status        | Pending           |
       | routingZoneId | <zone_id>         |
     And API Control - Operator get pickup appointment job search details:
-      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
+      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+07:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
     And API Control - Operator verify pickup appointment job search details:
       | actualData   | {KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[1]}                                                                                                |
       | expectedData | {"pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOBS[1].id}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": null, "driver_id": null} |
@@ -190,7 +190,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job - Outside Time Range
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
     And API Control - Operator get pickup appointment job search details:
-      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOB_IDS[1]}]}}} |
+      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+07:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOB_IDS[1]}]}}} |
     And API Control - Operator verify pickup appointment job search details:
       | actualData   | {KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[1]}                                                                                                                                                                   |
       | expectedData | {"pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOB_IDS[1]}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "routing_zone_id": <zone_id>, "driver_id": <driver_id>} |
@@ -238,7 +238,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job - Outside Time Range
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
     And API Control - Operator get pickup appointment job search details:
-      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOB_IDS[1]}]}}} |
+      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+07:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOB_IDS[1]}]}}} |
     And API Control - Operator verify pickup appointment job search details:
       | actualData   | {KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[1]}                                                                                                                                                                   |
       | expectedData | {"pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOB_IDS[1]}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "routing_zone_id": <zone_id>, "driver_id": <driver_id>} |
@@ -250,7 +250,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job - Outside Time Range
   @HighPriority
   Scenario Outline: ID - Auto Route PAJ - Date = Tomorrow, Creation = After End Clock Time & Run Manual Cron Job - <Note>
     And API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T22:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
+      | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+07:00", "latest":"{date: 1 days next, YYYY-MM-dd}T22:00:00+07:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
     Then DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And API Route - Operator run FM PAJ auto route cron job for date "{date: 0 days next, yyyy-MM-dd}"
     And DB Route - verify waypoints record:
@@ -260,7 +260,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job - Outside Time Range
       | status        | Pending           |
       | routingZoneId | <zone_id>         |
     And API Control - Operator get pickup appointment job search details:
-      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 1 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
+      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 1 days next, YYYY-MM-dd}T00:00:00+07:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
     And API Control - Operator verify pickup appointment job search details:
       | actualData   | {KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[1]}                                                                                                |
       | expectedData | {"pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOBS[1].id}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": null, "driver_id": null} |
@@ -272,7 +272,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job - Outside Time Range
   @HighPriority
   Scenario Outline: ID - Auto Route PAJ - Date = Today, Pickup Type = Hybrid, Creation = After End Clock Time & Run Manual Cron Job
     Given API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 0 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 0 days next, YYYY-MM-dd}T22:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
+      | createPickupJobRequest | { "shipperId":<shipper_id>, "from":{ "addressId":<address_id> }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 0 days next, YYYY-MM-dd}T09:00:00+07:00", "latest":"{date: 0 days next, YYYY-MM-dd}T22:00:00+07:00"}, "pickupApproxVolume":"Less than 10 Parcels"}} |
     Then DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And API Route - Operator run FM PAJ auto route cron job for date "{date: 0 days next, yyyy-MM-dd}"
     And DB Route - verify waypoints record:
@@ -282,7 +282,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job - Outside Time Range
       | status        | Pending           |
       | routingZoneId | <zone_id>         |
     And API Control - Operator get pickup appointment job search details:
-      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+08:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
+      | getPaJobSearchRequest | {"limit":500,"query":{"pickup_ready_datetime":{"lower_bound":"{date: 0 days next, YYYY-MM-dd}T00:00:00+07:00"},"pickup_appointment_job_id":{"in":[{KEY_CONTROL_CREATED_PA_JOBS[1].id}]}}} |
     And API Control - Operator verify pickup appointment job search details:
       | actualData   | {KEY_CONTROL_LIST_OF_PAJOB_SEARCH_DATA[1]}                                                                                                |
       | expectedData | {"pickup_appointment_job_id": {KEY_CONTROL_CREATED_PA_JOBS[1].id}, "waypoint_id": {KEY_WAYPOINT_ID}, "route_id": null, "driver_id": null} |

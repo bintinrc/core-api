@@ -153,7 +153,7 @@ Feature: ID - FM Automated Routing - After Clock Time
   @CancelCreatedReservations @HighPriority
   Scenario Outline: ID - Auto Route Reservation - Date = Today, Pickup Type = Hybrid, Creation = After End Clock Time & Run Manual Cron Job
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>,"global_shipper_id":<global_shipper_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>,"global_shipper_id":<global_shipper_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
     And API Route - Operator run FM auto route cron job for date "{date: 0 days next, yyyy-MM-dd}"
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
@@ -169,7 +169,7 @@ Feature: ID - FM Automated Routing - After Clock Time
   Scenario Outline: ID - Auto Route Reservation - Date = Tomorrow, Creation = After End Clock Time & Run Manual Cron Job - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>,"global_shipper_id":<global_shipper_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 1 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 1 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>,"global_shipper_id":<global_shipper_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 1 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 1 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
     And API Route - Operator run FM auto route cron job for date "{date: 0 days next, yyyy-MM-dd}"
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
@@ -224,9 +224,9 @@ Feature: ID - FM Automated Routing - After Clock Time
       | waypointStatus | Routed                                   |
       | driverId       | {fm-rsvn-driver-id-4}                    |
     Examples:
-      | Note                      | pickup_address_id                           | pickup_address                                                                                                                                                                                                                                   |
-      | Pickup Type: FM Dedicated | {fm-rsvn-address-id-4-fm-dedicated-ext-ref} | { "name": "PajAutoFmRoutingIdFmTruck", "phone_number": "+6281210000007", "email": "binti@test.co", "address": { "address1": "Tebet", "address2": "", "country": "ID", "postcode": "45115", "latitude": -4.126522635048489, "longitude": 120.02696984731197 } }                |
-      | Pickup Type: Truck        | {fm-rsvn-address-id-4-truck-ext-ref}        | { "name": "BNC Shop MR", "phone_number": "+6581234567", "email": "bnc@shop.co", "address": { "address1": "Mukahh", "address2": "#20-25", "country": "MY", "postcode": "96400", "latitude": 2.897574749844236,"longitude": 112.08453062175683 } } |
+      | Note                      | pickup_address_id                           | pickup_address                                                                                                                                                                                                                                                 |
+      | Pickup Type: FM Dedicated | {fm-rsvn-address-id-4-fm-dedicated-ext-ref} | { "name": "PajAutoFmRoutingIdFmTruck", "phone_number": "+6281210000007", "email": "binti@test.co", "address": { "address1": "Tebet", "address2": "", "country": "ID", "postcode": "45115", "latitude": -4.126522635048489, "longitude": 120.02696984731197 } } |
+      | Pickup Type: Truck        | {fm-rsvn-address-id-4-truck-ext-ref}        | { "name": "BNC Shop MR", "phone_number": "+6581234567", "email": "bnc@shop.co", "address": { "address1": "Mukahh", "address2": "#20-25", "country": "MY", "postcode": "96400", "latitude": 2.897574749844236,"longitude": 112.08453062175683 } }               |
 
   @CancelCreatedReservations @HighPriority
   Scenario Outline: ID - Auto Route Reservation - Order Create Flow, Date = Today, Creation = After End Clock Time & Run Manual Cron Job, Driver has Existing Route
