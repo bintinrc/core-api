@@ -1,5 +1,7 @@
-@routing-ph @CancelCreatedReservations @fm-routing-rsvn-ph-1
+@routing-ph @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-rsvn-ph-outside
 Feature: PH - FM Automated Routing
+
+  # Can only run before: 6am or after 6pm PH time
 
   @CancelCreatedReservations @HighPriority
   Scenario Outline: PH - Auto Route Reservation - Date = Today, Creation = After End Clock Time & Run Manual Cron Job, Driver has No Routes - <Note>
@@ -191,10 +193,10 @@ Feature: PH - FM Automated Routing
       | shipperClientSecret | {fm-shipper-5-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
       | generateTo          | RANDOM                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
       | v4OrderRequest      | { "service_type": "Parcel", "service_level": "Standard", "from":<pickup_address>, "parcel_job": { "pickup_address_id": "<pickup_address_id>", "pickup_address": <pickup_address>, "dimensions": { "height": 2.7, "length": 2.8, "width": 1 }, "is_pickup_required": true, "pickup_date": "{date: 0 days next, yyyy-MM-dd}", "pickup_timeslot": { "start_time": "09:00", "end_time": "22:00" }, "delivery_start_date": "{date: 0 days next, yyyy-MM-dd}", "delivery_timeslot": { "start_time": "09:00", "end_time": "22:00" } } } |
-    And API Route - Operator run FM auto route cron job for date "{date: 0 days next, yyyy-MM-dd}"
     And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And DB Core - get Order Pickup Data from order id "{KEY_LIST_OF_CREATED_ORDERS[1].id}"
     And API Core - Operator get reservation from reservation id "{KEY_CORE_LIST_OF_ORDER_PICKUPS[1].reservationId}"
+    And API Route - Operator run FM auto route cron job for date "{KEY_LIST_OF_RESERVATIONS[1].readyDatetime}"
     And DB Route - get latest route_logs record for driver id "{fm-driver-id-5}"
     Then DB Route - verify route_logs record:
       | legacyId | {KEY_LIST_OF_CREATED_ROUTES[1].legacyId} |
@@ -246,11 +248,12 @@ Feature: PH - FM Automated Routing
       | v4OrderRequest      | { "service_type": "Parcel", "service_level": "Standard", "from":<pickup_address>, "parcel_job": { "pickup_address_id": "<pickup_address_id_2>", "pickup_address": <pickup_address>, "dimensions": { "height": 2.7, "length": 2.8, "width": 1 }, "is_pickup_required": true, "pickup_date": "{date: 0 days next, yyyy-MM-dd}", "pickup_timeslot": { "start_time": "09:00", "end_time": "22:00" }, "delivery_start_date": "{date: 0 days next, yyyy-MM-dd}", "delivery_timeslot": { "start_time": "09:00", "end_time": "22:00" } } } |
     And API Route - Operator run FM auto route cron job for date "{date: 0 days next, yyyy-MM-dd}"
     And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-    And DB Core - get Order Pickup Data from order id "{KEY_LIST_OF_CREATED_ORDERS[1].id}"
     And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[2]}"
+    And DB Core - get Order Pickup Data from order id "{KEY_LIST_OF_CREATED_ORDERS[1].id}"
     And DB Core - get Order Pickup Data from order id "{KEY_LIST_OF_CREATED_ORDERS[2].id}"
     And API Core - Operator get reservation from reservation id "{KEY_CORE_LIST_OF_ORDER_PICKUPS[1].reservationId}"
     And API Core - Operator get reservation from reservation id "{KEY_CORE_LIST_OF_ORDER_PICKUPS[2].reservationId}"
+    And API Route - Operator run FM auto route cron job for date "{KEY_LIST_OF_RESERVATIONS[1].readyDatetime}"
     #    check 1st rsvn
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_RESERVATIONS[1].waypointId} |
