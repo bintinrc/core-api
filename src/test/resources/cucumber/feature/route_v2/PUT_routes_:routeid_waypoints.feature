@@ -128,7 +128,7 @@ Feature: Create Route & Assign Waypoints
       | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | routeEventSource | ADD_BY_TRACKING_OR_STAMP           |
 
-  @HighPriority @wip
+  @HighPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Routed Waypoints to Route - Transaction, Reservation, PA Job
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
@@ -161,7 +161,7 @@ Feature: Create Route & Assign Waypoints
       | responseCode                 | 400                                                                                                                                                                                            |
       | expectedApplicationErrorCode | 173000                                                                                                                                                                                         |
 
-  @MediumPriority @wip
+  @MediumPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Invalid Waypoint to Route
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
@@ -171,7 +171,7 @@ Feature: Create Route & Assign Waypoints
       | responseCode                 | 400                                |
       | expectedApplicationErrorCode | 173000                             |
 
-  @MediumPriority @wip
+  @MediumPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Waypoint to Invalid Route
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
@@ -187,7 +187,7 @@ Feature: Create Route & Assign Waypoints
       | responseCode                 | 404                                                          |
       | expectedApplicationErrorCode | 173001                                                       |
 
-  @MediumPriority @wip
+  @MediumPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Success Waypoints to Route - Transaction, Reservation, PA Job
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
@@ -237,7 +237,7 @@ Feature: Create Route & Assign Waypoints
       | responseCode                 | 400                                                                                                                                                                                            |
       | expectedApplicationErrorCode | 173000                                                                                                                                                                                         |
 
-  @MediumPriority @wip
+  @MediumPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Failed Waypoints to Route - Transaction, Reservation, PA Job
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
