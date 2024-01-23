@@ -156,20 +156,20 @@ Feature: Create Route & Assign Waypoints
       | routeId     | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                                                                                                                             |
       | waypointIds | [{KEY_WAYPOINT_ID} ,{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId},{KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}  ] |
     When API Route - Operator failed to add multiple waypoints to route:
-      | routeId      | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                                                                                                                                                                                                                                                                 |
-      | waypointIds  | [{KEY_WAYPOINT_ID} ,{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId},{KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}  ]                                                                                                                                     |
-      | responseCode | 400                                                                                                                                                                                                                                                                                                                                |
-      | error        | {"error":{"application_exception_code":173000,"title":"REQUEST_ERR","message":"Some of the waypoints are routed [invalidWaypointIDs=[{KEY_WAYPOINT_ID} {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}]]"}} |
+      | routeId                      | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                                                                                                                             |
+      | waypointIds                  | [{KEY_WAYPOINT_ID} ,{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId},{KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}  ] |
+      | responseCode                 | 400                                                                                                                                                                                            |
+      | expectedApplicationErrorCode | 173000                                                                                                                                                                                         |
 
   @MediumPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Invalid Waypoint to Route
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
     When API Route - Operator failed to add multiple waypoints to route:
-      | routeId      | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                                                                                                |
-      | waypointIds  | [1234]                                                                                                                                                            |
-      | responseCode | 400                                                                                                                                                               |
-      | error        | {"error":{"application_exception_code":173000,"title":"REQUEST_ERR","message":"Some of the waypoints are missing or does not exist [missingWaypointIds=[1234]]"}} |
+      | routeId                      | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | waypointIds                  | [1234]                             |
+      | responseCode                 | 400                                |
+      | expectedApplicationErrorCode | 173000                             |
 
   @MediumPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Waypoint to Invalid Route
@@ -182,10 +182,10 @@ Feature: Create Route & Assign Waypoints
     And API Core - Operator get multiple order details for tracking ids:
       | KEY_LIST_OF_CREATED_TRACKING_IDS[1] |
     When API Route - Operator failed to add multiple waypoints to route:
-      | routeId      | 1234                                                                                                                                |
-      | waypointIds  | [{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}]                                                                        |
-      | responseCode | 404                                                                                                                                 |
-      | error        | {"error":{"application_exception_code":173001,"title":"NOT_FOUND_ERR","message":"The requested route '[:routeId=1234]' not found"}} |
+      | routeId                      | 1234                                                         |
+      | waypointIds                  | [{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}] |
+      | responseCode                 | 404                                                          |
+      | expectedApplicationErrorCode | 173001                                                       |
 
   @MediumPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Success Waypoints to Route - Transaction, Reservation, PA Job
@@ -232,10 +232,10 @@ Feature: Create Route & Assign Waypoints
       | orderId        | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
       | granularStatus | Completed                          |
     When API Route - Operator failed to add multiple waypoints to route:
-      | routeId      | {KEY_LIST_OF_CREATED_ROUTES[2].id}                                                                                                                                                                                                                                                                                                 |
-      | waypointIds  | [{KEY_WAYPOINT_ID} ,{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId},{KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}  ]                                                                                                                                     |
-      | responseCode | 400                                                                                                                                                                                                                                                                                                                                |
-      | error        | {"error":{"application_exception_code":173000,"title":"REQUEST_ERR","message":"Some of the waypoints are routed [invalidWaypointIDs=[{KEY_WAYPOINT_ID} {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}]]"}} |
+      | routeId                      | {KEY_LIST_OF_CREATED_ROUTES[2].id}                                                                                                                                                             |
+      | waypointIds                  | [{KEY_WAYPOINT_ID} ,{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId},{KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}  ] |
+      | responseCode                 | 400                                                                                                                                                                                            |
+      | expectedApplicationErrorCode | 173000                                                                                                                                                                                         |
 
   @MediumPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Failed Waypoints to Route - Transaction, Reservation, PA Job
@@ -284,10 +284,10 @@ Feature: Create Route & Assign Waypoints
       | orderId        | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
       | granularStatus | Pending Reschedule                 |
     When API Route - Operator failed to add multiple waypoints to route:
-      | routeId      | {KEY_LIST_OF_CREATED_ROUTES[2].id}                                                                                                                                                                                                                                                                                                 |
-      | waypointIds  | [{KEY_WAYPOINT_ID} ,{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId},{KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}  ]                                                                                                                                     |
-      | responseCode | 400                                                                                                                                                                                                                                                                                                                                |
-      | error        | {"error":{"application_exception_code":173000,"title":"REQUEST_ERR","message":"Some of the waypoints are routed [invalidWaypointIDs=[{KEY_WAYPOINT_ID} {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}]]"}} |
+      | routeId                      | {KEY_LIST_OF_CREATED_ROUTES[2].id}                                                                                                                                                             |
+      | waypointIds                  | [{KEY_WAYPOINT_ID} ,{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId},{KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}  ] |
+      | responseCode                 | 400                                                                                                                                                                                            |
+      | expectedApplicationErrorCode | 173000                                                                                                                                                                                         |
 
 
   @DeletePickupAppointmentJob @HighPriority
