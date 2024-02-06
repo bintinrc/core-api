@@ -9,6 +9,7 @@
         </encoder>
     </appender>
 
+<<<<<<< HEAD
     <logger name="co.nvqa.common.di.guice.NvModule" level="INFO"/>
     <logger name="co.nvqa.common.runner.NvTestRunner" level="INFO"/>
     <logger name="co.nvqa.common.service.FailedScenarioReaderService" level="INFO"/>
@@ -29,6 +30,27 @@
     <logger name="org.asynchttpclient.netty" level="WARN"/>
     <logger name="io.netty" level="WARN"/>
     <logger name="com.zaxxer.hikari" level="WARN"/>
+=======
+  <logger name="co.nvqa.common.di.guice.NvModule" level="INFO"/>
+  <logger name="co.nvqa.common.runner.NvTestRunner" level="INFO"/>
+  <logger name="co.nvqa.common.service.FailedScenarioReaderService" level="INFO"/>
+  <logger name="co.nvqa.common.utils.NvRetry" level="INFO"/>
+  <logger name="co.nvqa.common.ui.support.CommonUiNvRetry" level="INFO"/>
+  <logger name="co.nvqa.common.reporter.cucumber.client" level="WARN"/>
+  <logger name="co.nvqa.common.reporter.cucumber.formatter.CustomNvReporter" level="OFF"/>
+  <logger name="co.nvqa.common.ui.support.AndroidSupport" level="INFO"/>
+  <logger name="co.nvqa.common.utils.CustomLogger" level="DEBUG"/>
+  <logger name="com.epam.reportportal.service" level="OFF"/>
+  <logger name="com.epam.reportportal.utils" level="OFF"/>
+  <logger name="sh.qos.logback" level="OFF"/>
+  <logger name="org.apache" level="WARN"/>
+  <logger name="httpclient" level="WARN"/>
+  <logger name="io.restassured.internal" level="WARN"/>
+  <logger name="org.hibernate" level="WARN"/>
+  <logger name="org.asynchttpclient.netty" level="WARN"/>
+  <logger name="io.netty" level="WARN"/>
+  <logger name="com.zaxxer.hikari" level="WARN"/>
+>>>>>>> 944d585f01ed0565deb73ee3c8f426b76e015f22
 
     <!-- By default, the level of the root level is set to DEBUG -->
     <root level="DEBUG">

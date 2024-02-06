@@ -9,7 +9,7 @@ Feature: Create Route & Assign Waypoints
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
       | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
@@ -136,7 +136,7 @@ Feature: Create Route & Assign Waypoints
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
       | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
@@ -156,20 +156,20 @@ Feature: Create Route & Assign Waypoints
       | routeId     | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                                                                                                                             |
       | waypointIds | [{KEY_WAYPOINT_ID} ,{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId},{KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}  ] |
     When API Route - Operator failed to add multiple waypoints to route:
-      | routeId      | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                                                                                                                                                                                                                                                                 |
-      | waypointIds  | [{KEY_WAYPOINT_ID} ,{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId},{KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}  ]                                                                                                                                     |
-      | responseCode | 400                                                                                                                                                                                                                                                                                                                                |
-      | error        | {"error":{"application_exception_code":173000,"title":"REQUEST_ERR","message":"Some of the waypoints are routed [invalidWaypointIDs=[{KEY_WAYPOINT_ID} {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}]]"}} |
+      | routeId                      | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                                                                                                                             |
+      | waypointIds                  | [{KEY_WAYPOINT_ID} ,{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId},{KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}  ] |
+      | responseCode                 | 400                                                                                                                                                                                            |
+      | expectedApplicationErrorCode | 173000                                                                                                                                                                                         |
 
   @MediumPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Invalid Waypoint to Route
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
     When API Route - Operator failed to add multiple waypoints to route:
-      | routeId      | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                                                                                                |
-      | waypointIds  | [1234]                                                                                                                                                            |
-      | responseCode | 400                                                                                                                                                               |
-      | error        | {"error":{"application_exception_code":173000,"title":"REQUEST_ERR","message":"Some of the waypoints are missing or does not exist [missingWaypointIds=[1234]]"}} |
+      | routeId                      | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | waypointIds                  | [1234]                             |
+      | responseCode                 | 400                                |
+      | expectedApplicationErrorCode | 173000                             |
 
   @MediumPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Waypoint to Invalid Route
@@ -182,10 +182,10 @@ Feature: Create Route & Assign Waypoints
     And API Core - Operator get multiple order details for tracking ids:
       | KEY_LIST_OF_CREATED_TRACKING_IDS[1] |
     When API Route - Operator failed to add multiple waypoints to route:
-      | routeId      | 1234                                                                                                                                |
-      | waypointIds  | [{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}]                                                                        |
-      | responseCode | 404                                                                                                                                 |
-      | error        | {"error":{"application_exception_code":173001,"title":"NOT_FOUND_ERR","message":"The requested route '[:routeId=1234]' not found"}} |
+      | routeId                      | 1234                                                         |
+      | waypointIds                  | [{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}] |
+      | responseCode                 | 404                                                          |
+      | expectedApplicationErrorCode | 173001                                                       |
 
   @MediumPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Success Waypoints to Route - Transaction, Reservation, PA Job
@@ -198,7 +198,7 @@ Feature: Create Route & Assign Waypoints
       | jobId                      | {KEY_CONTROL_CREATED_PA_JOBS[1].id}                                   |
       | addPickupJobToRouteRequest | {"new_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"overwrite":false} |
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
@@ -232,10 +232,10 @@ Feature: Create Route & Assign Waypoints
       | orderId        | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
       | granularStatus | Completed                          |
     When API Route - Operator failed to add multiple waypoints to route:
-      | routeId      | {KEY_LIST_OF_CREATED_ROUTES[2].id}                                                                                                                                                                                                                                                                                                 |
-      | waypointIds  | [{KEY_WAYPOINT_ID} ,{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId},{KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}  ]                                                                                                                                     |
-      | responseCode | 400                                                                                                                                                                                                                                                                                                                                |
-      | error        | {"error":{"application_exception_code":173000,"title":"REQUEST_ERR","message":"Some of the waypoints are routed [invalidWaypointIDs=[{KEY_WAYPOINT_ID} {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}]]"}} |
+      | routeId                      | {KEY_LIST_OF_CREATED_ROUTES[2].id}                                                                                                                                                             |
+      | waypointIds                  | [{KEY_WAYPOINT_ID} ,{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId},{KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}  ] |
+      | responseCode                 | 400                                                                                                                                                                                            |
+      | expectedApplicationErrorCode | 173000                                                                                                                                                                                         |
 
   @MediumPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Failed Waypoints to Route - Transaction, Reservation, PA Job
@@ -248,7 +248,7 @@ Feature: Create Route & Assign Waypoints
       | jobId                      | {KEY_CONTROL_CREATED_PA_JOBS[1].id}                                   |
       | addPickupJobToRouteRequest | {"new_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"overwrite":false} |
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
@@ -284,10 +284,10 @@ Feature: Create Route & Assign Waypoints
       | orderId        | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
       | granularStatus | Pending Reschedule                 |
     When API Route - Operator failed to add multiple waypoints to route:
-      | routeId      | {KEY_LIST_OF_CREATED_ROUTES[2].id}                                                                                                                                                                                                                                                                                                 |
-      | waypointIds  | [{KEY_WAYPOINT_ID} ,{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId},{KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}  ]                                                                                                                                     |
-      | responseCode | 400                                                                                                                                                                                                                                                                                                                                |
-      | error        | {"error":{"application_exception_code":173000,"title":"REQUEST_ERR","message":"Some of the waypoints are routed [invalidWaypointIDs=[{KEY_WAYPOINT_ID} {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}]]"}} |
+      | routeId                      | {KEY_LIST_OF_CREATED_ROUTES[2].id}                                                                                                                                                             |
+      | waypointIds                  | [{KEY_WAYPOINT_ID} ,{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId},{KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}  ] |
+      | responseCode                 | 400                                                                                                                                                                                            |
+      | expectedApplicationErrorCode | 173000                                                                                                                                                                                         |
 
 
   @DeletePickupAppointmentJob @HighPriority

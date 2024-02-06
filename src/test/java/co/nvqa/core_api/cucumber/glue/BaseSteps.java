@@ -92,6 +92,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
         .filter(e -> e.getType().equalsIgnoreCase(type))
         .filter(e -> e.getStatus().equalsIgnoreCase(status))
         .findAny().orElseThrow(
-            () -> new NvTestCoreOrderTransactionDetailsMismatchException("transaction details not found"));
+            () -> new NvTestCoreOrderTransactionDetailsMismatchException(
+                "transaction details not found"));
   }
 }

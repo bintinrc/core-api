@@ -47,7 +47,7 @@ Feature: Delete Route
   Scenario: Operator Delete Driver Route Successfully - Single Pending Reservation
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
@@ -156,7 +156,7 @@ Feature: Delete Route
   Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - Fail
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
       | driver_id  | {driver-id}      |
       | hub_id     | {sorting-hub-id} |
@@ -182,7 +182,7 @@ Feature: Delete Route
   Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - Success
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
       | driver_id  | {driver-id}      |
       | hub_id     | {sorting-hub-id} |

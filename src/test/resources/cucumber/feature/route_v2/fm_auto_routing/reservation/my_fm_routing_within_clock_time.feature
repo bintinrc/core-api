@@ -1,5 +1,7 @@
-@routing-my @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-rsvn-my-2
+@routing-my @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-rsvn-my-within
 Feature: MY - FM Automated Routing - Within Clock Time
+
+  # Can only run within: 10am - 2pm MY time
 
   @CancelCreatedReservations @HighPriority
   Scenario Outline: MY - Auto Route Reservation - Date = Today, Creation = Within Start & End Clock Time, Driver has Existing Route - <Note>
@@ -7,7 +9,7 @@ Feature: MY - FM Automated Routing - Within Clock Time
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":<zone_id>, "hubId":<hub_id>, "vehicleId":{vehicle-id}, "driverId":<driver_id> } |
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>,"global_shipper_id":<global_shipper_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
     Then DB Route - verify route_logs record:
       | legacyId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status   | 0                                  |
@@ -43,15 +45,15 @@ Feature: MY - FM Automated Routing - Within Clock Time
       | waypointStatus | Routed                                   |
       | driverId       | <driver_id>                              |
     Examples:
-      | Note                      | zone_id        | hub_id                     | shipper_legacy_id                     | driver_id     | address_id                     |
-      | Pickup Type: FM Dedicated | {fm-zone-id-1} | {fm-hub-id-1-fm-dedicated} | {fm-shipper-legacy-id-1-fm-dedicated} | {fm-driver-1} | {fm-address-id-1-fm-dedicated} |
-      | Pickup Type: Truck        | {fm-zone-id-1} | {fm-hub-id-1-truck}        | {fm-shipper-legacy-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
+      | Note                      | zone_id        | hub_id                     | shipper_legacy_id                     | global_shipper_id              | driver_id     | address_id                     |
+      | Pickup Type: FM Dedicated | {fm-zone-id-1} | {fm-hub-id-1-fm-dedicated} | {fm-shipper-legacy-id-1-fm-dedicated} | {fm-shipper-id-1-fm-dedicated} | {fm-driver-1} | {fm-address-id-1-fm-dedicated} |
+      | Pickup Type: Truck        | {fm-zone-id-1} | {fm-hub-id-1-truck}        | {fm-shipper-legacy-id-1-truck}        | {fm-shipper-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
 
   @CancelCreatedReservations @HighPriority
   Scenario Outline: MY - Auto Route Reservation - Date = Today, Creation = Within Start & End Clock Time, Driver has No Routes - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>,"global_shipper_id":<global_shipper_id>,"pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
     And DB Route - get latest route_logs record for driver id "<driver_id>"
     Then DB Route - verify route_logs record:
       | legacyId | {KEY_LIST_OF_CREATED_ROUTES[1].legacyId} |
@@ -82,14 +84,14 @@ Feature: MY - FM Automated Routing - Within Clock Time
       | waypointStatus | Routed                                   |
       | driverId       | <driver_id>                              |
     Examples:
-      | Note                      | zone_id        | hub_id                     | shipper_legacy_id                     | driver_id     | address_id                     |
-      | Pickup Type: FM Dedicated | {fm-zone-id-1} | {fm-hub-id-1-fm-dedicated} | {fm-shipper-legacy-id-1-fm-dedicated} | {fm-driver-1} | {fm-address-id-1-fm-dedicated} |
-      | Pickup Type: Truck        | {fm-zone-id-1} | {fm-hub-id-1-truck}        | {fm-shipper-legacy-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
+      | Note                      | zone_id        | hub_id                     | shipper_legacy_id                     | global_shipper_id              | driver_id     | address_id                     |
+      | Pickup Type: FM Dedicated | {fm-zone-id-1} | {fm-hub-id-1-fm-dedicated} | {fm-shipper-legacy-id-1-fm-dedicated} | {fm-shipper-id-1-fm-dedicated} | {fm-driver-1} | {fm-address-id-1-fm-dedicated} |
+      | Pickup Type: Truck        | {fm-zone-id-1} | {fm-hub-id-1-truck}        | {fm-shipper-legacy-id-1-truck}        | {fm-shipper-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
 
   @CancelCreatedReservations @HighPriority
   Scenario Outline: MY - Auto Route Reservation - Date = Today, No Driver Assigned for the Zone, Creation = Within Start & End Clock Time - <Note>
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>,"global_shipper_id":<global_shipper_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo         | null                                             |
@@ -97,14 +99,14 @@ Feature: MY - FM Automated Routing - Within Clock Time
       | status        | Pending                                          |
       | routingZoneId | <zone_id>                                        |
     Examples:
-      | Note                      | zone_id        | shipper_legacy_id                     | address_id                     |
-      | Pickup Type: FM Dedicated | {fm-zone-id-3} | {fm-shipper-legacy-id-3-fm-dedicated} | {fm-address-id-3-fm-dedicated} |
-      | Pickup Type: Truck        | {fm-zone-id-3} | {fm-shipper-legacy-id-3-truck}        | {fm-address-id-3-truck}        |
+      | Note                      | zone_id        | shipper_legacy_id                     | global_shipper_id              | address_id                     |
+      | Pickup Type: FM Dedicated | {fm-zone-id-3} | {fm-shipper-legacy-id-3-fm-dedicated} | {fm-shipper-id-3-fm-dedicated} | {fm-address-id-3-fm-dedicated} |
+      | Pickup Type: Truck        | {fm-zone-id-3} | {fm-shipper-legacy-id-3-truck}        | {fm-shipper-id-3-truck}        | {fm-address-id-3-truck}        |
 
   @CancelCreatedReservations @HighPriority
   Scenario Outline: MY - Auto Route Reservation - Date = Today, Pickup Type = Hybrid, Creation = Within Start & End Clock Time
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>,"global_shipper_id":<global_shipper_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo         | null                                             |
@@ -112,14 +114,14 @@ Feature: MY - FM Automated Routing - Within Clock Time
       | status        | Pending                                          |
       | routingZoneId | <zone_id>                                        |
     Examples:
-      | zone_id        | shipper_legacy_id               | address_id               |
-      | {fm-zone-id-4} | {fm-shipper-legacy-id-4-hybrid} | {fm-address-id-4-hybrid} |
+      | zone_id        | shipper_legacy_id               | global_shipper_id        | address_id               |
+      | {fm-zone-id-4} | {fm-shipper-legacy-id-4-hybrid} | {fm-shipper-id-4-hybrid} | {fm-address-id-4-hybrid} |
 
   @CancelCreatedReservations @HighPriority
   Scenario Outline: MY - Auto Route Reservation - Date = Tomorrow, Creation = Within Start & End Clock Time
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 1 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 1 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>,"global_shipper_id":<global_shipper_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 1 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 1 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo         | null                                             |
@@ -127,9 +129,9 @@ Feature: MY - FM Automated Routing - Within Clock Time
       | status        | Pending                                          |
       | routingZoneId | <zone_id>                                        |
     Examples:
-      | Note                      | zone_id        | shipper_legacy_id                     | driver_id     | address_id                     |
-      | Pickup Type: FM Dedicated | {fm-zone-id-1} | {fm-shipper-legacy-id-1-fm-dedicated} | {fm-driver-1} | {fm-address-id-1-fm-dedicated} |
-      | Pickup Type: Truck        | {fm-zone-id-1} | {fm-shipper-legacy-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
+      | Note                      | zone_id        | shipper_legacy_id                     | global_shipper_id              | driver_id     | address_id                     |
+      | Pickup Type: FM Dedicated | {fm-zone-id-1} | {fm-shipper-legacy-id-1-fm-dedicated} | {fm-shipper-id-1-fm-dedicated} | {fm-driver-1} | {fm-address-id-1-fm-dedicated} |
+      | Pickup Type: Truck        | {fm-zone-id-1} | {fm-shipper-legacy-id-1-truck}        | {fm-shipper-id-1-truck}        | {fm-driver-1} | {fm-address-id-1-truck}        |
 
   @CancelCreatedReservations @HighPriority
   Scenario Outline: MY - Auto Route Reservation - Order Create Flow, Date = Today, Creation = Within Start & End Clock Time, Driver has No Routes - <Note>

@@ -52,7 +52,8 @@ public class RouteMonitoringSteps extends BaseSteps {
               date, hubIds, zoneIds, 1000);
       RouteMonitoringResponse result = routeMonitoringDetails.stream()
           .filter(e -> e.getRouteId().equals(routeId)).findAny().orElseThrow(
-              () -> new NvTestCoreRouteMonitoringException("Route Monitoring Data not found " + routeId));
+              () -> new NvTestCoreRouteMonitoringException(
+                  "Route Monitoring Data not found " + routeId));
       put(KEY_ROUTE_MONITORING_RESULT, result);
     }, "get route monitoring data");
 
@@ -258,7 +259,8 @@ public class RouteMonitoringSteps extends BaseSteps {
         long orderId = getOrderClient().searchOrderByTrackingId(e.getTrackingNumber()).getId();
         Waypoint waypoint = waypoints.stream()
             .filter(o -> o.getTrackingId().contains(e.getTrackingNumber())).findAny().orElseThrow(
-                () -> new NvTestCoreRouteMonitoringException("waypoint not found: " + e.getTrackingNumber()));
+                () -> new NvTestCoreRouteMonitoringException(
+                    "waypoint not found: " + e.getTrackingNumber()));
 
         Assertions.assertThat(waypoint.getTrackingId()).as("contain tracking id")
             .contains(e.getTrackingNumber());
@@ -317,7 +319,8 @@ public class RouteMonitoringSteps extends BaseSteps {
         long orderId = getOrderClient().searchOrderByTrackingId(e.getTrackingNumber()).getId();
         Waypoint waypoint = waypoints.stream()
             .filter(o -> o.getTrackingId().contains(e.getTrackingNumber())).findAny().orElseThrow(
-                () -> new NvTestCoreRouteMonitoringException("pending priority parcels details not found"));
+                () -> new NvTestCoreRouteMonitoringException(
+                    "pending priority parcels details not found"));
 
         Assertions.assertThat(waypoint.getTrackingId()).as("tracking id is correct")
             .contains(e.getTrackingNumber());
@@ -426,7 +429,8 @@ public class RouteMonitoringSteps extends BaseSteps {
           Waypoint waypoint = waypoints.stream()
               .filter(o -> o.getType().equalsIgnoreCase(WAYPOINT_TYPE_TRANSACTION))
               .filter(o -> o.getTrackingId().contains(e.getTrackingNumber())).findAny()
-              .orElseThrow(() -> new NvTestCoreRouteMonitoringException("parcels details not found"));
+              .orElseThrow(
+                  () -> new NvTestCoreRouteMonitoringException("parcels details not found"));
           Assertions.assertThat(waypoint.getType()).as("type")
               .isEqualToIgnoringCase(WAYPOINT_TYPE_TRANSACTION);
           Assertions.assertThat(waypoint.getTrackingId()).as("tracking id")
@@ -492,7 +496,8 @@ public class RouteMonitoringSteps extends BaseSteps {
           Waypoint waypoint = waypoints.stream()
               .filter(o -> o.getType().equalsIgnoreCase(WAYPOINT_TYPE_RESERVATION))
               .filter(o -> o.getName().equalsIgnoreCase(e.getFrom().getName())).findAny()
-              .orElseThrow(() -> new NvTestCoreRouteMonitoringException("parcels details not found"));
+              .orElseThrow(
+                  () -> new NvTestCoreRouteMonitoringException("parcels details not found"));
 
           Assertions.assertThat(waypoint.getType()).as("type is reservation")
               .isEqualToIgnoringCase(WAYPOINT_TYPE_RESERVATION);
