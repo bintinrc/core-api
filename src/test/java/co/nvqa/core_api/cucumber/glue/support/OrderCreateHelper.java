@@ -15,7 +15,6 @@ import co.nvqa.common.utils.ReflectionUtil;
 import co.nvqa.common.utils.StandardTestConstants;
 import co.nvqa.common.utils.StandardTestUtils;
 import co.nvqa.common.utils.factory.address.AddressFactory;
-import co.nvqa.core_api.cucumber.glue.features.RouteMonitoringSteps;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,6 +38,10 @@ public class OrderCreateHelper {
   private static final String TYPE_SHIPPER = "shipper";
   private static final String TYPE_CUSTOMER = "customer";
   private static final List<Timeslot> TIMESLOTS;
+
+  private static final String TIMESLOT_TYPE_EARLY = "early";
+  private static final String TIMESLOT_TYPE_LATE = "late";
+  private static final String TIMESLOT_TYPE_IMPENDING = "impending";
 
   static {
     TIMESLOTS = new ArrayList<>();
@@ -160,16 +163,16 @@ public class OrderCreateHelper {
   }
 
   private static Timeslot generateValidTimeSlot(Map<String, String> source, ZonedDateTime zdt) {
-    String timeslotType = RouteMonitoringSteps.TIMESLOT_TYPE_EARLY;
+    String timeslotType = TIMESLOT_TYPE_EARLY;
     if (source.get(KEY_REQUESTED_TIMESLOT_TYPE) != null) {
       timeslotType = source.get(KEY_REQUESTED_TIMESLOT_TYPE);
     }
     Timeslot timeslot;
     switch (timeslotType) {
-      case RouteMonitoringSteps.TIMESLOT_TYPE_IMPENDING:
+      case TIMESLOT_TYPE_IMPENDING:
         timeslot = generateImpendingTimeSlot(zdt);
         break;
-      case RouteMonitoringSteps.TIMESLOT_TYPE_LATE:
+      case TIMESLOT_TYPE_LATE:
         timeslot = generateLateTimeSlot(zdt);
         break;
       default:
