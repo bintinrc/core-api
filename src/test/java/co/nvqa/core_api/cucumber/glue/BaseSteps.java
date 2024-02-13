@@ -36,20 +36,20 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
 
   @Inject
   @Getter
-
   private OrderClient orderClient;
+
   @Inject
   @Getter
-
   private RouteClient routeClient;
+
   @Inject
   @Getter
-
   private EventClient eventClient;
+
   @Inject
   @Getter
-
   private PickupClient shipperPickupClient;
+
   @Inject
   @Getter
   private InboundClient inboundClient;
@@ -57,7 +57,6 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
   @Inject
   @Getter
   private BatchUpdatePodClient batchUpdatePodClient;
-
 
   private ShipperClient shipperWebhookClient;
 
