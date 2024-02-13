@@ -1,4 +1,4 @@
-@ForceSuccessOrders @CancelCreatedReservations @ArchiveDriverRoutes  @routing1 @zonal-routing-api @routing-refactor
+@ForceSuccessOrders @CancelCreatedReservations @ArchiveDriverRoutes  @routing1 @zonal-routing-api @routing-refactor @NVQA-13557
 Feature: Zonal Routing API
 
   @happy-path @HighPriority

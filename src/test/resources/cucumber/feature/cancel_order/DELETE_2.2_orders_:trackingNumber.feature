@@ -1,4 +1,4 @@
-@ForceSuccessOrders @ArchiveDriverRoutes  @cancel-order @/2.2/orders/:trackingNumber
+@ForceSuccessOrders @ArchiveDriverRoutes @cancel-order @/2.2/orders/:trackingNumber @NVQA-13557
 Feature: Cancel DELETE /2.2/orders/:trackingNumber
 
   @MediumPriority

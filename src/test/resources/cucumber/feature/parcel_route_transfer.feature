@@ -1,4 +1,4 @@
-@ArchiveDriverRoutes @parcel-route-transfer
+@ArchiveDriverRoutes @parcel-route-transfer @NVQA-13557
 Feature: Parcel Route Transfer
 
   @routing-refactor @happy-path @HighPriority

@@ -1,4 +1,4 @@
-@ForceSuccessOrders @CancelCreatedReservations @routing1 @route-delete
+@ForceSuccessOrders @CancelCreatedReservations @routing1 @route-delete @NVQA-13557
 Feature: Delete Route
 
   @route-delete @routing-refactor @happy-path @HighPriority
