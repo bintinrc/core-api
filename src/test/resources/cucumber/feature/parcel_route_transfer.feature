@@ -21,6 +21,9 @@ Feature: Parcel Route Transfer
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | 100                                                        |
@@ -33,6 +36,9 @@ Feature: Parcel Route Transfer
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
       | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
       | seqNo    | 100                                                        |
@@ -44,6 +50,9 @@ Feature: Parcel Route Transfer
     #    check order 3
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id} |
       | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
@@ -125,6 +134,9 @@ Feature: Parcel Route Transfer
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | 100                                                        |
@@ -176,6 +188,9 @@ Feature: Parcel Route Transfer
     #    check order 1
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
@@ -234,6 +249,9 @@ Feature: Parcel Route Transfer
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | 100                                                        |
@@ -246,6 +264,9 @@ Feature: Parcel Route Transfer
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
       | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
       | seqNo    | 100                                                        |
@@ -257,6 +278,9 @@ Feature: Parcel Route Transfer
     #    check order 3
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id} |
       | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
@@ -352,6 +376,9 @@ Feature: Parcel Route Transfer
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | 100                                                        |
@@ -412,6 +439,9 @@ Feature: Parcel Route Transfer
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | 100                                                        |
@@ -469,9 +499,15 @@ Feature: Parcel Route Transfer
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | null                                               |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | null                                               |
     #    check order 2
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
+      | routeId | null                                               |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
       | routeId | null                                               |
     And Operator checks that "ROUTE_TRANSFER_SCAN" event is NOT published
 
@@ -499,6 +535,9 @@ Feature: Parcel Route Transfer
     #    check order 1
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | null                                               |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | null                                               |
     And Operator checks that "ROUTE_TRANSFER_SCAN" event is NOT published
 
@@ -531,6 +570,9 @@ Feature: Parcel Route Transfer
     #    check order 1
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | null                                               |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | null                                               |
     And Operator checks that "ROUTE_TRANSFER_SCAN" event is NOT published
 
@@ -588,6 +630,9 @@ Feature: Parcel Route Transfer
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | 100                                                        |
@@ -599,6 +644,9 @@ Feature: Parcel Route Transfer
     #    check order 2
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
       | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
@@ -612,6 +660,9 @@ Feature: Parcel Route Transfer
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id} |
       | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
       | seqNo    | 100                                                        |
@@ -623,6 +674,9 @@ Feature: Parcel Route Transfer
     #    check order 4
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].id} |
       | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].waypointId} |
@@ -716,6 +770,9 @@ Feature: Parcel Route Transfer
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | 100                                                        |
@@ -728,6 +785,9 @@ Feature: Parcel Route Transfer
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
       | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
       | seqNo    | 100                                                        |
@@ -739,6 +799,9 @@ Feature: Parcel Route Transfer
     #    check order 3
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id} |
       | routeId | {KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS.routeId}      |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |

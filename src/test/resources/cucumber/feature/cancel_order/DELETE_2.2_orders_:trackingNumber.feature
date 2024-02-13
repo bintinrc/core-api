@@ -27,6 +27,10 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | status   | Cancelled                                      |
       | comments | Cancellation reason : API CANCELLATION REQUEST |
       | type     | PP                                             |
+    And DB Routing Search - verify transactions record:
+      | txnId     | {KEY_CREATED_ORDER.transactions[1].id} |
+      | txnStatus | CANCELLED                              |
+      | txnType   | PICKUP                                 |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
       | status   | Pending                                        |
@@ -35,6 +39,10 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | status   | Cancelled                                      |
       | comments | Cancellation reason : API CANCELLATION REQUEST |
       | type     | DD                                             |
+    And DB Routing Search - verify transactions record:
+      | txnId     | {KEY_CREATED_ORDER.transactions[2].id} |
+      | txnStatus | CANCELLED                              |
+      | txnType   | DELIVERY                               |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CREATED_ORDER.transactions[2].waypointId} |
       | status   | Pending                                        |
@@ -65,6 +73,10 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | status   | Cancelled                                      |
       | comments | Cancellation reason : API CANCELLATION REQUEST |
       | type     | PP                                             |
+    And DB Routing Search - verify transactions record:
+      | txnId     | {KEY_CREATED_ORDER.transactions[1].id} |
+      | txnStatus | CANCELLED                              |
+      | txnType   | PICKUP                                 |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
       | status   | Pending                                        |
@@ -73,6 +85,10 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | status   | Cancelled                                      |
       | comments | Cancellation reason : API CANCELLATION REQUEST |
       | type     | DD                                             |
+    And DB Routing Search - verify transactions record:
+      | txnId     | {KEY_CREATED_ORDER.transactions[2].id} |
+      | txnStatus | CANCELLED                              |
+      | txnType   | DELIVERY                               |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CREATED_ORDER.transactions[2].waypointId} |
       | status   | Pending                                        |
@@ -116,6 +132,11 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | comments | Cancellation reason : API CANCELLATION REQUEST |
       | type     | PP                                             |
       | routeId  | null                                           |
+    And DB Routing Search - verify transactions record:
+      | txnId     | {KEY_CREATED_ORDER.transactions[1].id} |
+      | txnStatus | CANCELLED                              |
+      | txnType   | PICKUP                                 |
+      | routeId   | null                                   |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
       | status   | Pending                                        |
@@ -129,6 +150,11 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | comments | Cancellation reason : API CANCELLATION REQUEST |
       | type     | DD                                             |
       | routeId  | null                                           |
+    And DB Routing Search - verify transactions record:
+      | txnId     | {KEY_CREATED_ORDER.transactions[2].id} |
+      | txnStatus | CANCELLED                              |
+      | txnType   | DELIVERY                               |
+      | routeId   | null                                   |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CREATED_ORDER.transactions[2].waypointId} |
       | status   | Pending                                        |
@@ -175,6 +201,11 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | status  | Fail                                   |
       | type    | PP                                     |
       | routeId | {KEY_CREATED_ROUTE_ID}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId     | {KEY_CREATED_ORDER.transactions[1].id} |
+      | txnStatus | FAIL                                   |
+      | txnType   | PICKUP                                 |
+      | routeId   | {KEY_CREATED_ROUTE_ID}                 |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
       | status   | Fail                                           |
@@ -189,6 +220,11 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | comments | Cancellation reason : API CANCELLATION REQUEST |
       | type     | DD                                             |
       | routeId  | null                                           |
+    And DB Routing Search - verify transactions record:
+      | txnId     | {KEY_CREATED_ORDER.transactions[2].id} |
+      | txnStatus | CANCELLED                              |
+      | txnType   | DELIVERY                               |
+      | routeId   | null                                   |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CREATED_ORDER.transactions[2].waypointId} |
       | status   | Pending                                        |
