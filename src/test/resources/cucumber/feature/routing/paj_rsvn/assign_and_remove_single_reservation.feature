@@ -137,7 +137,7 @@ Feature: Assign and Remove Single Reservation To Route
       | expectedStatusCode           | 400                                |
       | expectedApplicationErrorCode | 103088                             |
 
-  @MediumPriority @wip
+  @MediumPriority
   Scenario: PUT /2.0/reservations/:routeid/route - Assign a Single Reservation to a Route - Reservation Status Fail
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
