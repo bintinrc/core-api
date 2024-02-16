@@ -84,6 +84,10 @@ Feature: Create Route & Assign Waypoints
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].id} |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
       | status  | Pending                                            |
+    And DB Routing Search - verify transactions record:
+      | txnId     | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].id} |
+      | routeId   | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+      | txnStatus | PENDING                                            |
     And DB Core - verify waypoints record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} |
       | seqNo   | 300                                                        |
@@ -108,6 +112,10 @@ Feature: Create Route & Assign Waypoints
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
       | status  | Pending                                            |
+    And DB Routing Search - verify transactions record:
+      | txnId     | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
+      | routeId   | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+      | txnStatus | PENDING                                            |
     And DB Core - verify waypoints record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
       | seqNo   | 400                                                        |

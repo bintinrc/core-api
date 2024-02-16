@@ -23,6 +23,9 @@ Feature: Delete Route
     And DB Core - verify transactions record:
       | id      | {KEY_TRANSACTION_DETAILS.id} |
       | routeId | null                         |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_TRANSACTION_DETAILS.id} |
+      | routeId | null                         |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_TRANSACTION_DETAILS.waypointId} |
       | routeId  | null                                 |
@@ -102,6 +105,9 @@ Feature: Delete Route
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_TRANSACTION_IDS[1]} |
       | routeId | null                             |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_TRANSACTION_IDS[1]} |
+      | routeId | null                             |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_WAYPOINT_IDS[1]} |
       | routeId  | null                          |
@@ -109,6 +115,9 @@ Feature: Delete Route
       | status   | Pending                       |
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_TRANSACTION_IDS[2]} |
+      | routeId | null                             |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_TRANSACTION_IDS[2]} |
       | routeId | null                             |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_WAYPOINT_IDS[2]} |
@@ -226,6 +235,9 @@ Feature: Delete Route
     And DB Core - verify transactions record:
       | id      | {KEY_TRANSACTION_ID}   |
       | routeId | {KEY_CREATED_ROUTE_ID} |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_TRANSACTION_ID}   |
+      | routeId | {KEY_CREATED_ROUTE_ID} |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}      |
       | routeId  | {KEY_CREATED_ROUTE_ID} |
@@ -258,6 +270,9 @@ Feature: Delete Route
     Then Operator verify delete route response with proper error message : "Pickup for Order {KEY_CREATED_ORDER_ID} has already been attempted. Cannot delete route."
     And DB Core - verify transactions record:
       | id      | {KEY_TRANSACTION_ID}   |
+      | routeId | {KEY_CREATED_ROUTE_ID} |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_TRANSACTION_ID}   |
       | routeId | {KEY_CREATED_ROUTE_ID} |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}      |

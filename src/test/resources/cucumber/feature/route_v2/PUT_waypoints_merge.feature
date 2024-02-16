@@ -46,6 +46,18 @@ Feature:PUT /waypoints/merge
     And DB Core - verify transactions record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
 
   @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Merge Pickup and Delivery Waypoint on Zonal Routing - Same Address & Email But Different Phone Number
@@ -103,6 +115,18 @@ Feature:PUT /waypoints/merge
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
     And DB Core - verify transactions record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
 
   @HighPriority
@@ -162,6 +186,18 @@ Feature:PUT /waypoints/merge
     And DB Core - verify transactions record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
 
   @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Merge Pickup and Delivery Waypoint on Zonal Routing - Default email OTP  - Same Default Email & Same Phone Number
@@ -220,6 +256,18 @@ Feature:PUT /waypoints/merge
     And DB Core - verify transactions record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
 
   @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Merge DP Delivery Waypoint on Zonal Routing - Same DP Delivery
@@ -251,6 +299,12 @@ Feature:PUT /waypoints/merge
     And DB Core - verify transactions record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
 
   @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Merge Delivery Waypoint on Zonal Routing - Non-Empty Delivery OTP - Different Delivery OTP
@@ -278,6 +332,12 @@ Feature:PUT /waypoints/merge
     And DB Core - verify transactions record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
 
   @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Merge Delivery Waypoint on Zonal Routing - Empty Delivery OTP
@@ -304,6 +364,12 @@ Feature:PUT /waypoints/merge
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
     And DB Core - verify transactions record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
 
   @HighPriority
@@ -338,6 +404,12 @@ Feature:PUT /waypoints/merge
     And DB Core - verify transactions record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
 
   @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Disallow Merge Delivery Waypoint on Zonal Routing - Different Order Verification Method
@@ -371,6 +443,12 @@ Feature:PUT /waypoints/merge
     And DB Core - verify transactions record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
 
   @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Disallow Merge DP Delivery Waypoint on Zonal Routing - Different DP Delivery
@@ -401,6 +479,12 @@ Feature:PUT /waypoints/merge
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
     And DB Core - verify transactions record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
 
   @HighPriority
@@ -460,6 +544,18 @@ Feature:PUT /waypoints/merge
     And DB Core - verify transactions record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[1].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[1].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[1].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[1].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[1].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[4].transactions[1].waypointId} |
 
   @HighPriority
   Scenario: PUT /route-v2/waypoints/merge - Partial Merge Valid and Invalid Waypoint on Zonal Routing - Different Address
@@ -500,4 +596,13 @@ Feature:PUT /waypoints/merge
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
     And DB Core - verify transactions record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |

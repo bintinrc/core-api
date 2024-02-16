@@ -24,6 +24,9 @@ Feature: Zonal Routing API
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | 200                                                        |
@@ -35,6 +38,9 @@ Feature: Zonal Routing API
     #   check return waypoint
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].id} |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId} |
@@ -106,6 +112,9 @@ Feature: Zonal Routing API
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | 100                                                        |
@@ -118,6 +127,9 @@ Feature: Zonal Routing API
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
       | seqNo    | 300                                                        |
@@ -129,6 +141,9 @@ Feature: Zonal Routing API
     #   check return waypoint
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[1].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[1].id} |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[1].waypointId} |
@@ -193,6 +208,9 @@ Feature: Zonal Routing API
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | 100                                                        |
@@ -204,6 +222,9 @@ Feature: Zonal Routing API
     #   check return waypoint
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].id} |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId} |
@@ -255,6 +276,9 @@ Feature: Zonal Routing API
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | 100                                                        |
@@ -267,6 +291,9 @@ Feature: Zonal Routing API
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
       | routeId | null                                               |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
+      | routeId | null                                               |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
       | seqNo    | null                                                       |
@@ -275,6 +302,9 @@ Feature: Zonal Routing API
     #   check return waypoint
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[1].id} |
+      | routeId | null                                               |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[1].id} |
       | routeId | null                                               |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[1].waypointId} |
@@ -344,9 +374,15 @@ Feature: Zonal Routing API
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id}                 |
     #  TRANSACTION - PICKUP
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].id} |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id}                 |
     #  WAYPOINT - RESERVATION
     And DB Route - verify waypoints record:
@@ -443,6 +479,9 @@ Feature: Zonal Routing API
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
@@ -451,6 +490,9 @@ Feature: Zonal Routing API
 #  WAYPOINT - DELIVERY Unrouted
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
+      | routeId | null                                               |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
       | routeId | null                                               |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |

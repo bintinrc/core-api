@@ -23,6 +23,11 @@ Feature: Order Tag to DP
       | address2            | Add 4-5                                                    |
       | postcode            | 238900                                                     |
       | city                | SG                                                         |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | {dp-holding-route-id}                                      |
     Then DB Core - verify waypoints record:
       | id       | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
@@ -109,6 +114,11 @@ Feature: Order Tag to DP
       | address2            | Add 4-5                                                    |
       | postcode            | 238900                                                     |
       | city                | SG                                                         |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | {dp-holding-route-id}                                      |
     Then DB Core - verify waypoints record:
       | id       | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
@@ -198,6 +208,11 @@ Feature: Order Tag to DP
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | status     | Pending                                                    |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
@@ -265,6 +280,11 @@ Feature: Order Tag to DP
       | postcode            | 238900                                                     |
       | city                | SG                                                         |
       | country             | SG                                                         |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
@@ -351,6 +371,11 @@ Feature: Order Tag to DP
       | postcode            | 238900                                                     |
       | city                | SG                                                         |
       | country             | SG                                                         |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id}                         |
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
@@ -438,6 +463,11 @@ Feature: Order Tag to DP
       | postcode            | 238900                                                     |
       | city                | SG                                                         |
       | country             | SG                                                         |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
@@ -496,6 +526,11 @@ Feature: Order Tag to DP
       | status              | Pending                                                    |
       | distributionPointId | null                                                       |
       | routeId             | null                                                       |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | null                                                       |
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | null                                                       |
@@ -570,6 +605,11 @@ Feature: Order Tag to DP
       | postcode            | 238900                                                     |
       | city                | SG                                                         |
       | country             | SG                                                         |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id}                         |
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
@@ -660,6 +700,11 @@ Feature: Order Tag to DP
       | postcode            | 238900                                                     |
       | city                | SG                                                         |
       | country             | SG                                                         |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
@@ -738,6 +783,11 @@ Feature: Order Tag to DP
       | postcode            | 238900                                                     |
       | city                | SG                                                         |
       | country             | SG                                                         |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id}                         |
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
@@ -767,7 +817,7 @@ Feature: Order Tag to DP
       | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | routeEventSource | REMOVE_BY_ORDER_DP                 |
 
-  @HighPriority
+  @HighPriority @wip
   Scenario: DELETE /2.0/orders/:orderId/dps/routes-dp - Remove and Unassigned DP Order From Holding Route
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -789,6 +839,11 @@ Feature: Order Tag to DP
       | address2            | Add 4-5                                                    |
       | postcode            | 238900                                                     |
       | city                | SG                                                         |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | {dp-holding-route-id}                                      |
     When API Core - Operator untag from dp and remove from holding route:
       | request | {"dp_untag": {"user_id": 120701}, "remove_from_route_dp": {"type": "DELIVERY"}} |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id}                                              |
@@ -833,6 +888,11 @@ Feature: Order Tag to DP
       | address2            | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress2}                 |
       | postcode            | {KEY_LIST_OF_CREATED_ORDERS[1].toPostcode}                 |
       | country             | {KEY_LIST_OF_CREATED_ORDERS[1].toCountry}                  |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | null                                                       |
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | null                                                       |
@@ -876,6 +936,11 @@ Feature: Order Tag to DP
       | address2            | Add 4-5                                                    |
       | postcode            | 238900                                                     |
       | city                | SG                                                         |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | {dp-holding-route-id}                                      |
     When API Core - Operator untag from dp:
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | version | 2.0                                |
@@ -907,6 +972,11 @@ Feature: Order Tag to DP
       | address2            | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress2}                 |
       | postcode            | {KEY_LIST_OF_CREATED_ORDERS[1].toPostcode}                 |
       | country             | {KEY_LIST_OF_CREATED_ORDERS[1].toCountry}                  |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | {dp-holding-route-id}                                      |
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
@@ -945,6 +1015,11 @@ Feature: Order Tag to DP
       | address2            | Add 4-5                                                    |
       | postcode            | 238900                                                     |
       | city                | SG                                                         |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | {dp-holding-route-id}                                      |
     When API Core - Operator untag from dp:
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | version | 2.0                                |
@@ -976,6 +1051,11 @@ Feature: Order Tag to DP
       | address2            | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress2}                 |
       | postcode            | {KEY_LIST_OF_CREATED_ORDERS[1].toPostcode}                 |
       | country             | {KEY_LIST_OF_CREATED_ORDERS[1].toCountry}                  |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | {dp-holding-route-id}                                      |
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
@@ -1043,6 +1123,11 @@ Feature: Order Tag to DP
       | address2            | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress2}         |
       | postcode            | {KEY_LIST_OF_CREATED_ORDERS[1].toPostcode}         |
       | country             | {KEY_LIST_OF_CREATED_ORDERS[1].toCountry}          |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[3].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[3].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | null                                                       |
 #  Check new DD transaction
     And DB Core - verify transactions record:
       | id       | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[4].id} |
@@ -1055,6 +1140,11 @@ Feature: Order Tag to DP
       | address2 | {KEY_LIST_OF_CREATED_ORDERS[2].fromAddress2}       |
       | postcode | {KEY_LIST_OF_CREATED_ORDERS[2].fromPostcode}       |
       | country  | {KEY_LIST_OF_CREATED_ORDERS[2].fromCountry}        |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[4].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[4].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | null                                                       |
     Then DB Core - verify waypoints record:
       | id       | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[4].waypointId} |
       | seqNo    | null                                                       |
@@ -1087,76 +1177,6 @@ Feature: Order Tag to DP
     And API Event - Operator verify that event is published with the following details:
       | event   | RTS                                |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-
-  @HighPriority
-  Scenario: POST /2.0/orders/:orderId/dropoff - Drop Off DP Order
-    Given Shipper id "{shipper-id}" subscribes to "Arrived at Distribution Point" webhook
-    When API Order - Shipper create multiple V4 orders using data below:
-      | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-      | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-      | numberOfOrder       | 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-      | generateTo          | RANDOM                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-      | v4OrderRequest      | { "service_type":"Parcel","service_level":"Standard","from":{"name": "binti v4.1","phone_number": "+65189168","email": "binti@test.co", "address": {"address1": "Orchard Road central","address2": "","country": "SG","postcode": "511200","latitude": 1.3248209,"longitude": 103.6983167}},"parcel_job":{ "is_pickup_required":false, "pickup_date":"{{next-1-day-yyyy-MM-dd}}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
-    And API Sort - Operator global inbound
-      | globalInboundRequest | {"inbound_type":"SORTING_HUB","dimensions":null,"to_reschedule":false,"to_show_shipper_info":false,"tags":[]} |
-      | trackingId           | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}                                                                         |
-      | hubId                | {sorting-hub-id}                                                                                              |
-    And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-    And API DP - Operator tag order to DP:
-      | request | { "order_id": {KEY_LIST_OF_CREATED_ORDERS[1].id},"dp_id": {dp-id},"drop_off_date": "{date: 0 days next, yyyy-MM-dd}"} |
-    And API Core - Operator perform dp drop off with order id "{KEY_LIST_OF_CREATED_ORDERS[1].id}"
-    And Operator search for "DELIVERY" transaction with status "SUCCESS" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-    Then DB Core - verify waypoints record:
-      | id     | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | status | Success                                                    |
-    Then DB Core - verify waypoints record:
-      | id     | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | status | Success                                                    |
-    And Shipper gets webhook request for event "Arrived at Distribution Point" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-    And Shipper verifies webhook request payload has correct details for status "Arrived at Distribution Point" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-    And Operator verify that order with status-granular status is "Transit"-"ARRIVED_AT_DISTRIBUTION_POINT" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-    And API Event - Operator verify that event is published with the following details:
-      | event              | UPDATE_STATUS                      |
-      | orderId            | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-      | updateStatusReason | TRANSFER_FROM_DRIVER_TO_PUDO       |
-
-  @HighPriority
-  Scenario: POST /2.0/orders/:orderId/collect - Customer Collection of DP Order
-    Given Shipper id "{shipper-id}" subscribes to "Successful Delivery" webhook
-    Given Shipper id "{shipper-id}" subscribes to "Completed" webhook
-    When API Order - Shipper create multiple V4 orders using data below:
-      | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-      | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-      | numberOfOrder       | 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-      | generateTo          | RANDOM                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-      | v4OrderRequest      | { "service_type":"Parcel","service_level":"Standard","from":{"name": "binti v4.1","phone_number": "+65189168","email": "binti@test.co", "address": {"address1": "Orchard Road central","address2": "","country": "SG","postcode": "511200","latitude": 1.3248209,"longitude": 103.6983167}},"parcel_job":{ "is_pickup_required":false, "pickup_date":"{{next-1-day-yyyy-MM-dd}}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
-    And API Sort - Operator global inbound
-      | globalInboundRequest | {"inbound_type":"SORTING_HUB","dimensions":null,"to_reschedule":false,"to_show_shipper_info":false,"tags":[]} |
-      | trackingId           | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}                                                                         |
-      | hubId                | {sorting-hub-id}                                                                                              |
-    And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-    And API DP - Operator tag order to DP:
-      | request | { "order_id": {KEY_LIST_OF_CREATED_ORDERS[1].id},"dp_id": {dp-id},"drop_off_date": "{date: 0 days next, yyyy-MM-dd}"} |
-    And API Core - Operator perform dp drop off with order id "{KEY_LIST_OF_CREATED_ORDERS[1].id}"
-    And API Core - Customer collect from dp:
-      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id}                             |
-      | request | {"collection_time":"{date: 0 days next, yyyy-MM-dd} 16:00:00"} |
-    And Operator search for "DELIVERY" transaction with status "SUCCESS" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-    Then DB Core - verify waypoints record:
-      | id     | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | status | Success                                                    |
-    Then DB Core - verify waypoints record:
-      | id     | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | status | Success                                                    |
-    And Shipper gets webhook request for event "Successful Delivery" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-    And Shipper verifies webhook request payload has correct details for status "Successful Delivery" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-    And Shipper gets webhook request for event "Completed" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-    And Shipper verifies webhook request payload has correct details for status "Completed" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-    And Operator verify that order with status-granular status is "Completed"-"Completed" and tracking id "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
-    And API Event - Operator verify that event is published with the following details:
-      | event              | UPDATE_STATUS                      |
-      | orderId            | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-      | updateStatusReason | RELEASED_FROM_DP                   |
 
   @HighPriority
   Scenario: PUT /2.0/orders/:orderId/routes-dp - Add Multiple Merge Orders To DP Routes
@@ -1223,6 +1243,11 @@ Feature: Order Tag to DP
       | status     | Pending                                                    |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
       | seqNo      | not null                                                   |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
+      | txnStatus  | PENDING                                                    |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
