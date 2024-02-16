@@ -1,4 +1,4 @@
-@ForceSuccessOrders @ArchiveDriverRoutes @cancel-order @/orders/:orderId/cancel @NVQA-13557
+@ForceSuccessOrders @ArchiveDriverRoutes @cancel-order @/orders/:orderId/cancel
 Feature: Cancel PUT /orders/:orderId/cancel
 
   @MediumPriority

@@ -1,4 +1,4 @@
-@ForceSuccessOrders @route-v2 @waypoints-merge @NVQA-13557
+@ForceSuccessOrders @route-v2 @waypoints-merge
 Feature:PUT /waypoints/merge
 
   @HighPriority

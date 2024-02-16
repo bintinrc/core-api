@@ -1,4 +1,4 @@
-@ArchiveRouteCommonV2 @CancelCreatedReservations @driver-api @NVQA-13557
+@ArchiveRouteCommonV2 @CancelCreatedReservations @driver-api
 Feature: Driver API
 
   @ForceSuccessOrders @happy-path @HighPriority
