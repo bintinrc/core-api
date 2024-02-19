@@ -5,7 +5,6 @@ import co.nvqa.common.core.client.EventClient;
 import co.nvqa.common.core.client.OrderClient;
 import co.nvqa.common.core.client.PickupClient;
 import co.nvqa.common.core.client.RouteClient;
-import co.nvqa.common.core.client.RouteMonitoringClient;
 import co.nvqa.common.core.model.order.Order;
 import co.nvqa.common.core.model.order.Order.Transaction;
 import co.nvqa.common.cucumber.glue.StandardSteps;
@@ -34,29 +33,32 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
   @Inject
   @Getter
   private OrderSearchClient orderSearchClient;
+
   @Inject
   @Getter
   private OrderClient orderClient;
+
   @Inject
   @Getter
   private RouteClient routeClient;
+
   @Inject
   @Getter
   private EventClient eventClient;
+
   @Inject
   @Getter
   private PickupClient shipperPickupClient;
+
   @Inject
   @Getter
   private InboundClient inboundClient;
 
-  private ShipperClient shipperWebhookClient;
-  @Inject
-  @Getter
-  private RouteMonitoringClient routeMonitoringClient;
   @Inject
   @Getter
   private BatchUpdatePodClient batchUpdatePodClient;
+
+  private ShipperClient shipperWebhookClient;
 
   protected synchronized OrderClient getShipperOrderClient(String shipperToken) {
     return new OrderClient(shipperToken);
@@ -64,8 +66,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
 
   protected synchronized ShipperClient getShipperWebhookClient() {
     if (shipperWebhookClient == null) {
-      shipperWebhookClient = new ShipperClient(
-          TestConstants.API_BASE_URL,
+      shipperWebhookClient = new ShipperClient(TestConstants.API_BASE_URL,
           TokenUtils.getOperatorAuthToken(), null);
     }
     return shipperWebhookClient;
@@ -76,8 +77,7 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
     OrderSearchRequest request = new OrderSearchRequest();
     request.addOrReplaceStringFilter("tracking_id", Collections.singletonList(trackingIdOrStampId));
     List<SearchData> searchData = orderSearchClient.searchOrders(request).getSearchData();
-    Assertions.assertThat(searchData)
-        .as("Order searchData shoudl NOT be empty").isNotEmpty();
+    Assertions.assertThat(searchData).as("Order searchData shoudl NOT be empty").isNotEmpty();
     return searchData.get(0).getOrder();
   }
 
@@ -88,10 +88,8 @@ public abstract class BaseSteps extends StandardSteps<ScenarioManager> implement
 
   protected Order.Transaction getTransaction(Order order, String type, String status) {
     List<Transaction> transactions = order.getTransactions();
-    return transactions.stream()
-        .filter(e -> e.getType().equalsIgnoreCase(type))
-        .filter(e -> e.getStatus().equalsIgnoreCase(status))
-        .findAny().orElseThrow(
+    return transactions.stream().filter(e -> e.getType().equalsIgnoreCase(type))
+        .filter(e -> e.getStatus().equalsIgnoreCase(status)).findAny().orElseThrow(
             () -> new NvTestCoreOrderTransactionDetailsMismatchException(
                 "transaction details not found"));
   }

@@ -1,4 +1,4 @@
-@ForceSuccessOrders @ArchiveDriverRoutes  @cancel-order @/orders/:orderId/cancel
+@ForceSuccessOrders @ArchiveDriverRoutes @cancel-order @/orders/:orderId/cancel
 Feature: Cancel PUT /orders/:orderId/cancel
 
   @MediumPriority
@@ -28,6 +28,11 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | status   | Cancelled                                                                         |
       | comments | Cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
       | type     | PP                                                                                |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_CREATED_ORDER.transactions[1].id}         |
+      | waypointId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
+      | txnStatus  | CANCELLED                                      |
+      | txnType    | PICKUP                                         |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
       | status   | Pending                                        |
@@ -36,6 +41,11 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | status   | Cancelled                                                                         |
       | comments | Cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
       | type     | DD                                                                                |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_CREATED_ORDER.transactions[2].id}         |
+      | waypointId | {KEY_CREATED_ORDER.transactions[2].waypointId} |
+      | txnStatus  | CANCELLED                                      |
+      | txnType    | DELIVERY                                       |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CREATED_ORDER.transactions[2].waypointId} |
       | status   | Pending                                        |
@@ -67,6 +77,11 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | status   | Cancelled                                                                         |
       | comments | Cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
       | type     | PP                                                                                |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_CREATED_ORDER.transactions[1].id}         |
+      | waypointId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
+      | txnStatus  | CANCELLED                                      |
+      | txnType    | PICKUP                                         |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
       | status   | Pending                                        |
@@ -75,6 +90,11 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | status   | Cancelled                                                                         |
       | comments | Cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
       | type     | DD                                                                                |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_CREATED_ORDER.transactions[2].id}         |
+      | waypointId | {KEY_CREATED_ORDER.transactions[2].waypointId} |
+      | txnStatus  | CANCELLED                                      |
+      | txnType    | DELIVERY                                       |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CREATED_ORDER.transactions[2].waypointId} |
       | status   | Pending                                        |
@@ -119,6 +139,12 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | comments | Cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
       | type     | PP                                                                                |
       | routeId  | null                                                                              |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_CREATED_ORDER.transactions[1].id}         |
+      | waypointId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
+      | txnStatus  | CANCELLED                                      |
+      | txnType    | PICKUP                                         |
+      | routeId    | null                                           |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
       | status   | Pending                                        |
@@ -132,6 +158,12 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | comments | Cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
       | type     | DD                                                                                |
       | routeId  | null                                                                              |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_CREATED_ORDER.transactions[2].id}         |
+      | waypointId | {KEY_CREATED_ORDER.transactions[2].waypointId} |
+      | txnStatus  | CANCELLED                                      |
+      | txnType    | DELIVERY                                       |
+      | routeId    | null                                           |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CREATED_ORDER.transactions[2].waypointId} |
       | status   | Pending                                        |
@@ -179,6 +211,12 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | status  | Fail                                   |
       | type    | PP                                     |
       | routeId | {KEY_CREATED_ROUTE_ID}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_CREATED_ORDER.transactions[1].id}         |
+      | waypointId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
+      | txnStatus  | FAIL                                           |
+      | txnType    | PICKUP                                         |
+      | routeId    | {KEY_CREATED_ROUTE_ID}                         |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
       | status   | Fail                                           |
@@ -193,6 +231,12 @@ Feature: Cancel PUT /orders/:orderId/cancel
       | comments | Cancellation reason : Cancelled by automated test {date: 0 days next, yyyy-MM-dd} |
       | type     | DD                                                                                |
       | routeId  | null                                                                              |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_CREATED_ORDER.transactions[2].id}         |
+      | waypointId | {KEY_CREATED_ORDER.transactions[2].waypointId} |
+      | txnStatus  | CANCELLED                                      |
+      | txnType    | DELIVERY                                       |
+      | routeId    | null                                           |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_CREATED_ORDER.transactions[2].waypointId} |
       | status   | Pending                                        |

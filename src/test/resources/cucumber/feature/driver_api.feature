@@ -174,6 +174,8 @@ Feature: Driver API
       | status    | Pending              |
       | type      | DD                   |
       | deletedAt | not null             |
+    And DB Routing Search - verify transactions record is hard deleted:
+      | txnId | {KEY_TRANSACTION.id} |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_TRANSACTION.waypointId} |
       | status   | Pending                      |
@@ -236,6 +238,8 @@ Feature: Driver API
       | status    | Pending              |
       | type      | PP                   |
       | deletedAt | not null             |
+    And DB Routing Search - verify transactions record is hard deleted:
+      | txnId | {KEY_TRANSACTION.id} |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_TRANSACTION.waypointId} |
       | status   | Pending                      |
@@ -326,6 +330,11 @@ Feature: Driver API
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].id} |
       | status  | Success                                            |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].id}         |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].waypointId} |
+      | txnStatus  | SUCCESS                                                    |
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
     And DB Core - verify waypoints record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].waypointId} |
       | seqNo   | not null                                                   |
