@@ -4,6 +4,7 @@ import co.nvqa.common.core.exception.NvTestCoreCastingErrorException;
 import co.nvqa.common.model.address.Address;
 import co.nvqa.common.ordercreate.model.Dimension;
 import co.nvqa.common.ordercreate.model.OrderRequestV4;
+import co.nvqa.common.ordercreate.model.OrderRequestV4.Marketplace;
 import co.nvqa.common.ordercreate.model.OrderRequestV4.ParcelJob;
 import co.nvqa.common.ordercreate.model.OrderRequestV4.UserDetail;
 import co.nvqa.common.ordercreate.model.Timeslot;
@@ -90,6 +91,12 @@ public class OrderCreateHelper {
     result.setTo(createUserDetail(TYPE_CUSTOMER, uniqueId, source));
     result.setFrom(createUserDetail(TYPE_SHIPPER, uniqueId, source));
     result.setParcelJob(parcelJob);
+//    to cater marketplace order
+    if (source.containsKey("marketplace_details")) {
+      Marketplace marketplace = JsonUtils.fromJsonSnakeCase(source.get("marketplace_details"),
+          Marketplace.class);
+      result.setMarketplace(marketplace);
+    }
     ReflectionUtil.nullifyFieldWithNullString(result);
     return result;
   }

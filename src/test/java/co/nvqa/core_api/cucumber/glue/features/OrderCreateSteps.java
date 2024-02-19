@@ -43,9 +43,6 @@ public class OrderCreateSteps extends BaseSteps {
       put(KEY_ORDER_CREATE_REQUEST, request);
       putInList(KEY_LIST_OF_ORDER_CREATE_RESPONSE, result);
       putInMap(KEY_LIST_OF_ORDER_CREATE_REQUEST, result.getTrackingNumber(), request);
-      String pickupAddress =
-          request.getFrom().getAddress().get("address1") + " " + request.getFrom().getAddress()
-              .get("address2");
       //custom dp order add to holding route
       if (source.get("dp-holding-route-id") != null) {
         long routeId = Long.parseLong(source.get("dp-holding-route-id"));
