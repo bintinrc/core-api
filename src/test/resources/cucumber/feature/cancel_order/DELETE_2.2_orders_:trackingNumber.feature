@@ -416,3 +416,60 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | description | ORDER_DETAILS_INVALID        |
     And Operator verify that order status-granular status is "Transit"-"Transferred_to_3PL"
     And Operator checks that "CANCEL" event is NOT published
+
+  @MediumPriority
+  Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Marketplace Order with correct parents token
+    Given Shipper id "{shipper-v4-marketplace-id}" subscribes to "Cancelled" webhook
+    And Shipper authenticates using client id "{shipper-v4-marketplace-client-id}" and client secret "{shipper-v4-marketplace-client-secret}"
+    When Shipper create order with parameters below
+      | service_type                  | Marketplace                                                     |
+      | service_level                 | Standard                                                        |
+      | parcel_job_is_pickup_required | true                                                            |
+      | marketplace_details           | {"seller_id": "seller-ABC01","seller_company_name": "ABC Shop"} |
+    And Operator search for created order
+    When API Operator cancel order with DELETE /2.2/orders/:trackingNumber
+    And Operator verify that order status-granular status is "Cancelled"-"Cancelled"
+    And API Event - Operator verify that event is published with the following details:
+      | event   | CANCEL                 |
+      | orderId | {KEY_CREATED_ORDER_ID} |
+    And API Event - Operator verify that event is published with the following details:
+      | event              | UPDATE_STATUS          |
+      | orderId            | {KEY_CREATED_ORDER_ID} |
+      | updateStatusReason | CANCEL                 |
+    And Operator verify that order comment is appended with cancel reason = "Cancellation reason : api cancellation request"
+    And DB Core - verify transactions record:
+      | id       | {KEY_CREATED_ORDER.transactions[1].id}         |
+      | status   | Cancelled                                      |
+      | comments | Cancellation reason : API CANCELLATION REQUEST |
+      | type     | PP                                             |
+    And DB Core - verify transactions record:
+      | id       | {KEY_CREATED_ORDER.transactions[2].id}         |
+      | status   | Cancelled                                      |
+      | comments | Cancellation reason : API CANCELLATION REQUEST |
+      | type     | DD                                             |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_CREATED_ORDER.transactions[2].waypointId} |
+      | status   | Pending                                        |
+    And Shipper gets webhook request for event "Cancelled"
+    And Shipper verifies webhook request payload has correct details for status "Cancelled"
+
+
+  @MediumPriority
+  Scenario: DELETE /2.2/orders/:trackingNumber - Cancel Order - Marketplace Order with incorrect parents token
+    Given Shipper id "{shipper-v4-marketplace-id}" subscribes to "Cancelled" webhook
+    And Shipper authenticates using client id "{shipper-v4-marketplace-client-id}" and client secret "{shipper-v4-marketplace-client-secret}"
+    When Shipper create order with parameters below
+      | service_type                  | Marketplace                                                     |
+      | service_level                 | Standard                                                        |
+      | parcel_job_is_pickup_required | true                                                            |
+      | marketplace_details           | {"seller_id": "seller-ABC01","seller_company_name": "ABC Shop"} |
+    And Operator search for created order
+    And Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
+    When Operator failed to cancel invalid status with DELETE /2.2/orders/:trackingNumber
+    Then Operator verify response code is 404 with error message details as follow
+      | code        | 103014                    |
+      | message     | Order is not found        |
+      | application | core                      |
+      | description | ORDER_NOT_FOUND_EXCEPTION |
+    And Operator verify that order status-granular status is "Pending"-"Pending_Pickup"
+    And Operator checks that "CANCEL" event is NOT published
