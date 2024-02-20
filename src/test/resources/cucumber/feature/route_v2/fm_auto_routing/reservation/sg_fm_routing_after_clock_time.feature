@@ -1,9 +1,9 @@
-@routing-ph @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-rsvn-ph-outside
-Feature: SG - FM Automated Routing
+@routing-sg @CancelCreatedReservations @ArchiveDriverRoutes @fm-routing-rsvn-sg-outside
+Feature: SG - FM Automated Routing - Outside Clock Time
 
   # Can only run before: 6am or after 4pm SG time
 
-  @CancelCreatedReservations @HighPriority @done
+  @CancelCreatedReservations @HighPriority
   Scenario Outline: SG - Auto Route Reservation - Date = Today, Creation = After End Clock Time & Run Manual Cron Job, Driver has No Routes - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create reservation using data below:
@@ -43,7 +43,7 @@ Feature: SG - FM Automated Routing
       | Pickup Type: FM Dedicated | {fm-rsvn-zone-id-1} | {fm-rsvn-hub-id-1-fm-dedicated} | {fm-rsvn-shipper-id-1-fm-dedicated} | {fm-rsvn-shipper-legacy-id-1-fm-dedicated} | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-rsvn-zone-id-1} | {fm-rsvn-hub-id-1-truck}        | {fm-rsvn-shipper-id-1-truck}        | {fm-rsvn-shipper-legacy-id-1-truck}        | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-truck}        |
 
-  @CancelCreatedReservations @HighPriority @done
+  @CancelCreatedReservations @HighPriority
   Scenario Outline: SG - Auto Route Reservation - Date = Today, Creation = After End Clock Time & Run Manual Cron Job, Driver has Existing Route
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create new route using data below:
@@ -103,7 +103,7 @@ Feature: SG - FM Automated Routing
       | zone_id             | hub_id                          | driver_id          | shipper_legacy_id_1                        | global_shipper_id_1                 | address_id_1                        | shipper_legacy_id_2                 | global_shipper_id_2          | address_id_2                 |
       | {fm-rsvn-zone-id-1} | {fm-rsvn-hub-id-1-fm-dedicated} | {fm-rsvn-driver-1} | {fm-rsvn-shipper-legacy-id-1-fm-dedicated} | {fm-rsvn-shipper-id-1-fm-dedicated} | {fm-rsvn-address-id-1-fm-dedicated} | {fm-rsvn-shipper-legacy-id-1-truck} | {fm-rsvn-shipper-id-1-truck} | {fm-rsvn-address-id-1-truck} |
 
-  @CancelCreatedReservations @HighPriority @done
+  @CancelCreatedReservations @HighPriority
   Scenario Outline: SG - Auto Route Reservation - Date = Today, Creation = After End Clock Time - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create reservation using data below:
@@ -120,7 +120,7 @@ Feature: SG - FM Automated Routing
       | Pickup Type: FM Dedicated | {fm-rsvn-zone-id-1} | {fm-rsvn-shipper-legacy-id-1-fm-dedicated} | {fm-rsvn-shipper-id-1-fm-dedicated} | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-rsvn-zone-id-1} | {fm-rsvn-shipper-legacy-id-1-truck}        | {fm-rsvn-shipper-id-1-truck}        | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-truck}        |
 
-  @CancelCreatedReservations @HighPriority @done
+  @CancelCreatedReservations @HighPriority
   Scenario Outline: SG - Auto Route Reservation - Date = Today, No Driver Assigned for the Zone, Creation = After End Clock Time & Run Manual Cron Job - <Note>
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>,"global_shipper_id":<global_shipper_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
@@ -136,7 +136,7 @@ Feature: SG - FM Automated Routing
       | Pickup Type: FM Dedicated | {fm-rsvn-zone-id-2} | {fm-rsvn-shipper-legacy-id-2-fm-dedicated} | {fm-rsvn-shipper-id-2-fm-dedicated} | {fm-rsvn-address-id-2-fm-dedicated} |
       | Pickup Type: Truck        | {fm-rsvn-zone-id-2} | {fm-rsvn-shipper-legacy-id-2-truck}        | {fm-rsvn-shipper-id-2-truck}        | {fm-rsvn-address-id-2-truck}        |
 
-  @CancelCreatedReservations @HighPriority @done
+  @CancelCreatedReservations @HighPriority
   Scenario Outline: SG - Auto Route Reservation - Date = Today, No Driver Assigned for the Zone, Creation = After End Clock Time & Run Manual Cron Job - <Note>
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>,"global_shipper_id":<global_shipper_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
@@ -152,7 +152,7 @@ Feature: SG - FM Automated Routing
       | Pickup Type: FM Dedicated | {fm-rsvn-zone-id-2} | {fm-rsvn-shipper-legacy-id-2-fm-dedicated} | {fm-rsvn-shipper-id-2-fm-dedicated} | {fm-rsvn-address-id-2-fm-dedicated} |
       | Pickup Type: Truck        | {fm-rsvn-zone-id-2} | {fm-rsvn-shipper-legacy-id-2-truck}        | {fm-rsvn-shipper-id-2-truck}        | {fm-rsvn-address-id-2-truck}        |
 
-  @CancelCreatedReservations @HighPriority @done
+  @CancelCreatedReservations @HighPriority
   Scenario Outline: SG - Auto Route Reservation - Date = Today, Pickup Type = Hybrid, Creation = After End Clock Time & Run Manual Cron Job
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>,"global_shipper_id":<global_shipper_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
@@ -167,7 +167,7 @@ Feature: SG - FM Automated Routing
       | zone_id             | shipper_legacy_id                    | global_shipper_id             | address_id                    |
       | {fm-rsvn-zone-id-3} | {fm-rsvn-shipper-legacy-id-3-hybrid} | {fm-rsvn-shipper-id-3-hybrid} | {fm-rsvn-address-id-3-hybrid} |
 
-  @CancelCreatedReservations @HighPriority @done
+  @CancelCreatedReservations @HighPriority
   Scenario Outline: SG - Auto Route Reservation - Date = Tomorrow, Creation = After End Clock Time & Run Manual Cron Job - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create reservation using data below:
@@ -184,7 +184,7 @@ Feature: SG - FM Automated Routing
       | Pickup Type: FM Dedicated | {fm-rsvn-zone-id-1} | {fm-rsvn-shipper-legacy-id-1-fm-dedicated} | {fm-rsvn-shipper-id-1-fm-dedicated} | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-fm-dedicated} |
       | Pickup Type: Truck        | {fm-rsvn-zone-id-1} | {fm-rsvn-shipper-legacy-id-1-truck}        | {fm-rsvn-shipper-id-1-truck}        | {fm-rsvn-driver-1} | {fm-rsvn-address-id-1-truck}        |
 
-  @CancelCreatedReservations @HighPriority @wip
+  @CancelCreatedReservations @HighPriority
   Scenario Outline: SG - Auto Route Reservation - Order Create Flow, Date = Today, Creation = After End Clock Time & Run Manual Cron Job, Driver has No Routes - <Note>
     Given API Route - Operator archive all unarchived routes of driver id "{fm-rsvn-driver-id-5}"
     Given API Order - Shipper create multiple V4 orders using data below:
@@ -226,15 +226,15 @@ Feature: SG - FM Automated Routing
       | waypointStatus | Routed                                   |
       | driverId       | {fm-rsvn-driver-id-5}                    |
     Examples:
-      | Note                      | pickup_address_id | pickup_address                                                                                                                                                                                                                                                                 |
-      | Pickup Type: FM Dedicated | 160895            | { "name": "binti v4.1", "phone_number": "+65189189", "email": "binti@test.co", "address": { "address1": "barangay 140 pasay city metro manila", "address2": "#20-25", "country": "PH", "postcode": "1300", "latitude": "14.5400587875001", "longitude": "121.006363105892" } } |
-      | Pickup Type: Truck        | 160897            | { "name": "binti v4.1", "phone_number": "+65189189", "email": "binti@test.co", "address": { "address1": "barangay 140 pasay city metro manila", "address2": "#20-25","postcode": "1300","country": "PH","latitude": 14.5400587875001,"longitude": 121.006363105892} }          |
+      | Note                      | pickup_address_id                   | pickup_address                                                                                                                                                                                                                                                                                         |
+      | Pickup Type: FM Dedicated | {fm-rsvn-address-id-5-fm-dedicated} | { "name": "CoreFmSgRsvn5Ded", "phone_number": "+6598980037", "email": "CoreFmSgRsvn5Ded@test.co", "address": { "address1": "SingaporeRsvn5Ded", "address2": "LOW LIM HENG BUILDING", "country": "SG", "postcode": "308665", "latitude": "1.2546304421842336", "longitude": "103.66704781712" } }       |
+      | Pickup Type: Truck        | {fm-rsvn-address-id-5-truck}        | { "name": "CoreFmSgRsvn5Truck", "phone_number": "+6598980037", "email": "CoreFmSgRsvn5Truck@test.co", "address": { "address1": "SingaporeRsvn5Truck", "address2": "LOW LIM HENG BUILDING", "country": "SG", "postcode": "308665", "latitude": "1.2546304421842336", "longitude": "103.66704781712" } } |
 
   @CancelCreatedReservations @HighPriority
   Scenario Outline: SG - Auto Route Reservation - Order Create Flow, Date = Today, Creation = After End Clock Time & Run Manual Cron Job, Driver has Existing Route
     Given API Route - Operator archive all unarchived routes of driver id "{fm-rsvn-driver-id-5}"
     Given API Core - Operator create new route using data below:
-      | createRouteRequest | { "zoneId":{fm-rsvn-zone-id-5}, "hubId":{fm-rsvn-hub-id-5}, "vehicleId":{vehicle-id}, "driverId":{fm-rsvn-driver-id-5} } |
+      | createRouteRequest | { "zoneId":{fm-rsvn-zone-id-5}, "hubId":{fm-rsvn-hub-id-5-fm-dedicated}, "vehicleId":{vehicle-id}, "driverId":{fm-rsvn-driver-id-5} } |
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {fm-rsvn-shipper-5-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
       | shipperClientSecret | {fm-rsvn-shipper-5-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -300,5 +300,5 @@ Feature: SG - FM Automated Routing
       | waypointStatus | Routed                             |
       | driverId       | {fm-rsvn-driver-id-5}              |
     Examples:
-      | pickup_address_id_1 | pickup_address_id_2 | pickup_address                                                                                                                                                                                                                                                                 |
-      | 160895              | 160897              | { "name": "binti v4.1", "phone_number": "+65189189", "email": "binti@test.co", "address": { "address1": "barangay 140 pasay city metro manila", "address2": "#20-25", "country": "PH", "postcode": "1300", "latitude": "14.5400587875001", "longitude": "121.006363105892" } } |
+      | pickup_address_id_1                 | pickup_address_id_2          | pickup_address                                                                                                                                                                                                                                                                          |
+      | {fm-rsvn-address-id-5-fm-dedicated} | {fm-rsvn-address-id-5-truck} | { "name": "CoreFmSgRsvn5", "phone_number": "+6598980037", "email": "CoreFmSgRsvn5@test.co", "address": { "address1": "SingaporeRsvn5", "address2": "LOW LIM HENG BUILDING", "country": "SG", "postcode": "308665", "latitude": "1.2546304421842336", "longitude": "103.66704781712" } } |
