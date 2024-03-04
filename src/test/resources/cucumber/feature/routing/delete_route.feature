@@ -284,3 +284,181 @@ Feature: Delete Route
       | Status  | terminal_state | service_type | service_level | parcel_job_is_pickup_required |
       | Success | SUCCESS        | Return       | Standard      | true                          |
       | Fail    | FAIL           | Return       | Standard      | true                          |
+
+  @route-delete @MediumPriority
+  Scenario: Operator Not Allowed to Delete Driver Route With Order Status = On Vehicle for Delivery
+    Given API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    When API Order - Shipper create multiple V4 orders using data below:
+      | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                             |
+      | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                         |
+      | generateFromAndTo   | RANDOM                                                                                                                                                                                                                                                                                                                          |
+      | v4OrderRequest      | { "service_type":"Return", "service_level":"Standard", "parcel_job":{ "is_pickup_required":true, "pickup_date":"{{next-1-day-yyyy-MM-dd}}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
+    And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[1]"
+    And API Sort - Operator global inbound
+      | globalInboundRequest | {"inbound_type":"SORTING_HUB","dimensions":null,"to_reschedule":false,"to_show_shipper_info":false,"tags":[]} |
+      | trackingId           | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}                                                                         |
+      | hubId                | {sorting-hub-id}                                                                                              |
+    And API Core - Operator add parcel to the route using data below:
+      | addParcelToRouteRequest | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"type":"DELIVERY"} |
+      | orderId                 | {KEY_LIST_OF_CREATED_ORDERS[1].id}                                |
+    And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
+    And API Driver - Driver van inbound:
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                                                                                                                     |
+      | request | {"parcels":[{"inbound_type":"VAN_FROM_NINJAVAN","tracking_id":"{KEY_LIST_OF_CREATED_ORDERS[1].trackingId}","waypoint_id":{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}}]} |
+    And API Driver - Driver start route "{KEY_LIST_OF_CREATED_ROUTES[1].id}"
+    Then API Core - Verifies order state:
+      | trackingId     | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]} |
+      | status         | TRANSIT                               |
+      | granularStatus | ON_VEHICLE_FOR_DELIVERY               |
+    When Operator delete driver route with status code 500
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
+      | seqNo    | not null                                                   |
+      | status   | Routed                                                     |
+
+  @route-delete @MediumPriority
+  Scenario: Operator Not Allowed to Delete Driver Route With Order Status = Completed
+    Given API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    When API Order - Shipper create multiple V4 orders using data below:
+      | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                             |
+      | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                         |
+      | generateFromAndTo   | RANDOM                                                                                                                                                                                                                                                                                                                          |
+      | v4OrderRequest      | { "service_type":"Return", "service_level":"Standard", "parcel_job":{ "is_pickup_required":true, "pickup_date":"{{next-1-day-yyyy-MM-dd}}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
+    And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[1]"
+    And API Sort - Operator global inbound
+      | globalInboundRequest | {"inbound_type":"SORTING_HUB","dimensions":null,"to_reschedule":false,"to_show_shipper_info":false,"tags":[]} |
+      | trackingId           | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}                                                                         |
+      | hubId                | {sorting-hub-id}                                                                                              |
+    And API Core - Operator add parcel to the route using data below:
+      | addParcelToRouteRequest | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"type":"DELIVERY"} |
+      | orderId                 | {KEY_LIST_OF_CREATED_ORDERS[1].id}                                |
+    And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
+    And API Driver - Driver van inbound:
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                                                                                                                     |
+      | request | {"parcels":[{"inbound_type":"VAN_FROM_NINJAVAN","tracking_id":"{KEY_LIST_OF_CREATED_ORDERS[1].trackingId}","waypoint_id":{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}}]} |
+    And API Driver - Driver start route "{KEY_LIST_OF_CREATED_ROUTES[1].id}"
+    And API Driver - Driver read routes:
+      | driverId        | {driver-id}                        |
+      | expectedRouteId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+    And API Driver - Driver submit POD:
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                              |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}                      |
+      | routes     | KEY_DRIVER_ROUTES                                                               |
+      | jobType    | TRANSACTION                                                                     |
+      | parcels    | [{ "tracking_id": "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}", "action":"SUCCESS"}] |
+      | jobAction  | SUCCESS                                                                         |
+      | jobMode    | DELIVERY                                                                        |
+    Then API Core - Verifies order state:
+      | trackingId     | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]} |
+      | status         | COMPLETED                             |
+      | granularStatus | COMPLETED                             |
+    When Operator delete driver route with status code 500
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
+      | seqNo    | not null                                                   |
+      | status   | Success                                                    |
+
+  @route-delete @MediumPriority
+  Scenario: Operator Not Allowed to Delete Driver Route With Order Status = Success
+    Given API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    When API Order - Shipper create multiple V4 orders using data below:
+      | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                             |
+      | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                         |
+      | generateFromAndTo   | RANDOM                                                                                                                                                                                                                                                                                                                          |
+      | v4OrderRequest      | { "service_type":"Parcel", "service_level":"Standard", "parcel_job":{ "is_pickup_required":true, "pickup_date":"{{next-1-day-yyyy-MM-dd}}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
+    And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[1]"
+    And API Sort - Operator global inbound
+      | globalInboundRequest | {"inbound_type":"SORTING_HUB","dimensions":null,"to_reschedule":false,"to_show_shipper_info":false,"tags":[]} |
+      | trackingId           | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}                                                                         |
+      | hubId                | {sorting-hub-id}                                                                                              |
+    And API Core - Operator add parcel to the route using data below:
+      | addParcelToRouteRequest | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"type":"DELIVERY"} |
+      | orderId                 | {KEY_LIST_OF_CREATED_ORDERS[1].id}                                |
+    And API Driver - Driver login with username "{driver-2-username}" and "{driver-2-password}"
+    And API Driver - Driver van inbound:
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                                                                                                                     |
+      | request | {"parcels":[{"inbound_type":"VAN_FROM_NINJAVAN","tracking_id":"{KEY_LIST_OF_CREATED_ORDERS[1].trackingId}","waypoint_id":{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}}]} |
+    And API Driver - Driver start route "{KEY_LIST_OF_CREATED_ROUTES[1].id}"
+    And API Driver - Driver read routes:
+      | driverId        | {driver-id}                        |
+      | expectedRouteId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+    And API Driver - Driver submit POD:
+      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                              |
+      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}                      |
+      | routes     | KEY_DRIVER_ROUTES                                                               |
+      | jobType    | TRANSACTION                                                                     |
+      | parcels    | [{ "tracking_id": "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}", "action":"SUCCESS"}] |
+      | jobAction  | SUCCESS                                                                         |
+      | jobMode    | DELIVERY                                                                        |
+    Then API Core - Verifies order state:
+      | trackingId     | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]} |
+      | status         | COMPLETED                             |
+      | granularStatus | COMPLETED                             |
+    When Operator delete driver route with status code 500
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
+      | seqNo    | not null                                                   |
+      | status   | Success                                                    |
+
+  @route-delete @MediumPriority
+  Scenario: Operator Not Allowed to Delete Driver Route With Order Status = Returned to Sender
+    Given API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
+    When API Order - Shipper create multiple V4 orders using data below:
+      | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                             |
+      | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                         |
+      | generateFromAndTo   | RANDOM                                                                                                                                                                                                                                                                                                                          |
+      | v4OrderRequest      | { "service_type":"Parcel", "service_level":"Standard", "parcel_job":{ "is_pickup_required":true, "pickup_date":"{{next-1-day-yyyy-MM-dd}}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
+    And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[1]"
+    And API Sort - Operator global inbound
+      | globalInboundRequest | {"inbound_type":"SORTING_HUB","dimensions":null,"to_reschedule":false,"to_show_shipper_info":false,"tags":[]} |
+      | trackingId           | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}                                                                         |
+      | hubId                | {sorting-hub-id}                                                                                              |
+    And API Core - Operator rts order:
+      | orderId    | {KEY_LIST_OF_CREATED_ORDERS[1].id}                                                                              |
+      | rtsRequest | { "reason": "Return to sender: Nobody at address", "timewindow_id":1, "date":"{date: 1 days next, yyyy-MM-dd}"} |
+    And API Core - Operator add parcel to the route using data below:
+      | addParcelToRouteRequest | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"type":"DELIVERY"} |
+      | orderId                 | {KEY_LIST_OF_CREATED_ORDERS[1].id}                                |
+    And API Core - Operator force success order "{KEY_LIST_OF_CREATED_ORDERS[1].id}" with cod collected "false"
+    Then API Core - Verifies order state:
+      | trackingId     | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]} |
+      | status         | COMPLETED                             |
+      | granularStatus | RETURNED_TO_SENDER                    |
+    When Operator delete driver route with status code 500
+    And DB Core - verify transactions record:
+      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And DB Routing Search - verify transactions record:
+      | txnId   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
+      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
+    And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[1]"
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
+      | seqNo    | not null                                                   |
+      | status   | Success                                                    |
