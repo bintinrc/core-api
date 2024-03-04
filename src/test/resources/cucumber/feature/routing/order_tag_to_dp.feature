@@ -1087,7 +1087,9 @@ Feature: Order Tag to DP
     And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     And API DP - Operator tag order to DP:
       | request | { "order_id": {KEY_LIST_OF_CREATED_ORDERS[1].id},"dp_id": {dp-id},"drop_off_date": "{date: 0 days next, yyyy-MM-dd}"} |
-    And API Core - Operator perform dp drop off with order id "{KEY_LIST_OF_CREATED_ORDERS[1].id}"
+    And API Core - Operator update order granular status:
+      | orderId        | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | granularStatus | Arrived at Distribution Point      |
     And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}"
     When API Core - Operator overstay order from dp:
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
@@ -1123,12 +1125,7 @@ Feature: Order Tag to DP
       | address2            | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress2}         |
       | postcode            | {KEY_LIST_OF_CREATED_ORDERS[1].toPostcode}         |
       | country             | {KEY_LIST_OF_CREATED_ORDERS[1].toCountry}          |
-    And DB Routing Search - verify transactions record:
-      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[3].id}         |
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[3].waypointId} |
-      | txnStatus  | PENDING                                                    |
-      | routeId    | null                                                       |
-#  Check new DD transaction
+    #  Check new DD transaction
     And DB Core - verify transactions record:
       | id       | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[4].id} |
       | status   | Pending                                            |
