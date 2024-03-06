@@ -5,7 +5,6 @@ import co.nvqa.common.ordercreate.model.OrderRequestV4;
 import co.nvqa.commonauth.utils.TokenUtils;
 import co.nvqa.core_api.cucumber.glue.BaseSteps;
 import co.nvqa.core_api.cucumber.glue.support.OrderCreateHelper;
-import co.nvqa.core_api.cucumber.glue.support.TestConstants;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
 import java.util.Map;
@@ -27,8 +26,8 @@ public class OrderCreateSteps extends BaseSteps {
   public void shipperAuthenticate(String clientId, String clientSecret) {
     doWithRetry(() -> {
       String token = TokenUtils.getShipperToken(clientId, clientSecret);
-      orderCreateClient = new OrderCreateClient(TestConstants.API_BASE_URL,
-          token);
+      orderCreateClient = new OrderCreateClient();
+      orderCreateClient.changeBearerToken(token);
       put(KEY_SHIPPER_V4_ACCESS_TOKEN, token);
     }, "shipper API authenticated");
   }

@@ -24,10 +24,12 @@ Feature: Order Tag to DP
       | postcode            | 238900                                                     |
       | city                | SG                                                         |
     And DB Routing Search - verify transactions record:
-      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | txnStatus  | PENDING                                                    |
-      | routeId    | {dp-holding-route-id}                                      |
+      | txnId           | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus       | PENDING                                                    |
+      | routeId         | {dp-holding-route-id}                                      |
+      | startTimeCustom | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].startTime}  |
+      | endTimeCustom   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].endTime}    |
     Then DB Core - verify waypoints record:
       | id       | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
@@ -115,10 +117,12 @@ Feature: Order Tag to DP
       | postcode            | 238900                                                     |
       | city                | SG                                                         |
     And DB Routing Search - verify transactions record:
-      | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | txnStatus  | PENDING                                                    |
-      | routeId    | {dp-holding-route-id}                                      |
+      | txnId           | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
+      | waypointId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | txnStatus       | PENDING                                                    |
+      | routeId         | {dp-holding-route-id}                                      |
+      | startTimeCustom | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].startTime}  |
+      | endTimeCustom   | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].endTime}    |
     Then DB Core - verify waypoints record:
       | id       | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
