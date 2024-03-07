@@ -8,6 +8,7 @@ import co.nvqa.core_api.cucumber.glue.support.OrderCreateHelper;
 import io.cucumber.guice.ScenarioScoped;
 import io.cucumber.java.en.Given;
 import java.util.Map;
+import javax.inject.Inject;
 
 /**
  * @author Binti Cahayati on 2020-07-01
@@ -15,6 +16,7 @@ import java.util.Map;
 @ScenarioScoped
 public class OrderCreateSteps extends BaseSteps {
 
+  @Inject
   private OrderCreateClient orderCreateClient;
 
   @Override
@@ -26,7 +28,6 @@ public class OrderCreateSteps extends BaseSteps {
   public void shipperAuthenticate(String clientId, String clientSecret) {
     doWithRetry(() -> {
       String token = TokenUtils.getShipperToken(clientId, clientSecret);
-      orderCreateClient = new OrderCreateClient();
       orderCreateClient.changeBearerToken(token);
       put(KEY_SHIPPER_V4_ACCESS_TOKEN, token);
     }, "shipper API authenticated");
