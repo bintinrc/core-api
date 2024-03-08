@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.inject.Inject;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -60,7 +61,7 @@ public class DriverSteps extends BaseSteps {
     final long routeId = Long.parseLong(resolvedData.get("routeId"));
     final long driverId = Long.parseLong(resolvedData.get("driverId"));
     doWithRetry(() -> {
-      List<GetRouteResponse.Route> result = getDriverClient().getRoutes(driverId, "2.1").getData()
+      List<GetRouteResponse.Route> result = getDriverClient().getRoutes(driverId, "2.1", Optional.of(routeId)).getData()
           .getRoutes();
       boolean found = result.stream().anyMatch(o -> o.getId() == routeId);
       Assertions.assertThat(found).as("route is not shown in driver list routes").isFalse();
@@ -145,7 +146,7 @@ public class DriverSteps extends BaseSteps {
 
   private void driverGetWaypointDetails(long routeId, long waypointId, long driverId) {
     doWithRetry(() -> {
-      List<GetRouteResponse.Route> routes = driverClient.getRoutes(driverId, "2.1")
+      List<GetRouteResponse.Route> routes = driverClient.getRoutes(driverId, "2.1", Optional.of(routeId))
           .getData().getRoutes();
       routes.stream().filter(e -> e.getId() == (routeId))
           .forEach(e -> put(KEY_LIST_OF_DRIVER_WAYPOINT_DETAILS, e));
