@@ -1,4 +1,4 @@
-@ForceSuccessOrders @route-v2 @waypoints-merge
+@ForceSuccessOrders @route-v2 @waypoints-merge @SG
 Feature: Zonal Routing - Merge Transactions - SG
 
   @HighPriority
