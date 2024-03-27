@@ -1,4 +1,4 @@
-@OperatorV2 @Core @Routing @RouteLogs @MergeTransactions @MergeTransactions @TH
+@waypoints-merge @TH
 Feature: Zonal Routing - Merge Transactions - TH - Can Merge
 
   @ArchiveRouteCommonV2 @HighPriority
