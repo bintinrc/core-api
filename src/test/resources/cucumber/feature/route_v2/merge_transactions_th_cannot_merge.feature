@@ -1,7 +1,7 @@
 @ForceSuccessOrders @route-v2 @waypoints-merge @TH
 Feature: Zonal Routing - Merge Transactions - TH - Cannot Merge
 
-  @ArchiveRouteCommonV2 @LowPriority
+  @ArchiveRouteCommonV2 @MediumPriority
   Scenario: Zonal Routing - Operator Merge Transactions of Multiple Routes - Pickup Transactions - Tagged with Same DP - Cannot Merge
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{hub-id}, "driverId":{ninja-driver-id} } |
@@ -94,7 +94,7 @@ Feature: Zonal Routing - Merge Transactions - TH - Cannot Merge
       | seqNo    | not null                                                   |
       | status   | Routed                                                     |
 
-  @ArchiveRouteCommonV2 @LowPriority
+  @ArchiveRouteCommonV2 @MediumPriority
   Scenario: Zonal Routing - Operator Merge Transactions of Multiple Routes - Delivery Transactions - Tagged with Same DP - Cannot Merge
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{hub-id}, "driverId":{ninja-driver-id} } |
@@ -185,7 +185,7 @@ Feature: Zonal Routing - Merge Transactions - TH - Cannot Merge
       | seqNo    | not null                                                   |
       | status   | Routed                                                     |
 
-  @ArchiveRouteCommonV2 @LowPriority
+  @ArchiveRouteCommonV2 @MediumPriority
   Scenario Outline: Zonal Routing - Operator Merge Multiple Transactions of Single Route - Pickup Transaction - Different Phone Number - Cannot Merge
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-v4-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
@@ -230,7 +230,7 @@ Feature: Zonal Routing - Merge Transactions - TH - Cannot Merge
       | transaction_type | type | service_type | direction | generateAddress | email_1       | email_2       | phone_number_1 | phone_number_2 | is_pickup_required |
       | Pickup           | PP   | Return       | from      | generateTo      | binti@test.co | binti@test.co | +6622134567    | +6622134561    | true               |
 
-  @ArchiveRouteCommonV2 @LowPriority
+  @ArchiveRouteCommonV2 @MediumPriority
   Scenario Outline: Zonal Routing - Operator Merge Multiple Transactions of Single Route - Delivery Transaction - Different Phone Number - Cannot Merge
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-v4-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
@@ -276,7 +276,7 @@ Feature: Zonal Routing - Merge Transactions - TH - Cannot Merge
       | transaction_type | type | service_type | direction | generateAddress | email_1       | email_2       | phone_number_1 | phone_number_2 | is_pickup_required |
       | Delivery         | DD   | Parcel       | to        | generateFrom    | binti@test.co | binti@test.co | +6622134567    | +6622134561    | false              |
 
-  @ArchiveRouteCommonV2 @LowPriority
+  @ArchiveRouteCommonV2 @MediumPriority
   Scenario Outline: Zonal Routing - Operator Merge Multiple Transactions of Single Route - Pickup Transaction - Different Address, Approximate Coordinate - Cannot Merge
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-v4-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
@@ -321,7 +321,7 @@ Feature: Zonal Routing - Merge Transactions - TH - Cannot Merge
       | transaction_type | type | service_type | direction | address_1    | address_2     | email_1       | email_2           | phone_number_1 | phone_number_2 | is_pickup_required |
       | Pickup           | PP   | Return       | from      | Khaosan Road | Ningling Road | binti@test.co | binti1234@test.co | +6622134567    | +66221345671   | true               |
 
-  @ArchiveRouteCommonV2 @LowPriority
+  @ArchiveRouteCommonV2 @MediumPriority
   Scenario Outline: Zonal Routing - Operator Merge Multiple Transactions of Single Route - Delivery Transaction - Different Address, Approximate Coordinate - Cannot Merge
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-v4-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -367,7 +367,7 @@ Feature: Zonal Routing - Merge Transactions - TH - Cannot Merge
       | transaction_type | type | service_type | direction | generateAddress | email_1       | email_2           | address_1    | address_2      | phone_number_1 | phone_number_2 | is_pickup_required |
       | Delivery         | DD   | Parcel       | to        | generateFrom    | binti@test.co | binti1234@test.co | Khaosan Road | Ningshang Road | +6622134567    | +6622134561    | false              |
 
-  @ArchiveRouteCommonV2 @LowPriority
+  @ArchiveRouteCommonV2 @MediumPriority
   Scenario Outline: Zonal Routing - Operator Merge Multiple Transactions of Single Route - Pickup Transaction - Different Address, Approximate Coordinate, Different Email - Cannot Merge
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-v4-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
@@ -412,7 +412,7 @@ Feature: Zonal Routing - Merge Transactions - TH - Cannot Merge
       | transaction_type | type | service_type | direction | address_1    | address_2     | email_1       | email_2           | phone_number_1 | phone_number_2 | is_pickup_required |
       | Pickup           | PP   | Return       | from      | Khaosan Road | Ningling Road | binti@test.co | binti1234@test.co | +6622134567    | +66221345671   | true               |
 
-  @ArchiveRouteCommonV2 @LowPriority
+  @ArchiveRouteCommonV2 @MediumPriority
   Scenario Outline: Zonal Routing - Operator Merge Multiple Transactions of Single Route - Delivery Transaction - Different Address, Approximate Coordinate, Different Email - Cannot Merge
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-v4-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -458,7 +458,7 @@ Feature: Zonal Routing - Merge Transactions - TH - Cannot Merge
       | transaction_type | type | service_type | direction | generateAddress | email_1       | email_2           | address_1    | address_2      | phone_number_1 | phone_number_2 | is_pickup_required |
       | Delivery         | DD   | Parcel       | to        | generateFrom    | binti@test.co | binti1234@test.co | Khaosan Road | Ningshang Road | +6622134567    | +6622134561    | false              |
 
-  @ArchiveRouteCommonV2 @LowPriority
+  @ArchiveRouteCommonV2 @MediumPriority
   Scenario Outline: Zonal Routing - Operator Merge Multiple Transactions of Single Route - Pickup Transaction - Different Address, Approximate Coordinate, Different Phone Number - Cannot Merge
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-v4-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
@@ -503,7 +503,7 @@ Feature: Zonal Routing - Merge Transactions - TH - Cannot Merge
       | transaction_type | type | service_type | direction | address_1    | address_2     | email_1       | email_2           | phone_number_1 | phone_number_2 | is_pickup_required |
       | Pickup           | PP   | Return       | from      | Khaosan Road | Ningling Road | binti@test.co | binti1234@test.co | +6622134567    | +6622134561    | true               |
 
-  @ArchiveRouteCommonV2 @LowPriority
+  @ArchiveRouteCommonV2 @MediumPriority
   Scenario Outline: Zonal Routing - Operator Merge Multiple Transactions of Single Route - Delivery Transaction - Different Address, Approximate Coordinate, Different Phone Number - Cannot Merge
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-v4-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
@@ -549,7 +549,7 @@ Feature: Zonal Routing - Merge Transactions - TH - Cannot Merge
       | transaction_type | type | service_type | direction | generateAddress | email_1       | email_2           | address_1    | address_2      | phone_number_1 | phone_number_2 | is_pickup_required |
       | Delivery         | DD   | Parcel       | to        | generateFrom    | binti@test.co | binti1234@test.co | Khaosan Road | Ningshang Road | +6622134567    | +6622134561    | false              |
 
-  @ArchiveRouteCommonV2 @LowPriority
+  @ArchiveRouteCommonV2 @MediumPriority
   Scenario Outline: Zonal Routing - Operator Merge Multiple Transactions of Single Route - Pickup Transaction - Different Delivery Verification Mode - Cannot Merge
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-v4-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
@@ -594,7 +594,7 @@ Feature: Zonal Routing - Merge Transactions - TH - Cannot Merge
       | transaction_type | type | service_type | direction | generateAddress | email_1       | email_2       | phone_number_1 | phone_number_2 | is_pickup_required |
       | Pickup           | PP   | Return       | from      | generateTo      | binti@test.co | binti@test.co | +6622134567    | +6622134561    | true               |
 
-  @ArchiveRouteCommonV2 @LowPriority
+  @ArchiveRouteCommonV2 @MediumPriority
   Scenario Outline: Zonal Routing - Operator Merge Multiple Transactions of Single Route - Delivery Transaction - Different Delivery Verification Mode - Cannot Merge
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-v4-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                              |
