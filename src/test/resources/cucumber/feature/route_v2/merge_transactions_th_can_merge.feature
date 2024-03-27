@@ -437,7 +437,7 @@ Feature: Zonal Routing - Merge Transactions - TH - Can Merge
       | transaction_type | type | service_type | direction | generateAddress | email_1    | email_2           | phone_number_1 | phone_number_2 | is_pickup_required |
       | Delivery         | DD   | Parcel       | to        | generateFrom    | binti@nnnn | binti1234@test.co | +6622134567    | +66221345671   | false              |
 
-  @LowPriority
+  @ArchiveRouteCommonV2 @LowPriority
   Scenario Outline: Zonal Routing - Operator Merge Multiple Transactions of Single Route - Pickup Transactions - Different Order Status - Can Merge
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-v4-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
