@@ -1,7 +1,7 @@
 @ForceSuccessOrders @route-v2 @waypoints-merge @TH
 Feature: Zonal Routing - Merge Transactions - TH - Cannot Merge
 
-  @ArchiveRouteCommonV2 @happy-path @HighPriority
+  @ArchiveRouteCommonV2 @LowPriority
   Scenario: Zonal Routing - Operator Merge Transactions of Multiple Routes - Pickup Transactions - Tagged with Same DP - Cannot Merge
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{hub-id}, "driverId":{ninja-driver-id} } |
@@ -94,7 +94,7 @@ Feature: Zonal Routing - Merge Transactions - TH - Cannot Merge
       | seqNo    | not null                                                   |
       | status   | Routed                                                     |
 
-  @ArchiveRouteCommonV2 @happy-path @HighPriority
+  @ArchiveRouteCommonV2 @LowPriority
   Scenario: Zonal Routing - Operator Merge Transactions of Multiple Routes - Delivery Transactions - Tagged with Same DP - Cannot Merge
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{hub-id}, "driverId":{ninja-driver-id} } |
