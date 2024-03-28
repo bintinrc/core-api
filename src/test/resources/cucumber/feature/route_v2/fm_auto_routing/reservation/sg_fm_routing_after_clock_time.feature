@@ -172,7 +172,7 @@ Feature: SG - FM Automated Routing - Outside Clock Time
     Given API Route - Operator archive all unarchived routes of driver id "<driver_id>"
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":<address_id>, "legacy_shipper_id":<shipper_legacy_id>,"global_shipper_id":<global_shipper_id>, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 1 days next, yyyy-MM-dd}T09:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 1 days next, yyyy-MM-dd}T22:00:00{gradle-timezone-XXX}" } |
-    And API Route - Operator run FM auto route cron job for date "{KEY_LIST_OF_CREATED_RESERVATIONS[1].readyDatetime}"
+    And API Route - Operator run FM auto route cron job for date "{date: 0 days next, yyyy-MM-dd}"
     And DB Route - verify waypoints record:
       | legacyId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo         | not null                                         |
