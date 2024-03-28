@@ -1,4 +1,4 @@
-@ForceSuccessOrders @route-v2 @waypoints-merge @TH
+@ForceSuccessOrders @waypoints-merge @TH
 Feature: Zonal Routing - Merge Transactions - TH - Can Merge
 
   @ArchiveRouteCommonV2 @MediumPriority
