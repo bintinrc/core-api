@@ -27,9 +27,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
-      | userId     | {route-v2-service-user-id}                      |
-      | userName   | {route-v2-service-user-name}                    |
-      | userEmail  | {route-v2-service-user-email}                   |
+      | userName   | {fm-service-user-name}                          |
       | type       | 1                                               |
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
@@ -69,9 +67,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
-      | userId     | {route-v2-service-user-id}                      |
-      | userName   | {route-v2-service-user-name}                    |
-      | userEmail  | {route-v2-service-user-email}                   |
+      | userName   | {fm-service-user-name}                          |
       | type       | 1                                               |
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
@@ -183,9 +179,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOB_IDS[1]}             |
-      | userId     | {route-v2-service-user-id}                      |
-      | userName   | {route-v2-service-user-name}                    |
-      | userEmail  | {route-v2-service-user-email}                   |
+      | userName   | {fm-service-user-name}                          |
       | type       | 1                                               |
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
@@ -230,9 +224,7 @@ Feature: ID - FM Automated Routing - Pickup Appointment Job
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOB_IDS[1]}             |
-      | userId     | {route-v2-service-user-id}                      |
-      | userName   | {route-v2-service-user-name}                    |
-      | userEmail  | {route-v2-service-user-email}                   |
+      | userName   | {fm-service-user-name}                          |
       | type       | 1                                               |
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
