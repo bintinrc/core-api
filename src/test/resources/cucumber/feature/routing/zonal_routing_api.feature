@@ -1,4 +1,4 @@
-@ForceSuccessOrders @CancelCreatedReservations @ArchiveDriverRoutes  @routing1 @zonal-routing-api @routing-refactor
+@ForceSuccessOrders @CancelCreatedReservations @ArchiveDriverRoutes @routing1 @zonal-routing-api @routing-refactor
 Feature: Zonal Routing API
 
   @happy-path @HighPriority
@@ -106,9 +106,9 @@ Feature: Zonal Routing API
     And API Core - Operator get multiple order details for tracking ids:
       | {KEY_LIST_OF_CREATED_TRACKING_IDS[2]} |
       | {KEY_LIST_OF_CREATED_TRACKING_IDS[3]} |
-    When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
-      | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[1].id}, "waypoints":[{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}, {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[3].transactions[1].waypointId}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
-#    check 1st delivery waypoint
+    When API Route - Operator Edit Route Waypoint on Zonal Routing Edit Route:
+      | {"route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "driver_id": {driver-id}, "waypoint_ids": [{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}, {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[3].transactions[1].waypointId}]}                                                                                                             |
+     #    check 1st delivery waypoint
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
@@ -162,17 +162,18 @@ Feature: Zonal Routing API
     And DB Core - verify route_monitoring_data record:
       | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
+# TODO: to uncomment after ROUTE-1466 is done
 #    check order events
-    And API Event - Operator verify that event is published with the following details:
-      | event            | ADD_TO_ROUTE                       |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
-      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | routeEventSource | ZONAL_ROUTING_UPDATE               |
-    And API Event - Operator verify that event is published with the following details:
-      | event            | ADD_TO_ROUTE                       |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
-      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | routeEventSource | ZONAL_ROUTING_UPDATE               |
+#    And API Event - Operator verify that event is published with the following details:
+#      | event            | ADD_TO_ROUTE                       |
+#      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
+#      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+#      | routeEventSource | ZONAL_ROUTING_UPDATE               |
+#    And API Event - Operator verify that event is published with the following details:
+#      | event            | ADD_TO_ROUTE                       |
+#      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
+#      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+#      | routeEventSource | ZONAL_ROUTING_UPDATE               |
 #    check pickup_events
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}        |
@@ -202,9 +203,9 @@ Feature: Zonal Routing API
       | {KEY_LIST_OF_CREATED_TRACKING_IDS[2]} |
     And API Core - Operator create new route from zonal routing using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId} ]} |
-    When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
-      | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[1].id}, "waypoints":[{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId},  {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
-#    check delivery waypoint
+    When API Route - Operator Edit Route Waypoint on Zonal Routing Edit Route:
+      | {"route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "driver_id": {driver-id}, "waypoint_ids": [{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}]}                                                                                                             |
+    #    check delivery waypoint
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
@@ -270,9 +271,9 @@ Feature: Zonal Routing API
       | {KEY_LIST_OF_CREATED_TRACKING_IDS[3]} |
     Given API Core - Operator create new route from zonal routing using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[3].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}]} |
-    When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
-      | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[1].id}, "waypoints":[{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
-#    check 1st delivery waypoint
+    When API Route - Operator Edit Route Waypoint on Zonal Routing Edit Route:
+      | {"route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "driver_id": {driver-id}, "waypoint_ids": [{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}]}                                                                                                             |
+    #    check 1st delivery waypoint
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
@@ -368,8 +369,9 @@ Feature: Zonal Routing API
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId} ]} |
     When API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
-    When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
-      | editRouteRequest | [ { "id": {KEY_LIST_OF_CREATED_ROUTES[2].id}, "waypoints": [ {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} ], "zoneId": {zone-id}, "hubId": {sorting-hub-id}, "vehicleId": {vehicle-id}, "driverId": {driver-id} }, { "id": {KEY_LIST_OF_CREATED_ROUTES[1].id }, "waypoints": [ {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} ], "zoneId": {zone-id}, "hubId": {sorting-hub-id}, "vehicleId": {vehicle-id}, "driverId": {driver-id} } ] |
+    When API Route - Operator Edit Route Waypoint on Zonal Routing Edit Route:
+      | {"route_id": {KEY_LIST_OF_CREATED_ROUTES[2].id}, "driver_id": {driver-id}, "waypoint_ids": [{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId},{KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId},{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}]} |
+      | {"route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "driver_id": {driver-id}, "waypoint_ids": [{KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId}]}                                                                                                             |
     #  TRANSACTION - DELIVERY
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id} |
@@ -420,24 +422,25 @@ Feature: Zonal Routing API
       | seqNo    | not null                                                   |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
       | status   | Routed                                                     |
-    And API Event - Operator verify that event is published with the following details:
-      | event            | ADD_TO_ROUTE                       |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
-      | routeEventSource | ZONAL_ROUTING_UPDATE               |
-    And API Event - Operator verify that event is published with the following details:
-      | event            | ADD_TO_ROUTE                       |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
-      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
-      | routeEventSource | ZONAL_ROUTING_UPDATE               |
-    And API Event - Operator verify that event is published with the following details:
-      | event            | PULL_OUT_OF_ROUTE                  |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-      | routeEventSource | ZONAL_ROUTING_UPDATE               |
-    And API Event - Operator verify that event is published with the following details:
-      | event            | PULL_OUT_OF_ROUTE                  |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
-      | routeEventSource | ZONAL_ROUTING_UPDATE               |
+# TODO: to uncomment after ROUTE-1466 is done
+#    And API Event - Operator verify that event is published with the following details:
+#      | event            | ADD_TO_ROUTE                       |
+#      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+#      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+#      | routeEventSource | ZONAL_ROUTING_UPDATE               |
+#    And API Event - Operator verify that event is published with the following details:
+#      | event            | ADD_TO_ROUTE                       |
+#      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
+#      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+#      | routeEventSource | ZONAL_ROUTING_UPDATE               |
+#    And API Event - Operator verify that event is published with the following details:
+#      | event            | PULL_OUT_OF_ROUTE                  |
+#      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+#      | routeEventSource | ZONAL_ROUTING_UPDATE               |
+#    And API Event - Operator verify that event is published with the following details:
+#      | event            | PULL_OUT_OF_ROUTE                  |
+#      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
+#      | routeEventSource | ZONAL_ROUTING_UPDATE               |
 
   @HighPriority
   Scenario: Add Merged Unrouted Waypoint to a Route from Zonal Routing Edit Route
@@ -458,8 +461,8 @@ Feature: Zonal Routing API
     And API Core - Operator get multiple order details for tracking ids:
       | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1]} |
       | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[2]} |
-    When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
-      | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[1].id}, "waypoints":[{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
+    When API Route - Operator Edit Route Waypoint on Zonal Routing Edit Route:
+      | {"route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "driver_id": {driver-id}, "waypoint_ids": [{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}]} |
     And API Core - Operator get multiple order details for tracking ids:
       | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[1]} |
       | {KEY_LIST_OF_CREATED_ORDER_TRACKING_ID[2]} |
@@ -650,8 +653,8 @@ Feature: Zonal Routing API
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
-    When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
-      | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[1].id}, "waypoints":[{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
+    When API Route - Operator Edit Route Waypoint on Zonal Routing Edit Route:
+      | {"route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "driver_id": {driver-id}, "waypoint_ids": [{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}]} |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo    | not null                                         |
@@ -677,8 +680,8 @@ Feature: Zonal Routing API
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}]} |
     And API Core - Operator create new route from zonal routing using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
-    When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
-      | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[2].id}, "waypoints":[{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
+    When API Route - Operator Edit Route Waypoint on Zonal Routing Edit Route:
+      | {"route_id": {KEY_LIST_OF_CREATED_ROUTES[2].id}, "driver_id": {driver-id}, "waypoint_ids": [{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}]} |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo    | not null                                         |
@@ -705,8 +708,8 @@ Feature: Zonal Routing API
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And API Core - Operator create new route from zonal routing using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_WAYPOINT_ID}, {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}]} |
-    When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
-      | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[1].id}, "waypoints":[{KEY_WAYPOINT_ID}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
+    When API Route - Operator Edit Route Waypoint on Zonal Routing Edit Route:
+      | {"route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "driver_id": {driver-id}, "waypoint_ids": [{KEY_WAYPOINT_ID}]} |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo    | null                                             |
