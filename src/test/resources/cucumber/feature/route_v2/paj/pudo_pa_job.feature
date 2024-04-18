@@ -1,4 +1,4 @@
-@ArchiveDriverRoutes @CancelCreatedReservations @routing2 @pudo-pa-job @wip
+@ArchiveDriverRoutes @CancelCreatedReservations @routing2 @pudo-pa-job
 Feature: Zonal Routing API - Pudo PAJ
 
   @DeletePudoPickupJob @MediumPriority
