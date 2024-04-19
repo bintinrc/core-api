@@ -1,4 +1,4 @@
-@ArchiveDriverRoutes @CancelCreatedReservations @DeletePickupAppointmentJob @routing2 @pa-job @wip
+@ArchiveDriverRoutes @CancelCreatedReservations @DeletePickupAppointmentJob @routing2 @pa-job
 Feature: Zonal Routing API
 
   @DeletePickupAppointmentJob @happy-path @HighPriority
