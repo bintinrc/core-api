@@ -114,8 +114,8 @@ Feature: Zonal Routing API
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
-    When API Route - Operator Edit Route Waypoint on Zonal Routing Edit Route:
-      | {"route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "driver_id": {driver-id}, "waypoint_ids": [{KEY_WAYPOINT_ID}]} |
+    When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
+      | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[1].id}, "waypoints":[{KEY_WAYPOINT_ID}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
     And DB Core - verify waypoints record:
       | id      | {KEY_WAYPOINT_ID}                  |
       | seqNo   | not null                           |
@@ -147,8 +147,8 @@ Feature: Zonal Routing API
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_WAYPOINT_ID}]} |
     And API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
-    When API Route - Operator Edit Route Waypoint on Zonal Routing Edit Route:
-      | {"route_id": {KEY_LIST_OF_CREATED_ROUTES[2].id}, "driver_id": {driver-id}, "waypoint_ids": [{KEY_WAYPOINT_ID}]} |
+    When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
+      | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[2].id}, "waypoints":[{KEY_WAYPOINT_ID}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
     And DB Core - verify waypoints record:
       | id      | {KEY_WAYPOINT_ID}                  |
       | seqNo   | not null                           |
@@ -188,8 +188,8 @@ Feature: Zonal Routing API
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And API Core - Operator create new route from zonal routing using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_WAYPOINT_ID}, {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}]} |
-    When API Route - Operator Edit Route Waypoint on Zonal Routing Edit Route:
-      | {"route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "driver_id": {driver-id}, "waypoint_ids": [{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}]} |
+    When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
+      | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[1].id}, "waypoints":[{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
     And DB Core - verify waypoints record:
       | id      | {KEY_WAYPOINT_ID} |
       | seqNo   | null              |
@@ -322,8 +322,8 @@ Feature: Zonal Routing API
     Given API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
-    When API Route - Operator Edit Route Waypoint on Zonal Routing Edit Route:
-      | {"route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "driver_id": {driver-id}, "waypoint_ids": [{KEY_WAYPOINT_ID}]} |
+    When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
+      | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[1].id}, "waypoints":[{KEY_WAYPOINT_ID}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | not null                           |
