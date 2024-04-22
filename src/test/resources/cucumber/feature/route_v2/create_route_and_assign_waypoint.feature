@@ -106,7 +106,7 @@ Feature: Create Route & Assign Waypoints
       | event            | ADD_TO_ROUTE                       |
       | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | routeEventSource | ADD_BY_TRACKING_OR_STAMP           |
+      | routeEventSource | ZONAL_ROUTING_CREATE               |
     #    check Delivery Transaction
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
@@ -134,7 +134,7 @@ Feature: Create Route & Assign Waypoints
       | event            | ADD_TO_ROUTE                       |
       | orderId          | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | routeEventSource | ADD_BY_TRACKING_OR_STAMP           |
+      | routeEventSource | ZONAL_ROUTING_CREATE               |
 
   @HighPriority
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Routed Waypoints to Route - Transaction, Reservation, PA Job
