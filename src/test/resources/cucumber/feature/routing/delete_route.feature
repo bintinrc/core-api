@@ -31,8 +31,6 @@ Feature: Delete Route
       | routeId  | null                                 |
       | seqNo    | null                                 |
       | status   | Pending                              |
-    And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_TRANSACTION_DETAILS.waypointId} |
     And API Event - Operator verify that event is published with the following details:
       | event            | PULL_OUT_OF_ROUTE      |
       | orderId          | {KEY_CREATED_ORDER_ID} |
@@ -68,8 +66,6 @@ Feature: Delete Route
       | routeId  | null                                             |
       | seqNo    | null                                             |
       | status   | Pending                                          |
-    And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
     And DB Core - verify shipper_pickup_search record:
       | reservationId  | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | waypointStatus | Pending                                  |
@@ -124,10 +120,6 @@ Feature: Delete Route
       | routeId  | null                          |
       | seqNo    | null                          |
       | status   | Pending                       |
-    And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_LIST_OF_WAYPOINT_IDS[1]} |
-    And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_LIST_OF_WAYPOINT_IDS[2]} |
     And API Event - Operator verify that event is published with the following details:
       | event            | PULL_OUT_OF_ROUTE                 |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |

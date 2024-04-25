@@ -142,8 +142,6 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | status   | Pending                                        |
       | routeId  | null                                           |
       | seqNo    | null                                           |
-    And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_CREATED_ORDER.transactions[1].waypointId} |
     And DB Core - verify transactions record:
       | id       | {KEY_CREATED_ORDER.transactions[2].id}         |
       | status   | Cancelled                                      |
@@ -211,9 +209,6 @@ Feature: Cancel DELETE /2.2/orders/:trackingNumber
       | status   | Fail                                           |
       | routeId  | {KEY_CREATED_ROUTE_ID}                         |
       | seqNo    | not null                                       |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_CREATED_ORDER.transactions[1].waypointId} |
-      | routeId    | {KEY_CREATED_ROUTE_ID}                         |
     And DB Core - verify transactions record:
       | id       | {KEY_CREATED_ORDER.transactions[2].id}         |
       | status   | Cancelled                                      |

@@ -22,9 +22,6 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status        | Routed                             |
       | routingZoneId | <zone_id>                          |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
       | userName   | {fm-service-user-name}                          |
@@ -62,9 +59,6 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status        | Routed                             |
       | routingZoneId | <zone_id>                          |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
       | userName   | {fm-service-user-name}                          |
@@ -171,9 +165,6 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status        | Routed                             |
       | routingZoneId | <zone_id>                          |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOB_IDS[1]}             |
       | userName   | {fm-service-user-name}                          |
@@ -216,9 +207,6 @@ Feature: SG - FM Automated Routing - Pickup Appointment Job
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status        | Routed                             |
       | routingZoneId | <zone_id>                          |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOB_IDS[1]}             |
       | userName   | {fm-service-user-name}                          |

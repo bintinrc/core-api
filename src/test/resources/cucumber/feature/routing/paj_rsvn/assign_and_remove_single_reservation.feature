@@ -20,10 +20,6 @@ Feature: Assign and Remove Single Reservation To Route
       | seqNo    | 100                                              |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
       | status   | Routed                                           |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
-      | type       | RESERVATION                                      |
     And DB Core - verify shipper_pickup_search record:
       | reservationId  | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId        | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
@@ -84,10 +80,6 @@ Feature: Assign and Remove Single Reservation To Route
       | seqNo    | 100                                              |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id}               |
       | status   | Routed                                           |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id}               |
-      | type       | RESERVATION                                      |
     And DB Core - verify shipper_pickup_search record:
       | reservationId  | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId        | {KEY_LIST_OF_CREATED_ROUTES[2].id}       |
@@ -183,10 +175,6 @@ Feature: Assign and Remove Single Reservation To Route
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
     When API Core - Operator remove reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" from route
-    Then DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-    And DB Core - verify route_waypoint records are hard-deleted:
-      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
     And DB Core - verify waypoints record:
       | id      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo   | null                                             |

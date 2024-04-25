@@ -18,10 +18,6 @@ Feature: Zonal Routing API - Pudo PAJ
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status   | Routed                             |
-#    will be enabled once RMD is catered for pudo paj
-#    And DB Core - verify route_monitoring_data record:
-#      | waypointId | {KEY_WAYPOINT_ID}                  |
-#      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
 #    will be enabled once pickup_events is catered for pudo paj
 #    And DB Events - verify pickup_events record:
 #      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
@@ -51,10 +47,6 @@ Feature: Zonal Routing API - Pudo PAJ
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status   | Routed                             |
-#    will be enabled once RMD is catered for pudo paj
-#    And DB Core - verify route_monitoring_data record:
-#      | waypointId | {KEY_WAYPOINT_ID}                  |
-#      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
 #    will be enabled once pickup_events is catered for pudo paj
 #    And DB Events - verify pickup_events record:
 #      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
@@ -86,10 +78,6 @@ Feature: Zonal Routing API - Pudo PAJ
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
       | status   | Routed                             |
-#    will be enabled once RMD is catered for pudo paj
-#    And DB Core - verify route_monitoring_data record:
-#      | waypointId | {KEY_WAYPOINT_ID}                  |
-#      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
 #    will be enabled once pickup_events is catered for pudo paj
 #    And DB Events - verify pickup_events record:
 #      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
@@ -130,9 +118,6 @@ Feature: Zonal Routing API - Pudo PAJ
       | seqNo    | null              |
       | routeId  | null              |
       | status   | Pending           |
-##    will be enabled once RMD is catered for pudo paj
-#    And DB Core - verify route_monitoring_data is hard-deleted:
-#      | {KEY_WAYPOINT_ID} |
 #    will be enabled once pickup_events is catered for pudo paj
 #    And DB Events - verify pickup_events record:
 #      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |

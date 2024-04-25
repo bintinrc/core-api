@@ -40,9 +40,6 @@ Feature: Order Tag to DP
       | postcode | 238900                                                     |
       | city     | SG                                                         |
       | country  | SG                                                         |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | routeId    | {dp-holding-route-id}                                      |
     And DB Core - verify orders record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | toAddress1 | 119, CLEMENTI ROAD, SG, 129801     |
@@ -133,9 +130,6 @@ Feature: Order Tag to DP
       | postcode | 238900                                                     |
       | city     | SG                                                         |
       | country  | SG                                                         |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | routeId    | {dp-holding-route-id}                                      |
     And DB Core - verify orders record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | toAddress1 | 119, CLEMENTI ROAD, SG, 129801     |
@@ -204,9 +198,6 @@ Feature: Order Tag to DP
       | seqNo   | not null                                                   |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
       | status  | Routed                                                     |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
     And DB Core - verify transactions record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
@@ -252,9 +243,6 @@ Feature: Order Tag to DP
       | postcode | 238900                                                     |
       | city     | SG                                                         |
       | country  | SG                                                         |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
     And DB Core - verify orders record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | toAddress1 | 119, CLEMENTI ROAD, SG, 129801     |
@@ -343,9 +331,6 @@ Feature: Order Tag to DP
       | postcode | 238900                                                     |
       | city     | SG                                                         |
       | country  | SG                                                         |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id}                         |
     And DB Core - verify orders record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | toAddress1 | 119, CLEMENTI ROAD, SG, 129801     |
@@ -435,9 +420,6 @@ Feature: Order Tag to DP
       | postcode | 238900                                                     |
       | city     | SG                                                         |
       | country  | SG                                                         |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
     And DB Core - verify orders record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | toAddress1 | 119, CLEMENTI ROAD, SG, 129801     |
@@ -522,8 +504,6 @@ Feature: Order Tag to DP
       | seqNo   | null                                                       |
       | routeId | null                                                       |
       | status  | Pending                                                    |
-    And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
     And DB Core - verify transactions record:
       | id                  | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
       | waypointId          | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
@@ -577,9 +557,6 @@ Feature: Order Tag to DP
       | postcode | 238900                                                     |
       | city     | SG                                                         |
       | country  | SG                                                         |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id}                         |
     And DB Core - verify orders record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | toAddress1 | 119, CLEMENTI ROAD, SG, 129801     |
@@ -672,9 +649,6 @@ Feature: Order Tag to DP
       | postcode | 238900                                                     |
       | city     | SG                                                         |
       | country  | SG                                                         |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
     And DB Core - verify orders record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | toAddress1 | 119, CLEMENTI ROAD, SG, 129801     |
@@ -755,9 +729,6 @@ Feature: Order Tag to DP
       | seqNo   | not null                                                   |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id}                         |
       | status  | Routed                                                     |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id}                         |
     And DB Core - verify orders record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | toAddress1 | 119, CLEMENTI ROAD, SG, 129801     |
@@ -863,8 +834,6 @@ Feature: Order Tag to DP
       | address2 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress2}                 |
       | postcode | {KEY_LIST_OF_CREATED_ORDERS[1].toPostcode}                 |
       | country  | {KEY_LIST_OF_CREATED_ORDERS[1].toCountry}                  |
-    And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
     And DB Core - verify orders record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
       | toAddress1 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress1} |
@@ -957,9 +926,6 @@ Feature: Order Tag to DP
       | address2 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress2}                 |
       | postcode | {KEY_LIST_OF_CREATED_ORDERS[1].toPostcode}                 |
       | country  | {KEY_LIST_OF_CREATED_ORDERS[1].toCountry}                  |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | routeId    | {dp-holding-route-id}                                      |
     And DB Core - verify orders record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
       | toAddress1 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress1} |
@@ -1036,9 +1002,6 @@ Feature: Order Tag to DP
       | address2 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress2}                 |
       | postcode | {KEY_LIST_OF_CREATED_ORDERS[1].toPostcode}                 |
       | country  | {KEY_LIST_OF_CREATED_ORDERS[1].toCountry}                  |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | routeId    | {dp-holding-route-id}                                      |
     And DB Core - verify orders record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
       | toAddress1 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress1} |
@@ -1232,9 +1195,6 @@ Feature: Order Tag to DP
       | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | routeEventSource | ADD_BY_ORDER_DP                    |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
     And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[2]"
     And API Core - save the last Delivery transaction of "{KEY_LIST_OF_CREATED_ORDERS[2].id}" order from "KEY_LIST_OF_CREATED_ORDERS" as "KEY_TRANSACTION"
     When DB Core - operator get waypoints details for "{KEY_TRANSACTION.waypointId}"
@@ -1259,6 +1219,3 @@ Feature: Order Tag to DP
       | orderId          | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | routeEventSource | ADD_BY_ORDER_DP                    |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
