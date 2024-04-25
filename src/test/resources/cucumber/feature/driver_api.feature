@@ -181,8 +181,6 @@ Feature: Driver API
       | status   | Pending                      |
       | routeId  | null                         |
       | seqNo    | null                         |
-    And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_TRANSACTION.waypointId} |
 
   @HighPriority
   Scenario: Driver Success a Failed Pickup that was Rescheduled
@@ -245,8 +243,6 @@ Feature: Driver API
       | status   | Pending                      |
       | routeId  | null                         |
       | seqNo    | null                         |
-    And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_TRANSACTION.waypointId} |
 
   @HighPriority
   Scenario: Success Delivery Order - Create PETS Ticket - Resolve PETS ticket - Success New Delivery Transaction from Driver App

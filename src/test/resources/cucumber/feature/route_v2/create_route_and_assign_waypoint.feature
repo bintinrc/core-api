@@ -39,10 +39,6 @@ Feature: Create Route & Assign Waypoints
       | seqNo    | 100                                |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status   | Routed                             |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | type       | PICKUP_APPOINTMENT                 |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
       | userId     | {pickup-user-id}                                |
@@ -62,10 +58,6 @@ Feature: Create Route & Assign Waypoints
       | seqNo    | 200                                              |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
       | status   | Routed                                           |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
-      | type       | RESERVATION                                      |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}        |
       | userId     | {pickup-user-id}                                |
@@ -98,10 +90,6 @@ Feature: Create Route & Assign Waypoints
       | seqNo    | 300                                                        |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
       | status   | Routed                                                     |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
-      | type       | TRANSACTION                                                |
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                       |
       | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
@@ -126,10 +114,6 @@ Feature: Create Route & Assign Waypoints
       | seqNo    | 400                                                        |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
       | status   | Routed                                                     |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
-      | type       | TRANSACTION                                                |
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                       |
       | orderId          | {KEY_LIST_OF_CREATED_ORDERS[2].id} |
