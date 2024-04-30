@@ -53,13 +53,14 @@ Feature: Driver API
       | driverId        | {driver-2-id}                      |
       | expectedRouteId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And API Driver - Driver submit POD:
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                              |
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}                      |
-      | routes     | KEY_DRIVER_ROUTES                                                               |
-      | jobType    | TRANSACTION                                                                     |
-      | parcels    | [{ "tracking_id": "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}", "action":"SUCCESS"}] |
-      | jobAction  | SUCCESS                                                                         |
-      | jobMode    | PICK_UP                                                                         |
+      | routeId         | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                              |
+      | waypointId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}                      |
+      | routes          | KEY_DRIVER_ROUTES                                                               |
+      | jobType         | TRANSACTION                                                                     |
+      | parcels         | [{ "tracking_id": "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}", "action":"SUCCESS"}] |
+      | jobAction       | SUCCESS                                                                         |
+      | jobMode         | PICK_UP                                                                         |
+      | globalShipperId | {shipper-id}                                                                    |
     Then API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}" with granular status "Enroute_to_sorting_hub"
     And API Event - Operator verify that event is published with the following details:
       | event   | DRIVER_PICKUP_SCAN                 |
@@ -95,14 +96,14 @@ Feature: Driver API
       | driverId        | {driver-2-id}                      |
       | expectedRouteId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And API Driver - Driver submit POD:
-      | routeId         | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                                                  |
-      | waypointId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}                                                                    |
+      | routeId         | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                               |
+      | waypointId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}                                 |
       | parcels         | [{ "tracking_id": "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}", "action": "SUCCESS"}] |
-      | routes          | KEY_DRIVER_ROUTES                                                                                                   |
-      | jobType         | RESERVATION                                                                                                         |
-      | jobAction       | SUCCESS                                                                                                             |
-      | jobMode         | PICK_UP                                                                                                             |
-      | globalShipperId | {shipper-3-id}                                                                                                     |
+      | routes          | KEY_DRIVER_ROUTES                                                                |
+      | jobType         | RESERVATION                                                                      |
+      | jobAction       | SUCCESS                                                                          |
+      | jobMode         | PICK_UP                                                                          |
+      | globalShipperId | {shipper-3-id}                                                                   |
     Then API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}" with granular status "Enroute_to_sorting_hub"
     And API Event - Operator verify that event is published with the following details:
       | event   | DRIVER_PICKUP_SCAN                 |
@@ -210,6 +211,7 @@ Feature: Driver API
       | jobAction       | FAIL                                                                                                 |
       | jobMode         | PICK_UP                                                                                              |
       | failureReasonId | 139                                                                                                  |
+      | globalShipperId | {shipper-id}                                                                                         |
     Then API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}" with granular status "Pickup_Fail"
     And API Core - Operator reschedule order:
       | orderId           | {KEY_LIST_OF_CREATED_ORDERS[1].id}        |
@@ -220,13 +222,14 @@ Feature: Driver API
       | orderId                 | {KEY_LIST_OF_CREATED_ORDERS[1].id}                              |
     And API Core - save the last Pickup transaction of "{KEY_LIST_OF_CREATED_ORDERS[1].id}" order from "KEY_LIST_OF_CREATED_ORDERS" as "KEY_TRANSACTION"
     And API Driver - Driver submit POD:
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                              |
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}                      |
-      | routes     | KEY_DRIVER_ROUTES                                                               |
-      | jobType    | TRANSACTION                                                                     |
-      | parcels    | [{ "tracking_id": "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}", "action":"SUCCESS"}] |
-      | jobAction  | SUCCESS                                                                         |
-      | jobMode    | PICK_UP                                                                         |
+      | routeId         | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                              |
+      | waypointId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}                      |
+      | routes          | KEY_DRIVER_ROUTES                                                               |
+      | jobType         | TRANSACTION                                                                     |
+      | parcels         | [{ "tracking_id": "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}", "action":"SUCCESS"}] |
+      | jobAction       | SUCCESS                                                                         |
+      | jobMode         | PICK_UP                                                                         |
+      | globalShipperId | {shipper-id}                                                                    |
     Then API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}" with granular status "Enroute_To_Sorting_Hub"
     Then API Event - Operator verify that event is published with the following details:
       | event            | PULL_OUT_OF_ROUTE                  |

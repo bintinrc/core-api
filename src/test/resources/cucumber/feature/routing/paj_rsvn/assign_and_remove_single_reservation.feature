@@ -115,13 +115,14 @@ Feature: Assign and Remove Single Reservation To Route
       | driverId        | {driver-id}                        |
       | expectedRouteId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     When API Driver - Driver submit POD:
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                    |
-      | waypointId | {KEY_LIST_OF_RESERVATIONS[1].waypointId}                                              |
-      | parcels    | [{ "tracking_id": "{KEY_LIST_OF_CREATED_ORDERS[1].trackingId}", "action": "SUCCESS"}] |
-      | routes     | KEY_DRIVER_ROUTES                                                                     |
-      | jobType    | RESERVATION                                                                           |
-      | jobAction  | SUCCESS                                                                               |
-      | jobMode    | PICK_UP                                                                               |
+      | routeId         | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                    |
+      | waypointId      | {KEY_LIST_OF_RESERVATIONS[1].waypointId}                                              |
+      | parcels         | [{ "tracking_id": "{KEY_LIST_OF_CREATED_ORDERS[1].trackingId}", "action": "SUCCESS"}] |
+      | routes          | KEY_DRIVER_ROUTES                                                                     |
+      | jobType         | RESERVATION                                                                           |
+      | jobAction       | SUCCESS                                                                               |
+      | jobMode         | PICK_UP                                                                               |
+      | globalShipperId | {shipper-id}                                                                          |
     Then API Core - Operator failed to add reservation to route using data below:
       | reservationId                | {KEY_LIST_OF_RESERVATIONS[1].id}   |
       | routeId                      | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
@@ -158,6 +159,7 @@ Feature: Assign and Remove Single Reservation To Route
       | jobType         | RESERVATION                                                                                                 |
       | jobAction       | FAIL                                                                                                        |
       | jobMode         | PICK_UP                                                                                                     |
+      | globalShipperId | {shipper-id}                                                                                                |
     Then API Core - Operator failed to add reservation to route using data below:
       | reservationId                | {KEY_LIST_OF_RESERVATIONS[1].id}   |
       | routeId                      | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
@@ -199,7 +201,7 @@ Feature: Assign and Remove Single Reservation To Route
     Given API Core - Operator create reservation using data below:
       | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id},  "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     Then API Core - Operator failed to remove reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" from route
-      | expectedStatusCode           | 400     |
+      | expectedStatusCode           | 400    |
       | expectedApplicationErrorCode | 103088 |
 
   @MediumPriority
@@ -223,13 +225,14 @@ Feature: Assign and Remove Single Reservation To Route
       | driverId        | {driver-id}                        |
       | expectedRouteId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     When API Driver - Driver submit POD:
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                    |
-      | waypointId | {KEY_LIST_OF_RESERVATIONS[1].waypointId}                                              |
-      | parcels    | [{ "tracking_id": "{KEY_LIST_OF_CREATED_ORDERS[1].trackingId}", "action": "SUCCESS"}] |
-      | routes     | KEY_DRIVER_ROUTES                                                                     |
-      | jobType    | RESERVATION                                                                           |
-      | jobAction  | SUCCESS                                                                               |
-      | jobMode    | PICK_UP                                                                               |
+      | routeId         | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                    |
+      | waypointId      | {KEY_LIST_OF_RESERVATIONS[1].waypointId}                                              |
+      | parcels         | [{ "tracking_id": "{KEY_LIST_OF_CREATED_ORDERS[1].trackingId}", "action": "SUCCESS"}] |
+      | routes          | KEY_DRIVER_ROUTES                                                                     |
+      | jobType         | RESERVATION                                                                           |
+      | jobAction       | SUCCESS                                                                               |
+      | jobMode         | PICK_UP                                                                               |
+      | globalShipperId | {shipper-id}                                                                          |
     Then API Core - Operator failed to remove reservation id "{KEY_LIST_OF_RESERVATIONS[1].id}" from route
       | expectedStatusCode           | 400    |
       | expectedApplicationErrorCode | 103088 |
@@ -263,6 +266,7 @@ Feature: Assign and Remove Single Reservation To Route
       | jobType         | RESERVATION                                                                                                 |
       | jobAction       | FAIL                                                                                                        |
       | jobMode         | PICK_UP                                                                                                     |
+      | globalShipperId | {shipper-id}                                                                                                |
     Then API Core - Operator failed to remove reservation id "{KEY_LIST_OF_RESERVATIONS[1].id}" from route
       | expectedStatusCode           | 400    |
       | expectedApplicationErrorCode | 103088 |
