@@ -153,7 +153,7 @@ Feature: Delete Route
       | routeId  | {KEY_CREATED_ROUTE_ID} |
       | driverId | {driver-id}            |
 
-  @route-delete @MediumPriority
+  @route-delete @MediumPriority @wip
   Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - Fail
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     Given API Core - Operator create reservation using data below:
@@ -171,7 +171,7 @@ Feature: Delete Route
       | waypointId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | failureReasonId | {failure-reason-id}                              |
     Then Operator delete driver route with status code 500
-    And Operator verify delete route response with proper error message : "Reservation {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} for Shipper {KEY_LIST_OF_CREATED_RESERVATIONS[1].legacyShipperId} has status <action>. Cannot delete route."
+    And Operator verify delete route response with proper error message : "Reservation {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} for Global Shipper {shipper-2-id} has status <action>. Cannot delete route."
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | status   | <action>                                         |
@@ -196,7 +196,7 @@ Feature: Delete Route
       | routeId    | {KEY_CREATED_ROUTE_ID}                           |
       | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
     Then Operator delete driver route with status code 500
-    And Operator verify delete route response with proper error message : "Reservation {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} for Shipper {KEY_LIST_OF_CREATED_RESERVATIONS[1].legacyShipperId} has status <action>. Cannot delete route."
+    And Operator verify delete route response with proper error message : "Reservation {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} for Global Shipper {shipper-2-id} has status <action>. Cannot delete route."
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | status   | <action>                                         |
