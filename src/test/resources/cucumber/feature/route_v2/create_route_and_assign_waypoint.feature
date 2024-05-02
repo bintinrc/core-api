@@ -29,11 +29,6 @@ Feature: Create Route & Assign Waypoints
       | routeId     | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                                                                                                                             |
       | waypointIds | [{KEY_WAYPOINT_ID} ,{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId},{KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId}, {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId}  ] |
 #    check pa job
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID}                  |
-      | seqNo   | 100                                |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | status  | Routed                             |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | 100                                |
@@ -48,11 +43,6 @@ Feature: Create Route & Assign Waypoints
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 #    check reservation
-    And DB Core - verify waypoints record:
-      | id      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | seqNo   | 200                                              |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
-      | status  | Routed                                           |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo    | 200                                              |
@@ -80,11 +70,6 @@ Feature: Create Route & Assign Waypoints
       | txnId     | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].id} |
       | routeId   | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
       | txnStatus | PENDING                                            |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} |
-      | seqNo   | 300                                                        |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
-      | status  | Routed                                                     |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[1].waypointId} |
       | seqNo    | 300                                                        |
@@ -104,11 +89,6 @@ Feature: Create Route & Assign Waypoints
       | txnId     | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
       | routeId   | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
       | txnStatus | PENDING                                            |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
-      | seqNo   | 400                                                        |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
-      | status  | Routed                                                     |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
       | seqNo    | 400                                                        |

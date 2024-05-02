@@ -10,11 +10,6 @@ Feature: Assign and Remove Single Reservation To Route
     When API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | seqNo   | 100                                              |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
-      | status  | Routed                                           |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo    | 100                                              |
@@ -70,11 +65,6 @@ Feature: Assign and Remove Single Reservation To Route
     When API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[2].id}       |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | seqNo   | 100                                              |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id}               |
-      | status  | Routed                                           |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo    | 100                                              |
@@ -177,11 +167,6 @@ Feature: Assign and Remove Single Reservation To Route
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
     When API Core - Operator remove reservation id "{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}" from route
-    And DB Core - verify waypoints record:
-      | id      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | seqNo   | null                                             |
-      | routeId | null                                             |
-      | status  | Pending                                          |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo    | null                                             |
