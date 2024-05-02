@@ -102,8 +102,9 @@ Feature: Assign and Remove Single Reservation To Route
     And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
     And API Driver - Driver start route "{KEY_LIST_OF_CREATED_ROUTES[1].id}"
     And API Driver - Driver read routes:
-      | driverId        | {driver-id}                        |
-      | expectedRouteId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | driverId            | {driver-id}                              |
+      | expectedRouteId     | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
+      | expectedWaypointIds | {KEY_LIST_OF_RESERVATIONS[1].waypointId} |
     When API Driver - Driver submit POD:
       | routeId         | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                    |
       | waypointId      | {KEY_LIST_OF_RESERVATIONS[1].waypointId}                                              |
@@ -138,8 +139,9 @@ Feature: Assign and Remove Single Reservation To Route
     And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
     And API Driver - Driver start route "{KEY_LIST_OF_CREATED_ROUTES[1].id}"
     And API Driver - Driver read routes:
-      | driverId        | {driver-id}                        |
-      | expectedRouteId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | driverId            | {driver-id}                              |
+      | expectedRouteId     | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
+      | expectedWaypointIds | {KEY_LIST_OF_RESERVATIONS[1].waypointId} |
     When API Driver - Driver submit POD:
       | routeId         | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                                          |
       | waypointId      | {KEY_LIST_OF_RESERVATIONS[1].waypointId}                                                                    |
@@ -207,8 +209,9 @@ Feature: Assign and Remove Single Reservation To Route
     And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
     And API Driver - Driver start route "{KEY_LIST_OF_CREATED_ROUTES[1].id}"
     And API Driver - Driver read routes:
-      | driverId        | {driver-id}                        |
-      | expectedRouteId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | driverId            | {driver-id}                              |
+      | expectedRouteId     | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
+      | expectedWaypointIds | {KEY_LIST_OF_RESERVATIONS[1].waypointId} |
     When API Driver - Driver submit POD:
       | routeId         | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                    |
       | waypointId      | {KEY_LIST_OF_RESERVATIONS[1].waypointId}                                              |
@@ -240,8 +243,9 @@ Feature: Assign and Remove Single Reservation To Route
     And API Driver - Driver login with username "{driver-username}" and "{driver-password}"
     And API Driver - Driver start route "{KEY_LIST_OF_CREATED_ROUTES[1].id}"
     And API Driver - Driver read routes:
-      | driverId        | {driver-id}                        |
-      | expectedRouteId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | driverId            | {driver-id}                              |
+      | expectedRouteId     | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
+      | expectedWaypointIds | {KEY_LIST_OF_RESERVATIONS[1].waypointId} |
     When API Driver - Driver submit POD:
       | routeId         | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                                                          |
       | waypointId      | {KEY_LIST_OF_RESERVATIONS[1].waypointId}                                                                    |
