@@ -1,5 +1,5 @@
 @ForceSuccessOrders @ArchiveDriverRoutes @batch-update-pods-txn
-Feature: Batch Update PODs
+Feature: Batch Update PODs - TXN
 
   @happy-path @HighPriority
   Scenario Outline: Driver picks up all X number of return parcels in one waypoint with POD type - <Note>
