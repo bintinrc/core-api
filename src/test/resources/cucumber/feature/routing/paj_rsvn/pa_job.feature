@@ -11,11 +11,6 @@ Feature: Zonal Routing API
       | jobId                      | {KEY_CONTROL_CREATED_PA_JOBS[1].id}                                   |
       | addPickupJobToRouteRequest | {"new_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"overwrite":false} |
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID}                  |
-      | seqNo   | not null                           |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | status  | Routed                             |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | not null                           |
@@ -45,11 +40,6 @@ Feature: Zonal Routing API
       | jobId                      | {KEY_CONTROL_CREATED_PA_JOBS[1].id}                                  |
       | addPickupJobToRouteRequest | {"new_route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id},"overwrite":true} |
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID}                  |
-      | seqNo   | not null                           |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
-      | status  | Routed                             |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | not null                           |
@@ -79,11 +69,6 @@ Feature: Zonal Routing API
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And API Core - Operator create new route from zonal routing using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_WAYPOINT_ID}]} |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID}                  |
-      | seqNo   | not null                           |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | status  | Routed                             |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | not null                           |
@@ -107,11 +92,6 @@ Feature: Zonal Routing API
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
     When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
       | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[1].id}, "waypoints":[{KEY_WAYPOINT_ID}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID}                  |
-      | seqNo   | not null                           |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | status  | Routed                             |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | not null                           |
@@ -137,11 +117,6 @@ Feature: Zonal Routing API
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
     When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
       | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[2].id}, "waypoints":[{KEY_WAYPOINT_ID}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID}                  |
-      | seqNo   | not null                           |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
-      | status  | Routed                             |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | not null                           |
@@ -175,11 +150,6 @@ Feature: Zonal Routing API
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_WAYPOINT_ID}, {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}]} |
     When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
       | editRouteRequest | [{"id":{KEY_LIST_OF_CREATED_ROUTES[1].id}, "waypoints":[{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}],"zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}}] |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID} |
-      | seqNo   | null              |
-      | routeId | null              |
-      | status  | Pending           |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID} |
       | seqNo    | null              |
@@ -201,22 +171,12 @@ Feature: Zonal Routing API
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And API Core - Operator create new route from zonal routing using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_WAYPOINT_ID}]} |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID}                  |
-      | seqNo   | not null                           |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | status  | Routed                             |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID}                  |
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status   | Routed                             |
     When API Core - Operator remove pickup job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}" from route
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID} |
-      | seqNo   | null              |
-      | routeId | null              |
-      | status  | Pending           |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_WAYPOINT_ID} |
       | seqNo    | null              |
