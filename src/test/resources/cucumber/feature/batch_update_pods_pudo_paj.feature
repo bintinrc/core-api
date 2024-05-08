@@ -2,7 +2,7 @@
 Feature: Batch Update PODs - PUDO PAJ
 
   @happy-path @HighPriority
-  Scenario: Driver picks up all X number of Normal parcels in One Pickup Appointment Job
+  Scenario: Driver picks up all X number of Normal parcels in One Pudo Pickup Appointment Job
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
@@ -49,7 +49,7 @@ Feature: Batch Update PODs - PUDO PAJ
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
   @update-rsvn @HighPriority
-  Scenario: Driver Picks Up All X number of Return Parcels in One Pickup Appointment Job
+  Scenario: Driver Picks Up All X number of Return Parcels in One Pudo Pickup Appointment Job
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
@@ -97,7 +97,7 @@ Feature: Batch Update PODs - PUDO PAJ
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
   @update-rsvn @HighPriority
-  Scenario: Driver success Pickup Appointment Job without scanning any parcel
+  Scenario: Driver success Pudo Pickup Appointment Job without scanning any parcel
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
@@ -134,7 +134,7 @@ Feature: Batch Update PODs - PUDO PAJ
       | jobType       | PUDO_PICKUP_APPOINTMENT                  |
 
   @update-rsvn @HighPriority
-  Scenario: Driver Successes the Pickup Appointment Job with X number of Parcels but Fails Y number of Parcels (Partial Success)
+  Scenario: Driver Successes the Pudo Pickup Appointment Job with X number of Parcels but Fails Y number of Parcels (Partial Success)
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub, Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper creates multiple orders : 4 orders with the same params
@@ -173,7 +173,7 @@ Feature: Batch Update PODs - PUDO PAJ
       | jobType       | PUDO_PICKUP_APPOINTMENT                  |
 
   @update-rsvn @HighPriority
-  Scenario: Driver fails the Pickup Appointment Job and fail all X number of normal parcels under a Pickup Appointment Job
+  Scenario: Driver fails the Pudo Pickup Appointment Job and fail all X number of normal parcels under a Pudo Pickup Appointment Job
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
@@ -210,7 +210,7 @@ Feature: Batch Update PODs - PUDO PAJ
       | jobType       | PUDO_PICKUP_APPOINTMENT                  |
 
   @update-rsvn @HighPriority
-  Scenario: Driver fails the Pickup Appointment Job and fail all X number of return parcels under a Pickup Appointment Job
+  Scenario: Driver fails the Pudo Pickup Appointment Job and fail all X number of return parcels under a Pudo Pickup Appointment Job
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     And API Control - Operator create pudo pickup appointment job with data below:
@@ -255,7 +255,7 @@ Feature: Batch Update PODs - PUDO PAJ
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
   @happy-path @update-rsvn @HighPriority
-  Scenario: Driver fails the Pickup Appointment Job without failing any parcel
+  Scenario: Driver fails the Pudo Pickup Appointment Job without failing any parcel
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
     When Shipper creates multiple orders : 2 orders with the same params
