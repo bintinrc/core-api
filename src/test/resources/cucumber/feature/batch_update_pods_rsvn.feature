@@ -1,5 +1,5 @@
 @ForceSuccessOrders @ArchiveDriverRoutes @batch-update-pods-rsvn
-Feature: Batch Update PODs
+Feature: Batch Update PODs - RSVN
 
   @happy-path @update-rsvn @HighPriority
   Scenario: Driver picks up all X number of Normal parcels in one reservation
