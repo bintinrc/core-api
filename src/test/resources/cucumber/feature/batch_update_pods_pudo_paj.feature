@@ -48,7 +48,7 @@ Feature: Batch Update PODs - PUDO PAJ
       | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
-  @update-rsvn @HighPriority
+  @update-rsvn @MediumPriority
   Scenario: Driver Picks Up All X number of Return Parcels in One Pudo Pickup Appointment Job
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -96,7 +96,7 @@ Feature: Batch Update PODs - PUDO PAJ
       | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
-  @update-rsvn @HighPriority
+  @update-rsvn @MediumPriority
   Scenario: Driver success Pudo Pickup Appointment Job without scanning any parcel
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -133,7 +133,7 @@ Feature: Batch Update PODs - PUDO PAJ
       | routeId       | {KEY_CREATED_ROUTE_ID}                   |
       | jobType       | PUDO_PICKUP_APPOINTMENT                  |
 
-  @update-rsvn @HighPriority
+  @update-rsvn @MediumPriority
   Scenario: Driver Successes the Pudo Pickup Appointment Job with X number of Parcels but Fails Y number of Parcels (Partial Success)
     Given Shipper id "{shipper-4-id}" subscribes to "Successful Pickup, En-route to Sorting Hub, Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -172,7 +172,7 @@ Feature: Batch Update PODs - PUDO PAJ
       | routeId       | {KEY_CREATED_ROUTE_ID}                   |
       | jobType       | PUDO_PICKUP_APPOINTMENT                  |
 
-  @update-rsvn @HighPriority
+  @update-rsvn @MediumPriority
   Scenario: Driver fails the Pudo Pickup Appointment Job and fail all X number of normal parcels under a Pudo Pickup Appointment Job
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -209,7 +209,7 @@ Feature: Batch Update PODs - PUDO PAJ
       | routeId       | {KEY_CREATED_ROUTE_ID}                   |
       | jobType       | PUDO_PICKUP_APPOINTMENT                  |
 
-  @update-rsvn @HighPriority
+  @update-rsvn @MediumPriority
   Scenario: Driver fails the Pudo Pickup Appointment Job and fail all X number of return parcels under a Pudo Pickup Appointment Job
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
@@ -254,7 +254,7 @@ Feature: Batch Update PODs - PUDO PAJ
       | orderId            | {KEY_LIST_OF_CREATED_ORDER_ID[2]} |
       | updateStatusReason | BATCH_POD_UPDATE                  |
 
-  @happy-path @update-rsvn @HighPriority
+  @happy-path @update-rsvn @MediumPriority
   Scenario: Driver fails the Pudo Pickup Appointment Job without failing any parcel
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
