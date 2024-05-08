@@ -15,11 +15,6 @@ Feature: Bulk Add Reservation to Route
       | successfulJobs | [{"id": {KEY_LIST_OF_CREATED_RESERVATIONS[1].id},"status": "PENDING"},{"id": {KEY_LIST_OF_CREATED_RESERVATIONS[2].id},"status": "PENDING"}] |
       | failedJobs     | []                                                                                                                                          |
 #    reservation #1
-    And DB Core - verify waypoints record:
-      | id      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | seqNo   | not null                                         |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
-      | status  | Routed                                           |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo    | not null                                         |
@@ -34,11 +29,6 @@ Feature: Bulk Add Reservation to Route
       | pickupType | 1                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 #    reservation #2
-    And DB Core - verify waypoints record:
-      | id      | {KEY_LIST_OF_CREATED_RESERVATIONS[2].waypointId} |
-      | seqNo   | not null                                         |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
-      | status  | Routed                                           |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[2].waypointId} |
       | seqNo    | not null                                         |
@@ -70,11 +60,6 @@ Feature: Bulk Add Reservation to Route
       | successfulJobs | [{"id": {KEY_LIST_OF_CREATED_RESERVATIONS[1].id},"status": "PENDING"},{"id": {KEY_LIST_OF_CREATED_RESERVATIONS[2].id},"status": "PENDING"}] |
       | failedJobs     | []                                                                                                                                          |
 #    reservation #1
-    And DB Core - verify waypoints record:
-      | id      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | seqNo   | not null                                         |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id}               |
-      | status  | Routed                                           |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo    | not null                                         |
@@ -89,11 +74,6 @@ Feature: Bulk Add Reservation to Route
       | pickupType | 1                                                                                                 |
       | data       | {"old_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
 #    reservation #2
-    And DB Core - verify waypoints record:
-      | id      | {KEY_LIST_OF_CREATED_RESERVATIONS[2].waypointId} |
-      | seqNo   | not null                                         |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id}               |
-      | status  | Routed                                           |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[2].waypointId} |
       | seqNo    | not null                                         |
@@ -124,11 +104,6 @@ Feature: Bulk Add Reservation to Route
     Then API Core - Operator verifies response of bulk add reservation to route
       | successfulJobs | [{"id": {KEY_LIST_OF_CREATED_RESERVATIONS[1].id},"status": "PENDING"}]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
       | failedJobs     | [{"id": 160894,"error": {"code": 103016,"nvErrorCode": "SERVER_ERROR_EXCEPTION","messages": ["Reservation not found"],"application": "core","description": "RESERVATION_NOT_FOUND","data": {"message": "Reservation not found"}}}, {"id": {KEY_LIST_OF_CREATED_RESERVATIONS[2].id},"error": {"code": 103088,"nvErrorCode": "SERVER_ERROR_EXCEPTION","messages": ["Reservation is in final state [status: SUCCESS]"],"application": "core","description": "INVALID_OPERATION","data": {"message": "Reservation is in final state [status: SUCCESS]"}}}] |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | seqNo   | not null                                         |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
-      | status  | Routed                                           |
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo    | not null                                         |
@@ -153,11 +128,6 @@ Feature: Bulk Add Reservation to Route
 #    When API Core - Operator bulk add reservation to route with partial success:
 #      | request    | {"ids": [{KEY_LIST_OF_CREATED_RESERVATIONS[1].id}],"new_route_id":160894,"overwrite":false}                                                                                                                          |
 #      | failedJobs | {"code": 103080,"nvErrorCode": "SERVER_ERROR_EXCEPTION","messages": ["Unable to find route 160894"],"application": "core","description": "BAD_REQUEST_EXCEPTION","data": {"message": "Unable to find route 160894"}} |
-#    And DB Core - verify waypoints record:
-#      | id      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-#      | seqNo   | null                                             |
-#      | routeId | null                                             |
-#      | status  | Pending                                          |
 #    And DB Route - verify waypoints record:
 #      | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
 #      | seqNo    | null                                             |
