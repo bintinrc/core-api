@@ -1,4 +1,4 @@
-@ForceSuccessOrders @ArchiveDriverRoutes @DeletePickupAppointmentJob @batch-update-pods-paj @wip
+@ForceSuccessOrders @ArchiveDriverRoutes @DeletePickupAppointmentJob @batch-update-pods-paj
 Feature: Batch Update PODs - PUDO PAJ
 
   @happy-path @HighPriority

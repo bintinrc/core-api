@@ -1,4 +1,4 @@
-@ForceSuccessOrders  @routing1 @order-tag-to-dp @routing-refactor
+@ForceSuccessOrders  @routing1 @order-tag-to-dp @routing-refactor @wip
 Feature: Order Tag to DP
 
   @happy-path @HighPriority
@@ -22,7 +22,7 @@ Feature: Order Tag to DP
       | address1            | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2            | Add 4-5                                                    |
       | postcode            | 238900                                                     |
-      | city                | SG                                                         |
+      | city                | Singapore                                                  |
     And DB Routing Search - verify transactions record:
       | txnId           | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
       | waypointId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
@@ -35,7 +35,7 @@ Feature: Order Tag to DP
       | toAddress1 | 119, CLEMENTI ROAD, SG, 129801     |
       | toAddress2 | Add 4-5                            |
       | toPostcode | 238900                             |
-      | toCity     | SG                                 |
+      | toCity     | Singapore                          |
       | toCountry  | SG                                 |
     And DB Core - operator verify orders.data.previousDeliveryDetails is updated correctly:
       | orderId  | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
@@ -56,7 +56,7 @@ Feature: Order Tag to DP
       | address1 | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2 | Add 4-5                                                    |
       | postcode | 238900                                                     |
-      | city     | SG                                                         |
+      | city     | Singapore                                                  |
       | country  | SG                                                         |
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                       |
@@ -102,7 +102,7 @@ Feature: Order Tag to DP
       | address1            | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2            | Add 4-5                                                    |
       | postcode            | 238900                                                     |
-      | city                | SG                                                         |
+      | city                | Singapore                                                  |
     And DB Routing Search - verify transactions record:
       | txnId           | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
       | waypointId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
@@ -115,7 +115,7 @@ Feature: Order Tag to DP
       | toAddress1 | 119, CLEMENTI ROAD, SG, 129801     |
       | toAddress2 | Add 4-5                            |
       | toPostcode | 238900                             |
-      | toCity     | SG                                 |
+      | toCity     | Singapore                          |
       | toCountry  | SG                                 |
     And DB Core - operator verify orders.data.previousDeliveryDetails is updated correctly:
       | orderId  | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
@@ -136,7 +136,7 @@ Feature: Order Tag to DP
       | address1 | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2 | Add 4-5                                                    |
       | postcode | 238900                                                     |
-      | city     | SG                                                         |
+      | city     | Singapore                                                  |
       | country  | SG                                                         |
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                       |
@@ -213,7 +213,7 @@ Feature: Order Tag to DP
       | toAddress1 | 119, CLEMENTI ROAD, SG, 129801     |
       | toAddress2 | Add 4-5                            |
       | toPostcode | 238900                             |
-      | toCity     | SG                                 |
+      | toCity     | Singapore                          |
       | toCountry  | SG                                 |
     And DB Core - operator verify orders.data.previousDeliveryDetails is updated correctly:
       | orderId  | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
@@ -235,7 +235,7 @@ Feature: Order Tag to DP
       | address1            | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2            | Add 4-5                                                    |
       | postcode            | 238900                                                     |
-      | city                | SG                                                         |
+      | city                | Singapore                                                  |
       | country             | SG                                                         |
     And DB Routing Search - verify transactions record:
       | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
@@ -250,7 +250,7 @@ Feature: Order Tag to DP
       | address1 | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2 | Add 4-5                                                    |
       | postcode | 238900                                                     |
-      | city     | SG                                                         |
+      | city     | Singapore                                                  |
       | country  | SG                                                         |
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                       |
@@ -291,7 +291,7 @@ Feature: Order Tag to DP
       | toAddress1 | 119, CLEMENTI ROAD, SG, 129801     |
       | toAddress2 | Add 4-5                            |
       | toPostcode | 238900                             |
-      | toCity     | SG                                 |
+      | toCity     | Singapore                          |
       | toCountry  | SG                                 |
     And DB Core - operator verify orders.data.previousDeliveryDetails is updated correctly:
       | orderId  | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
@@ -313,7 +313,7 @@ Feature: Order Tag to DP
       | address1            | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2            | Add 4-5                                                    |
       | postcode            | 238900                                                     |
-      | city                | SG                                                         |
+      | city                | Singapore                                                  |
       | country             | SG                                                         |
     And DB Routing Search - verify transactions record:
       | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
@@ -328,7 +328,7 @@ Feature: Order Tag to DP
       | address1 | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2 | Add 4-5                                                    |
       | postcode | 238900                                                     |
-      | city     | SG                                                         |
+      | city     | Singapore                                                  |
       | country  | SG                                                         |
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                       |
@@ -370,7 +370,7 @@ Feature: Order Tag to DP
       | toAddress1 | 119, CLEMENTI ROAD, SG, 129801     |
       | toAddress2 | Add 4-5                            |
       | toPostcode | 238900                             |
-      | toCity     | SG                                 |
+      | toCity     | Singapore                          |
       | toCountry  | SG                                 |
     And DB Core - operator verify orders.data.previousDeliveryDetails is updated correctly:
       | orderId  | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
@@ -392,7 +392,7 @@ Feature: Order Tag to DP
       | address1            | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2            | Add 4-5                                                    |
       | postcode            | 238900                                                     |
-      | city                | SG                                                         |
+      | city                | Singapore                                                  |
       | country             | SG                                                         |
     And DB Routing Search - verify transactions record:
       | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
@@ -407,7 +407,7 @@ Feature: Order Tag to DP
       | address1 | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2 | Add 4-5                                                    |
       | postcode | 238900                                                     |
-      | city     | SG                                                         |
+      | city     | Singapore                                                  |
       | country  | SG                                                         |
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                       |
@@ -487,7 +487,7 @@ Feature: Order Tag to DP
       | toAddress1 | 119, CLEMENTI ROAD, SG, 129801     |
       | toAddress2 | Add 4-5                            |
       | toPostcode | 238900                             |
-      | toCity     | SG                                 |
+      | toCity     | Singapore                          |
       | toCountry  | SG                                 |
     And DB Core - operator verify orders.data.previousDeliveryDetails is updated correctly:
       | orderId  | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
@@ -509,7 +509,7 @@ Feature: Order Tag to DP
       | address1            | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2            | Add 4-5                                                    |
       | postcode            | 238900                                                     |
-      | city                | SG                                                         |
+      | city                | Singapore                                                  |
       | country             | SG                                                         |
     And DB Routing Search - verify transactions record:
       | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
@@ -524,7 +524,7 @@ Feature: Order Tag to DP
       | address1 | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2 | Add 4-5                                                    |
       | postcode | 238900                                                     |
-      | city     | SG                                                         |
+      | city     | Singapore                                                  |
       | country  | SG                                                         |
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                       |
@@ -569,7 +569,7 @@ Feature: Order Tag to DP
       | toAddress1 | 119, CLEMENTI ROAD, SG, 129801     |
       | toAddress2 | Add 4-5                            |
       | toPostcode | 238900                             |
-      | toCity     | SG                                 |
+      | toCity     | Singapore                          |
       | toCountry  | SG                                 |
     And DB Core - operator verify orders.data.previousDeliveryDetails is updated correctly:
       | orderId  | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
@@ -591,7 +591,7 @@ Feature: Order Tag to DP
       | address1            | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2            | Add 4-5                                                    |
       | postcode            | 238900                                                     |
-      | city                | SG                                                         |
+      | city                | Singapore                                                  |
       | country             | SG                                                         |
     And DB Routing Search - verify transactions record:
       | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
@@ -606,7 +606,7 @@ Feature: Order Tag to DP
       | address1 | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2 | Add 4-5                                                    |
       | postcode | 238900                                                     |
-      | city     | SG                                                         |
+      | city     | Singapore                                                  |
       | country  | SG                                                         |
     And API Event - Operator verify that event is published with the following details:
       | event   | ASSIGNED_TO_DP                     |
@@ -644,7 +644,7 @@ Feature: Order Tag to DP
       | toAddress1 | 119, CLEMENTI ROAD, SG, 129801     |
       | toAddress2 | Add 4-5                            |
       | toPostcode | 238900                             |
-      | toCity     | SG                                 |
+      | toCity     | Singapore                          |
       | toCountry  | SG                                 |
     And DB Core - operator verify orders.data.previousDeliveryDetails is updated correctly:
       | orderId  | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
@@ -666,7 +666,7 @@ Feature: Order Tag to DP
       | address1            | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2            | Add 4-5                                                    |
       | postcode            | 238900                                                     |
-      | city                | SG                                                         |
+      | city                | Singapore                                                  |
       | country             | SG                                                         |
     And DB Routing Search - verify transactions record:
       | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
@@ -681,7 +681,7 @@ Feature: Order Tag to DP
       | address1 | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2 | Add 4-5                                                    |
       | postcode | 238900                                                     |
-      | city     | SG                                                         |
+      | city     | Singapore                                                  |
       | country  | SG                                                         |
     And API Event - Operator verify that event is published with the following details:
       | event   | ASSIGNED_TO_DP                     |
@@ -723,7 +723,7 @@ Feature: Order Tag to DP
       | address1            | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2            | Add 4-5                                                    |
       | postcode            | 238900                                                     |
-      | city                | SG                                                         |
+      | city                | Singapore                                                  |
     And DB Routing Search - verify transactions record:
       | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
@@ -809,7 +809,7 @@ Feature: Order Tag to DP
       | address1            | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2            | Add 4-5                                                    |
       | postcode            | 238900                                                     |
-      | city                | SG                                                         |
+      | city                | Singapore                                                  |
     And DB Routing Search - verify transactions record:
       | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
@@ -876,7 +876,7 @@ Feature: Order Tag to DP
       | address1            | 119, CLEMENTI ROAD, SG, 129801                             |
       | address2            | Add 4-5                                                    |
       | postcode            | 238900                                                     |
-      | city                | SG                                                         |
+      | city                | Singapore                                                  |
     And DB Routing Search - verify transactions record:
       | txnId      | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].id}         |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
