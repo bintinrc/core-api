@@ -530,7 +530,7 @@ Feature: Order Tag to DP
       | event            | ADD_TO_ROUTE                       |
       | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
-#      | routeEventSource | ADD_BY_ORDER_DP                    |
+      | routeEventSource | ADD_BY_ORDER_DP                    |
 #    And API Event - Operator verify that event is published with the following details:
 #      | event            | PULL_OUT_OF_ROUTE                  |
 #      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
