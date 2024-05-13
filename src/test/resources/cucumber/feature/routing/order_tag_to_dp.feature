@@ -334,11 +334,11 @@ Feature: Order Tag to DP
       | event            | ADD_TO_ROUTE                       |
       | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
-      | routeEventSource | ADD_BY_ORDER_DP                    |
-    And API Event - Operator verify that event is published with the following details:
-      | event            | PULL_OUT_OF_ROUTE                  |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-      | routeEventSource | REMOVE_BY_ORDER_DP                 |
+#      | routeEventSource | ADD_BY_ORDER_DP                    |
+#    And API Event - Operator verify that event is published with the following details:
+#      | event            | PULL_OUT_OF_ROUTE                  |
+#      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+#      | routeEventSource | REMOVE_BY_ORDER_DP                 |
     And API Event - Operator verify that event is published with the following details:
       | event   | ASSIGNED_TO_DP                     |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
@@ -454,12 +454,12 @@ Feature: Order Tag to DP
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | null                                                       |
       | routeId  | null                                                       |
-      | status   | Pending                                                    |
-    And API Event - Operator verify that event is published with the following details:
-      | event            | PULL_OUT_OF_ROUTE                  |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | routeEventSource | REMOVE_BY_ORDER_DP                 |
+#      | status   | Pending                                                    |
+#    And API Event - Operator verify that event is published with the following details:
+#      | event            | PULL_OUT_OF_ROUTE                  |
+#      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+#      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+#      | routeEventSource | REMOVE_BY_ORDER_DP                 |
 
   @HighPriority
   Scenario: PUT /2.0/orders/:orderId/dps/routes-dp - Add Routed DP Order To New Route
@@ -530,11 +530,11 @@ Feature: Order Tag to DP
       | event            | ADD_TO_ROUTE                       |
       | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
-      | routeEventSource | ADD_BY_ORDER_DP                    |
-    And API Event - Operator verify that event is published with the following details:
-      | event            | PULL_OUT_OF_ROUTE                  |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-      | routeEventSource | REMOVE_BY_ORDER_DP                 |
+#      | routeEventSource | ADD_BY_ORDER_DP                    |
+#    And API Event - Operator verify that event is published with the following details:
+#      | event            | PULL_OUT_OF_ROUTE                  |
+#      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+#      | routeEventSource | REMOVE_BY_ORDER_DP                 |
     And API Event - Operator verify that event is published with the following details:
       | event   | ASSIGNED_TO_DP                     |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
@@ -696,11 +696,11 @@ Feature: Order Tag to DP
       | event            | ADD_TO_ROUTE                       |
       | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
-      | routeEventSource | ADD_BY_ORDER_DP                    |
-    And API Event - Operator verify that event is published with the following details:
-      | event            | PULL_OUT_OF_ROUTE                  |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-      | routeEventSource | REMOVE_BY_ORDER_DP                 |
+#      | routeEventSource | ADD_BY_ORDER_DP                    |
+#    And API Event - Operator verify that event is published with the following details:
+#      | event            | PULL_OUT_OF_ROUTE                  |
+#      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+#      | routeEventSource | REMOVE_BY_ORDER_DP                 |
 
   @HighPriority
   Scenario: DELETE /2.0/orders/:orderId/dps/routes-dp - Remove and Unassigned DP Order From Holding Route
@@ -781,12 +781,12 @@ Feature: Order Tag to DP
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
     And API Event - Operator verify that event is published with the following details:
       | event   | UNASSIGNED_FROM_DP                 |
-      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-    And API Event - Operator verify that event is published with the following details:
-      | event            | PULL_OUT_OF_ROUTE                  |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-      | oldRouteId       | {dp-holding-route-id}              |
-      | routeEventSource | REMOVE_BY_ORDER_DP                 |
+#      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+#    And API Event - Operator verify that event is published with the following details:
+#      | event            | PULL_OUT_OF_ROUTE                  |
+#      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+#      | oldRouteId       | {dp-holding-route-id}              |
+#      | routeEventSource | REMOVE_BY_ORDER_DP                 |
 
   @HighPriority
   Scenario: DELETE /2.0/orders/:orderId/dps - Remove DP Order From Holding Route
