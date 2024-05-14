@@ -36,7 +36,7 @@ dependencies {
     implementation "co.nvqa:common-base:1.5.1"
     implementation "co.nvqa:common-auth:1.5.1"
     implementation "co.nvqa:common-sort:1.5.1"
-    implementation "co.nvqa:common-core:1.5.2-RC2"
+    implementation "co.nvqa:common-core:1.5.3-RC10"
     implementation "co.nvqa:common-corev2:1.5.2"
     implementation "co.nvqa:common-recovery:1.5.0"
     implementation "co.nvqa:common-driver:1.5.1"
