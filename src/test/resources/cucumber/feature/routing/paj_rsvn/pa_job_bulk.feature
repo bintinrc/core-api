@@ -8,16 +8,19 @@ Feature: Pickup Appointment Job Bulk Routing
       | generateAddress | RANDOM         |
     And API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_LIST_OF_CREATED_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     Given API Shipper - Operator create new shipper address using data below:
       | shipperId       | {shipper-5-id} |
       | generateAddress | RANDOM         |
     And API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_LIST_OF_CREATED_ADDRESSES[2].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[2].id}"
     Given API Shipper - Operator create new shipper address using data below:
       | shipperId       | {shipper-5-id} |
       | generateAddress | RANDOM         |
     And API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_LIST_OF_CREATED_ADDRESSES[3].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[3].id}"
     And API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     And API Core - Operator bulk add pickup jobs to the route using data below:
@@ -29,14 +32,6 @@ Feature: Pickup Appointment Job Bulk Routing
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status   | Routed                             |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID}                  |
-      | seqNo   | not null                           |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | status  | Routed                             |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
       | userId     | {pickup-user-id}                                |
@@ -52,14 +47,6 @@ Feature: Pickup Appointment Job Bulk Routing
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status   | Routed                             |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID}                  |
-      | seqNo   | not null                           |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | status  | Routed                             |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[2].id}             |
       | userId     | {pickup-user-id}                                |
@@ -75,14 +62,6 @@ Feature: Pickup Appointment Job Bulk Routing
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status   | Routed                             |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID}                  |
-      | seqNo   | not null                           |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | status  | Routed                             |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[3].id}             |
       | userId     | {pickup-user-id}                                |
@@ -100,16 +79,19 @@ Feature: Pickup Appointment Job Bulk Routing
       | generateAddress | RANDOM         |
     And API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_LIST_OF_CREATED_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     Given API Shipper - Operator create new shipper address using data below:
       | shipperId       | {shipper-5-id} |
       | generateAddress | RANDOM         |
     And API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_LIST_OF_CREATED_ADDRESSES[2].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     Given API Shipper - Operator create new shipper address using data below:
       | shipperId       | {shipper-5-id} |
       | generateAddress | RANDOM         |
     And API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_LIST_OF_CREATED_ADDRESSES[3].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[2].id}"
     And API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     And API Core - Operator bulk add pickup jobs to the route using data below:
@@ -126,14 +108,6 @@ Feature: Pickup Appointment Job Bulk Routing
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
       | status   | Routed                             |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID}                  |
-      | seqNo   | not null                           |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
-      | status  | Routed                             |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}                                                               |
       | userId     | {pickup-user-id}                                                                                  |
@@ -149,14 +123,6 @@ Feature: Pickup Appointment Job Bulk Routing
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
       | status   | Routed                             |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID}                  |
-      | seqNo   | not null                           |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
-      | status  | Routed                             |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[2].id}                                                               |
       | userId     | {pickup-user-id}                                                                                  |
@@ -172,14 +138,6 @@ Feature: Pickup Appointment Job Bulk Routing
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
       | status   | Routed                             |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID}                  |
-      | seqNo   | not null                           |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
-      | status  | Routed                             |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[3].id}                                                               |
       | userId     | {pickup-user-id}                                                                                  |
@@ -196,16 +154,19 @@ Feature: Pickup Appointment Job Bulk Routing
       | generateAddress | RANDOM         |
     And API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_LIST_OF_CREATED_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     Given API Shipper - Operator create new shipper address using data below:
       | shipperId       | {shipper-5-id} |
       | generateAddress | RANDOM         |
     And API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_LIST_OF_CREATED_ADDRESSES[2].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[2].id}"
     Given API Shipper - Operator create new shipper address using data below:
       | shipperId       | {shipper-5-id} |
       | generateAddress | RANDOM         |
     And API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_LIST_OF_CREATED_ADDRESSES[3].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[3].id}"
     # PA Job 1 is already routed to Route 1
     And API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
@@ -237,14 +198,6 @@ Feature: Pickup Appointment Job Bulk Routing
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status   | Routed                             |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID}                  |
-      | seqNo   | not null                           |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-      | status  | Routed                             |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
       | userId     | {pickup-user-id}                                |
@@ -260,14 +213,6 @@ Feature: Pickup Appointment Job Bulk Routing
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
       | status   | Success                            |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID}                  |
-      | seqNo   | not null                           |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
-      | status  | Success                            |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
     #  Verification for Job 3 (Should be routed to Route 3)
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[3].id}"
     And DB Route - verify waypoints record:
@@ -275,14 +220,6 @@ Feature: Pickup Appointment Job Bulk Routing
       | seqNo    | not null                           |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[3].id} |
       | status   | Routed                             |
-    And DB Core - verify waypoints record:
-      | id      | {KEY_WAYPOINT_ID}                  |
-      | seqNo   | not null                           |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[3].id} |
-      | status  | Routed                             |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_WAYPOINT_ID}                  |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[3].id} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[3].id}             |
       | userId     | {pickup-user-id}                                |

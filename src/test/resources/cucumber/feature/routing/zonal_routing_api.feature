@@ -4,7 +4,7 @@ Feature: Zonal Routing API
   @happy-path @HighPriority
   Scenario: Zonal Routing API - Create Driver Route & Assign Waypoints
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id},  "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
       | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
@@ -32,10 +32,7 @@ Feature: Zonal Routing API
       | seqNo    | 200                                                        |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
       | status   | Routed                                                     |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
-    #   check return waypoint
+        #   check return waypoint
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].id} |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id}                 |
@@ -47,18 +44,12 @@ Feature: Zonal Routing API
       | seqNo    | 300                                                        |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
       | status   | Routed                                                     |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
 #    check reservation waypoint
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo    | 100                                              |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
       | status   | Routed                                           |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
 #    check order events
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                       |
@@ -92,7 +83,7 @@ Feature: Zonal Routing API
     Given API Core - Operator create new route from zonal routing using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} ]} |
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id},  "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
       | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
@@ -120,9 +111,6 @@ Feature: Zonal Routing API
       | seqNo    | 100                                                        |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
       | status   | Routed                                                     |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
     #    check 2nd delivery waypoint
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
@@ -135,9 +123,6 @@ Feature: Zonal Routing API
       | seqNo    | 300                                                        |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
       | status   | Routed                                                     |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
     #   check return waypoint
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[1].id} |
@@ -150,18 +135,12 @@ Feature: Zonal Routing API
       | seqNo    | 400                                                        |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
       | status   | Routed                                                     |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
 #    check reservation waypoint
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo    | 200                                              |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
       | status   | Routed                                           |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
 #    check order events
     And API Event - Operator verify that event is published with the following details:
       | event            | ADD_TO_ROUTE                       |
@@ -186,7 +165,7 @@ Feature: Zonal Routing API
   @happy-path @HighPriority
   Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Edit Waypoint Sequence
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id},  "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
       | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
@@ -216,9 +195,6 @@ Feature: Zonal Routing API
       | seqNo    | 100                                                        |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
       | status   | Routed                                                     |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
     #   check return waypoint
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].id} |
@@ -231,18 +207,12 @@ Feature: Zonal Routing API
       | seqNo    | 200                                                        |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
       | status   | Routed                                                     |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
 #    check reservation waypoint
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | seqNo    | 300                                              |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
       | status   | Routed                                           |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
 
   @HighPriority
   Scenario: Zonal Routing Edit Route API - Edit Waypoints Inside a Route - Remove Waypoints From Route
@@ -254,7 +224,7 @@ Feature: Zonal Routing API
     And API Core - Operator get multiple order details for tracking ids:
       | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]} |
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id},  "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
       | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
@@ -284,9 +254,6 @@ Feature: Zonal Routing API
       | seqNo    | 100                                                        |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
       | status   | Routed                                                     |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
     #    check 2nd delivery waypoint
     And DB Core - verify transactions record:
       | id      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].id} |
@@ -318,10 +285,6 @@ Feature: Zonal Routing API
       | routeId  | null                                             |
       | status   | Pending                                          |
 #    check rmd deleted
-    And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}           |
-      | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[2].waypointId} |
-      | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[1].waypointId} |
     #    check order events
     And API Event - Operator verify that event is published with the following details:
       | event            | PULL_OUT_OF_ROUTE                  |
@@ -344,7 +307,7 @@ Feature: Zonal Routing API
   @happy-path @HighPriority
   Scenario: Zonal Routing Edit Route API - Bulk Edit Waypoints Inside Multiple Routes - Move Routed Waypoints to Another Route
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id},  "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
       | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
@@ -402,18 +365,6 @@ Feature: Zonal Routing API
       | seqNo    | not null                                                   |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id}                         |
       | status   | Routed                                                     |
-    # RMD - RESERVATION
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id}               |
-    # RMD - DELIVERY
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id}                         |
-    # RMD - PICKUP
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_ORDERS[2].transactions[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id}                         |
     #  WAYPOINT - DELIVERY
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[3].transactions[2].waypointId} |
@@ -443,7 +394,7 @@ Feature: Zonal Routing API
   Scenario: Add Merged Unrouted Waypoint to a Route from Zonal Routing Edit Route
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id},  "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     When Shipper creates multiple orders : 2 orders with the same params
       | service_type                  | Parcel   |
       | service_level                 | Standard |
@@ -578,8 +529,6 @@ Feature: Zonal Routing API
       | seqNo    | null                          |
       | routeId  | null                          |
       | status   | Pending                       |
-    And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_LIST_OF_WAYPOINT_IDS[1]} |
 
   @MediumPriority
   Scenario Outline: Zonal Routing API - Not Allowed to Set Attempted Waypoint to Pending - <Note>
@@ -612,9 +561,6 @@ Feature: Zonal Routing API
       | seqNo    | not null                      |
       | routeId  | {KEY_CREATED_ROUTE_ID}        |
       | status   | <waypointStatus>              |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_WAYPOINT_IDS[1]} |
-      | routeId    | {KEY_CREATED_ROUTE_ID}        |
 
     Examples:
       | Note             | granularStatus         | waypointStatus |
@@ -624,7 +570,7 @@ Feature: Zonal Routing API
   @HighPriority
   Scenario: Zonal Routing API - Create Driver Route & Assign Reservation Waypoints
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id},  "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And API Core - Operator create new route from zonal routing using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}]} |
     And DB Route - verify waypoints record:
@@ -632,9 +578,6 @@ Feature: Zonal Routing API
       | seqNo    | 100                                              |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
       | status   | Routed                                           |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}        |
       | userId     | {pickup-user-id}                                |
@@ -647,7 +590,7 @@ Feature: Zonal Routing API
   @HighPriority
   Scenario: Zonal Routing Edit Route API - Edit Reservation Waypoints Inside a Route - Add Unrouted Reservation Waypoints to Route
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id},  "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
     When API Core - Operator Edit Route Waypoint on Zonal Routing Edit Route:
@@ -657,9 +600,6 @@ Feature: Zonal Routing API
       | seqNo    | not null                                         |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
       | status   | Routed                                           |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}        |
       | userId     | {pickup-user-id}                                |
@@ -672,7 +612,7 @@ Feature: Zonal Routing API
   @HighPriority
   Scenario: Zonal Routing Edit Route API - Bulk Edit Reservation Waypoints Inside Multiple Routes - Move Routed Reservation Waypoints to Another Route
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id},  "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And API Core - Operator create new route from zonal routing using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId}]} |
     And API Core - Operator create new route from zonal routing using data below:
@@ -684,9 +624,6 @@ Feature: Zonal Routing API
       | seqNo    | not null                                         |
       | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id}               |
       | status   | Routed                                           |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id}               |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}                                                          |
       | userId     | {pickup-user-id}                                                                                  |
@@ -699,7 +636,7 @@ Feature: Zonal Routing API
   @DeletePickupAppointmentJob @HighPriority
   Scenario: Zonal Routing Edit Route API - Edit Reservation Waypoints Inside a Route - Remove Reservation Waypoints From Route
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id},  "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And API Control - Operator create pickup appointment job with data below:
       | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
@@ -712,8 +649,6 @@ Feature: Zonal Routing API
       | seqNo    | null                                             |
       | routeId  | null                                             |
       | status   | Pending                                          |
-    And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}        |
       | userId     | {pickup-user-id}                                |

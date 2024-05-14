@@ -183,7 +183,8 @@ public class WebhookSteps extends BaseSteps {
               //to exclude POD on Pickup with Normal Order under a reservation
               final String jobType = get(KEY_UPDATE_PODS_JOB_TYPE, "TRANSACTION");
               if ((order.getServiceType().equalsIgnoreCase("Parcel")
-                  || proofDetails == null) && !jobType.equalsIgnoreCase("PICKUP_APPOINTMENT")) {
+                  || proofDetails == null) && (jobType.equalsIgnoreCase("TRANSACTION")
+                  || jobType.equalsIgnoreCase("RESERVATION"))) {
                 Assertions.assertThat(request.getPod()).as("pod field is null").isNull();
               } else {
                 checkDeliverySuccessPod(request, trackingId);

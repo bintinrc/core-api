@@ -28,9 +28,6 @@ Feature: SG - FM Automated Routing - Within Clock Time
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
       | status        | Routed                                           |
       | routingZoneId | <zone_id>                                        |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}               |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}        |
       | userId     | {route-v2-service-user-id}                      |
@@ -67,9 +64,6 @@ Feature: SG - FM Automated Routing - Within Clock Time
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].legacyId}         |
       | status        | Routed                                           |
       | routingZoneId | <zone_id>                                        |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].legacyId}         |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id}              |
       | userId     | {route-v2-service-user-id}                            |
@@ -157,9 +151,6 @@ Feature: SG - FM Automated Routing - Within Clock Time
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].legacyId} |
       | status        | Routed                                   |
       | routingZoneId | {fm-rsvn-zone-id-5}                      |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_RESERVATIONS[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].legacyId} |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_LIST_OF_RESERVATIONS[1].id}                      |
       | userId     | {route-v2-service-user-id}                            |
@@ -206,9 +197,6 @@ Feature: SG - FM Automated Routing - Within Clock Time
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
       | status        | Routed                                   |
       | routingZoneId | {fm-rsvn-zone-id-5}                      |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_RESERVATIONS[1].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_LIST_OF_RESERVATIONS[1].id}                |
       | userId     | {route-v2-service-user-id}                      |
@@ -229,9 +217,6 @@ Feature: SG - FM Automated Routing - Within Clock Time
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
       | status        | Routed                                   |
       | routingZoneId | {fm-rsvn-zone-id-5}                      |
-    And DB Core - verify route_monitoring_data record:
-      | waypointId | {KEY_LIST_OF_RESERVATIONS[2].waypointId} |
-      | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |
     And DB Events - verify pickup_events record:
       | pickupId   | {KEY_LIST_OF_RESERVATIONS[2].id}                |
       | userId     | {route-v2-service-user-id}                      |

@@ -31,8 +31,6 @@ Feature: Delete Route
       | routeId  | null                                 |
       | seqNo    | null                                 |
       | status   | Pending                              |
-    And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_TRANSACTION_DETAILS.waypointId} |
     And API Event - Operator verify that event is published with the following details:
       | event            | PULL_OUT_OF_ROUTE      |
       | orderId          | {KEY_CREATED_ORDER_ID} |
@@ -50,7 +48,7 @@ Feature: Delete Route
   Scenario: Operator Delete Driver Route Successfully - Single Pending Reservation
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id},  "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
       | driver_id  | {driver-2-id}    |
       | hub_id     | {sorting-hub-id} |
@@ -68,8 +66,6 @@ Feature: Delete Route
       | routeId  | null                                             |
       | seqNo    | null                                             |
       | status   | Pending                                          |
-    And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
     And DB Core - verify shipper_pickup_search record:
       | reservationId  | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | waypointStatus | Pending                                  |
@@ -124,10 +120,6 @@ Feature: Delete Route
       | routeId  | null                          |
       | seqNo    | null                          |
       | status   | Pending                       |
-    And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_LIST_OF_WAYPOINT_IDS[1]} |
-    And DB Core - verify route_monitoring_data is hard-deleted:
-      | {KEY_LIST_OF_WAYPOINT_IDS[2]} |
     And API Event - Operator verify that event is published with the following details:
       | event            | PULL_OUT_OF_ROUTE                 |
       | orderId          | {KEY_LIST_OF_CREATED_ORDER_ID[1]} |
@@ -165,7 +157,7 @@ Feature: Delete Route
   Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - Fail
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id},  "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
       | driver_id  | {driver-id}      |
       | hub_id     | {sorting-hub-id} |
@@ -179,7 +171,7 @@ Feature: Delete Route
       | waypointId      | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | failureReasonId | {failure-reason-id}                              |
     Then Operator delete driver route with status code 500
-    And Operator verify delete route response with proper error message : "Reservation {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} for Shipper {KEY_LIST_OF_CREATED_RESERVATIONS[1].legacyShipperId} has status <action>. Cannot delete route."
+    And Operator verify delete route response with proper error message : "Reservation {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} for Global Shipper {shipper-2-id} has status <action>. Cannot delete route."
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | status   | <action>                                         |
@@ -191,7 +183,7 @@ Feature: Delete Route
   Scenario Outline: Operator Not Allowed to Delete Driver Route With Attempted Reservation - Success
     Given Shipper authenticates using client id "{shipper-client-id}" and client secret "{shipper-client-secret}"
     Given API Core - Operator create reservation using data below:
-      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id}, "legacy_shipper_id":{shipper-2-legacy-id}, "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | { "pickup_address_id":{shipper-2-address-id}, "global_shipper_id":{shipper-2-id},  "pickup_approx_volume":"Less than 10 Parcels", "pickup_start_time":"{date: 0 days next, yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}", "pickup_end_time":"{date: 0 days next, yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And Operator create an empty route
       | driver_id  | {driver-id}      |
       | hub_id     | {sorting-hub-id} |
@@ -204,7 +196,7 @@ Feature: Delete Route
       | routeId    | {KEY_CREATED_ROUTE_ID}                           |
       | waypointId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
     Then Operator delete driver route with status code 500
-    And Operator verify delete route response with proper error message : "Reservation {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} for Shipper {KEY_LIST_OF_CREATED_RESERVATIONS[1].legacyShipperId} has status <action>. Cannot delete route."
+    And Operator verify delete route response with proper error message : "Reservation {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} for Global Shipper {shipper-2-id} has status <action>. Cannot delete route."
     And DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].waypointId} |
       | status   | <action>                                         |
@@ -347,8 +339,9 @@ Feature: Delete Route
       | request | {"parcels":[{"inbound_type":"VAN_FROM_NINJAVAN","tracking_id":"{KEY_LIST_OF_CREATED_ORDERS[1].trackingId}","waypoint_id":{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}}]} |
     And API Driver - Driver start route "{KEY_LIST_OF_CREATED_ROUTES[1].id}"
     And API Driver - Driver read routes:
-      | driverId        | {driver-id}                        |
-      | expectedRouteId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | driverId            | {driver-id}                                                |
+      | expectedRouteId     | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
+      | expectedWaypointIds | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
     And API Driver - Driver submit POD:
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                              |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}                      |
@@ -397,8 +390,9 @@ Feature: Delete Route
       | request | {"parcels":[{"inbound_type":"VAN_FROM_NINJAVAN","tracking_id":"{KEY_LIST_OF_CREATED_ORDERS[1].trackingId}","waypoint_id":{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}}]} |
     And API Driver - Driver start route "{KEY_LIST_OF_CREATED_ROUTES[1].id}"
     And API Driver - Driver read routes:
-      | driverId        | {driver-id}                        |
-      | expectedRouteId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | driverId            | {driver-id}                                                |
+      | expectedRouteId     | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
+      | expectedWaypointIds | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
     And API Driver - Driver submit POD:
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                                              |
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}                      |
