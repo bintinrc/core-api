@@ -267,7 +267,7 @@ Feature: Order Tag to DP
       | event   | UPDATE_AV                          |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
-  @HighPriority @wip
+  @HighPriority
   Scenario: PUT /2.0/orders/:orderId/dps/routes-dp - Add Routed Order To DP
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
