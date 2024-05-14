@@ -142,11 +142,11 @@ Feature: Order Tag to DP
       | event            | ADD_TO_ROUTE                       |
       | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | routeId          | {dp-holding-route-id}              |
-#      | routeEventSource | ADD_BY_ORDER_DP                    |
-#    And API Event - Operator verify that event is published with the following details:
-#      | event            | PULL_OUT_OF_ROUTE                  |
-#      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-#      | routeEventSource | REMOVE_BY_ORDER_DP                 |
+      | routeEventSource | ADD_BY_ORDER_DP                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                  |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | routeEventSource | REMOVE_BY_ORDER_DP                 |
     And API Event - Operator verify that event is published with the following details:
       | event   | HUB_INBOUND_SCAN                   |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
@@ -267,7 +267,7 @@ Feature: Order Tag to DP
       | event   | UPDATE_AV                          |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
-  @HighPriority
+  @HighPriority @wip
   Scenario: PUT /2.0/orders/:orderId/dps/routes-dp - Add Routed Order To DP
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
@@ -320,6 +320,24 @@ Feature: Order Tag to DP
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | txnStatus  | PENDING                                                    |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id}                         |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                       |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+      | routeEventSource | ADD_BY_ORDER_DP                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                  |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | routeEventSource | REMOVE_BY_ORDER_DP                 |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | ASSIGNED_TO_DP                     |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | UPDATE_ADDRESS                     |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | UPDATE_AV                          |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
@@ -330,24 +348,6 @@ Feature: Order Tag to DP
       | postcode | 238900                                                     |
       | city     | Singapore                                                  |
       | country  | SG                                                         |
-    And API Event - Operator verify that event is published with the following details:
-      | event            | ADD_TO_ROUTE                       |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
-#      | routeEventSource | ADD_BY_ORDER_DP                    |
-#    And API Event - Operator verify that event is published with the following details:
-#      | event            | PULL_OUT_OF_ROUTE                  |
-#      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-#      | routeEventSource | REMOVE_BY_ORDER_DP                 |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | ASSIGNED_TO_DP                     |
-      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | UPDATE_ADDRESS                     |
-      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | UPDATE_AV                          |
-      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
   @HighPriority
   Scenario: PUT /2.0/orders/:orderId/dps/routes-dp - Add Unrouted DP Order To Route
@@ -454,12 +454,12 @@ Feature: Order Tag to DP
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | null                                                       |
       | routeId  | null                                                       |
-#      | status   | Pending                                                    |
-#    And API Event - Operator verify that event is published with the following details:
-#      | event            | PULL_OUT_OF_ROUTE                  |
-#      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-#      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
-#      | routeEventSource | REMOVE_BY_ORDER_DP                 |
+      | status   | Pending                                                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                  |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | routeEventSource | REMOVE_BY_ORDER_DP                 |
 
   @HighPriority
   Scenario: PUT /2.0/orders/:orderId/dps/routes-dp - Add Routed DP Order To New Route
@@ -516,6 +516,24 @@ Feature: Order Tag to DP
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | txnStatus  | PENDING                                                    |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id}                         |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | ADD_TO_ROUTE                       |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
+      | routeEventSource | ADD_BY_ORDER_DP                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                  |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | routeEventSource | REMOVE_BY_ORDER_DP                 |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | ASSIGNED_TO_DP                     |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | UPDATE_ADDRESS                     |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | UPDATE_AV                          |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
@@ -526,24 +544,6 @@ Feature: Order Tag to DP
       | postcode | 238900                                                     |
       | city     | Singapore                                                  |
       | country  | SG                                                         |
-    And API Event - Operator verify that event is published with the following details:
-      | event            | ADD_TO_ROUTE                       |
-      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-      | routeId          | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
-      | routeEventSource | ADD_BY_ORDER_DP                    |
-#    And API Event - Operator verify that event is published with the following details:
-#      | event            | PULL_OUT_OF_ROUTE                  |
-#      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-#      | routeEventSource | REMOVE_BY_ORDER_DP                 |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | ASSIGNED_TO_DP                     |
-      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | UPDATE_ADDRESS                     |
-      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | UPDATE_AV                          |
-      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
   @HighPriority
   Scenario: PUT /2.0/orders/:orderId/dps/routes-dp - Add Routed DP Order To New DP
@@ -598,6 +598,15 @@ Feature: Order Tag to DP
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | txnStatus  | PENDING                                                    |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[1].id}                         |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | ASSIGNED_TO_DP                     |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | UPDATE_ADDRESS                     |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+    And API Event - Operator verify that event is published with the following details:
+      | event   | UPDATE_AV                          |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
     Then DB Route - verify waypoints record:
       | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | seqNo    | not null                                                   |
@@ -608,15 +617,6 @@ Feature: Order Tag to DP
       | postcode | 238900                                                     |
       | city     | Singapore                                                  |
       | country  | SG                                                         |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | ASSIGNED_TO_DP                     |
-      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | UPDATE_ADDRESS                     |
-      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-    And API Event - Operator verify that event is published with the following details:
-      | event   | UPDATE_AV                          |
-      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
 
   @HighPriority
   Scenario: PUT /2.0/orders/:orderId/dps/routes-dp - Add Routed DP Order To New DP and Route
@@ -673,16 +673,6 @@ Feature: Order Tag to DP
       | waypointId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
       | txnStatus  | PENDING                                                    |
       | routeId    | {KEY_LIST_OF_CREATED_ROUTES[2].id}                         |
-    Then DB Route - verify waypoints record:
-      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
-      | seqNo    | not null                                                   |
-      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id}                         |
-      | status   | Routed                                                     |
-      | address1 | 119, CLEMENTI ROAD, SG, 129801                             |
-      | address2 | Add 4-5                                                    |
-      | postcode | 238900                                                     |
-      | city     | Singapore                                                  |
-      | country  | SG                                                         |
     And API Event - Operator verify that event is published with the following details:
       | event   | ASSIGNED_TO_DP                     |
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
@@ -696,11 +686,21 @@ Feature: Order Tag to DP
       | event            | ADD_TO_ROUTE                       |
       | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
       | routeId          | {KEY_LIST_OF_CREATED_ROUTES[2].id} |
-#      | routeEventSource | ADD_BY_ORDER_DP                    |
-#    And API Event - Operator verify that event is published with the following details:
-#      | event            | PULL_OUT_OF_ROUTE                  |
-#      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-#      | routeEventSource | REMOVE_BY_ORDER_DP                 |
+      | routeEventSource | ADD_BY_ORDER_DP                    |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                  |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | routeEventSource | REMOVE_BY_ORDER_DP                 |
+    Then DB Route - verify waypoints record:
+      | legacyId | {KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId} |
+      | seqNo    | not null                                                   |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[2].id}                         |
+      | status   | Routed                                                     |
+      | address1 | 119, CLEMENTI ROAD, SG, 129801                             |
+      | address2 | Add 4-5                                                    |
+      | postcode | 238900                                                     |
+      | city     | Singapore                                                  |
+      | country  | SG                                                         |
 
   @HighPriority
   Scenario: DELETE /2.0/orders/:orderId/dps/routes-dp - Remove and Unassigned DP Order From Holding Route
@@ -781,12 +781,12 @@ Feature: Order Tag to DP
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
     And API Event - Operator verify that event is published with the following details:
       | event   | UNASSIGNED_FROM_DP                 |
-#      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-#    And API Event - Operator verify that event is published with the following details:
-#      | event            | PULL_OUT_OF_ROUTE                  |
-#      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-#      | oldRouteId       | {dp-holding-route-id}              |
-#      | routeEventSource | REMOVE_BY_ORDER_DP                 |
+      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+    And API Event - Operator verify that event is published with the following details:
+      | event            | PULL_OUT_OF_ROUTE                  |
+      | orderId          | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
+      | oldRouteId       | {dp-holding-route-id}              |
+      | routeEventSource | REMOVE_BY_ORDER_DP                 |
 
   @HighPriority
   Scenario: DELETE /2.0/orders/:orderId/dps - Remove DP Order From Holding Route
