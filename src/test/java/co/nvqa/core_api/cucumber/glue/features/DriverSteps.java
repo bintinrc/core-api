@@ -32,7 +32,7 @@ import org.assertj.core.api.Assertions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static co.nvqa.common.core.utils.CoreScenarioStorageKeys.KEY_ROUTE_LIST_ROUTE_TRANSFER_RESPONSE;
+import static co.nvqa.common.core.utils.CoreScenarioStorageKeys.KEY_ROUTE_TRANSFER_RESPONSE;
 
 /**
  * @author Binti Cahayati on 2020-07-03
@@ -120,7 +120,7 @@ public class DriverSteps extends BaseSteps {
   @Then("Verify Parcel Route Transfer Failed Orders with message : {string}")
   public void verifyRouteTransferResponseFailed(String message, List<String> failedTrackingIds) {
     List<String> trackingIds = resolveValues(failedTrackingIds);
-    ParcelRouteTransferResponse response = get(KEY_ROUTE_LIST_ROUTE_TRANSFER_RESPONSE);
+    ParcelRouteTransferResponse response = get(KEY_ROUTE_TRANSFER_RESPONSE);
     List<FailedOrder> failedOrders = response.getData().getFailure();
     Assertions.assertThat(failedOrders.size() == trackingIds.size())
         .as("contains all failed orders").isTrue();
