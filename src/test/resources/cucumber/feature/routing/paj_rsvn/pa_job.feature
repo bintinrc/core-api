@@ -1,10 +1,11 @@
-@ArchiveDriverRoutes @CancelCreatedReservations @DeletePickupAppointmentJob @routing2 @pa-job
+@ArchiveDriverRoutes @CancelCreatedReservations @DeletePickupAppointmentJob @ReleaseShipperAddress @routing2 @pa-job
 Feature: Zonal Routing API
 
-  @DeletePickupAppointmentJob @happy-path @HighPriority
+  @DeletePickupAppointmentJob @ReleaseShipperAddress @happy-path @HighPriority
   Scenario: PUT /pickup-appointment-jobs/:paJobId/route - Route Unrouted PA Job Waypoint
-    Given API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-5-id}"
+    And API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     When API Core - Operator add pickup job to the route using data below:
@@ -25,10 +26,11 @@ Feature: Zonal Routing API
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
-  @DeletePickupAppointmentJob @HighPriority
+  @DeletePickupAppointmentJob @ReleaseShipperAddress @HighPriority
   Scenario: PUT /pickup-appointment-jobs/:paJobId/route - Update Routed PA Job to a New Route
-    Given API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-5-id}"
+    And API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     When API Core - Operator add pickup job to the route using data below:
@@ -62,10 +64,11 @@ Feature: Zonal Routing API
       | pickupType | 2                                                                                                 |
       | data       | {"old_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"route_id":{KEY_LIST_OF_CREATED_ROUTES[2].id}} |
 
-  @DeletePickupAppointmentJob @HighPriority
+  @DeletePickupAppointmentJob @ReleaseShipperAddress @HighPriority
   Scenario: POST /routes - Zonal Routing API - Create Driver Route & Assign PA Job Waypoint
-    Given API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-5-id}"
+    And API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And API Core - Operator create new route from zonal routing using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_WAYPOINT_ID}]} |
@@ -83,10 +86,11 @@ Feature: Zonal Routing API
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
-  @DeletePickupAppointmentJob @happy-path @HighPriority
+  @DeletePickupAppointmentJob @ReleaseShipperAddress @happy-path @HighPriority
   Scenario: PUT /pickup-appointment-jobs/:paJobId/unroute - Unroute PA Job Waypoint
-    When API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-5-id}"
+    And API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And API Core - Operator create new route from zonal routing using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}, "waypoints":[{KEY_WAYPOINT_ID}]} |
@@ -110,10 +114,11 @@ Feature: Zonal Routing API
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
 
-  @DeletePickupAppointmentJob @HighPriority
+  @DeletePickupAppointmentJob @ReleaseShipperAddress @HighPriority
   Scenario: PUT /pickup-appointment-jobs/:paJobId/route - Add PA Job to a Route that has been started
-    Given API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-5-id}"
+    And API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
     When API Core - Operator add pickup job to the route using data below:
@@ -139,8 +144,9 @@ Feature: Zonal Routing API
       | type       | 4                                               |
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
-    Given API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-2-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-2-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-5-id}"
+    And API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[2].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     When API Core - Operator add pickup job to the route using data below:
       | jobId                      | {KEY_CONTROL_CREATED_PA_JOBS[2].id}                                   |
       | addPickupJobToRouteRequest | {"new_route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"overwrite":false} |

@@ -41,7 +41,7 @@ dependencies {
     implementation "co.nvqa:common-recovery:1.5.2-RC5"
     implementation "co.nvqa:common-driver:1.5.3-RC3"
     implementation "co.nvqa:common-webhook:1.5.1"
-    implementation "co.nvqa:common-shipper:1.5.2"
+    implementation "co.nvqa:common-shipper:1.5.2-RC9"
     implementation "co.nvqa:common-dp:1.5.0"
     implementation "co.nvqa:common-ordercreate:1.5.0"
     testImplementation "ch.qos.logback:logback-classic:1.2.3"

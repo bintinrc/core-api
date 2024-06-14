@@ -443,7 +443,7 @@ Feature: Parcel Route Transfer
       | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
     When Driver Transfer Parcel to Archived route "{KEY_LIST_OF_CREATED_ROUTES[1].id}"
       | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]} |
-    Then Operator verify response code is 400 with error message "{\"error\":{\"application_exception_code\":173000,\"application\":\"ROUTE-V2\",\"title\":\"REQUEST_ERR\",\"message\":\"[routeID={KEY_LIST_OF_CREATED_ROUTES[1].id}][status=ARCHIVED]: cannot add waypoint if route not in [PENDING IN_PROGRESS] status\"}}"
+    Then Operator verify response code is 400 with error message "{\"error\":{\"application_exception_code\":173000,\"application\":\"ROUTE-V2\",\"title\":\"REQUEST_ERR\",\"message\":\"[routeID={KEY_LIST_OF_CREATED_ROUTES[1].id}][status=ARCHIVED]: cannot add/remove waypoint if route not in [PENDING IN_PROGRESS] status\"}}"
 
   @HighPriority
   Scenario: Driver Route Transfer Parcel - Merged Waypoints

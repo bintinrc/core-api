@@ -1,12 +1,13 @@
 @ArchiveRouteCommonV2 @ForceSuccessOrders @DeletePickupAppointmentJob @CancelCreatedReservations @route-v2 @create-route-assign-waypoint
 Feature: Create Route & Assign Waypoints
 
-  @HighPriority
+  @HighPriority @ReleaseShipperAddress
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Unrouted Waypoints to Route - Transaction, Reservation, PA Job
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
-    Given API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-5-id}"
+    And API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     Given API Core - Operator create reservation using data below:
@@ -101,12 +102,13 @@ Feature: Create Route & Assign Waypoints
       | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | routeEventSource | ZONAL_ROUTING_CREATE               |
 
-  @HighPriority
+  @HighPriority @ReleaseShipperAddress
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Routed Waypoints to Route - Transaction, Reservation, PA Job
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
-    Given API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-5-id}"
+    And API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     Given API Core - Operator create reservation using data below:
@@ -161,12 +163,13 @@ Feature: Create Route & Assign Waypoints
       | responseCode                 | 404                                                          |
       | expectedApplicationErrorCode | 173001                                                       |
 
-  @MediumPriority
+  @MediumPriority @ReleaseShipperAddress
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Success Waypoints to Route - Transaction, Reservation, PA Job
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
-    Given API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-5-id}"
+    And API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     When API Core - Operator add pickup job to the route using data below:
@@ -212,12 +215,13 @@ Feature: Create Route & Assign Waypoints
       | responseCode                 | 400                                                                                                                                                                                            |
       | expectedApplicationErrorCode | 173000                                                                                                                                                                                         |
 
-  @MediumPriority
+  @MediumPriority @ReleaseShipperAddress
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Failed Waypoints to Route - Transaction, Reservation, PA Job
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
-    Given API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-5-id}"
+    And API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     When API Core - Operator add pickup job to the route using data below:
@@ -266,7 +270,7 @@ Feature: Create Route & Assign Waypoints
       | expectedApplicationErrorCode | 173000                                                                                                                                                                                         |
 
 
-  @DeletePickupAppointmentJob @HighPriority
+  @DeletePickupAppointmentJob @ReleaseShipperAddress @HighPriority
   Scenario: PUT /routes/:routeid/waypoints - Add PA Job to a Route that has been started
     Given API Order - Shipper create multiple V4 orders using data below:
       | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
@@ -284,8 +288,9 @@ Feature: Create Route & Assign Waypoints
     And DB Route - verify route_logs record:
       | legacyId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | status   | 1                                  |
-    Given API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId":{shipper-5-address-id}}, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{gradle-next-1-day-yyyy-MM-dd}T09:00:00+08:00", "latest":"{gradle-next-1-day-yyyy-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-5-id}"
+    And API Control - Operator create pickup appointment job with data below:
+      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     When API Route - Operator add multiple waypoints to route:
