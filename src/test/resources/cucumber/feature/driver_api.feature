@@ -73,15 +73,13 @@ Feature: Driver API
       | type    | 1                                  |
       | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
 
-  @HighPriority
+  @HighPriority @ReleaseShipperAddress
   Scenario: Driver Success a Reservation Pickup by Scanning Normal Order
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-2-id} } |
-    Given API Shipper - Operator create new shipper address using data below:
-      | shipperId       | {shipper-3-id} |
-      | generateAddress | RANDOM         |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-3-id}"
     And API Core - Operator create reservation using data below:
-      | reservationRequest | {"global_shipper_id":{shipper-3-id}, "pickup_address_id":{KEY_LIST_OF_CREATED_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
+      | reservationRequest | {"global_shipper_id":{shipper-3-id}, "pickup_address_id":{KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id}, "pickup_start_time":"{gradle-current-date-yyyy-MM-dd}T15:00:00{gradle-timezone-XXX}","pickup_end_time":"{gradle-current-date-yyyy-MM-dd}T18:00:00{gradle-timezone-XXX}" } |
     And API Core - Operator add reservation to route using data below:
       | reservationId | {KEY_LIST_OF_CREATED_RESERVATIONS[1].id} |
       | routeId       | {KEY_LIST_OF_CREATED_ROUTES[1].id}       |

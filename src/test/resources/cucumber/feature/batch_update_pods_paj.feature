@@ -1,4 +1,4 @@
-@ForceSuccessOrders @ArchiveDriverRoutes @DeletePickupAppointmentJob @batch-update-pods-paj
+@ForceSuccessOrders @ArchiveDriverRoutes @DeletePickupAppointmentJob @ReleaseShipperAddress @batch-update-pods-paj
 Feature: Batch Update PODs - PAJ
 
   @happy-path @HighPriority
@@ -9,8 +9,9 @@ Feature: Batch Update PODs - PAJ
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-paj-id}"
     And API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {shipper-5-address-id-2} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+      | createPickupJobRequest | { "shipperId":{shipper-paj-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And Operator create an empty route
@@ -56,8 +57,9 @@ Feature: Batch Update PODs - PAJ
       | service_type                  | Return   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-paj-id}"
     And API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {shipper-5-address-id-2} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+      | createPickupJobRequest | { "shipperId":{shipper-paj-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And Operator create an empty route
@@ -104,8 +106,9 @@ Feature: Batch Update PODs - PAJ
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-paj-id}"
     And API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {shipper-5-address-id-2} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+      | createPickupJobRequest | { "shipperId":{shipper-paj-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And Operator create an empty route
@@ -141,8 +144,9 @@ Feature: Batch Update PODs - PAJ
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-paj-id}"
     And API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {shipper-5-address-id-2} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+      | createPickupJobRequest | { "shipperId":{shipper-paj-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And Operator create an empty route
@@ -180,8 +184,9 @@ Feature: Batch Update PODs - PAJ
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | true     |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-paj-id}"
     And API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {shipper-5-address-id-2} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+      | createPickupJobRequest | { "shipperId":{shipper-paj-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And Operator create an empty route
@@ -213,8 +218,9 @@ Feature: Batch Update PODs - PAJ
   Scenario: Driver fails the Pickup Appointment Job and fail all X number of return parcels under a Pickup Appointment Job
     Given Shipper id "{shipper-4-id}" subscribes to "Pickup fail" webhook
     Given Shipper authenticates using client id "{shipper-4-client-id}" and client secret "{shipper-4-client-secret}"
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-paj-id}"
     And API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {shipper-5-address-id-2} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+      | createPickupJobRequest | { "shipperId":{shipper-paj-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And Operator create an empty route
@@ -262,8 +268,9 @@ Feature: Batch Update PODs - PAJ
       | service_type                  | Parcel   |
       | service_level                 | Standard |
       | parcel_job_is_pickup_required | false    |
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-paj-id}"
     And API Control - Operator create pickup appointment job with data below:
-      | createPickupJobRequest | { "shipperId":{shipper-5-id}, "from":{ "addressId": {shipper-5-address-id-2} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
+      | createPickupJobRequest | { "shipperId":{shipper-paj-id}, "from":{ "addressId": {KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].id} }, "pickupService":{ "level":"Standard", "type":"Scheduled"}, "pickupTimeslot":{ "ready":"{date: 1 days next, YYYY-MM-dd}T09:00:00+08:00", "latest":"{date: 1 days next, YYYY-MM-dd}T12:00:00+08:00"}, "pickupApproxVolume":"Less than 10 Parcels"} |
     And DB Route - wait until job_waypoints table is populated for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
     And Operator create an empty route
