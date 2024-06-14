@@ -1,7 +1,7 @@
-@ArchiveRouteCommonV2 @ForceSuccessOrders @DeletePickupAppointmentJob @ReleaseShipperAddress @CancelCreatedReservations @route-v2 @create-route-assign-waypoint
+@ArchiveRouteCommonV2 @ForceSuccessOrders @DeletePickupAppointmentJob @CancelCreatedReservations @route-v2 @create-route-assign-waypoint
 Feature: Create Route & Assign Waypoints
 
-  @HighPriority
+  @HighPriority @ReleaseShipperAddress
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Unrouted Waypoints to Route - Transaction, Reservation, PA Job
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
@@ -102,7 +102,7 @@ Feature: Create Route & Assign Waypoints
       | routeId          | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
       | routeEventSource | ZONAL_ROUTING_CREATE               |
 
-  @HighPriority
+  @HighPriority @ReleaseShipperAddress
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Routed Waypoints to Route - Transaction, Reservation, PA Job
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
@@ -163,7 +163,7 @@ Feature: Create Route & Assign Waypoints
       | responseCode                 | 404                                                          |
       | expectedApplicationErrorCode | 173001                                                       |
 
-  @MediumPriority
+  @MediumPriority @ReleaseShipperAddress
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Success Waypoints to Route - Transaction, Reservation, PA Job
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
@@ -215,7 +215,7 @@ Feature: Create Route & Assign Waypoints
       | responseCode                 | 400                                                                                                                                                                                            |
       | expectedApplicationErrorCode | 173000                                                                                                                                                                                         |
 
-  @MediumPriority
+  @MediumPriority @ReleaseShipperAddress
   Scenario: PUT /routes/:routeid/waypoints - Add Multiple Failed Waypoints to Route - Transaction, Reservation, PA Job
     Given API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id}} |
