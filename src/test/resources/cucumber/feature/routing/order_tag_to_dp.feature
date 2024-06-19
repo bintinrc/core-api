@@ -11,9 +11,9 @@ Feature: Order Tag to DP
     And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[1]"
     And API Core - Operator create new route using data below:
       | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
-    When API Core - Operator new add parcel to DP holding route:
-      | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
-      | routeId | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+    And API Core - Operator add parcel to the route using data below:
+      | addParcelToRouteRequest | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id},"type":"DELIVERY"} |
+      | orderId                 | {KEY_LIST_OF_CREATED_ORDERS[1].id}                                |
     When API Core - Operator pull out dp order from DP holding route for order
       | {KEY_LIST_OF_CREATED_ORDERS[1].id} |
     And DB Core - verify transactions record:
