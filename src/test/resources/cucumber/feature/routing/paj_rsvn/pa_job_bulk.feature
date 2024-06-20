@@ -281,3 +281,58 @@ Feature: Pickup Appointment Job Bulk Routing
       | type       | 4                                               |
       | pickupType | 2                                               |
       | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
+
+  @DeletePickupAppointmentJob @ReleaseShipperAddress @wip
+  Scenario: PAJ via OC Sample
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-id}"
+    Given API Order - Shipper create multiple V4 orders using data below:
+      | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+      | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+      | generateFrom        | RANDOM                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+      | v4OrderRequest      | { "service_type":"Parcel","service_level":"Standard","to":{"name": "QA core api automation","phone_number": "+65189681","email": "qa@test.co", "address": {"address1": "80 MANDAI LAKE ROAD","address2": "Singapore Zoological","country": "SG","postcode": "123456","latitude": 1.3248209,"longitude": 103.6983167}},"parcel_job":{ "dimensions": {"weight": 1}, "pickup_address_id":"{KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[1].externalRef}","is_pickup_required":true, "pickup_date":"{{next-1-day-yyyy-MM-dd}}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
+    And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[1]"
+    And DB Control - get pickup appointment job id from order id "{KEY_LIST_OF_CREATED_ORDERS[1].id}"
+    And DB Route - wait until job_waypoints table is populated for job id "KEY_CONTROL_CREATED_PA_JOB_IDS[1]"
+    Given DB Shipper - get unique shipper address for shipper id: "{shipper-id}"
+    Given API Order - Shipper create multiple V4 orders using data below:
+      | shipperClientId     | {shipper-client-id}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+      | shipperClientSecret | {shipper-client-secret}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+      | generateFrom        | RANDOM                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+      | v4OrderRequest      | { "service_type":"Parcel","service_level":"Standard","to":{"name": "QA core api automation","phone_number": "+65189681","email": "qa@test.co", "address": {"address1": "80 MANDAI LAKE ROAD","address2": "Singapore Zoological","country": "SG","postcode": "123456","latitude": 1.3248209,"longitude": 103.6983167}},"parcel_job":{ "dimensions": {"weight": 1}, "pickup_address_id":"{KEY_SHIPPER_LIST_OF_SHIPPER_ADDRESSES[2].externalRef}","is_pickup_required":true, "pickup_date":"{{next-1-day-yyyy-MM-dd}}", "pickup_timeslot":{ "start_time":"12:00", "end_time":"15:00"}, "delivery_start_date":"{{next-1-day-yyyy-MM-dd}}", "delivery_timeslot":{ "start_time":"09:00", "end_time":"22:00"}}} |
+    And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[2]"
+    And DB Control - get pickup appointment job id from order id "{KEY_LIST_OF_CREATED_ORDERS[2].id}"
+    And DB Route - wait until job_waypoints table is populated for job id "KEY_CONTROL_CREATED_PA_JOB_IDS[1]"
+    And API Core - Operator create new route using data below:
+      | createRouteRequest | { "zoneId":{zone-id}, "hubId":{sorting-hub-id}, "vehicleId":{vehicle-id}, "driverId":{driver-id} } |
+    And API Core - Operator bulk add pickup jobs to the route using data below:
+      | bulkAddPickupJobToTheRouteRequest | { "ids": [{KEY_CONTROL_CREATED_PA_JOB_IDS[1]},{KEY_CONTROL_CREATED_PA_JOB_IDS[2]}], "new_route_id": {KEY_LIST_OF_CREATED_ROUTES[1].id}, "overwrite": false} |
+    #  Verification for Job 1
+    And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[1].id}"
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID}                  |
+      | seqNo    | not null                           |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | status   | Routed                             |
+    And DB Events - verify pickup_events record:
+      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[1].id}             |
+      | userId     | {pickup-user-id}                                |
+      | userName   | {pickup-user-name}                              |
+      | userEmail  | {pickup-user-email}                             |
+      | type       | 1                                               |
+      | pickupType | 2                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
+   # Verification for Job 2
+    And DB Route - get waypoint id for job id "{KEY_CONTROL_CREATED_PA_JOBS[2].id}"
+    And DB Route - verify waypoints record:
+      | legacyId | {KEY_WAYPOINT_ID}                  |
+      | seqNo    | not null                           |
+      | routeId  | {KEY_LIST_OF_CREATED_ROUTES[1].id} |
+      | status   | Routed                             |
+    And DB Events - verify pickup_events record:
+      | pickupId   | {KEY_CONTROL_CREATED_PA_JOBS[2].id}             |
+      | userId     | {pickup-user-id}                                |
+      | userName   | {pickup-user-name}                              |
+      | userEmail  | {pickup-user-email}                             |
+      | type       | 1                                               |
+      | pickupType | 2                                               |
+      | data       | {"route_id":{KEY_LIST_OF_CREATED_ROUTES[1].id}} |
