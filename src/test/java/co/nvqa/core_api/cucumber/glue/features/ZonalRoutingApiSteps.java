@@ -37,37 +37,6 @@ public class ZonalRoutingApiSteps extends BaseSteps {
     }, "zonal routing create route");
   }
 
-  //remove waypoints of merged transactions
-  @When("Operator edit route by removing merged waypoints from Zonal Routing API")
-  public void operatorEditRouteRemoveMergedWp(Map<String, String> arg1) {
-    final long routeId = get(KEY_CREATED_ROUTE_ID);
-    final String json = toJsonCamelCase(arg1);
-    final RouteRequest route = fromJsonSnakeCase(json, RouteRequest.class);
-    final List<Long> waypointIds = get(KEY_LIST_OF_WAYPOINT_IDS);
-    route.setTags(Arrays.asList(1, 4));
-    route.setWaypoints(Collections.singletonList(waypointIds.get(0)));
-    route.setId(routeId);
-    doWithRetry(() -> {
-      List<RouteResponse> result = getRouteClient()
-          .zonalRoutingEditRoute(Collections.singletonList(route));
-      Assertions.assertThat(result.get(0)).as("updated route is not null").isNotNull();
-    }, "zonal routing edit route");
-  }
-
-  @When("API Route - Operator edit route from Zonal Routing API with Invalid State")
-  public void operatorEditRouteZrInvalidState(Map<String, String> mapOfData) {
-    mapOfData = resolveKeyValues(mapOfData);
-    String json = toJson(mapOfData);
-    RouteRequest route = fromJson(json, RouteRequest.class);
-    List<Long> waypointIds = get(KEY_LIST_OF_WAYPOINT_IDS);
-    route.setWaypoints(waypointIds);
-    doWithRetry(() -> {
-      Response response = getRouteClient()
-          .zonalRoutingEditRouteAndGetRawResponse(Collections.singletonList(route));
-      put(KEY_API_RAW_RESPONSE, response);
-    }, "zonal routing edit route");
-  }
-
   @When("API Route - Operator create route from Zonal Routing API with Invalid State")
   public void operatorCreateRouteZrInvalidState(Map<String, String> mapOfData) {
     mapOfData = resolveKeyValues(mapOfData);
