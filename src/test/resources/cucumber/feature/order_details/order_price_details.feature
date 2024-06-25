@@ -188,7 +188,7 @@ Feature: Order Price Details
       | jobAction  | SUCCESS                                                                         |
       | jobMode    | DELIVERY                                                                        |
     And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}" with granular status "RETURNED_TO_SENDER"
-    When DB Core - operator get waypoints details for "{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}"
+    When DB Route - operator get waypoints details for "{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}"
     And API Core - verify order pricing details:
       | orderId               | {KEY_LIST_OF_CREATED_ORDERS[1].id}                  |
       | trackingId            | {KEY_LIST_OF_CREATED_TRACKING_IDS[1]}               |
@@ -203,8 +203,8 @@ Feature: Order Price Details
       | toDistrict            | null                                                |
       | toAddress             | 9 TUA KONG GREEN MANILA GARDENS SG 455384           |
       | toPostcode            | 455384                                              |
-      | toLatitude            | {KEY_CORE_WAYPOINT_DETAILS.latitude}                |
-      | toLongitude           | {KEY_CORE_WAYPOINT_DETAILS.longitude}               |
+      | toLatitude            | {KEY_ROUTE_WAYPOINT_DETAILS.latitude}                |
+      | toLongitude           | {KEY_ROUTE_WAYPOINT_DETAILS.longitude}               |
       | toName                | Elsa Customer (RTS)                                 |
       | fromCity              | null                                                |
       | fromLongitude         | 132.89808                                           |
@@ -290,7 +290,7 @@ Feature: Order Price Details
       | jobAction  | SUCCESS                                                                         |
       | jobMode    | DELIVERY                                                                        |
     And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}" with granular status "RETURNED_TO_SENDER"
-    When DB Core - operator get waypoints details for "{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}"
+    When DB Route - operator get waypoints details for "{KEY_LIST_OF_CREATED_ORDERS[1].transactions[2].waypointId}"
     And API Core - verify order pricing details:
       | orderId               | {KEY_LIST_OF_CREATED_ORDERS[1].id}                  |
       | trackingId            | {KEY_LIST_OF_CREATED_ORDERS[1].trackingId}          |
@@ -305,8 +305,8 @@ Feature: Order Price Details
       | toDistrict            | null                                                |
       | toAddress             | 9 TUA KONG GREEN MANILA GARDENS SG 455384           |
       | toPostcode            | 455384                                              |
-      | toLatitude            | {KEY_CORE_WAYPOINT_DETAILS.latitude}                |
-      | toLongitude           | {KEY_CORE_WAYPOINT_DETAILS.longitude}               |
+      | toLatitude            | {KEY_ROUTE_WAYPOINT_DETAILS.latitude}                |
+      | toLongitude           | {KEY_ROUTE_WAYPOINT_DETAILS.longitude}               |
       | toName                | Elsa Customer (RTS)                                 |
       | fromCity              | null                                                |
       | fromLongitude         | 132.89808                                           |
@@ -392,7 +392,7 @@ Feature: Order Price Details
       | jobAction  | SUCCESS                                                                         |
       | jobMode    | DELIVERY                                                                        |
     And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}" with granular status "COMPLETED"
-    When DB Core - operator get waypoints details for "{KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].waypointId}"
+    When DB Route - operator get waypoints details for "{KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].waypointId}"
     And API Core - verify order pricing details:
       | orderId               | {KEY_LIST_OF_CREATED_ORDERS[1].id}                  |
       | trackingId            | {KEY_LIST_OF_CREATED_ORDERS[1].trackingId}          |
@@ -407,8 +407,8 @@ Feature: Order Price Details
       | toDistrict            | null                                                |
       | toAddress             | 9 TUA KONG GREEN MANILA GARDENS SG 455384           |
       | toPostcode            | 455384                                              |
-      | toLatitude            | {KEY_CORE_WAYPOINT_DETAILS.latitude}                |
-      | toLongitude           | {KEY_CORE_WAYPOINT_DETAILS.longitude}               |
+      | toLatitude            | {KEY_ROUTE_WAYPOINT_DETAILS.latitude}                |
+      | toLongitude           | {KEY_ROUTE_WAYPOINT_DETAILS.longitude}               |
       | toName                | Elsa Sender                                         |
       | fromCity              | null                                                |
       | fromLongitude         | 132.89808                                           |
@@ -494,7 +494,7 @@ Feature: Order Price Details
       | jobAction  | SUCCESS                                                                         |
       | jobMode    | DELIVERY                                                                        |
     And API Core - Operator get order details for tracking order "{KEY_LIST_OF_CREATED_TRACKING_IDS[1]}" with granular status "COMPLETED"
-    When DB Core - operator get waypoints details for "{KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].waypointId}"
+    When DB Route - operator get waypoints details for "{KEY_LIST_OF_CREATED_ORDERS[1].transactions[3].waypointId}"
     And API Core - verify order pricing details:
       | orderId               | {KEY_LIST_OF_CREATED_ORDERS[1].id}                                |
       | trackingId            | {KEY_LIST_OF_CREATED_ORDERS[1].trackingId}                        |

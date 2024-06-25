@@ -70,7 +70,7 @@ Feature: Order Tag to DP
       | orderId | {KEY_LIST_OF_CREATED_ORDERS[1].id}                                              |
     And API Core - Operator get order details for tracking order "KEY_LIST_OF_CREATED_TRACKING_IDS[1]"
     And API Core - save the last Delivery transaction of "{KEY_LIST_OF_CREATED_ORDERS[1].id}" order from "KEY_LIST_OF_CREATED_ORDERS" as "KEY_TRANSACTION"
-    When DB Core - operator get waypoints details for "{KEY_TRANSACTION.waypointId}"
+    When DB Route - operator get waypoints details for "{KEY_TRANSACTION.waypointId}"
     And DB Core - verify orders record:
       | id         | {KEY_LIST_OF_CREATED_ORDERS[1].id}         |
       | toAddress1 | {KEY_LIST_OF_CREATED_ORDERS[1].toAddress1} |
